@@ -1,0 +1,15 @@
+cd
+ls
+zsh
+find-file Emacs.org
+ga
+git add .
+clear
+cd
+cd Documents/Wiki/Notes/CSC148H5S/
+mkdir Notes
+mv CSC148H5S.org Notes/
+mkdir -p assets/css
+mkdir images
+mv ~/Documents/unclealone.github.io/assets/css/org.css assets/css/
+exit
