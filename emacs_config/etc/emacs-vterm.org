@@ -1,0 +1,21 @@
+#+title: Vterm Mode Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-vterm.el
+
+* Vterm
+Vitual Termianl
+#+begin_src shell
+brew install libtool libvterm 
+#+end_src
+#+begin_src emacs-lisp
+(use-package vterm
+  :commands vterm
+  :config
+  ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  (setq vterm-max-scrollback 10000))
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-vterm)
+#+end_src

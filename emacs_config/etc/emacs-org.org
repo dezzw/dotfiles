@@ -1,0 +1,299 @@
+#+title: Org Mode Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-org.el
+
+* Org Babel Browser
+Add *HTML* for =org-babel=
+#+begin_src emacs-lisp
+(use-package ob-browser)
+#+end_src
+* Config Basic Org mode
+#+begin_src emacs-lisp
+(defun dw/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(use-package org
+  :defer t
+  :hook (org-mode . dw/org-mode-setup)
+  :config
+  (setq org-html-head-include-default-style nil)
+  (setq org-ellipsis " ▾"
+	org-hide-emphasis-markers nil
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t
+	org-edit-src-content-indentation 0
+	org-hide-block-startup nil
+	org-src-preserve-indentation nil
+	org-startup-folded 'content
+	org-cycle-separator-lines 2)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  
+  (setq org-html-htmlize-output-type nil)
+  
+  ;; Edited from http://emacs.stackexchange.com/a/9838
+  (defun rasmus/org-html-wrap-blocks-in-code (src backend info)
+  "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
+  (when (org-export-derived-backend-p backend 'html)
+    (replace-regexp-in-string
+     "\\(</pre>\\)" "</code>\n\\1"
+     (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
+                               "<pre>\n<code class=\"\\1\">" src))))
+  (require 'ox-html)
+  (add-to-list 'org-export-filter-src-block-functions
+               'rasmus/org-html-wrap-blocks-in-code)
+
+  ;; (setq org-latex-to-pdf-process
+  ;;          '("xelatex -shell-escape -interaction nonstopmode %f"))
+
+  (setq org-latex-to-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+  ;; 生成PDF后清理辅助文件
+  ;; https://answer-id.com/53623039
+  (setq org-latex-logfiles-extensions 
+    (quote ("lof" "lot" "tex~" "tex" "aux" 
+      "idx" "log" "out" "toc" "nav" 
+      "snm" "vrb" "dvi" "fdb_latexmk" 
+      "blg" "brf" "fls" "entoc" "ps" 
+      "spl" "bbl" "xdv")))
+
+  ;; 图片默认宽度
+  (setq org-image-actual-width '(300))
+
+  (setq org-export-with-sub-superscripts nil)
+
+  ;; 不要自动创建备份文件
+  (setq make-backup-files nil)
+
+  ;; elegantpaper.cls
+  ;; https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls
+  (with-eval-after-load 'ox-latex
+  ;; http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
+  ;; latexmk runs pdflatex/xelatex (whatever is specified) multiple times
+  ;; automatically to resolve the cross-references.
+  ; (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+  (setq org-latex-listings t)
+  (add-to-list 'org-latex-classes
+		'("elegantpaper"
+		  "\\documentclass[lang=en]{elegantpaper}
+		  [NO-DEFAULT-PACKAGES]
+		  [PACKAGES]
+		  [EXTRA]"
+		  ("\\section{%s}" . "\\section*{%s}")
+		  ("\\subsection{%s}" . "\\subsection*{%s}")
+		  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (setq org-latex-listings 'minted)
+  (add-to-list 'org-latex-packages-alist '("" "minted"))))
+
+
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (latex . t)
+   (java . t)
+   (C . t)
+   (js . t)
+   (css . t)
+   (browser . t)
+   (R . t)
+   (ditaa . t)
+   (python . t)))
+
+ (setq org-confirm-babel-evaluate nil)
+ (push '("conf-unix" . conf-unix) org-src-lang-modes)
+#+end_src
+* Bullets
+#+begin_src emacs-lisp
+;; change bullets for headings
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+;; Replace list hyphen(-) with dot(.)
+;; (font-lock-add-keywords 'org-mode
+;;                         '(("^ *\\([-]\\) "
+;;                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+#+end_src
+* Fonts
+#+begin_src emacs-lisp
+;; Make sure org faces is available
+(require 'org-faces)
+;; Make sure org-indent face is available
+(require 'org-indent)
+;; Set Size and Fonts for Headings
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+#+end_src
+* Src Block Templates
+#+begin_src emacs-lisp
+;; This is needed as of Org 9.2
+(require 'org-tempo)
+
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("java" . "src java"))
+(add-to-list 'org-structure-template-alist '("srcc" . "src C"))
+(add-to-list 'org-structure-template-alist '("cpp" . "src cpp"))
+(add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+(add-to-list 'org-structure-template-alist '("js" . "src js"))
+(add-to-list 'org-structure-template-alist '("css" . "src css"))
+(add-to-list 'org-structure-template-alist '("html" . "src browser :out"))
+(add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
+(add-to-list 'org-structure-template-alist '("la" . "latex"))
+(add-to-list 'org-structure-template-alist '("r" . "src R"))
+(add-to-list 'org-structure-template-alist '("d" . "src ditaa :file ../images/.png :cmdline -E"))
+#+end_src
+* Set Margins for Modes
+#+begin_src emacs-lisp
+(defun dw/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :defer t
+  :hook (org-mode . dw/org-mode-visual-fill))
+#+end_src
+* Disable the Actual Width of a Picture
+#+begin_src emacs-lisp
+(setq org-image-actual-width nil)
+#+end_src
+* Org download
+#+begin_src emacs-lisp
+(use-package org-download
+	  :ensure t 
+	  ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
+	  :bind ("C-S-y" . org-download-screenshot)
+	  :config
+	  (require 'org-download)
+	  ;; Drag and drop to Dired
+	  (add-hook 'dired-mode-hook 'org-download-enable))
+#+end_src
+* Auto Show Images in Org
+#+begin_src emacs-lisp
+(auto-image-file-mode t) 
+#+end_src
+* COMMENT Convert to HTML
+#+begin_src emacs-lisp
+(use-package htmlize)
+#+end_src
+* COMMENT Latex Setting (based on Org)
+#+begin_src emacs-lisp
+;; (require 'ox-latex)
+;; (setq org-latex-compiler "xelatex")
+;; (setq org-latex-pdf-process
+;; 	'("xelatex -8bit -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; (add-to-list 'org-latex-packages-alist '("" "minted"))
+;; (setq org-latex-listings 'minted)
+;; (setq org-latex-minted-options
+;;       '(
+;; 	("linenos=true")
+;; ;;	("mathescape=true")
+;; ;;        ("numbersep=5pt")
+;; ;;        ("gobble=2")
+;; 	("frame=lines")
+;; ;;        ("framesep=2mm")
+;; 	))
+
+(with-eval-after-load 'ox-latex
+ ;; http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
+ ;; latexmk runs pdflatex/xelatex (whatever is specified) multiple times
+ ;; automatically to resolve the cross-references.
+ (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+ (add-to-list 'org-latex-classes
+               '("elegantpaper"
+                 "\\documentclass[lang=cn]{elegantpaper}
+                 [NO-DEFAULT-PACKAGES]
+                 [PACKAGES]
+                 [EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (setq org-latex-listings 'minted)
+  (add-to-list 'org-latex-packages-alist '("" "minted")))
+#+end_src
+* Org Latex Impatient
+#+begin_src emacs-lisp
+(use-package org-latex-impatient
+  :defer t
+  :hook (org-mode . org-latex-impatient-mode)
+  :init
+  (setq org-latex-impatient-tex2svg-bin
+        ;; location of tex2svg executable
+        "~/.nvm/versions/node/v15.5.1/lib/node_modules/mathjax-node-cli/bin/tex2svg")
+  :custom
+  (org-latex-impatient-posframe-position-handler 'posframe-poshandler-point-bottom-left-corner))
+#+end_src
+* Org Roam
+#+begin_src emacs-lisp
+(use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "~/Documents/Wiki")
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
+#+end_src
+* Org Roam Server
+#+begin_src emacs-lisp
+(use-package org-roam-server
+  :ensure t
+  :after org-mode
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 9090
+        org-roam-server-authenticate nil
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+#+end_src
+* Properly Align Tables
+#+begin_src emacs-lisp
+(use-package valign
+  :hook (org-mode . valign-mode))
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-org)
+#+end_src

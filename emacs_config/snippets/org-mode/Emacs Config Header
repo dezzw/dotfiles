@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: Emacs Config Header
+# key: +e
+# --
+
+#+title: $1
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init$2.el
+
+$0

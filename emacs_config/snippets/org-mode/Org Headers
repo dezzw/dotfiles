@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: Org Headers
+# key: +t
+# --
+
+#+title: $1
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../assets/css/org.css" />
+#+HTML_HEAD: <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/atom-one-dark.min.css">
+#+HTML_HEAD: <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+#+HTML_HEAD: <script>hljs.initHighlightingOnLoad();</script>
+
+$0

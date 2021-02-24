@@ -1,0 +1,47 @@
+#+title: Auto Configuration Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-auto.el
+
+
+* Stop Backup and "Auto-Save"
+Stop backup and auto-save (save as a backup) made by emacs
+#+begin_src emacs-lisp
+;; 关闭备份
+(setq make-backup-files nil
+      auto-save-default nil)
+#+end_src
+* Stop Auto-Change Vertical Scroll Size
+#+begin_src emacs-lisp
+(setq auto-window-vscroll nil)
+#+end_src
+* Auto-Reverting Changed Files
+auto allow the outside changes
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+#+end_src
+* Auto-Tangle emacs.org File
+Tangle (form a new file) on save
+#+begin_src emacs-lisp
+;; Since we don't want to disable org-confirm-babel-evaluate all
+;; of the time, do it around the after-save-hook
+(defun dw/org-babel-tangle-dont-ask ()
+  ;; Dynamic scoping to the rescue
+  (let ((org-confirm-babel-evaluate nil))
+    (org-babel-tangle)))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'dw/org-babel-tangle-dont-ask
+                                              'run-at-end 'only-in-org-mode)))
+#+end_src
+* Auto-Saving Changed Files
+The package make emacs auto save the files
+#+begin_src emacs-lisp
+(use-package super-save
+  :defer 1
+  :diminish super-save-mode
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t))
+#+end_src
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-auto)
+#+end_src

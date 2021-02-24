@@ -1,104 +1,106 @@
-(let (;; 加载的时候临时增大`gc-cons-threshold'以加速启动速度。
-      (gc-cons-threshold most-positive-fixnum)
-      ;; 清空避免加载远程文件的时候分析文件。
-      (file-name-handler-alist nil))
+;; Initialize package sources
+(require 'package)
 
-  ;; Emacs配置文件内容写到下面.
+(setq package-archives '(
+			 ("melpa" . "https://melpa.org/packages/")
+			 ("melpa" . "http://melpa.milkbox.net/packages/")
+			 ("org" . "https://orgmode.org/elpa/")
+			 ("elpa" . "https://elpa.gnu.org/packages/")
+			 ))
 
-  ;; Initialize package sources
-  (require 'package)
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
+;; Initialize use-package on non-Linux platforms
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents))
+(require 'use-package)
+(setq use-package-always-ensure t)
 
-  ;; Initialize use-package on non-Linux platforms
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
+(setq inhibit-startup-message t)
 
-  (require 'use-package)
-  (setq use-package-always-ensure t)
+(scroll-bar-mode -1)        ; Disable visible scrollbar
+(tool-bar-mode -1)          ; Disable the toolbar
+(tooltip-mode -1)           ; Disable tooltips
+(set-fringe-mode 10)
 
-  (setq inhibit-startup-message t)
+(menu-bar-mode -1)            ; Disable the menu bar
 
-  (scroll-bar-mode -1)        ; Disable visible scrollbar
-  (tool-bar-mode -1)          ; Disable the toolbar
-  (tooltip-mode -1)           ; Disable tooltips
-  (set-fringe-mode 10)
+(setq ring-bell-function 'ignore)
 
-  (menu-bar-mode -1)            ; Disable the menu bar
+;; Find Executable Path on OS X
+(use-package exec-path-from-shell
+  ;; :init
+  ;; (when (memq window-system '(mac ns))
+  ;;   (exec-path-from-shell-initialize))
+  :config
+  (use-package cache-path-from-shell
+    :load-path "~/.emacs.d/site-packages/cache-path-from-shell/")
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize))
+  )
 
-  (setq ring-bell-function 'ignore)
+;; 关闭备份
+(setq make-backup-files nil
+      auto-save-default nil)
 
-  ;; Find Executable Path on OS X
-  (use-package exec-path-from-shell
-    ;; :init
-    ;; (when (memq window-system '(mac ns))
-    ;;   (exec-path-from-shell-initialize))
-    :config
-    (use-package cache-path-from-shell
-      :load-path "~/.emacs.d/site-packages/cache-path-from-shell/")
-    (when (memq window-system '(mac ns))
-      (exec-path-from-shell-initialize))
-    )
+(setq auto-window-vscroll nil)
 
-  ;; 关闭备份
-  (setq make-backup-files nil
-	auto-save-default nil)
+;; set delete selection mode
+(delete-selection-mode t)
 
-  (setq auto-window-vscroll nil)
+;; Since we don't want to disable org-confirm-babel-evaluate all
+;; of the time, do it around the after-save-hook
+(defun dw/org-babel-tangle-dont-ask ()
+  ;; Dynamic scoping to the rescue
+  (let ((org-confirm-babel-evaluate nil))
+    (org-babel-tangle)))
 
-  ;; set delete selection mode
-  (delete-selection-mode t)
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'dw/org-babel-tangle-dont-ask
+                                              'run-at-end 'only-in-org-mode)))
 
-  ;; Since we don't want to disable org-confirm-babel-evaluate all
-  ;; of the time, do it around the after-save-hook
-  (defun dw/org-babel-tangle-dont-ask ()
-    ;; Dynamic scoping to the rescue
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle)))
+(global-auto-revert-mode 1)
 
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'dw/org-babel-tangle-dont-ask
-						'run-at-end 'only-in-org-mode)))
+(use-package super-save
+  :defer 1
+  :diminish super-save-mode
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t))
 
-  (global-auto-revert-mode 1)
+(setq gc-cons-threshold 100000000)
 
-  (use-package super-save
-    :defer 1
-    :diminish super-save-mode
-    :config
-    (super-save-mode +1)
-    (setq super-save-auto-save-when-idle t))
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-  (setq gc-cons-threshold 100000000)
+(use-package midnight
+  :ensure nil
+  :config
+  (setq midnight-period 7200))
 
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+;; Set frame transparency and maximize windows by default.
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-  ;; Set frame transparency and maximize windows by default.
+;; Enalbe column number
+(column-number-mode)
 
-  (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-  (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
-  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; Enable liner number
+(global-display-line-numbers-mode t)
 
-  ;; Enalbe column number
-  (column-number-mode)
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+		vterm-mode-hook
+		shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-  ;; Enable liner number
-  (global-display-line-numbers-mode t)
-
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-                  term-mode-hook
-		  vterm-mode-hook
-		  shell-mode-hook
-                  eshell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
+(defun dw/set-font-faces ()
+  (message "Setting faces!")
   ;; set font
   (set-face-attribute 'default nil :font "Jetbrains Mono" :height 140)
 
@@ -106,775 +108,804 @@
   (set-face-attribute 'fixed-pitch nil :font "Jetbrains Mono" :height 140)
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 175 :weight 'regular)
+  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 175 :weight 'regular))
 
-  (use-package all-the-icons)
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (setq doom-modeline-icon t)
+                (with-selected-frame frame
+                  (dw/set-font-faces))))
+    (dw/set-font-faces))
 
-  (use-package doom-themes
-    :config
-    (load-theme 'doom-one t))
+(use-package all-the-icons)
 
-  (use-package doom-modeline
-    :init (doom-modeline-mode 1)
-    :config
-    (setq doom-modeline-env-version t))
+(use-package doom-themes
+  :config
+  (load-theme 'doom-one t))
 
-  (use-package dashboard
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-env-version t))
+
+(use-package dashboard
+  :init
+  ;; Set the title
+  (setq dashboard-banner-logo-title nil)
+  ;; Set the banner
+  (setq dashboard-startup-banner "~/.emacs.d/dashboard/banner.txt")
+  (setq dashboard-center-content t)
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents  . 5)
+                          (projects . 5)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-init-info t))
+
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(use-package general
+  :config
+  (general-evil-setup t)
+
+  (general-create-definer dw/leader-key-def
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (general-create-definer dw/ctrl-c-keys
+    :prefix "C-c"))
+
+(defun dw/evil-hook ()
+  (dolist (mode '(custom-mode
+                  eshell-mode
+		  vterm-mode
+                  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
+
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-respect-visual-line-mode t)
+  :config
+  (add-hook 'evil-mode-hook 'dw/evil-hook)
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :custom
+  (evil-collection-outline-bind-tab-p nil)
+  :config
+  (evil-collection-init))
+
+(unless (display-graphic-p)
+  (use-package evil-terminal-cursor-changer
+    :ensure t
     :init
-    ;; Set the title
-    (setq dashboard-banner-logo-title nil)
-    ;; Set the banner
-    (setq dashboard-startup-banner "~/.emacs.d/dashboard/banner.txt")
-    (setq dashboard-center-content t)
+    (evil-terminal-cursor-changer-activate)
     :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items '((recents  . 5)
-                            (projects . 5)))
-    (setq dashboard-set-heading-icons t)
-    (setq dashboard-set-file-icons t)
-    (setq dashboard-set-init-info t))
+     (setq evil-motion-state-cursor 'box)  ; █
+     (setq evil-visual-state-cursor 'box)  ; █
+     (setq evil-normal-state-cursor 'box)  ; █
+     (setq evil-insert-state-cursor 'bar)  ; ⎸
+     (setq evil-emacs-state-cursor  'hbar) ; _
+     )
+  )
 
-  ;; Make ESC quit prompts
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
 
-  (use-package general
-    :config
-    (general-evil-setup t)
+(use-package ob-browser)
 
-    (general-create-definer dw/leader-key-def
-      :keymaps '(normal insert visual emacs)
-      :prefix "SPC"
-      :global-prefix "C-SPC")
+(defun dw/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
 
-    (general-create-definer dw/ctrl-c-keys
-      :prefix "C-c"))
+(use-package org
+  :defer t
+  :hook (org-mode . dw/org-mode-setup)
+  :config
+  (setq org-html-head-include-default-style nil)
+  (setq org-ellipsis " ▾"
+	org-hide-emphasis-markers nil
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t
+	org-edit-src-content-indentation 0
+	org-hide-block-startup nil
+	org-src-preserve-indentation nil
+	org-startup-folded 'content
+	org-cycle-separator-lines 2)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  
+  (setq org-html-htmlize-output-type nil)
+  
+  ;; Edited from http://emacs.stackexchange.com/a/9838
+  (defun rasmus/org-html-wrap-blocks-in-code (src backend info)
+  "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
+  (when (org-export-derived-backend-p backend 'html)
+    (replace-regexp-in-string
+     "\\(</pre>\\)" "</code>\n\\1"
+     (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
+                               "<pre>\n<code class=\"\\1\">" src))))
+  (require 'ox-html)
+  (add-to-list 'org-export-filter-src-block-functions
+               'rasmus/org-html-wrap-blocks-in-code)
 
-  (defun dw/evil-hook ()
-    (dolist (mode '(custom-mode
-                    eshell-mode
-		    vterm-mode
-                    term-mode))
-      (add-to-list 'evil-emacs-state-modes mode)))
+  ;; (setq org-latex-to-pdf-process
+  ;;          '("xelatex -shell-escape -interaction nonstopmode %f"))
 
-  (use-package evil
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump nil)
-    (setq evil-respect-visual-line-mode t)
-    :config
-    (add-hook 'evil-mode-hook 'dw/evil-hook)
-    (evil-mode 1)
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  (setq org-latex-to-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  ;; 生成PDF后清理辅助文件
+  ;; https://answer-id.com/53623039
+  (setq org-latex-logfiles-extensions 
+    (quote ("lof" "lot" "tex~" "tex" "aux" 
+      "idx" "log" "out" "toc" "nav" 
+      "snm" "vrb" "dvi" "fdb_latexmk" 
+      "blg" "brf" "fls" "entoc" "ps" 
+      "spl" "bbl" "xdv")))
 
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal))
+  ;; 图片默认宽度
+  (setq org-image-actual-width '(300))
 
-  (use-package evil-collection
-    :after evil
-    :custom
-    (evil-collection-outline-bind-tab-p nil)
-    :config
-    (evil-collection-init))
+  (setq org-export-with-sub-superscripts nil)
 
-  (unless (display-graphic-p)
-    (use-package evil-terminal-cursor-changer
-      :ensure t
-      :init
-      (evil-terminal-cursor-changer-activate)
-      :config
-      (setq evil-motion-state-cursor 'box)  ; █
-      (setq evil-visual-state-cursor 'box)  ; █
-      (setq evil-normal-state-cursor 'box)  ; █
-      (setq evil-insert-state-cursor 'bar)  ; ⎸
-      (setq evil-emacs-state-cursor  'hbar) ; _
-      )
-    )
+  ;; 不要自动创建备份文件
+  (setq make-backup-files nil)
 
-  (use-package which-key
-    :init (which-key-mode)
-    :diminish which-key-mode
-    :config
-    (setq which-key-idle-delay 0.3))
-
-  (use-package ob-browser)
-
-  (defun dw/org-mode-setup ()
-    (org-indent-mode)
-    (variable-pitch-mode 1)
-    (visual-line-mode 1))
-
-  (use-package org
-    :defer t
-    :hook (org-mode . dw/org-mode-setup)
-    :config
-    (setq org-html-head-include-default-style nil)
-    (setq org-ellipsis " ▾"
-	  org-hide-emphasis-markers nil
-	  org-src-fontify-natively t
-	  org-src-tab-acts-natively t
-	  org-edit-src-content-indentation 0
-	  org-hide-block-startup nil
-	  org-src-preserve-indentation nil
-	  org-startup-folded 'content
-	  org-cycle-separator-lines 2)
-    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-    
-    (setq org-html-htmlize-output-type nil)
-    
-    ;; Edited from http://emacs.stackexchange.com/a/9838
-    (defun rasmus/org-html-wrap-blocks-in-code (src backend info)
-      "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
-      (when (org-export-derived-backend-p backend 'html)
-	(replace-regexp-in-string
-	 "\\(</pre>\\)" "</code>\n\\1"
-	 (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
-				   "<pre>\n<code class=\"\\1\">" src))))
-    (require 'ox-html)
-    (add-to-list 'org-export-filter-src-block-functions
-		 'rasmus/org-html-wrap-blocks-in-code)
-
-    ;; (setq org-latex-to-pdf-process
-    ;;          '("xelatex -shell-escape -interaction nonstopmode %f"))
-
-    (setq org-latex-to-pdf-process
-	  '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-    ;; 生成PDF后清理辅助文件
-    ;; https://answer-id.com/53623039
-    (setq org-latex-logfiles-extensions 
-	  (quote ("lof" "lot" "tex~" "tex" "aux" 
-		  "idx" "log" "out" "toc" "nav" 
-		  "snm" "vrb" "dvi" "fdb_latexmk" 
-		  "blg" "brf" "fls" "entoc" "ps" 
-		  "spl" "bbl" "xdv")))
-
-    ;; 图片默认宽度
-    (setq org-image-actual-width '(300))
-
-    (setq org-export-with-sub-superscripts nil)
-
-    ;; 不要自动创建备份文件
-    (setq make-backup-files nil)
-
-    ;; elegantpaper.cls
-    ;; https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls
-    (with-eval-after-load 'ox-latex
-      ;; http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
-      ;; latexmk runs pdflatex/xelatex (whatever is specified) multiple times
-      ;; automatically to resolve the cross-references.
-					; (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
-      (setq org-latex-listings t)
-      (add-to-list 'org-latex-classes
-		   '("elegantpaper"
-		     "\\documentclass[lang=en]{elegantpaper}
+  ;; elegantpaper.cls
+  ;; https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls
+  (with-eval-after-load 'ox-latex
+  ;; http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
+  ;; latexmk runs pdflatex/xelatex (whatever is specified) multiple times
+  ;; automatically to resolve the cross-references.
+  ; (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+  (setq org-latex-listings t)
+  (add-to-list 'org-latex-classes
+		'("elegantpaper"
+		  "\\documentclass[lang=en]{elegantpaper}
 		  [NO-DEFAULT-PACKAGES]
 		  [PACKAGES]
 		  [EXTRA]"
-		     ("\\section{%s}" . "\\section*{%s}")
-		     ("\\subsection{%s}" . "\\subsection*{%s}")
-		     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-		     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-      (setq org-latex-listings 'minted)
-      (add-to-list 'org-latex-packages-alist '("" "minted"))))
+		  ("\\section{%s}" . "\\section*{%s}")
+		  ("\\subsection{%s}" . "\\subsection*{%s}")
+		  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (setq org-latex-listings 'minted)
+  (add-to-list 'org-latex-packages-alist '("" "minted"))))
 
 
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (latex . t)
-     (java . t)
-     (C . t)
-     (js . t)
-     (css . t)
-     (browser . t)
-     (R . t)
-     (ditaa . t)
-     (python . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (latex . t)
+   (java . t)
+   (C . t)
+   (js . t)
+   (css . t)
+   (browser . t)
+   (R . t)
+   (ditaa . t)
+   (python . t)))
 
-  (setq org-confirm-babel-evaluate nil)
-  (push '("conf-unix" . conf-unix) org-src-lang-modes)
+ (setq org-confirm-babel-evaluate nil)
+ (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
-  ;; change bullets for headings
-  (use-package org-bullets
-    :after org
-    :hook (org-mode . org-bullets-mode)
-    :custom
-    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+;; change bullets for headings
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-  ;; Replace list hyphen(-) with dot(.)
-  ;; (font-lock-add-keywords 'org-mode
-  ;;                         '(("^ *\\([-]\\) "
-  ;;                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+;; Replace list hyphen(-) with dot(.)
+;; (font-lock-add-keywords 'org-mode
+;;                         '(("^ *\\([-]\\) "
+;;                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-  ;; Make sure org faces is available
-  (require 'org-faces)
-  ;; Make sure org-indent face is available
-  (require 'org-indent)
-  ;; Set Size and Fonts for Headings
-  (dolist (face '((org-level-1 . 1.2)
-                  (org-level-2 . 1.1)
-                  (org-level-3 . 1.05)
-                  (org-level-4 . 1.0)
-                  (org-level-5 . 1.1)
-                  (org-level-6 . 1.1)
-                  (org-level-7 . 1.1)
-                  (org-level-8 . 1.1)))
+;; Make sure org faces is available
+(require 'org-faces)
+;; Make sure org-indent face is available
+(require 'org-indent)
+;; Set Size and Fonts for Headings
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
     (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
-  ;; This is needed as of Org 9.2
-  (require 'org-tempo)
+;; This is needed as of Org 9.2
+(require 'org-tempo)
 
-  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("java" . "src java"))
-  (add-to-list 'org-structure-template-alist '("srcc" . "src C"))
-  (add-to-list 'org-structure-template-alist '("cpp" . "src cpp"))
-  (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
-  (add-to-list 'org-structure-template-alist '("js" . "src js"))
-  (add-to-list 'org-structure-template-alist '("css" . "src css"))
-  (add-to-list 'org-structure-template-alist '("html" . "src browser :out"))
-  (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
-  (add-to-list 'org-structure-template-alist '("la" . "latex"))
-  (add-to-list 'org-structure-template-alist '("r" . "src R"))
-  (add-to-list 'org-structure-template-alist '("d" . "src ditaa :file ../images/.png :cmdline -E"))
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("java" . "src java"))
+(add-to-list 'org-structure-template-alist '("srcc" . "src C"))
+(add-to-list 'org-structure-template-alist '("cpp" . "src cpp"))
+(add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+(add-to-list 'org-structure-template-alist '("js" . "src js"))
+(add-to-list 'org-structure-template-alist '("css" . "src css"))
+(add-to-list 'org-structure-template-alist '("html" . "src browser :out"))
+(add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
+(add-to-list 'org-structure-template-alist '("la" . "latex"))
+(add-to-list 'org-structure-template-alist '("r" . "src R"))
+(add-to-list 'org-structure-template-alist '("d" . "src ditaa :file ../images/.png :cmdline -E"))
 
-  (defun dw/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
-          visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
+(defun dw/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
 
-  (use-package visual-fill-column
-    :defer t
-    :hook (org-mode . dw/org-mode-visual-fill))
+(use-package visual-fill-column
+  :defer t
+  :hook (org-mode . dw/org-mode-visual-fill))
 
-  (setq org-image-actual-width nil)
+(setq org-image-actual-width nil)
 
-  (use-package org-download
-    :ensure t 
-    ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
-    :bind ("C-S-y" . org-download-screenshot)
-    :config
-    (require 'org-download)
-    ;; Drag and drop to Dired
-    (add-hook 'dired-mode-hook 'org-download-enable))
+(use-package org-download
+	  :ensure t 
+	  ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
+	  :bind ("C-S-y" . org-download-screenshot)
+	  :config
+	  (require 'org-download)
+	  ;; Drag and drop to Dired
+	  (add-hook 'dired-mode-hook 'org-download-enable))
 
-  (auto-image-file-mode t)
+(auto-image-file-mode t)
 
-  (use-package cdlatex
-    :hook (org-mode . org-cdlatex-mode)
-    :config
-    (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex))
+(use-package org-latex-impatient
+  :defer t
+  :hook (org-mode . org-latex-impatient-mode)
+  :init
+  (setq org-latex-impatient-tex2svg-bin
+        ;; location of tex2svg executable
+        "~/.nvm/versions/node/v15.5.1/lib/node_modules/mathjax-node-cli/bin/tex2svg")
+  :custom
+  (org-latex-impatient-posframe-position-handler 'posframe-poshandler-point-bottom-left-corner))
 
-  (use-package org-latex-impatient
-    :defer t
-    :hook (org-mode . org-latex-impatient-mode)
-    :init
-    (setq org-latex-impatient-tex2svg-bin
-          ;; location of tex2svg executable
-          "~/.nvm/versions/node/v15.5.1/lib/node_modules/mathjax-node-cli/bin/tex2svg")
-    :custom
-    (org-latex-impatient-posframe-position-handler 'posframe-poshandler-point-bottom-left-corner))
+(use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "~/Documents/Wiki")
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
 
-  (use-package org-roam
-    :ensure t
-    :hook
-    (after-init . org-roam-mode)
-    :custom
-    (org-roam-directory "~/Documents/Wiki")
-    :bind (:map org-roam-mode-map
-		(("C-c n l" . org-roam)
-		 ("C-c n f" . org-roam-find-file)
-		 ("C-c n g" . org-roam-graph))
-		:map org-mode-map
-		(("C-c n i" . org-roam-insert))
-		(("C-c n I" . org-roam-insert-immediate))))
+(use-package org-roam-server
+  :ensure t
+  :after org-mode
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 9090
+        org-roam-server-authenticate nil
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
 
-  (use-package org-roam-server
-    :ensure t
-    :after org-mode
-    :config
-    (setq org-roam-server-host "127.0.0.1"
-          org-roam-server-port 9090
-          org-roam-server-authenticate nil
-          org-roam-server-export-inline-images t
-          org-roam-server-serve-files nil
-          org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-          org-roam-server-network-poll t
-          org-roam-server-network-arrows nil
-          org-roam-server-network-label-truncate t
-          org-roam-server-network-label-truncate-length 60
-          org-roam-server-network-label-wrap-length 20))
+(use-package valign
+  :hook (org-mode . valign-mode))
 
-  (use-package valign
-    :hook (org-mode . valign-mode))
+(use-package latex-preview-pane
+  :ensure t)
 
-  (use-package ace-window
-    :bind ("C-x o" . ace-window)
-    :config
-    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+(use-package cdlatex
+  :hook 
+  (org-mode . org-cdlatex-mode)
+  (LaTeX-mode . cdlatex-mode)
+  (latex-mode . cdlatex-mode)
+  )
 
-  (use-package dired
-    :ensure nil
-    :commands (dired dired-jump)
-    :bind (("C-x C-j" . dired-jump))
-    :config
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "h" 'dired-single-up-directory
-      "l" 'dired-single-buffer))
+(use-package ace-window
+  :bind ("C-x o" . ace-window)
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
-  (use-package dired-single)
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :bind (("C-x C-j" . dired-jump))
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-single-up-directory
+    "l" 'dired-single-buffer))
 
-  (use-package all-the-icons-dired
-    :hook (dired-mode . all-the-icons-dired-mode))
+(use-package dired-single)
 
-  (use-package dired-hide-dotfiles
-    :hook (dired-mode . dired-hide-dotfiles-mode)
-    :config
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "H" 'dired-hide-dotfiles-mode))
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
 
-  (use-package markdown-mode
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'" . down-mode)
-           ("\\.jown\\'" . jown-mode))
-    :init (setq jown-command "multijown"))
+(use-package dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "H" 'dired-hide-dotfiles-mode))
 
-  (use-package edit-indirect)
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . down-mode)
+         ("\\.jown\\'" . jown-mode))
+  :init (setq jown-command "multijown"))
 
-  (use-package ivy
-    :diminish
-    :bind (("C-s" . swiper)
-           :map ivy-minibuffer-map
-           ("C-l" . ivy-alt-done)
-           ("C-j" . ivy-next-line)
-           ("C-k" . ivy-previous-line)
-           :map ivy-switch-buffer-map
-           ("C-k" . ivy-previous-line)
-           ("C-l" . ivy-done)
-           ("C-d" . ivy-switch-buffer-kill)
-           :map ivy-reverse-i-search-map
-           ("C-k" . ivy-previous-line)
-           ("C-d" . ivy-reverse-i-search-kill))
-    :init
-    (ivy-mode 1))
+(use-package edit-indirect)
 
-  (use-package counsel
-    :bind (("M-x" . counsel-M-x)
-           ("C-x b" . counsel-switch-buffer)
-           ("C-x C-f" . counsel-find-file)
-           :map minibuffer-local-map
-           ("C-r" . 'counsel-minibuffer-histor))
-    :config
-    (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :init
+  (ivy-mode 1))
+
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+         ("C-x b" . counsel-switch-buffer)
+         ("C-x C-f" . counsel-find-file)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-histor))
+  :config
+  (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
 
 
-  (dw/leader-key-def
-    "SPC" 'counsel-M-x)
+(dw/leader-key-def
+  "SPC" 'counsel-M-x)
 
-  (use-package ivy-rich
-    :init
-    (ivy-rich-mode 1))
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
 
-  (use-package ivy-posframe
-    :config
-    (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-    (ivy-posframe-mode 1))
+(use-package ivy-posframe
+ :config
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  (ivy-posframe-mode 1))
 
-  (use-package helpful
-    :ensure t
-    :custom
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
-    :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command] . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key] . helpful-key))
+(use-package helpful
+  :ensure t
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
-  (use-package projectile
-    :diminish projectile-mode
-    :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
-    :init
-    (when (file-directory-p "~Documents/Projects/Code")
-      (setq projectile-project-search-path '("~Documents/Projects/Code")))
-    (setq projectile-switch-project-action #'projectile-dired))
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~Documents/Projects/Code")
+    (setq projectile-project-search-path '("~Documents/Projects/Code")))
+  (setq projectile-switch-project-action #'projectile-dired))
 
-  (use-package counsel-projectile
-    :after projectile
-    :config (counsel-projectile-mode))
+(use-package counsel-projectile
+  :after projectile
+  :config (counsel-projectile-mode))
 
-  (use-package evil-surround
-    :after evil
-    :config
-    (global-evil-surround-mode 1))
+(use-package evil-surround
+  :after evil
+  :config
+  (global-evil-surround-mode 1))
 
-  (use-package evil-escape
-    :after evil
-    :config
-    (evil-escape-mode t)
-    (setq-default evil-escape-key-sequence "jk"))
+(use-package evil-escape
+  :after evil
+  :config
+  (evil-escape-mode t)
+  (setq-default evil-escape-key-sequence "jk"))
 
-  (use-package evil-nerd-commenter
-    :after evil
-    :config
-    (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
-    (global-set-key (kbd "C-c l") 'evilnc-quick-comment-or-uncomment-to-the-line)
-    (global-set-key (kbd "C-c c") 'evilnc-copy-and-comment-lines)
-    (global-set-key (kbd "C-c p") 'evilnc-comment-or-uncomment-paragraphs))
+(use-package evil-nerd-commenter
+  :after evil
+  :config
+  (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+  (global-set-key (kbd "C-c l") 'evilnc-quick-comment-or-uncomment-to-the-line)
+  (global-set-key (kbd "C-c c") 'evilnc-copy-and-comment-lines)
+  (global-set-key (kbd "C-c p") 'evilnc-comment-or-uncomment-paragraphs))
 
-  (use-package color-rg
-    :load-path "~/.emacs.d/site-packages/color-rg/")
+(use-package color-rg
+  :load-path "~/.emacs.d/site-packages/color-rg/")
 
-  (dw/leader-key-def
-    "c" '(:ignore t :which-key "color-rg")
-    "cid" 'color-rg-search-input
-    "csd" 'color-rg-search-symbol
-    "cip" 'color-rg-search-input-in-project
-    "cic" 'color-rg-search-input-in-current-file
-    "cit" 'color-rg-search-project-with-type)
+(dw/leader-key-def
+  "c" '(:ignore t :which-key "color-rg")
+  "cid" 'color-rg-search-input
+  "csd" 'color-rg-search-symbol
+  "cip" 'color-rg-search-input-in-project
+  "cic" 'color-rg-search-input-in-current-file
+  "cit" 'color-rg-search-project-with-type)
 
-  (use-package multiple-cursors
-    :bind
-    (("C-S-c C-S-c" . 'mc/edit-lines)
-     ("C->" . 'mc/mark-next-like-this)
-     ("C-<" . 'mc/mark-previous-like-this)
-     ("C-S-c C-<" . 'mc/mark-all-like-this)))
+(use-package multiple-cursors
+  :bind
+  (("C-S-c C-S-c" . 'mc/edit-lines)
+   ("C->" . 'mc/mark-next-like-this)
+   ("C-<" . 'mc/mark-previous-like-this)
+   ("C-S-c C-<" . 'mc/mark-all-like-this)))
 
-  (use-package term
-    :config
-    (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
-    ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
+(use-package term
+  :config
+  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
+  ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
 
-    ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
-    ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
-    )
+  ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
+  ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
+  )
 
-  (use-package eterm-256color
-    :hook (term-mode . eterm-256color-mode))
+(use-package eterm-256color
+  :hook (term-mode . eterm-256color-mode))
 
-  (use-package vterm
-    :commands vterm
-    :config
-    ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-    ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-    (setq vterm-max-scrollback 10000))
+(use-package vterm
+  :commands vterm
+  :config
+  ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  (setq vterm-max-scrollback 10000))
 
-  (defun dw/configure-eshell ()
-    ;; Save command history when commands are entered
-    (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+(defun dw/configure-eshell ()
+  ;; Save command history when commands are entered
+  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
 
-    ;; Truncate buffer for performance
-    (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+  ;; Truncate buffer for performance
+  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
-    ;; Bind some useful keys for evil-mode
-    (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-    (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-    (evil-normalize-keymaps)
+  ;; Bind some useful keys for evil-mode
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
+  (evil-normalize-keymaps)
 
-    (setq eshell-history-size         10000
-          eshell-buffer-maximum-lines 10000
-          eshell-hist-ignoredups t
-          eshell-scroll-to-bottom-on-input t))
+  (setq eshell-history-size         10000
+        eshell-buffer-maximum-lines 10000
+        eshell-hist-ignoredups t
+        eshell-scroll-to-bottom-on-input t))
 
-  (use-package eshell-git-prompt)
+(use-package eshell-git-prompt)
 
-  (use-package eshell
-    :hook (eshell-first-time-mode . dw/configure-eshell)
-    :config
+(use-package eshell
+  :hook (eshell-first-time-mode . dw/configure-eshell)
+  :config
 
-    (with-eval-after-load 'esh-opt
-      (setq eshell-destroy-buffer-when-process-dies t)
-      (setq eshell-visual-commands '("zsh" "vim")))
+  (with-eval-after-load 'esh-opt
+    (setq eshell-destroy-buffer-when-process-dies t)
+    (setq eshell-visual-commands '("zsh" "vim")))
 
-    (eshell-git-prompt-use-theme 'powerline))
+  (eshell-git-prompt-use-theme 'powerline))
 
-  (use-package lsp-mode
-    :commands (lsp lsp-deferred)
-    :hook ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode) . lsp)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-    :config
-    (lsp-enable-which-key-integration t)
-    (setq lsp-headerline-breadcrumb-enable-symbol-numbers t)
-    (setq lsp-log-io t)
-    (setq lsp-idle-delay 0.500)
-    (setq lsp-completion-provider :capf))
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode) . lsp)
+  :init
+  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t)
+  (setq lsp-headerline-breadcrumb-enable-symbol-numbers t)
+  (setq lsp-log-io t)
+  (setq lsp-idle-delay 0.500)
+  (setq lsp-completion-provider :capf))
 
-  (dw/leader-key-def
-    "l"  '(:ignore t :which-key "lsp")
-    "ld" 'xref-find-definitions
-    "lr" 'xref-find-references
-    "ln" 'lsp-ui-find-next-reference
-    "lp" 'lsp-ui-find-prev-reference
-    "ls" 'counsel-imenu
-    "le" 'lsp-ui-flycheck-list
-    "lS" 'lsp-ui-sideline-mode
-    "lX" 'lsp-execute-code-action)
+(dw/leader-key-def
+  "l"  '(:ignore t :which-key "lsp")
+  "ld" 'xref-find-definitions
+  "lr" 'xref-find-references
+  "ln" 'lsp-ui-find-next-reference
+  "lp" 'lsp-ui-find-prev-reference
+  "ls" 'counsel-imenu
+  "le" 'lsp-ui-flycheck-list
+  "lS" 'lsp-ui-sideline-mode
+  "lX" 'lsp-execute-code-action)
 
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    :config
-    (setq lsp-ui-sideline-enable t)
-    (setq lsp-ui-doc-position 'bottom))
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-doc-position 'bottom))
 
-  (use-package lsp-ivy 
-    :commands lsp-ivy-workspace-symbol)
+(use-package lsp-ivy 
+  :commands lsp-ivy-workspace-symbol)
 
-  (use-package lsp-treemacs
-    :commands lsp-treemacs-errors-list)
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list)
 
-  (use-package typescript-mode
-    :mode "\\.ts\\'"
-    :config
-    (setq typescript-indent-level 2))
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :config
+  (setq typescript-indent-level 2))
 
-  (defun dw/set-js-indentation ()
-    (setq js-indent-level 2)
-    (setq evil-shift-width js-indent-level)
-    (setq-default tab-width 2))
+(defun dw/set-js-indentation ()
+  (setq js-indent-level 2)
+  (setq evil-shift-width js-indent-level)
+  (setq-default tab-width 2))
 
-  (use-package js2-mode
-    :mode "\\.jsx?\\'")
+(use-package js2-mode
+  :mode "\\.jsx?\\'")
 
-  ;; Don't use built-in syntax checking
-  (setq js2-mode-show-strict-warnings nil)
+;; Don't use built-in syntax checking
+(setq js2-mode-show-strict-warnings nil)
 
-  ;; Set up proper indentation in JavaScript and JSON files
-  (add-hook 'js2-mode-hook #'dw/set-js-indentation)
-  (add-hook 'json-mode-hook #'dw/set-js-indentation)
+;; Set up proper indentation in JavaScript and JSON files
+(add-hook 'js2-mode-hook #'dw/set-js-indentation)
+(add-hook 'json-mode-hook #'dw/set-js-indentation)
 
-  (use-package prettier-js
-    :hook ((js2-mode . prettier-js-mode)
-           (typescript-mode . prettier-js-mode))
-    :config
-    (setq prettier-js-show-errors nil))
+(use-package prettier-js
+  :hook ((js2-mode . prettier-js-mode)
+         (typescript-mode . prettier-js-mode))
+  :config
+  (setq prettier-js-show-errors nil))
 
-  (use-package web-mode
-    :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
+(use-package web-mode
+  :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
 
-  ;; Impatient Html File
-  (use-package impatient-mode)
+;; Impatient Html File
+(use-package impatient-mode)
 
-  ;; Preview the html file
-  (use-package skewer-mode
-    :config
-    (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'css-mode-hook 'skewer-css-mode)
-    (add-hook 'html-mode-hook 'skewer-html-mode)
-    (add-hook 'web-mode-hook 'skewer-html-mode))
+;; Preview the html file
+(use-package skewer-mode
+  :config
+  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'html-mode-hook 'skewer-html-mode)
+  (add-hook 'web-mode-hook 'skewer-html-mode))
 
-  (use-package lsp-pyright
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp))))
+(use-package lsp-pyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))
 
-  (use-package lsp-latex
-    :config
-    (add-hook 'tex-mode-hook 'lsp)
-    (add-hook 'latex-mode-hook 'lsp)
-    (add-hook 'Latex-mode-hook 'lsp)
-    (add-hook 'TeX-latex-mode-hook 'lsp))
+(use-package lsp-latex
+  :config
+  (add-hook 'tex-mode-hook 'lsp)
+  (add-hook 'latex-mode-hook 'lsp)
+  (add-hook 'Latex-mode-hook 'lsp)
+  (add-hook 'TeX-latex-mode-hook 'lsp))
 
-  (use-package lsp-sourcekit
+(use-package lsp-sourcekit
+  :after lsp-mode
+  :config
+  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
+
+(use-package swift-mode
+  :hook (swift-mode . (lambda () (lsp))))
+
+(use-package ess)
+
+(use-package company 
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind 
+  (:map company-active-map
+        ("<tab>". company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-tooltip-align-annotations t)
+  ;; Number the candidates (use M-1, M-2 etc to select completions)
+  (company-show-numbers t)
+  ;; starts with 1 character
+  (company-minimum-prefix-length 1)
+  ;; Trigger completion immediately
+  (company-idle-delay 0)
+  :config
+  ;; (setq global-company-mode t)
+  ;;Completion based on AI
+  (use-package company-tabnine
     :after lsp-mode
     :config
-    (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
+    (push '(company-capf :with company-tabnine :separate) company-backends))
+  )
 
-  (use-package swift-mode
-    :hook (swift-mode . (lambda () (lsp))))
+;; Add UI for Company
+(use-package company-box
+  :hook (company-mode . company-box-mode)
+  :config
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
-  (use-package ess)
+(use-package flycheck
+  :defer t
+  :hook (lsp-mode . flycheck-mode))
 
-  (use-package company 
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind 
-    (:map company-active-map
-          ("<tab>". company-complete-selection))
-    (:map lsp-mode-map
-          ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-tooltip-align-annotations t)
-    ;; Number the candidates (use M-1, M-2 etc to select completions)
-    (company-show-numbers t)
-    ;; starts with 1 character
-    (company-minimum-prefix-length 1)
-    ;; Trigger completion immediately
-    (company-idle-delay 0)
-    :config
-    ;; (setq global-company-mode t)
-    ;;Completion based on AI
-    (use-package company-tabnine
-      :after lsp-mode
-      :config
-      (push '(company-capf :with company-tabnine :separate) company-backends))
-    )
+(use-package yasnippet
+  :after prog-mode
+  :hook (prog-mode . yas-minor-mode)
+  :config
+  (yas-reload-all))
 
-  ;; Add UI for Company
-  (use-package company-box
-    :hook (company-mode . company-box-mode)
-    :config
-    (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+;; Snippets Collection
+(use-package yasnippet-snippets)
 
-  (use-package flycheck
-    :defer t
-    :hook (lsp-mode . flycheck-mode))
+;; auto insert
+(use-package auto-yasnippet)
 
-  (use-package yasnippet
-    :after prog-mode
-    :hook (prog-mode . yas-minor-mode)
-    :config
-    (yas-reload-all))
+(dw/leader-key-def
+  "a"  '(:ignore t :which-key "auto-snippets")
+  "aw" 'aya-create
+  "ay" 'aya-expand
+  "ao" 'aya-open-line)
 
-  ;; Snippets Collection
-  (use-package yasnippet-snippets)
-
-  ;; auto insert
-  (use-package auto-yasnippet)
-
-  (dw/leader-key-def
-    "a"  '(:ignore t :which-key "auto-snippets")
-    "aw" 'aya-create
-    "ay" 'aya-expand
-    "ao" 'aya-open-line)
-
-  ;; dap debug tools
-  (use-package dap-mode
-    :after lsp-mode
-    :config
-    (require 'dap-python)
-    (setq dap-auto-configure-features '(sessions locals controls tooltip)))
+;; dap debug tools
+(use-package dap-mode
+  :after lsp-mode
+  :config
+  (require 'dap-python)
+  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 
-  (dw/leader-key-def
-    "d"  '(:ignore t :which-key "dap debug")
-    "dd" 'dap-debug
-    "da" 'dap-breakpoint-add
-    "dsc" 'dap-breakpoint-delete
-    "dsc" 'dap-breakpoinnt-delete-all
-    "di" 'dap-step-in
-    "do" 'dap-step-out
-    "dn" 'dap-next)
+(dw/leader-key-def
+  "d"  '(:ignore t :which-key "dap debug")
+  "dd" 'dap-debug
+  "da" 'dap-breakpoint-add
+  "dsc" 'dap-breakpoint-delete
+  "dsc" 'dap-breakpoinnt-delete-all
+  "di" 'dap-step-in
+  "do" 'dap-step-out
+  "dn" 'dap-next)
 
-  (use-package smartparens
-    :after prog-mode
-    :hook (prog-mode . smartparens-mode))
+(use-package smartparens
+  :after prog-mode
+  :hook (prog-mode . smartparens-mode))
 
-  (use-package rainbow-delimiters
-    :after prog-mode
-    :hook (prog-mode . rainbow-delimiters-mode))
+(use-package rainbow-delimiters
+  :after prog-mode
+  :hook (prog-mode . rainbow-delimiters-mode))
 
-  (use-package hungry-delete
-    :hook (prog-mode . hungry-delete-mode))
+(use-package hungry-delete
+  :hook (prog-mode . hungry-delete-mode))
 
-  (use-package indent-guide
-    :after prog-mode
-    :hook (prog-mode . indent-guide-mode))
+(use-package indent-guide
+  :after prog-mode
+  :hook (prog-mode . indent-guide-mode))
 
-  (use-package emmet-mode
-    :hook (web-mode . emmet-mode))
+(use-package emmet-mode
+  :hook (web-mode . emmet-mode))
 
-  (use-package format-all
-    :after prog-mode)
+(use-package format-all
+  :after prog-mode)
 
-  (use-package magit
-    :defer t
-    :commands (magit-status magit-get-current-branch)
-    :custom
-    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(use-package magit
+  :defer t
+  :commands (magit-status magit-get-current-branch)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-  (use-package evil-magit
-    :after magit)
+(use-package evil-magit
+  :after magit)
 
-  ;; Add a super-convenient global binding for magit-status since
-  ;; I use it 8 million times a day
-  (global-set-key (kbd "C-M-;") 'magit-status)
+;; Add a super-convenient global binding for magit-status since
+;; I use it 8 million times a day
+(global-set-key (kbd "C-M-;") 'magit-status)
 
-  (dw/leader-key-def
-    "g"   '(:ignore t :which-key "git")
-    "gs"  'magit-status
-    "gd"  'magit-diff-unstaged
-    "gc"  'magit-branch-or-checkout
-    "gl"   '(:ignore t :which-key "log")
-    "glc" 'magit-log-current
-    "glf" 'magit-log-buffer-file
-    "gb"  'magit-branch
-    "gP"  'magit-push-current
-    "gp"  'magit-pull-branch
-    "gf"  'magit-fetch
-    "gF"  'magit-fetch-all
-    "gr"  'magit-rebase)
+(dw/leader-key-def
+  "g"   '(:ignore t :which-key "git")
+  "gs"  'magit-status
+  "gd"  'magit-diff-unstaged
+  "gc"  'magit-branch-or-checkout
+  "gl"   '(:ignore t :which-key "log")
+  "glc" 'magit-log-current
+  "glf" 'magit-log-buffer-file
+  "gb"  'magit-branch
+  "gP"  'magit-push-current
+  "gp"  'magit-pull-branch
+  "gf"  'magit-fetch
+  "gF"  'magit-fetch-all
+  "gr"  'magit-rebase)
 
-  ;; Enable to control pipenv in Emacs
-  (use-package pipenv
-    :hook (python-mode . pipenv-mode)
-    :init
-    (setq
-     pipenv-projectile-after-switch-function
-     #'pipenv-projectile-after-switch-extended))
+;; Enable to control pipenv in Emacs
+(use-package pipenv
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq
+   pipenv-projectile-after-switch-function
+   #'pipenv-projectile-after-switch-extended))
 
-  (use-package pyenv-mode
-    :hook (python-mode . pyenv-mode)) 
+(use-package pyenv-mode
+  :hook (python-mode . pyenv-mode)) 
 
 
-  (dw/leader-key-def
-    "p"  '(:ignore t :which-key "pyenv")
-    "pp" 'pyenv-mode
-    "ps" 'pyenv-mode-set
-    "pu" 'pyenv-mode-unset
-    "pr" 'run-python)
+(dw/leader-key-def
+  "p"  '(:ignore t :which-key "pyenv")
+  "pp" 'pyenv-mode
+  "ps" 'pyenv-mode-set
+  "pu" 'pyenv-mode-unset
+  "pr" 'run-python)
 
-  ;; auto activates the virtual environment if .python-version exists
-  ;;(use-package pyenv-mode-auto)
+;; auto activates the virtual environment if .python-version exists
+;;(use-package pyenv-mode-auto)
 
-  (use-package auto-virtualenvwrapper
-    :hook 
-    ((python-mode focus-in window-configuration-change) . auto-virtualenvwrapper-activate))
+(use-package auto-virtualenvwrapper
+  :hook 
+  ((python-mode focus-in window-configuration-change) . auto-virtualenvwrapper-activate))
   ;; (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate)
   ;; (add-hook 'window-configuration-change-hook #'auto-virtualenvwrapper-activate)
   ;; (add-hook 'focus-in-hook #'auto-virtualenvwrapper-activate))
 
-  (use-package quickrun
-    :after prog-mode
-    :config
-    ;; set python3 as default
-    (quickrun-add-command "python" 
-      '((:command . "python3") 
-	(:exec . "%c %s") 
-	(:tempfile . nil)) 
-      :default "python"))
+(use-package quickrun
+  :after prog-mode
+  :config
+  ;; set python3 as default
+  (quickrun-add-command "python" 
+    '((:command . "python3") 
+      (:exec . "%c %s") 
+      (:tempfile . nil)) 
+    :default "python"))
 
-  ;; Set up Keybindings
+;; Set up Keybindings
   (dw/leader-key-def
-    "r"  '(:ignore t :which-key "quickrun")
-    "rr" 'quickrun
-    "ra" 'quickrun-with-arg
-    "rs" 'quickrun-shell
-    "rc" 'quickrun-compile-only
-    "re" 'quickrun-region)
+  "r"  '(:ignore t :which-key "quickrun")
+  "rr" 'quickrun
+  "ra" 'quickrun-with-arg
+  "rs" 'quickrun-shell
+  "rc" 'quickrun-compile-only
+  "re" 'quickrun-region)
 
-  )
+(defun kill-all-buffer ()
+  "Kill all buffer."
+  (interactive)
+  (dolist (buffer (buffer-list)) (kill-buffer buffer)))
+
+(defun kill-other-buffer ()
+  "Close all of other buffer."
+  (interactive)
+  (dolist (buffer (delq (current-buffer) (buffer-list))) (kill-buffer buffer)))
+
+(defun kill-frame-buffers()
+  "Close the current frame and all buffers"
+  (interactive)
+  (kill-all-buffer)
+  (delete-frame))
+
+(global-set-key (kbd "C-q") 'kill-frame-buffers)

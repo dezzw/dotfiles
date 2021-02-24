@@ -1,0 +1,107 @@
+#+title: UI Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-ui.el
+
+* Hide Useless UI
+#+begin_src emacs-lisp
+(setq inhibit-startup-message t)
+
+(scroll-bar-mode -1)        ; Disable visible scrollbar
+(tool-bar-mode -1)          ; Disable the toolbar
+(tooltip-mode -1)           ; Disable tooltips
+(set-fringe-mode 10)
+
+(menu-bar-mode -1)            ; Disable the menu bar
+
+(setq ring-bell-function 'ignore)
+#+end_src
+
+* Frame Transparency and Maximize Windows
+#+begin_src emacs-lisp
+;; Set frame transparency and maximize windows by default.
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+
+* Line Number
+#+begin_src emacs-lisp
+;; Enalbe column number
+(column-number-mode)
+
+;; Enable liner number
+(global-display-line-numbers-mode t)
+
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+		vterm-mode-hook
+		shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+#+end_src
+
+* Fonts
+#+begin_src emacs-lisp
+(defun dw/set-font-faces ()
+  (message "Setting faces!")
+  ;; set font
+  (set-face-attribute 'default nil :font "Jetbrains Mono" :height 140)
+
+  ;; Set the fixed pitch face
+  (set-face-attribute 'fixed-pitch nil :font "Jetbrains Mono" :height 140)
+
+  ;; Set the variable pitch face
+  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 175 :weight 'regular))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (setq doom-modeline-icon t)
+                (with-selected-frame frame
+                  (dw/set-font-faces))))
+    (dw/set-font-faces))
+#+end_src
+
+* Icons Support 
+#+begin_src emacs-lisp
+(use-package all-the-icons)
+#+end_src
+
+* Themes
+#+begin_src emacs-lisp
+(use-package doom-themes
+  :config
+  (load-theme 'doom-one t))
+#+end_src
+
+* Modeline 
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-env-version t))
+#+end_src
+
+* Dashbard
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :init
+    ;; Set the title
+    (setq dashboard-banner-logo-title nil)
+    ;; Set the banner
+    (setq dashboard-startup-banner "~/.emacs.d/dashboard/banner.txt")
+    (setq dashboard-center-content t)
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-set-heading-icons t)
+    (setq dashboard-set-file-icons t)
+    (setq dashboard-set-init-info t))
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-ui)
+#+end_src

@@ -1,0 +1,118 @@
+#+title: Evil Mode Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-evil.el
+
+* Evil Mode
+#+begin_src emacs-lisp
+(defun dw/evil-hook ()
+  (dolist (mode '(custom-mode
+                  eshell-mode
+		  vterm-mode
+                  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
+
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-respect-visual-line-mode t)
+  :config
+  (add-hook 'evil-mode-hook 'dw/evil-hook)
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :custom
+  (evil-collection-outline-bind-tab-p nil)
+  :config
+  (evil-collection-init))
+#+end_src
+** Evil Cursor Changer (Terminal)
+#+begin_src emacs-lisp
+(unless (display-graphic-p)
+  (use-package evil-terminal-cursor-changer
+    :ensure t
+    :init
+    (evil-terminal-cursor-changer-activate)
+    :config
+     (setq evil-motion-state-cursor 'box)  ; █
+     (setq evil-visual-state-cursor 'box)  ; █
+     (setq evil-normal-state-cursor 'box)  ; █
+     (setq evil-insert-state-cursor 'bar)  ; ⎸
+     (setq evil-emacs-state-cursor  'hbar) ; _
+     )
+  )
+#+end_src
+
+
+
+* Evil Cursor Changer (Terminal)
+#+begin_src emacs-lisp
+(unless (display-graphic-p)
+  (use-package evil-terminal-cursor-changer
+    :ensure t
+    :init
+    (evil-terminal-cursor-changer-activate)
+    :config
+     (setq evil-motion-state-cursor 'box)  ; █
+     (setq evil-visual-state-cursor 'box)  ; █
+     (setq evil-normal-state-cursor 'box)  ; █
+     (setq evil-insert-state-cursor 'bar)  ; ⎸
+     (setq evil-emacs-state-cursor  'hbar) ; _
+     )
+  )
+#+end_src
+
+* Evil Surround
+- Add surrounding
+  - In visual-state with =S<textobject>= or =gS<textobject>=. Or in normal-state with =ys<textobject>= or =yS<textobject>=.
+- Change surroundinf
+  - =cs<old-textobject><new-textobject>=
+- Delete surrounding
+  - =ds<textobject>=
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :after evil
+  :config
+  (global-evil-surround-mode 1))
+#+end_src
+* Evil Escape
+#+begin_src emacs-lisp
+(use-package evil-escape
+  :after evil
+  :config
+  (evil-escape-mode t)
+  (setq-default evil-escape-key-sequence "jk"))
+#+end_src
+* COMMENT Evil Multiple Cursors
+#+begin_src emacs-lisp
+(use-package evil-mc
+  :config
+  (global-evil-mc-mode  1))
+
+
+(dw/leader-key-def
+  "m"  '(:ignore t :which-key "evil-mc")
+  "ma" 'evil-mc-make-all-cursors
+  "mu" 'evil-mc-undo-all-cursors
+  "mmn" 'evil-mc-make-and-goto-next-match
+  "mmp" 'evil-mc-make-and-goto-prev-match
+  "mkn" 'evil-mc-skip-and-goto-next-match
+  "mkp" 'evil-mc-skip-and-goto-prev-match
+  "mI" 'evil-mc-make-cursor-in-visual-selection-beg
+  "mA" 'evil-mc-make-cursor-in-visual-selection-end)
+#+end_src
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-evil)
+#+end_src

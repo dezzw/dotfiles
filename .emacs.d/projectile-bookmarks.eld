@@ -1,1 +1,1 @@
-("~/Documents/dotfiles/" "~/" "~/Desktop/UTM/2020S/CSC148H5S/" "~/Desktop/Test/" "~/Documents/unclealone.github.io/" "/usr/local/Homebrew/")
+("~/Desktop/UTM/2020S/CSC148H5S/" "~/Desktop/Test/" "~/Documents/dotfiles/" "//Users/desmond/Desktop/UTM/2020S/CSC148H5S/" "~/Documents/unclealone.github.io/" "~/" "/usr/local/Homebrew/")

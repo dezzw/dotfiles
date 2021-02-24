@@ -1,0 +1,40 @@
+#+title: Lsp Mode Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-lsp.el
+
+* LSP Mode
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode) . lsp)
+  :init
+  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t)
+  (setq lsp-headerline-breadcrumb-enable-symbol-numbers t)
+  (setq lsp-log-io t)
+  ;; (setq lsp-idle-delay 0.500)
+  (setq lsp-completion-provider :capf))
+
+(dw/leader-key-def
+  "l"  '(:ignore t :which-key "lsp")
+  "ld" 'xref-find-definitions
+  "lr" 'xref-find-references
+  "ln" 'lsp-ui-find-next-reference
+  "lp" 'lsp-ui-find-prev-reference
+  "ls" 'counsel-imenu
+  "le" 'lsp-ui-flycheck-list
+  "lS" 'lsp-ui-sideline-mode
+  "lX" 'lsp-execute-code-action)
+
+#+end_src
+
+* Lsp UI
+#+begin_src emacs-lisp
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-doc-position 'bottom))
+
+(use-package lsp-treemacs
+#+end_src

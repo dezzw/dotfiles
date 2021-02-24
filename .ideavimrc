@@ -1,0 +1,28 @@
+set multiple-cursors
+set surround
+set easymotion
+set commentary
+set ReplaceWithRegister
+set exchange
+set textobj-entire
+
+" Keep 5 lines below
+set so=5
+
+" Quit every mode
+" insert mode
+inoremap jk <Esc>
+inoremap <C-g> <Esc>
+" visual mode
+vnoremap jk <Esc>
+vnoremap <C-g> <Esc>
+
+" Move forward one character
+inoremap JK <ESC>la
+
+" Move to the start of line
+nnoremap H ^
+
+" Move to the end of line
+nnoremap L $
+

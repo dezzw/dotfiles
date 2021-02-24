@@ -73,7 +73,6 @@ plugins=(
 	zsh-autosuggestions
 	autojump
 	zsh-syntax-highlighting
-	zsh-vi-mode
 )
 
 
@@ -106,13 +105,16 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 #jdks
-export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.8.jdk/Contents/Home
-export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_261.jdk/Contents/Home
+export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.10.jdk/Contents/Home
+export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_281.jdk/Contents/Home
 
 export JAVA_HOME=$JAVA_8_HOME
 
 alias jdk8="export JAVA_HOME=$JAVA_8_HOME"
 alias jdk11="export JAVA_HOME=$JAVA_11_HOME"
+
+# Path to iCloud Drive
+alias iCloud="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/"
 
 # alias c as clear
 alias c="clear"
@@ -141,14 +143,24 @@ alias d="deactivate"
 # alias for emacs
 # alias emacs='emacs -nw'
 alias kille="emacsclient -e '(kill-emacs)'"
-alias ec='emacsclient -t -a ""'
-alias sec='sudo emacsclient -t -a ""'
+alias ec='emacsclient -c -a ""'
+alias sec='sudo emacsclient -a ""'
+
+# alias to delet extra latex output file
+alias clean_file="python ~/Documents/Projects/Python/Del_aditional_tex_file/main.py"
 
 # alias e as exit
 alias e="exit"
 
 # alias shell script
 alias update="~/Documents/dotfiles/update.sh"
+
+# Hide Desktop files
+alias hideDesktop="defaults write com.apple.finder CreateDesktop -bool FALSE; killall Finder"
+alias showDesktop="defaults write com.apple.finder CreateDesktop -bool true; killall Finder"
+
+alias setproxy="export http_proxy=http://127.0.0.1:1087; export https_proxy=$http_proxy; echo 'HTTP Proxy on';"
+alias unsetproxy="unset http_proxy; unset https_proxy; echo 'HTTP Proxy off';"
 
 # suggestted by homebrew
 export PATH="/usr/local/opt/ncurses/bin:$PATH"
@@ -172,10 +184,8 @@ export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
 # export LDFLAGS="-L/usr/local/opt/llvm/lib"
 # export CPPFLAGS="-I/usr/local/opt/llvm/include"
 
-# The path of R
-export PATH="/Library/Frameworks/R.framework/Resources:$PATH"
-
 # nvm
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
