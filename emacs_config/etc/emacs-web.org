@@ -1,0 +1,28 @@
+#+title: Web Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-web.el
+
+* HTML and CSS
+#+begin_src emacs-lisp
+(use-package web-mode
+  :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
+
+;; Impatient Html File
+(use-package impatient-mode)
+
+;; Preview the html file
+(use-package skewer-mode
+  :config
+  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'html-mode-hook 'skewer-html-mode)
+  (add-hook 'web-mode-hook 'skewer-html-mode))
+#+end_src
+* Emmet
+#+begin_src emacs-lisp
+  (use-package emmet-mode
+    :hook (web-mode . emmet-mode))
+#+end_src
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-web)
+#+end_src

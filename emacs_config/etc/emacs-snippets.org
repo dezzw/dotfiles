@@ -1,0 +1,29 @@
+#+title: Snippets Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-snippets.el
+
+* Snippets
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :after prog-mode
+  :hook (prog-mode . yas-minor-mode)
+  :config
+  (yas-reload-all))
+
+;; Snippets Collection
+(use-package yasnippet-snippets)
+
+;; auto insert
+(use-package auto-yasnippet)
+
+(dw/leader-key-def
+  "a"  '(:ignore t :which-key "auto-snippets")
+  "aw" 'aya-create
+  "ay" 'aya-expand
+  "ao" 'aya-open-line)
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-snippets)
+#+end_src
+

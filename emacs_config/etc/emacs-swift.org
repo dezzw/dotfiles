@@ -1,0 +1,18 @@
+#+title: Swift Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-swift.el
+
+* Swift
+#+begin_src emacs-lisp
+(use-package lsp-sourcekit
+  :after lsp-mode
+  :config
+  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
+
+(use-package swift-mode
+  :hook (swift-mode . (lambda () (lsp))))
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-swift)
+#+end_src

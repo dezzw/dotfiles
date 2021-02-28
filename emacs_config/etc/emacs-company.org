@@ -1,0 +1,46 @@
+#+title: Company Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-company.el
+
+* Company Mode
+#+begin_src emacs-lisp
+(use-package company 
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind 
+  (:map company-active-map
+        ("<tab>". company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-tooltip-align-annotations t)
+  ;; Number the candidates (use M-1, M-2 etc to select completions)
+  (company-show-numbers t)
+  ;; starts with 1 character
+  (company-minimum-prefix-length 1)
+  ;; Trigger completion immediately
+  (company-idle-delay 0)
+  :config
+  ;; (setq global-company-mode t)
+  ;;Completion based on AI
+  (use-package company-tabnine
+    :after lsp-mode
+    :config
+    (push '(company-capf :with company-tabnine :separate) company-backends))
+  )
+#+end_src
+
+* Company Box
+#+begin_src emacs-lisp
+;; Add UI for Company
+(use-package company-box
+  :hook (company-mode . company-box-mode)
+  :config
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-company)
+#+end_src
+

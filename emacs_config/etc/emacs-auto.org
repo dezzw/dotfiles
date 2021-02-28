@@ -1,7 +1,6 @@
 #+title: Auto Configuration Layer
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-auto.el
 
-
 * Stop Backup and "Auto-Save"
 Stop backup and auto-save (save as a backup) made by emacs
 #+begin_src emacs-lisp

@@ -37,7 +37,7 @@
   :config
   (evil-collection-init))
 #+end_src
-** Evil Cursor Changer (Terminal)
+* Evil Cursor Changer (Terminal)
 #+begin_src emacs-lisp
 (unless (display-graphic-p)
   (use-package evil-terminal-cursor-changer
@@ -53,7 +53,6 @@
      )
   )
 #+end_src
-
 
 
 * Evil Cursor Changer (Terminal)

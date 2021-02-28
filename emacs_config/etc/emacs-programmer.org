@@ -1,0 +1,56 @@
+#+title: Programmer Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-programmer.el
+
+* Smart Parens
+#+begin_src emacs-lisp
+(use-package smartparens
+  :after prog-mode
+  :hook (prog-mode . smartparens-mode))
+#+end_src
+* Rainbow Brackets 
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :after prog-mode
+  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+* Hungry Delete
+#+begin_src emacs-lisp
+(use-package hungry-delete
+  :hook (prog-mode . hungry-delete-mode))
+#+end_src
+* Indent Guide
+#+begin_src emacs-lisp
+(use-package indent-guide
+  :after prog-mode
+  :hook (prog-mode . indent-guide-mode))
+#+end_src
+* Format All
+#+begin_src emacs-lisp
+(use-package format-all
+  :after prog-mode)
+#+end_src
+* quickrun.el
+#+begin_src emacs-lisp
+  (use-package quickrun
+    :after prog-mode
+    :config
+    ;; set python3 as default
+    (quickrun-add-command "python" 
+      '((:command . "python3") 
+        (:exec . "%c %s") 
+        (:tempfile . nil)) 
+      :default "python"))
+
+  ;; Set up Keybindings
+    (dw/leader-key-def
+    "r"  '(:ignore t :which-key "quickrun")
+    "rr" 'quickrun
+    "ra" 'quickrun-with-arg
+    "rs" 'quickrun-shell
+    "rc" 'quickrun-compile-only
+    "re" 'quickrun-region)
+#+end_src
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-programmer)
+#+end_src
