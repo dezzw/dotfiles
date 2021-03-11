@@ -1,0 +1,166 @@
+{
+  "title": "Virtual Num Pad in DVP ",
+  "rules": [
+    {
+      "description": "g to 7 in dvp with fn",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "u" },
+          "to": [
+            {"key_code": "2", "modifiers": ["left_shift"] }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "c to 8 in dvp with fn",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "i" },
+          "to": [
+            {
+              "key_code": "hyphen",
+              "modifiers": ["left_shift"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+        "description": "r to 9 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "o" },
+            "to": [
+              {
+                "key_code": "6",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "description": "h to 4 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "j" },
+            "to": [
+              {
+                "key_code": "9",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "description": "t to 5 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "k" },
+            "to": [
+              {
+                "key_code": "3",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "description": "n to 6 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "l" },
+            "to": [
+              {
+                "key_code": "0",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "description": "m to 1 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "m" },
+            "to": [
+              {
+                "key_code": "5",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "description": "w to 2 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "comma" },
+            "to": [
+              {
+                "key_code": "8",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "description": "v to 3 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "period" },
+            "to": [
+              {
+                "key_code": "4",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "description": "space to 0 in dvp with fn",
+        "manipulators": [
+          {
+            "type": "basic",
+            "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "spacebar" },
+            "to": [
+              {
+                "key_code": "7",
+                "modifiers": ["left_shift"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+      "description": "still delete with fn in dvp",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": { "modifiers": { "mandatory": ["fn"] }, "key_code": "delete_or_backspace" },
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

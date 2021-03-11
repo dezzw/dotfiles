@@ -1,2 +1,0 @@
-;;; Generated package description from lsp-sourcekit.el  -*- no-byte-compile: t -*-
-(define-package "lsp-sourcekit" "20181216.1450" "sourcekit-lsp client for lsp-mode" '((emacs "25.1") (lsp-mode "5")) :commit "948c3a35fd05496a77af2d8935e754db112cb4c3" :authors '(("Daniel Martín")) :maintainer '("Daniel Martín") :keywords '("languages" "lsp" "swift" "objective-c" "c++") :url "https://github.com/emacs-lsp/lsp-sourcekit")

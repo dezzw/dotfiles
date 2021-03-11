@@ -1,0 +1,15 @@
+#+title: Flycheck Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-flycheck.el
+
+* Syntax checking with Flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :defer t
+    :hook (lsp-mode . flycheck-mode))
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-flycheck)
+#+end_src
+

@@ -1,0 +1,32 @@
+#+title: Latex Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-latex.el
+
+* latex-preview-pane
+Preview latex files as PDF in Emacs
+#+begin_src emacs-lisp
+(use-package latex-preview-pane
+  :ensure t)
+#+end_src
+* CDLaTex
+#+begin_src emacs-lisp
+(use-package cdlatex
+  :hook 
+  (org-mode . org-cdlatex-mode)
+  (LaTeX-mode . cdlatex-mode)
+  (latex-mode . cdlatex-mode)
+  )
+#+end_src
+* Lsp-Latex
+Need to download language server
+#+begin_src emacs-lisp
+(use-package lsp-latex
+  :config
+  (add-hook 'tex-mode-hook 'lsp)
+  (add-hook 'latex-mode-hook 'lsp)
+  (add-hook 'Latex-mode-hook 'lsp)
+  (add-hook 'TeX-latex-mode-hook 'lsp))
+#+end_src
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-latex)
+#+end_src

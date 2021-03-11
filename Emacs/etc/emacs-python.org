@@ -1,0 +1,58 @@
+#+title: Python Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-python.el
+
+* Python
+#+begin_src emacs-lisp
+(use-package lsp-pyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp)))) 
+#+end_src
+* pipenv
+#+begin_src emacs-lisp
+;; Enable to control pipenv in Emacs
+(use-package pipenv
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq
+   pipenv-projectile-after-switch-function
+   #'pipenv-projectile-after-switch-extended))
+#+end_src
+* pyenv
+#+begin_src emacs-lisp
+(use-package pyenv-mode
+  :hook (python-mode . pyenv-mode)) 
+
+
+(dw/leader-key-def
+  "p"  '(:ignore t :which-key "pyenv")
+  "pp" 'pyenv-mode
+  "ps" 'pyenv-mode-set
+  "pu" 'pyenv-mode-unset
+  "pr" 'run-python)
+
+;; auto activates the virtual environment if .python-version exists
+;;(use-package pyenv-mode-auto)
+#+end_src
+* COMMENT shim
+#+begin_src emacs-lisp
+(use-package shim
+  :load-path "~/.emacs.d/site-packages/shim/shim.el"
+  :hook (python-mode . shim-mode)
+  :config
+  (shim-init-python))
+#+end_src
+* auto-virtualenvwrapper
+#+begin_src emacs-lisp
+(use-package auto-virtualenvwrapper
+  :hook 
+  ((python-mode focus-in window-configuration-change) . auto-virtualenvwrapper-activate))
+  ;; (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate)
+  ;; (add-hook 'window-configuration-change-hook #'auto-virtualenvwrapper-activate)
+  ;; (add-hook 'focus-in-hook #'auto-virtualenvwrapper-activate))
+#+end_src
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-python)
+#+end_src
+

@@ -1,0 +1,47 @@
+Info 0    [23:54:32.230] Starting TS Server
+Info 1    [23:54:32.235] Version: 4.1.3
+Info 2    [23:54:32.235] Arguments: /Users/desmond/.nvm/versions/node/v15.7.0/bin/node /Users/desmond/.nvm/versions/node/v15.7.0/bin/tsserver --logFile /Users/desmond/Documents/dotfiles/.log/tsserver.log --logVerbosity info --cancellationPipeName /private/var/folders/c7/jf_ztd597dx4dnzb6bfby5p80000gn/T/9c51f6868fef72bcf6d42ac1e78084b0/tscancellation*
+Info 3    [23:54:32.235] Platform: darwin NodeVersion: 15 CaseSensitive: false
+Info 4    [23:54:32.235] ServerMode: undefined syntaxOnly: false hasUnknownServerMode: undefined
+Info 5    [23:54:33.371] Search path: /Users/desmond/.config/karabiner
+Info 6    [23:54:33.372] For info: /Users/desmond/.config/karabiner/karabiner.json :: No config files found.
+Info 7    [23:54:33.378] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 8    [23:54:33.988] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 1 structureChanged: true Elapsed: 609.9975010000635ms
+Info 9    [23:54:33.988] Project '/dev/null/inferredProject1*' (Inferred)
+Info 10   [23:54:33.989] 	Files (19)
+
+Info 11   [23:54:33.989] -----------------------------------------------
+Info 12   [23:54:34.752] Before ensureProjectForOpenFiles:
+Info 13   [23:54:34.753] After ensureProjectForOpenFiles:
+Info 14   [23:54:34.753] got projects updated in background, updating diagnostics for /Users/desmond/.config/karabiner/karabiner.json
+Info 15   [23:54:34.858] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 16   [23:54:34.859] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 2 structureChanged: false Elapsed: 1.7197490001562983ms
+Info 17   [23:54:37.345] Before ensureProjectForOpenFiles:
+Info 18   [23:54:37.345] After ensureProjectForOpenFiles:
+Info 19   [23:54:37.345] got projects updated in background, updating diagnostics for /Users/desmond/.config/karabiner/karabiner.json
+Info 20   [23:55:04.568] Search path: /Users/desmond/.config/karabiner/assets/complex_modifications
+Info 21   [23:55:04.568] For info: /Users/desmond/.config/karabiner/assets/complex_modifications/1615436761.json :: No config files found.
+Info 22   [23:55:04.570] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 23   [23:55:04.581] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 1 structureChanged: true Elapsed: 11.425451999995857ms
+Info 24   [23:55:04.581] Project '/dev/null/inferredProject2*' (Inferred)
+Info 25   [23:55:04.581] 	Files (19)
+
+Info 26   [23:55:04.581] -----------------------------------------------
+Info 27   [23:55:04.772] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 28   [23:55:04.772] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 2 structureChanged: false Elapsed: 0.35810500010848045ms
+Info 29   [23:55:07.187] Before ensureProjectForOpenFiles:
+Info 30   [23:55:07.187] After ensureProjectForOpenFiles:
+Info 31   [23:55:07.187] got projects updated in background, updating diagnostics for /Users/desmond/.config/karabiner/karabiner.json,/Users/desmond/.config/karabiner/assets/complex_modifications/1615436761.json
+Info 32   [23:55:11.723] Search path: /Users/desmond/.config/karabiner/assets/complex_modifications
+Info 33   [23:55:11.723] For info: /Users/desmond/.config/karabiner/assets/complex_modifications/1615437505.json :: No config files found.
+Info 34   [23:55:11.724] Starting updateGraphWorker: Project: /dev/null/inferredProject3*
+Info 35   [23:55:11.734] Finishing updateGraphWorker: Project: /dev/null/inferredProject3* Version: 1 structureChanged: true Elapsed: 10.070928999921307ms
+Info 36   [23:55:11.734] Project '/dev/null/inferredProject3*' (Inferred)
+Info 37   [23:55:11.734] 	Files (19)
+
+Info 38   [23:55:11.734] -----------------------------------------------
+Info 39   [23:55:11.930] Starting updateGraphWorker: Project: /dev/null/inferredProject3*
+Info 40   [23:55:11.931] Finishing updateGraphWorker: Project: /dev/null/inferredProject3* Version: 2 structureChanged: false Elapsed: 0.5433959998190403ms
+Info 41   [23:55:14.341] Before ensureProjectForOpenFiles:
+Info 42   [23:55:14.341] After ensureProjectForOpenFiles:
+Info 43   [23:55:14.341] got projects updated in background, updating diagnostics for /Users/desmond/.config/karabiner/karabiner.json,/Users/desmond/.config/karabiner/assets/complex_modifications/1615436761.json,/Users/desmond/.config/karabiner/assets/complex_modifications/1615437505.json

@@ -1,0 +1,12 @@
+#+title: R Layer
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/etc/init-r.el
+
+* R
+#+begin_src emacs-lisp
+(use-package ess)
+#+end_src
+
+* Provide Layer
+#+begin_src emacs-lisp
+(provide 'init-r)
+#+end_src

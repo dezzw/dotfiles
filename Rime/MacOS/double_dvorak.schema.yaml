@@ -1,0 +1,156 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: double_dvorak
+  name: Dvorak双拼
+  version: "0.5"
+  author:
+    - Desmond Wang
+  description: |
+    適用於德沃夏克佈局的雙拼輸入法
+  dependencies:
+    - stroke
+
+switches:
+  - name: full_shape
+    reset: 0
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+engine:
+  processors:
+    - recognizer
+    - key_binder
+    - speller
+    - selector
+    - punctuator
+    - navigator
+    - express_editor
+  segmentors:
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - script_translator
+
+
+speller:
+  alphabet: 'zyxwvutsrqponmlkjihgfedcba0987654321:,.!()/-=_+'
+  initials: 'zyxwvutsrqponmlkjihgfedcba0987654321'
+  delimiter: " '"
+  algebra:
+    - erase/^xx$/
+    - derive/^([jqxy])u$/$1v/
+    - derive/^([aoe])([ioun])$/$1$1$2/
+    - xform/^([aoe])(ng)?$/$1$1$2/
+    - xform/iu$/L/
+    - xform/(.)ei$/$1J/
+    - xform/uan$/F/
+    - xform/[uv]e$/W/
+    - xform/un$/Z/
+    - xform/^sh/U/
+    - xform/^ch/I/
+    - xform/^zh/V/
+    - xform/uo$/O/
+    - xform/ie$/S/
+    - xform/ing$|uai$/N/
+    - xform/(.)ai$/$1P/
+    - xform/(.)en$/$1X/
+    - xform/(.)eng$/$1B/
+    - xform/[iu]ang$/G/
+    - xform/(.)ang$/$1T/
+    - xform/i?ong$/K/
+    - xform/ian$/Q/
+    - xform/(.)an$/$1Y/
+    - xform/(.)ou$/$1D/
+    - xform/[iu]a$/C/
+    - xform/iao$/R/
+    - xform/(.)ao$/$1H/
+    - xform/ui$/V/
+    - xform/in$/M/
+    - xlit/QWRTYUIOPSDFGHJKLZXCVBNM/qwrtyuiopsdfghjklzxcvbnm/
+
+translator:
+  dictionary: extended
+  prism: double_dvorak
+  preedit_format:
+    - xform/([jqxnl])g/$1iang/
+    - xform/(?![jqxnl])(\w)g/$1uang/
+    - xform/([gkhvuirzcs])n/$1uai/
+    - xform/(?![ae])(\w)n(?!g)/$1ing/
+    - xform/([bpmfdtnljqx])r/$1iao/
+    - xform/(\w)l/$1iu/
+    - xform/(\w)j/$1ei/
+    - xform/([dtnlgkhjqxyvuirzcs])f/$1uan/
+    - xform/(\w)w/$1ve/
+    - xform/(\w)z/$1un/
+    - xform/([dtnlgkhvuirzcs])o/$1uo/
+    - xform/(\w)s/$1ie/
+    - xform/([jqx])k/$1iong/
+    - xform/(\w)p/$1ai/
+    - xform/(\w)d/$1ou/
+    - xform/([gkhvuirzcs])c/$1ua/
+    - xform/(\w)c/$1ia/
+    - xform/(\w)h/$1ao/
+    - xform/([dtgkhvuirzcs])v/$1ui/
+    - xform/(\w)b/$1eng/
+    - xform/(\w)q/$1ian/
+    - xform/(\w)k/$1ong/
+    - xform/(\w)t/$1ang/
+    - xform/(\w)y/$1an/
+    - xform/(?![ae])(\w)x/$1en/
+    - xform/(\w)m/$1in/
+    - xform/([aoe])\1(\w)/$1$2/
+    - "xform/(^|[ '])v/$1zh/"
+    - "xform/(^|[ '])i/$1ch/"
+    - "xform/(^|[ '])u/$1sh/"
+    - xform/([jqxy])v/$1u/
+    - xform/([nl])v/$1ü/
+  contextual_suggestions: true
+  max_homophones: 7
+
+grammar:
+  language: zh-hans-t-essay-bgw
+
+punctuator:
+  import_preset: default
+  symbols:
+    "bq": [😂️, 😅️, 🎉, 🐂, 😱️, 👌, 😇️, 🙃️, 🤔️, 💊️, 💯️, 👍️, 🙈️, 💩️, 😈️ ]
+    "kb": [⌘, ⌥, ⇧, ⌃, ⎋, ⇪, , ⌫, ⌦, ↩︎, ⏎, ↑, ↓, ←, →, ↖, ↘, ⇟, ⇞]
+  half_shape:
+    "\\" : "、"
+    "#" : "#"
+    "@" : "@"
+    "~": "~"
+    "/": "/"
+    "'": {pair: ["「", "」"]}
+    "[": "["
+    "]": "]"
+    "{": "{"
+    "}": "}"
+    "*": "*"
+    "%": "%"
+    "<" : ["<", "《"]
+    ">" : [">", "》"]
+
+recognizer:
+  import_preset: default
+  patterns:
+    punct: "^(bq|kb)$"
+
+menu:
+  page_size: 2
+  alternative_select_keys: "';"
+  page_down_cycle: true
+
+key_binder:
+  bindings:
+    - { when: composing, accept: Tab,        send: Page_Down }
+    - { when: composing, accept: Shift+Tab,  send: Page_Up }
+    - { when: composing, accept: Control+k,  send: Escape }
+    - { when: composing, accept: Control+p,  send: Page_Up }
+    - { when: composing, accept: Control+n,  send: Page_Down }

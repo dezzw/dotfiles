@@ -1,2 +1,0 @@
-;;; Generated package description from org-latex-impatient.el  -*- no-byte-compile: t -*-
-(define-package "org-latex-impatient" "20201123.845" "Preview org-latex Fragments Instantly via MathJax" '((emacs "26") (s "1.8.0") (posframe "0.8.0") (org "9.3") (dash "2.17.0")) :commit "d8be05fd6857c72a1766e3fa9dafa1602ccf88e3" :authors '(("Sheng Yang" . "styang@fastmail.com")) :maintainer '("Sheng Yang" . "styang@fastmail.com") :keywords '("tex" "tools") :url "https://github.com/yangsheng6810/org-latex-instant-preview")

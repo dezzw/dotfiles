@@ -129,8 +129,8 @@ alias ls="ls -a -l"
 # alias for shorter git
 alias ga="git add ."
 alias gc="git commit -m"
-alias gpull="git pull origin"
-alias gpush="git push origin"
+alias gpl="git pull origin"
+alias gps="git push origin"
 
 # alias v/vim as nivm
 alias vim="nvim"
@@ -145,6 +145,7 @@ alias d="deactivate"
 alias kille="emacsclient -e '(kill-emacs)'"
 alias ec='emacsclient -c -a ""'
 alias sec='sudo emacsclient -a ""'
+alias dump="~/Documents/dotfiles/dump.sh"
 
 # alias to delet extra latex output file
 alias clean_file="python ~/Documents/Projects/Python/Del_aditional_tex_file/main.py"
@@ -180,12 +181,21 @@ eval "$(pyenv virtualenv-init -)"
 export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib"
 export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
 
-# llvm for cpp program
-# export LDFLAGS="-L/usr/local/opt/llvm/lib"
-# export CPPFLAGS="-I/usr/local/opt/llvm/include"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
+# setting for vterm in emacs
+vterm_printf(){
+    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
+        # Tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+}

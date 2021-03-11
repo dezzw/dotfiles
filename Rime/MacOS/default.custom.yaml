@@ -1,0 +1,7 @@
+patch:
+  schema_list:
+    - schema: double_dvorak
+    - schema: placeless_flypy
+  switcher/hotkeys:
+    - "Control+grave"
+    - "F4"
