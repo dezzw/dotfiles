@@ -1,7 +1,10 @@
-log/*
-.Ds_Store
-*/.Ds_Store
+.log/*
+
+.DS_Store
+*/.DS_Store
+
 DMGs/*
+
 Emacs/emacs-configs/doom-emacs/*
 Emacs/emacs-configs/my-emacs/.cache/*
 Emacs/emacs-configs/my-emacs/.extension/*
