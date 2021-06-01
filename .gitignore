@@ -1,0 +1,9 @@
+log/*
+.Ds_Store
+*/.Ds_Store
+DMGs/*
+Emacs/emacs-configs/doom-emacs/*
+Emacs/emacs-configs/my-emacs/.cache/*
+Emacs/emacs-configs/my-emacs/.extension/*
+Emacs/emacs-configs/my-emacs/eln-cache/*
+Emacs/emacs-configs/my-emacs/straight/*

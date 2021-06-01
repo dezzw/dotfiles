@@ -9,6 +9,11 @@ set textobj-entire
 " Keep 5 lines below
 set so=5
 
+" Change the key to move
+nnoremap <silent> t l
+nnoremap <silent> n j
+nnoremap <silent> p k
+
 " Quit every mode
 " insert mode
 inoremap jk <Esc>
