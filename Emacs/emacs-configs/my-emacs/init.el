@@ -47,7 +47,7 @@
   )
 
 ;; Add my library path to load-path
-(push "~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 
@@ -155,7 +155,7 @@
   ;; Set the title
   ;; (setq dashboard-banner-logo-title "Code Better, Live Longer!")
   ;; Set the banner
-  (setq dashboard-startup-banner "~/Documents/dotfiles/Emacs/dashboard/banner.txt")
+  (setq dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
   (setq dashboard-center-content t)
   :config
   (dashboard-setup-startup-hook)
@@ -647,7 +647,7 @@
   :hook (prog-mode . yas-minor-mode)
   :config
   (setq yas-snippet-dirs
-    '("~/Documents/dotfiles/Emacs/snippets"))
+    '("~/.dotfiles/Emacs/snippets"))
   (yas-reload-all))
 
 ;; Snippets Collection

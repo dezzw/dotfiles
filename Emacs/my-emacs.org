@@ -1,11 +1,11 @@
 #+TITLE: Emacs Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle  ~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/init.el :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/my-emacs/init.el :mkdirp yes
 * Graphic Only Plugins Setting
 #+begin_src emacs-lisp
 (setq graphic-only-plugins-setting ())
 #+end_src
 * Some improve in early-init
-#+begin_src emacs-lisp :tangle ~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
 (setq gc-cons-threshold most-positive-fixnum)
 
 (setq load-prefer-newer noninteractive)
@@ -95,7 +95,7 @@
 ** Update Load Path
 #+begin_src emacs-lisp
 ;; Add my library path to load-path
-(push "~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 #+end_src
@@ -141,7 +141,7 @@
  #+end_src
 * UI Setup
 ** Hide Useless UI
- #+begin_src emacs-lisp :tangle ~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
  (setq inhibit-startup-message t)
 
  (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -149,13 +149,13 @@
  (tooltip-mode -1)           ; Disable tooltips
  (set-fringe-mode 10)
 
- (menu-bar-mode -1)            ; Disable the menu bar
+ (menu-bar-mode -1)          ; Disable the menu bar
 
 
  (setq ring-bell-function 'ignore)
  #+end_src
 ** Frame Transparency and Maximize Windows
- #+begin_src emacs-lisp :tangle ~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
  ;; (push '(;; Set frame transparency and maximize windows by default.
          (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
          (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
@@ -258,7 +258,7 @@
    ;; Set the title
    ;; (setq dashboard-banner-logo-title "Code Better, Live Longer!")
    ;; Set the banner
-   (setq dashboard-startup-banner "~/Documents/dotfiles/Emacs/dashboard/banner.txt")
+   (setq dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
    (setq dashboard-center-content t)
    :config
    (dashboard-setup-startup-hook)
@@ -921,7 +921,7 @@
   #+end_src
 ** Meow
 *** Dvorak Simplified Layout Setting
-#+begin_src emacs-lisp :tangle ~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvorak.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvorak.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (meow-leader-define-key
@@ -1003,7 +1003,7 @@
 (provide 'init-meow-dvorak)
 #+end_src
 *** Dvorak Programmer Layout Setting
-#+begin_src emacs-lisp :tangle ~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvp.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvp.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvp)
   (meow-normal-define-key
@@ -1084,7 +1084,7 @@
 (provide 'init-meow-dvp)
 #+end_src
 *** Qwerty Layout Setting
-#+begin_src emacs-lisp :tangle ~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-qwerty.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-qwerty.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-overwrite-define-key
@@ -1282,7 +1282,7 @@ This program can be used *WITHOUT* evil-mode!
 (use-package rime
   :custom
   (default-input-method "rime")
-  (rime-librime-root "~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/librime/dist")
+  (rime-librime-root "~/.dotfiles/Emacs/emacs-configs/my-emacs/librime/dist")
   )
 #+end_src
 * Company
@@ -1387,7 +1387,7 @@ This program can be used *WITHOUT* evil-mode!
     :hook (prog-mode . yas-minor-mode)
     :config
     (setq yas-snippet-dirs
-      '("~/Documents/dotfiles/Emacs/snippets"))
+      '("~/.dotfiles/Emacs/snippets"))
     (yas-reload-all))
   
   ;; Snippets Collection
