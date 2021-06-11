@@ -1,5 +1,3 @@
-(setq graphic-only-plugins-setting ())
-
 (setq comp-async-jobs-number 7 
        comp-deferred-compilation t
        ;; comp-deferred-compilation-black-list '()
@@ -47,7 +45,7 @@
   )
 
 ;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/daemon-emacs/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 
@@ -70,7 +68,6 @@
                                               'run-at-end 'only-in-org-mode)))
 
 (use-package super-save
-  :defer 1
   :diminish super-save-mode
   :config
   (super-save-mode +1)
@@ -101,7 +98,7 @@
   ;; Set the variable pitch face
   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 140 :weight 'regular))
 
-(push '(use-package ligature
+(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
 	 :config
 	 ;; Enable the "www" ligature in every possible major mode
@@ -125,7 +122,7 @@
 					      "\\\\" "://"))
 	 ;; Enables ligature checks globally in all buffers. You can also do it
 	 ;; per mode with `ligature-mode'.
-	 (global-ligature-mode t)) graphic-only-plugins-setting)
+	 (global-ligature-mode t))
 
 (use-package all-the-icons
   :custom
@@ -133,22 +130,16 @@
 
 (use-package doom-themes)
 
-(if (not (display-graphic-p))
-    (load-theme 'doom-one t))
-
-(if (display-graphic-p)
-    (defun dw/apply-theme (appearance)
-      "Load theme, taking current system APPEARANCE into consideration."
-      (mapc #'disable-theme custom-enabled-themes)
-      (pcase appearance
-	('light (load-theme 'doom-solarized-light t))
-	('dark (load-theme 'doom-one t))))
-  )
+(defun dw/apply-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme 'doom-solarized-light t))
+    ('dark (load-theme 'doom-one t))))
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-window-width-limit fill-column) 
   (setq doom-modeline-env-version t))
 
 (use-package dashboard
@@ -179,16 +170,16 @@
   (setq dashboard-set-init-info t)
   )
 
-(push '(use-package nyan-mode
+(use-package nyan-mode
 	 :config
 	 (setq nyan-mode t)
 	 :custom
 	 (nyan-animate-nyancat t)
 	 (nyan-wavy-trail t)
-	 ) graphic-only-plugins-setting)
+	 )
 
 (use-package hl-todo
-  :defer t
+  :demand t
   :hook ((org-mode prog-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
@@ -200,6 +191,7 @@
   )
 
 (use-package highlight-numbers
+  :demand t
   :hook (prog-mode . highlight-numbers-mode))
 
 (if (daemonp)
@@ -212,6 +204,7 @@
                 (with-selected-frame frame
                   (dw/set-font-faces))
 		(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+		(setq doom-modeline-window-width-limit fill-column)
 		))
   ;; (load-theme 'doom-one t)
   ;; (lab-themes-load-style 'dark)
@@ -219,7 +212,16 @@
   (dw/set-font-faces)
   )
 
+(use-package midnight
+  :demand t
+  :config
+  (setq midnight-mode 1)
+  (midnight-delay-set 'midnight-delay "4:30am")
+  ;; (setq midnight-period 7200)
+  )
+
 (use-package ace-window
+  :demand t
   :bind ("C-x o" . ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
@@ -233,6 +235,7 @@
 (use-package dired
   :ensure nil
   :straight nil
+  :demand t
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   ;;:config
@@ -242,12 +245,15 @@
   )
 
 (use-package dired-single
+  :demand t
   :commands (dired dired-jump))
 
 (use-package all-the-icons-dired
+  :demand t
   :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package dired-hide-dotfiles
+  :demand t
   :hook (dired-mode . dired-hide-dotfiles-mode)
   ;;:config
   ;;(evil-collection-define-key 'normal 'dired-mode-map
@@ -255,8 +261,21 @@
   )
 
 (use-package diredfl
+  :demand t
   :hook (dired-mode . diredfl-mode)
   )
+
+(use-package general
+  :config
+  (general-evil-setup t)
+
+  (general-create-definer dw/leader-key-def
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (general-create-definer dw/ctrl-c-keys
+    :prefix "C-c"))
 
 (use-package which-key
   :init (which-key-mode)
@@ -265,6 +284,7 @@
   (setq which-key-idle-delay 0.3))
 
 (use-package projectile
+  :demand t
   :diminish projectile-mode
   :config (projectile-mode)
   :custom ((projectile-completion-system 'ivy))
@@ -281,6 +301,7 @@
 
 (use-package ivy
   :diminish
+  :demand t
   :bind (("C-s" . swiper)
          :map ivy-minibuffer-map
          ("C-l" . ivy-alt-done)
@@ -297,6 +318,7 @@
   (ivy-mode 1))
 
 (use-package counsel
+  :demand t
   :bind (("M-x" . counsel-M-x)
          ("C-x b" . counsel-switch-buffer)
          ("C-x C-f" . counsel-find-file)
@@ -318,6 +340,7 @@
   (ivy-posframe-mode 1))
 
 (use-package helpful
+  :demand t
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
   (counsel-describe-function-function #'helpful-callable)
@@ -334,6 +357,7 @@
   (visual-line-mode 1))
 
 (use-package org
+  :demand t
   :hook (org-mode . dw/org-mode-setup)
   :config
   (setq org-html-head-include-default-style nil)
@@ -463,65 +487,85 @@
   :hook (org-mode . dw/org-mode-visual-fill))
 
 (use-package org-download
-	  :ensure t 
-	  ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
-	  :bind ("C-S-y" . org-download-screenshot)
-	  :config
-	  (require 'org-download)
-	  ;; Drag and drop to Dired
-	  (add-hook 'dired-mode-hook 'org-download-enable))
+          :ensure t
+          :demand t
+          ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
+          :bind ("C-S-y" . org-download-screenshot)
+          :config
+          (require 'org-download)
+          ;; Drag and drop to Dired
+          (add-hook 'dired-mode-hook 'org-download-enable))
 
 (use-package valign
   :hook (org-mode . valign-mode))
 
 (use-package markdown-mode
  :ensure t
+ :demand t
  :mode ("README\\.md\\'" . gfm-mode)
  :init (setq markdown-command "multimarkdown"))
 
 (use-package edit-indirect
   :after markdown-mode)
 
-;; For DVP
-;; (require 'init-meow-dvp)
+(defun dw/evil-hook ()
+  (dolist (mode '(custom-mode
+                  eshell-mode
+		  vterm-mode
+                  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
 
-;; For Qwerty
-(require 'init-meow-qwerty)
-
-(use-package meow
-  :demand t
+(use-package evil
   :init
-  (meow-global-mode 1)
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-respect-visual-line-mode t)
   :config
-  ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
-  (meow-setup)
-  ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
-  (meow-setup-line-number)
-  ;;(add-to-list 'meow-normal-state-mode-list 'dashboard-mode)
-  ;; (setq meow-replace-state-name-list
-  ;; '((normal . "Ꮚ•ꈊ•Ꮚ")
-  ;;   (insert . "Ꮚ`ꈊ´Ꮚ")
-  ;;   (keypad . "Ꮚ'ꈊ'Ꮚ")
-  ;;   (motion . "Ꮚ-ꈊ-Ꮚ")))
-  :bind ("C-g" . meow-insert-exit)
+  (add-hook 'evil-mode-hook 'dw/evil-hook)
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :custom
+  (evil-collection-outline-bind-tab-p nil)
+  :config
+  (evil-collection-init))
+
+(unless (display-graphic-p)
+  (use-package evil-terminal-cursor-changer
+    :ensure t
+    :init
+    (evil-terminal-cursor-changer-activate)
+    :config
+     (setq evil-motion-state-cursor 'box)  ; █
+     (setq evil-visual-state-cursor 'box)  ; █
+     (setq evil-normal-state-cursor 'box)  ; █
+     (setq evil-insert-state-cursor 'bar)  ; ⎸
+     (setq evil-emacs-state-cursor  'hbar) ; _
+     )
   )
 
-(meow-leader-define-key
- '("f" . find-file)
- '("b" . counsel-switch-buffer)
- '("t" . vterm)
- '("qr" . quickrun)
- '("oo" . ace-window)
- '("od" . ace-delete-window)
- '("dd" . dap-debug)
- '("aa" . org-agenda)
- '("al" . org-agenda-list)
- '("ac" . org-capture)
-)
+(use-package evil-surround
+  :after evil
+  :config
+  (global-evil-surround-mode 1))
 
-(meow-motion-overwrite-define-key
- '("h" . dired-single-up-directory)
- '("l" . dired-single-buffer))
+(use-package evil-escape
+  :after evil
+  :config
+  (evil-escape-mode t)
+  (setq-default evil-escape-key-sequence "jk"))
 
 ;; set delete selection mode
 (delete-selection-mode t)
@@ -531,6 +575,7 @@
 
 (use-package color-rg
   :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
+  :demand t
   :commands (color-rg-search-input
              color-rg-search-symbol
              color-rg-search-input-in-project
@@ -547,6 +592,7 @@
 ;;   "cit" 'color-rg-search-project-with-type)
 
 (use-package multiple-cursors
+  :demand t
   :commands (mc/edit-lines mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this)
   :bind
   (("C-S-c C-S-c" . 'mc/edit-lines)
@@ -558,7 +604,7 @@
   :after lsp)
 
 (use-package evil-nerd-commenter
-  :defer t
+  :demand t
   :bind
   ("M-;" . 'evilnc-comment-or-uncomment-lines)
   ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
@@ -568,7 +614,8 @@
   ;; (evilnc-default-hotkeys t)
   )
 
-(use-package company 
+(use-package company
+  :demand t
   :hook (lsp-mode . company-mode)
   ;; :bind 
   ;; (:map company-active-map
@@ -605,21 +652,27 @@
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 (use-package smartparens
+  :demand t
   :hook (prog-mode . smartparens-mode))
 
 (use-package rainbow-delimiters
+  :demand t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package hungry-delete
+  :demand t
   :hook (prog-mode . hungry-delete-mode))
 
 (use-package indent-guide
+  :demand t
   :hook (prog-mode . indent-guide-mode))
 
 (use-package format-all
+  :demand t
   :commands (format-all-ensure-formatter format-all-buffer))
 
 (use-package quickrun
+  :demand t
   :commands (quickrun)
   :config
   ;; set python3 as default
@@ -664,6 +717,7 @@
 ;;   "ao" 'aya-open-line)
 
 (use-package lsp-mode
+  :demand t
   :commands (lsp lsp-deferred)
   :hook ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
   :init
@@ -703,7 +757,6 @@
   :commands lsp-treemacs-errors-list)
 
 (use-package lsp-pyright
-  :defer t
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp))))
@@ -724,6 +777,7 @@
 ;;   "pr" 'run-python)
 
 (use-package typescript-mode
+  :demand t
   :mode "\\.ts\\'"
   :config
   (setq typescript-indent-level 2))
@@ -734,6 +788,7 @@
   (setq-default tab-width 2))
 
 (use-package js2-mode
+  :demand t
   :mode "\\.jsx?\\'")
 
 ;; Don't use built-in syntax checking
@@ -744,12 +799,14 @@
 (add-hook 'json-mode-hook #'dw/set-js-indentation)
 
 (use-package prettier-js
+  :demand t
   :hook ((js2-mode . prettier-js-mode)
          (typescript-mode . prettier-js-mode))
   :config
   (setq prettier-js-show-errors nil))
 
 (use-package coffee-mode
+  :demand t
   :mode "\\.coffee\\'"
   :config
   ;; automatically clean up bad whitespace
@@ -774,6 +831,7 @@
   )
 
 (use-package web-mode
+  :demand t
   :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
 
 ;; Impatient Html File
@@ -794,11 +852,13 @@
 
 (use-package latex-preview-pane
   :ensure t
+  :demand t
   :after (tex-mode Latex-mode latex-mode TeX-latex-mode))
 
 (straight-use-package 'auctex)
 
 (use-package cdlatex
+  :demand t
   :hook 
   (org-mode . org-cdlatex-mode)
   (LaTeX-mode . cdlatex-mode)
@@ -806,22 +866,27 @@
   )
 
 (use-package lsp-sourcekit
+  :demand t
   :after swift-mode
   :config
   (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 
 (use-package swift-mode
+  :demand t
   :mode "\\.swift\\'"
   :hook (swift-mode . (lambda () (lsp))))
 
 (use-package yaml-mode
+  :demand t
   :mode "\\.yaml\\'")
 
 (use-package json-mode
+  :demand t
   :mode "\\.json\\'")
 
 ;; dap debug tools
 (use-package dap-mode
+  :demand t
   :commands dap-debug 
   :config
   ;; Set up Node debugging
@@ -831,51 +896,8 @@
   (require 'dap-python)
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
-(use-package term
-  :commands term
-  :config
-  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
-  ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
-
-  ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
-  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
-  )
-
-(use-package eterm-256color
-  :hook (term-mode . eterm-256color-mode))
-
-(defun dw/configure-eshell ()
-  ;; Save command history when commands are entered
-  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-
-  ;; Truncate buffer for performance
-  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-
-  ;; Bind some useful keys for evil-mode
-  ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-  ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-  ;; (evil-normalize-keymaps)
-
-  (setq eshell-history-size         10000
-        eshell-buffer-maximum-lines 10000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t))
-
-(use-package eshell-git-prompt
-  :after eshell)
-
-(use-package eshell
-  :commands eshell
-  :hook (eshell-first-time-mode . dw/configure-eshell)
-  :config
-
-  (with-eval-after-load 'esh-opt
-    (setq eshell-destroy-buffer-when-process-dies t)
-    (setq eshell-visual-commands '("zsh" "vim")))
-
-  (eshell-git-prompt-use-theme 'powerline))
-
 (use-package vterm
+  :demand t
   :commands vterm
   :config
   ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
@@ -883,6 +905,7 @@
   (setq vterm-max-scrollback 10000))
 
 (use-package magit
+  :demand t
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
@@ -892,6 +915,7 @@
 (global-set-key (kbd "C-M-;") 'magit-status)
 
 (use-package leetcode
+  :demand t
   :commands (leetcode start-leetcode)
   :custom
   (leetcode-prefer-language "python3")
@@ -916,7 +940,3 @@
 (setq gc-cons-threshold 100000000)
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
-
-(if (display-graphic-p)
-    (dolist (elisp-code graphic-only-plugins-setting)
-      (eval elisp-code)))

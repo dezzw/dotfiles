@@ -14,9 +14,7 @@
 
 (setq ring-bell-function 'ignore)
 
-;; (push '(;; Set frame transparency and maximize windows by default.
-        (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-        (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
-        (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-        (add-to-list 'default-frame-alist '(fullscreen . maximized))
-        ;; ) graphic-only-plugins-setting)
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))

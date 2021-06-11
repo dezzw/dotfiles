@@ -1,5 +1,3 @@
-(setq graphic-only-plugins-setting ())
-
 (setq comp-async-jobs-number 7 
        comp-deferred-compilation t
        ;; comp-deferred-compilation-black-list '()
@@ -7,39 +5,40 @@
        comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
-;; Initialize package sources
-(require 'package)
+(setq comp-deferred-compilation-deny-list ())
+(setq straight-vc-git-default-clone-depth 1)
 
-(setq package-archives '(
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")
-                         ))
+(setq straight-disable-native-compile
+      (when (fboundp 'native-comp-available-p)
+	(not (native-comp-available-p))))
 
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-;; Initialize use-package on non-Linux platforms
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+;; Always use straight to install on systems other than Linux
+(setq straight-use-package-by-default t)
 
-(require 'use-package)
+;; Use straight.el for use-package expressions
+(straight-use-package 'use-package)
+;;(setq use-package-verbose t)
 
-;; always auto-download from source
-(setq use-package-always-ensure t)
-(setq use-package-verbose t)
+;; Load the helper package for commands like `straight-x-clean-unused-repos'
+(require 'straight-x)
 
-;; Find Executable Path on OS X
-(use-package exec-path-from-shell
-  :init
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
-  )
+(setq package-enable-at-startup nil)
 
 ;; Add my library path to load-path
-(push "~/Documents/dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/term-emacs/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 
@@ -82,60 +81,9 @@
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-(defun dw/set-font-faces ()
-  (message "Setting faces!")
-  ;; set font
-  (set-face-attribute 'default nil :font "Victor Mono" :height 140)
-
-  ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 140)
-
-  ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 140 :weight 'regular))
-
-;; (push '(use-package ligature
-	 ;; :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
-	 ;; :config
-	 ;; Enable the "www" ligature in every possible major mode
-	 ;; (ligature-set-ligatures 't '("www"))
-	 ;; Enable traditional ligature support in eww-mode, if the
-	 ;; `variable-pitch' face supports it
-	 ;; (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-	 ;; Enable all Cascadia Code ligatures in programming modes
-	 ;; (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-					      ;; ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-					      ;; "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-					      ;; "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-					      ;; "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-					      ;; "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-					      ;; "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-					      ;; "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-					      ;; ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-					      ;; "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-					      ;; "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-					      ;; "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-					      ;; "\\\\" "://"))
-	 ;; Enables ligature checks globally in all buffers. You can also do it
-	 ;; per mode with `ligature-mode'.
-	 ;; (global-ligature-mode t)) graphic-only-plugins-setting)
-
-(use-package all-the-icons
-  :custom
-  (all-the-icons-dired-monochrome t))
-
 (use-package doom-themes)
 
-(if (not (display-graphic-p))
-    (load-theme 'doom-one t))
-
-(if (display-graphic-p)
-    (defun dw/apply-theme (appearance)
-      "Load theme, taking current system APPEARANCE into consideration."
-      (mapc #'disable-theme custom-enabled-themes)
-      (pcase appearance
-	('light (load-theme 'doom-solarized-light t))
-	('dark (load-theme 'doom-one t))))
-  )
+(load-theme 'doom-one t)
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
@@ -147,7 +95,7 @@
   ;; Set the title
   ;; (setq dashboard-banner-logo-title "Code Better, Live Longer!")
   ;; Set the banner
-  (setq dashboard-startup-banner "~/Documents/dotfiles/Emacs/emacs-configs/my-emacs//dashboard/banner.txt")
+  (setq dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
   (setq dashboard-center-content t)
   :config
   (dashboard-setup-startup-hook)
@@ -170,14 +118,6 @@
   (setq dashboard-set-init-info t)
   )
 
-(push '(use-package nyan-mode
-	 :config
-	 (setq nyan-mode t)
-	 :custom
-	 (nyan-animate-nyancat t)
-	 (nyan-wavy-trail t)
-	 ) graphic-only-plugins-setting)
-
 (use-package hl-todo
   :defer t
   :hook ((org-mode prog-mode) . hl-todo-mode)
@@ -193,65 +133,127 @@
 (use-package highlight-numbers
   :hook (prog-mode . highlight-numbers-mode))
 
-(if (daemonp)
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (setq doom-modeline-icon t)
-		;; (load-theme 'doom-one t)
-		(add-hook 'ns-system-appearance-change-functions #'dw/apply-theme)
-		(dashboard-setup-startup-hook)
-                (with-selected-frame frame
-                  (dw/set-font-faces))
-		(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-		))
-  ;; (load-theme 'doom-one t)
-  ;; (lab-themes-load-style 'dark)
-  (add-hook 'ns-system-appearance-change-functions #'dw/apply-theme)
-  (dw/set-font-faces)
-  )
-
-(use-package midnight
-  :ensure nil
-  :config
-  (setq midnight-mode 1)
-  (midnight-delay-set 'midnight-delay "4:30am")
-  ;; (setq midnight-period 7200)
-  )
-
 (use-package ace-window
   :bind ("C-x o" . ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
-(use-package edwina
+(defun dw/evil-hook ()
+  (dolist (mode '(custom-mode
+                  eshell-mode
+                  vterm-mode
+                  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
+
+(use-package evil
+  :demand t
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-respect-visual-line-mode t)
   :config
-  (setq display-buffer-base-action '(display-buffer-below-selected))
-  ;; (edwina-setup-dwm-keys)
-  (edwina-mode 1))
+  (add-hook 'evil-mode-hook 'dw/evil-hook)
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-(use-package dired
-  :ensure nil
-  ;; :straight nil
-  :commands (dired dired-jump)
-  :bind (("C-x C-j" . dired-jump))
-  ;;:config
-  ;;(evil-collection-define-key 'normal 'dired-mode-map
-  ;;  "d" 'dired-single-up-directory
-  ;;  "n" 'dired-single-buffer)
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+(use-package evil-collection
+  :after evil
+  :custom
+  (evil-collection-outline-bind-tab-p nil)
+  :config
+  (evil-collection-init))
+
+(unless (display-graphic-p)
+  (use-package evil-terminal-cursor-changer
+    :ensure t
+    :init
+    (evil-terminal-cursor-changer-activate)
+    :config
+     (setq evil-motion-state-cursor 'box)  ; █
+     (setq evil-visual-state-cursor 'box)  ; █
+     (setq evil-normal-state-cursor 'box)  ; █
+     (setq evil-insert-state-cursor 'bar)  ; ⎸
+     (setq evil-emacs-state-cursor  'hbar) ; _
+     )
   )
 
-(use-package dired-single
-  :commands (dired dired-jump))
+(use-package evil-surround
+  :after evil
+  :config
+  (global-evil-surround-mode 1))
 
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode))
+(use-package evil-escape
+  :after evil
+  :config
+  (evil-escape-mode t)
+  (setq-default evil-escape-key-sequence "jk"))
 
-(use-package dired-hide-dotfiles
-  :hook (dired-mode . dired-hide-dotfiles-mode)
-  ;;:config
-  ;;(evil-collection-define-key 'normal 'dired-mode-map
-  ;;  "H" 'dired-hide-dotfiles-mode)
+;; set delete selection mode
+(delete-selection-mode t)
+
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(use-package color-rg
+  :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
+  :commands (color-rg-search-input
+             color-rg-search-symbol
+             color-rg-search-input-in-project
+             color-rg-search-input-in-current-file
+             color-rg-search-project-with-typ)
   )
+
+;; (dw/leader-key-def
+;;   "c" '(:ignore t :which-key "color-rg")
+;;   "cid" 'color-rg-search-input
+;;   "csd" 'color-rg-search-symbol
+;;   "cip" 'color-rg-search-input-in-project
+;;   "cic" 'color-rg-search-input-in-current-file
+;;   "cit" 'color-rg-search-project-with-type)
+
+(use-package multiple-cursors
+  :commands (mc/edit-lines mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this)
+  :bind
+  (("C-S-c C-S-c" . 'mc/edit-lines)
+   ("C->" . 'mc/mark-next-like-this)
+   ("C-<" . 'mc/mark-previous-like-this)
+   ("C-S-c C-<" . 'mc/mark-all-like-this)))
+
+(use-package iedit
+  :after lsp)
+
+(use-package evil-nerd-commenter
+  :defer t
+  :bind
+  ("M-;" . 'evilnc-comment-or-uncomment-lines)
+  ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
+  ("C-c c" . 'evilnc-copy-and-comment-lines)
+  ("C-c p" . 'evilnc-comment-or-uncomment-paragraphs)
+  ;; :config
+  ;; (evilnc-default-hotkeys t)
+  )
+
+(use-package general
+  :config
+  (general-evil-setup t)
+
+  (general-create-definer dw/leader-key-def
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (general-create-definer dw/ctrl-c-keys
+    :prefix "C-c"))
 
 (use-package which-key
   :init (which-key-mode)
@@ -273,6 +275,31 @@
 (use-package counsel-projectile
   :after projectile
   :config (counsel-projectile-mode))
+
+(use-package dired
+  :ensure nil
+  :straight nil
+  :commands (dired dired-jump)
+  :bind (("C-x C-j" . dired-jump))
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+   "h" 'dired-single-up-directory
+   "l" 'dired-single-buffer)
+  )
+
+(use-package dired-single
+  :commands (dired dired-jump))
+
+(use-package dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+   "H" 'dired-hide-dotfiles-mode)
+  )
+
+(use-package diredfl
+   :hook (dired-mode . diredfl-mode)
+   )
 
 (use-package ivy
   :diminish
@@ -301,16 +328,13 @@
   (setq ivy-initial-inputs-alist nil) ;; Don't start searches with ^
   )
 
+(dw/leader-key-def
+ "SPC" 'counsel-M-x)
+
 (use-package ivy-rich
   :after ivy
   :init
   (ivy-rich-mode 1))
-
-(use-package ivy-posframe
- :after ivy
- :config
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (ivy-posframe-mode 1))
 
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
@@ -477,81 +501,6 @@
 (use-package edit-indirect
   :after markdown-mode)
 
-;; For DVP
-;; (require 'init-meow-dvp)
-
-;; For Qwerty
-(require 'init-meow-qwerty)
-
-(use-package meow
-  :demand t
-  :init
-  (meow-global-mode 1)
-  :config
-  ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
-  (meow-setup)
-  ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
-  (meow-setup-line-number)
-  ;; 如果你需要自动的 mode-line 设置（如果需要自定义见下文对 `meow-indicator' 说明）
-  ;;(meow-setup-indicator)
-  ;;(add-to-list 'meow-normal-state-mode-list 'dashboard-mode)
-  (setq meow-replace-state-name-list
-  '((normal . "Ꮚ•ꈊ•Ꮚ")
-    (insert . "Ꮚ`ꈊ´Ꮚ")
-    (keypad . "Ꮚ'ꈊ'Ꮚ")
-    (motion . "Ꮚ-ꈊ-Ꮚ")))
-  :bind ("C-g" . meow-insert-exit)
-  )
-
-(meow-leader-define-key
- '("p" . meow-motion-origin-command)
- '("n" . meow-motion-origin-command)
- '("f" . find-file)
- '("b" . counsel-switch-buffer)
- '("v" . vterm)
- '("qr" . quickrun)
- '("oo" . ace-window)
- '("od" . ace-delete-window)
- '("dd" . dap-debug)
- '("aa" . org-agenda)
- '("al" . org-agenda-list)
- '("ac" . org-capture)
-)
-
-(meow-motion-overwrite-define-key
- '("n" . meow-next)
- '("p" . meow-prev)
- '("h" . dired-single-up-directory)
- '("t" . dired-single-buffer))
-
-;; set delete selection mode
-(delete-selection-mode t)
-
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-(use-package multiple-cursors
-  :commands (mc/edit-lines mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this)
-  :bind
-  (("C-S-c C-S-c" . 'mc/edit-lines)
-   ("C->" . 'mc/mark-next-like-this)
-   ("C-<" . 'mc/mark-previous-like-this)
-   ("C-S-c C-<" . 'mc/mark-all-like-this)))
-
-(use-package iedit
-  :after lsp)
-
-(use-package evil-nerd-commenter
-  ;; :after meow
-  :bind
-  ("M-;" . 'evilnc-comment-or-uncomment-lines)
-  ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
-  ("C-c c" . 'evilnc-copy-and-comment-lines)
-  ("C-c p" . 'evilnc-comment-or-uncomment-paragraphs)
-  ;; :config
-  ;; (evilnc-default-hotkeys t)
-  )
-
 (use-package company 
   :hook (lsp-mode . company-mode)
   ;; :bind 
@@ -582,12 +531,6 @@
     (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
   )
 
-;; Add UI for Company
-(use-package company-box
-  :hook (company-mode . company-box-mode)
-  :config
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
 (use-package smartparens
   :hook (prog-mode . smartparens-mode))
 
@@ -614,13 +557,13 @@
     :default "python"))
 
 ;; Set up Keybindings
-;; (dw/leader-key-def
-;;   "r"  '(:ignore t :which-key "quickrun")
-;;   "rr" 'quickrun
-;;   "ra" 'quickrun-with-arg
-;;   "rs" 'quickrun-shell
-;;   "rc" 'quickrun-compile-only
-;;   "re" 'quickrun-region)
+(dw/leader-key-def
+  "r"  '(:ignore t :which-key "quickrun")
+  "rr" 'quickrun
+  "ra" 'quickrun-with-arg
+  "rs" 'quickrun-shell
+  "rc" 'quickrun-compile-only
+  "re" 'quickrun-region)
 
 (use-package flycheck
   :hook (lsp-mode . flycheck-mode))
@@ -629,6 +572,8 @@
   :after company
   :hook (prog-mode . yas-minor-mode)
   :config
+  (setq yas-snippet-dirs
+    '("~/.dotfiles/Emacs/snippets"))
   (yas-reload-all))
 
 ;; Snippets Collection
@@ -658,24 +603,24 @@
   (setq lsp-idle-delay 0.500)
   (setq lsp-completion-provider :capf))
 
-;; (dw/leader-key-def
-;;   "l"  '(:ignore t :which-key "lsp")
-;;   "ld" 'xref-find-definitions
-;;   "lr" 'xref-find-references
-;;   "ln" 'lsp-ui-find-next-reference
-;;   "lp" 'lsp-ui-find-prev-reference
-;;   "ls" 'counsel-imenu
-;;   "le" 'lsp-ui-flycheck-list
-;;   "lS" 'lsp-ui-sideline-mode
-;;   "lX" 'lsp-execute-code-action)
+(dw/leader-key-def
+  "l"  '(:ignore t :which-key "lsp")
+  "ld" 'xref-find-definitions
+  "lr" 'xref-find-references
+  "ln" 'lsp-ui-find-next-reference
+  "lp" 'lsp-ui-find-prev-reference
+  "ls" 'counsel-imenu
+  "le" 'lsp-ui-flycheck-list
+  "lS" 'lsp-ui-sideline-mode
+  "lX" 'lsp-execute-code-action)
 
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-doc-position 'bottom)
-  (setq lsp-ui-imenu-auto-refresh t)
-  )
+;; (use-package lsp-ui
+;;   :hook (lsp-mode . lsp-ui-mode)
+;;   :config
+;;   (setq lsp-ui-sideline-enable t)
+;;   (setq lsp-ui-doc-position 'bottom)
+;;   (setq lsp-ui-imenu-auto-refresh t)
+;;   )
 
 (use-package lsp-ivy 
   :after lsp
@@ -774,6 +719,19 @@
 (use-package emmet-mode
   :hook (web-mode . emmet-mode))
 
+(use-package latex-preview-pane
+  :ensure t
+  :after (tex-mode Latex-mode latex-mode TeX-latex-mode))
+
+(straight-use-package 'auctex)
+
+(use-package cdlatex
+  :hook 
+  (org-mode . org-cdlatex-mode)
+  (LaTeX-mode . cdlatex-mode)
+  (latex-mode . cdlatex-mode)
+  )
+
 (use-package lsp-sourcekit
   :after swift-mode
   :config
@@ -800,56 +758,22 @@
   (require 'dap-python)
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
-(use-package term
-  :commands term
+(use-package tmux-pane
   :config
-  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
-  ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
-
-  ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
-  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
+  (tmux-pane-mode)
   )
 
-(use-package eterm-256color
-  :hook (term-mode . eterm-256color-mode))
+(dw/leader-key-def
+ "p"  '(:ignore t :which-key "tmux pane")
+ "pv" 'tmux-pane-open-vertical
+ "ph" 'tmux-pane-open-horizontal
+ "pc" 'tmux-pane-close
+ "pr" 'tmux-pane-rerun)
 
-(defun dw/configure-eshell ()
-  ;; Save command history when commands are entered
-  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-
-  ;; Truncate buffer for performance
-  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-
-  ;; Bind some useful keys for evil-mode
-  ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-  ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-  ;; (evil-normalize-keymaps)
-
-  (setq eshell-history-size         10000
-        eshell-buffer-maximum-lines 10000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t))
-
-(use-package eshell-git-prompt
-  :after eshell)
-
-(use-package eshell
-  :commands eshell
-  :hook (eshell-first-time-mode . dw/configure-eshell)
-  :config
-
-  (with-eval-after-load 'esh-opt
-    (setq eshell-destroy-buffer-when-process-dies t)
-    (setq eshell-visual-commands '("zsh" "vim")))
-
-  (eshell-git-prompt-use-theme 'powerline))
-
-(use-package vterm
-  :commands vterm
-  :config
-  ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-  (setq vterm-max-scrollback 10000))
+(dw/leader-key-def
+ "t" '(:ignore t :which-key "tmux toggle")
+ "tv" 'tmux-pane-toggle-vertical
+ "th" 'tmux-pane-toggle-horizontal)
 
 (use-package magit
   :commands (magit-status magit-get-current-branch)
@@ -885,20 +809,3 @@
 (setq gc-cons-threshold 100000000)
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
-
-(if (display-graphic-p)
-    (dolist (elisp-code graphic-only-plugins-setting)
-      (eval elisp-code)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(pyenv-mode-auto nyan-mode leetcode magit vterm eshell-git-prompt eterm-256color dap-mode json-mode yaml-mode swift-mode lsp-sourcekit emmet-mode skewer-mode impatient-mode web-mode flymake-coffee coffee-mode prettier-js js2-mode typescript-mode pyenv-mode lsp-pyright lsp-treemacs lsp-ivy lsp-ui lsp-mode auto-yasnippet yasnippet-snippets yasnippet flycheck quickrun format-all indent-guide hungry-delete rainbow-delimiters smartparens company-box company-tabnine company evil-nerd-commenter iedit multiple-cursors meow edit-indirect markdown-mode valign org-download visual-fill-column ob-browser org-bullets helpful ivy-posframe ivy-rich counsel-projectile projectile which-key dired-hide-dotfiles all-the-icons-dired dired-single edwina ace-window highlight-numbers hl-todo dashboard doom-modeline doom-themes all-the-icons super-save exec-path-from-shell use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
