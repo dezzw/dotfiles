@@ -1,10 +1,10 @@
 (setq graphic-only-plugins-setting ())
 
 (setq comp-async-jobs-number 7 
-       comp-deferred-compilation t
-       ;; comp-deferred-compilation-black-list '()
-       ;; or it will be too annoying
-       comp-async-report-warnings-errors nil)
+ comp-deferred-compilation t
+ ;; comp-deferred-compilation-black-list '()
+ ;; or it will be too annoying
+ comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq comp-deferred-compilation-deny-list ())
@@ -72,9 +72,10 @@
 (use-package super-save
   :defer 1
   :diminish super-save-mode
+  :custom
+  (super-save-auto-save-when-idle t)
   :config
-  (super-save-mode +1)
-  (setq super-save-auto-save-when-idle t))
+  (super-save-mode +1))
 
 ;; Enalbe column number
 (column-number-mode)
@@ -93,13 +94,13 @@
 (defun dw/set-font-faces ()
   (message "Setting faces!")
   ;; set font
-  (set-face-attribute 'default nil :font "Victor Mono" :height 140)
+  (set-face-attribute 'default nil :font "Victor Mono" :height 150)
 
   ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 140)
+  (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 150)
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 140 :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
 
 (push '(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
@@ -147,9 +148,10 @@
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-window-width-limit fill-column) 
-  (setq doom-modeline-env-version t))
+  :custom
+  (doom-modeline-window-width-limit fill-column) 
+  ;; (doom-modeline-major-mode-color-icon nil)
+  )
 
 (use-package dashboard
   :init
@@ -189,7 +191,7 @@
 
 (use-package hl-todo
   :defer t
-  :hook ((org-mode prog-mode) . hl-todo-mode)
+  :hook ((org-mode lsp-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
@@ -200,7 +202,7 @@
   )
 
 (use-package highlight-numbers
-  :hook (prog-mode . highlight-numbers-mode))
+  :hook ((org-mode lsp-mode) . highlight-numbers-mode))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -509,7 +511,7 @@
 (meow-leader-define-key
  '("f" . find-file)
  '("b" . counsel-switch-buffer)
- '("t" . vterm)
+ '("t" . vterm-toggle)
  '("qr" . quickrun)
  '("oo" . ace-window)
  '("od" . ace-delete-window)
@@ -593,9 +595,10 @@
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
   ;;Completion based on AI
-  (use-package company-tabnine
-    :config
-    (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
+  ;; (use-package company-tabnine
+  ;;   :config
+  ;;   (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
+  (push '(company-capf :with company-yasnippet :separate) company-backends)
   )
 
 ;; Add UI for Company
@@ -605,18 +608,19 @@
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 (use-package smartparens
-  :hook (prog-mode . smartparens-mode))
+  :hook (lsp-mode . smartparens-mode))
 
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (lsp-mode . rainbow-delimiters-mode))
 
 (use-package hungry-delete
-  :hook (prog-mode . hungry-delete-mode))
+  :hook (lsp-mode . hungry-delete-mode))
 
 (use-package indent-guide
-  :hook (prog-mode . indent-guide-mode))
+  :hook (lsp-mode . indent-guide-mode))
 
 (use-package format-all
+  :hook (lsp-mode . format-all-mode)
   :commands (format-all-ensure-formatter format-all-buffer))
 
 (use-package quickrun
@@ -642,8 +646,7 @@
   :hook (lsp-mode . flycheck-mode))
 
 (use-package yasnippet
-  :after company
-  :hook (prog-mode . yas-minor-mode)
+  :hook ((lsp-mode org-mode) . yas-minor-mode)
   :config
   (setq yas-snippet-dirs
     '("~/.dotfiles/Emacs/snippets"))
@@ -665,34 +668,30 @@
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :hook ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
+  :hook (
+         ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
   :init
   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :custom
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-signature-auto-activate nil)
+  (lsp-signature-render-documentation nil)
+  (lsp-log-io nil)
+  (lsp-idle-delay 0.500)
+  (lsp-completion-provider :capf)
   :config
-  (lsp-enable-which-key-integration t)
-  (setq lsp-headerline-breadcrumb-segments nil)
-  ;; (setq lsp-headerline-breadcrumb-enable-symbol-numbers t)
-  (setq lsp-log-io nil)
-  (setq lsp-idle-delay 0.500)
-  (setq lsp-completion-provider :capf))
-
-;; (dw/leader-key-def
-;;   "l"  '(:ignore t :which-key "lsp")
-;;   "ld" 'xref-find-definitions
-;;   "lr" 'xref-find-references
-;;   "ln" 'lsp-ui-find-next-reference
-;;   "lp" 'lsp-ui-find-prev-reference
-;;   "ls" 'counsel-imenu
-;;   "le" 'lsp-ui-flycheck-list
-;;   "lS" 'lsp-ui-sideline-mode
-;;   "lX" 'lsp-execute-code-action)
+  (add-to-list 'lsp-language-id-configuration '((scss-mode . "css")
+                                                (less-css-mode . "css")))
+  )
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-doc-position 'bottom)
-  (setq lsp-ui-imenu-auto-refresh t)
+  :custom
+  (lsp-ui-sideline-enable t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-position 'bottom)
+  (lsp-ui-imenu-auto-refresh t)
   )
 
 (use-package lsp-ivy 
@@ -777,8 +776,8 @@
   :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
 
 ;; Impatient Html File
-(use-package impatient-mode
-  :after web-mode)
+;; (use-package impatient-mode
+;;   :after web-mode)
 
 ;; Preview the html file
 (use-package skewer-mode
@@ -791,6 +790,14 @@
 
 (use-package emmet-mode
   :hook (web-mode . emmet-mode))
+
+(use-package scss-mode
+  :mode "\\.scss\\'"
+  :custom
+  (scss-compile-at-save t)
+  (scss-output-directory "../css")
+  (scss-sass-command "sass --no-source-map")
+  )
 
 (use-package latex-preview-pane
   :ensure t
@@ -831,56 +838,18 @@
   (require 'dap-python)
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
-(use-package term
-  :commands term
-  :config
-  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
-  ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
-
-  ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
-  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
-  )
-
-(use-package eterm-256color
-  :hook (term-mode . eterm-256color-mode))
-
-(defun dw/configure-eshell ()
-  ;; Save command history when commands are entered
-  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-
-  ;; Truncate buffer for performance
-  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-
-  ;; Bind some useful keys for evil-mode
-  ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-  ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-  ;; (evil-normalize-keymaps)
-
-  (setq eshell-history-size         10000
-        eshell-buffer-maximum-lines 10000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t))
-
-(use-package eshell-git-prompt
-  :after eshell)
-
-(use-package eshell
-  :commands eshell
-  :hook (eshell-first-time-mode . dw/configure-eshell)
-  :config
-
-  (with-eval-after-load 'esh-opt
-    (setq eshell-destroy-buffer-when-process-dies t)
-    (setq eshell-visual-commands '("zsh" "vim")))
-
-  (eshell-git-prompt-use-theme 'powerline))
-
 (use-package vterm
   :commands vterm
   :config
   ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
   (setq vterm-max-scrollback 10000))
+
+(use-package multi-vterm
+  :after vterm)
+
+(use-package vterm-toggle
+  :after vterm)
 
 (use-package magit
   :commands (magit-status magit-get-current-branch)

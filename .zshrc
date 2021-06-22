@@ -140,8 +140,8 @@ vterm_printf(){
 
 ### Manage Alias
 
-# alias c as clear
-alias c="clear"
+# alias cls as clear
+alias cls="clear"
 
 # alias p as python3
 alias p="python3"
@@ -156,7 +156,8 @@ alias v="nvim"
 alias kille="emacsclient -e '(kill-emacs)'"
 alias ec='emacsclient -c -a ""'
 alias sec='sudo emacsclient -a ""'
-alias dump="~/Documents/dotfiles/dump.sh"
+alias eterm='emacs -nw --with-profile term'
+alias edoom='emacs --with-profile doom'
 
 # alias to delet extra latex output file
 alias clean_file="python ~/Documents/Projects/Python/Del_aditional_tex_file/main.py"
@@ -165,11 +166,14 @@ alias clean_file="python ~/Documents/Projects/Python/Del_aditional_tex_file/main
 alias e="exit"
 
 # ls alias based on exa
-alias ls="exa"
+alias l="exa"
+
+# rm alias based on trash
+alias rm="trash"
 
 # alias shell script
-alias update="sh ~/Documents/dotfiles/Shells/update.sh"
-alias backup="sh ~/Documents/dotfiles/Shells/backup.sh"
+alias update="sh ~/.dotfiles/Shells/update.sh"
+alias backup="sh ~/.dotfiles/Shells/backup.sh"
 
 # Hide Desktop files
 alias hideDesktop="defaults write com.apple.finder CreateDesktop -bool FALSE; killall Finder"

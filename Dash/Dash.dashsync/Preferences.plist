@@ -161,6 +161,11 @@
 				<key>date</key>
 				<date>2021-04-28T13:54:52Z</date>
 			</dict>
+			<key>http://kapeli.com/feeds/Emmet.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2021-06-17T15:59:57Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/HTML.xml</key>
 			<dict>
 				<key>date</key>
@@ -195,6 +200,11 @@
 			<dict>
 				<key>date</key>
 				<date>2021-04-28T13:57:43Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Sass.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2021-06-17T16:01:27Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/TypeScript.xml</key>
 			<dict>

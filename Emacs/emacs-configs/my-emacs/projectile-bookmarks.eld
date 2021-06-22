@@ -1,1 +1,1 @@
-("~/.dotfiles/" "~/Desktop/Test/")
+("~/Desktop/Test/" "~/" "~/.dotfiles/" "~/.dotfiles/Emacs/emacs-configs/my-emacs/straight/repos/lsp-mode/")

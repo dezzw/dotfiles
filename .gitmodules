@@ -1,0 +1,3 @@
+[submodule "Emacs/emacs-configs/doom-core"]
+	path = Emacs/emacs-configs/doom-core
+	url = https://github.com/hlissner/doom-emacs.git

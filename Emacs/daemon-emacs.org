@@ -1,11 +1,7 @@
 #+TITLE: Emacs Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/my-emacs/init.el :mkdirp yes
-* Graphic Only Plugins Setting
-#+begin_src emacs-lisp
-(setq graphic-only-plugins-setting ())
-#+end_src
+#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/init.el :mkdirp yes
 * Some improve in early-init
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/early-init.el
 (setq gc-cons-threshold most-positive-fixnum)
 
 (setq load-prefer-newer noninteractive)
@@ -20,32 +16,6 @@
   (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
  #+end_src
 * Package Management
-** COMMENT Initialize use-package on non-Linux platforms
- #+begin_src emacs-lisp
- ;; Initialize package sources
- (require 'package)
- 
- (setq package-archives '(
-                          ("melpa" . "https://melpa.org/packages/")
-                          ("melpa" . "http://melpa.milkbox.net/packages/")
-                          ("org" . "https://orgmode.org/elpa/")
-                          ("elpa" . "https://elpa.gnu.org/packages/")
-                          ))
- 
- (package-initialize)
- (unless package-archive-contents
-   (package-refresh-contents))
- 
- ;; Initialize use-package on non-Linux platforms
- (unless (package-installed-p 'use-package)
-   (package-install 'use-package))
- 
- (require 'use-package)
- 
- ;; always auto-download from source
- (setq use-package-always-ensure t)
- (setq use-package-verbose t)
- #+end_src
 ** Straight.el
 #+begin_src emacs-lisp
 (setq comp-deferred-compilation-deny-list ())
@@ -95,7 +65,7 @@
 ** Update Load Path
 #+begin_src emacs-lisp
 ;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/daemon-emacs/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 #+end_src
@@ -133,16 +103,14 @@
  The package make emacs auto save the files
  #+begin_src emacs-lisp
  (use-package super-save
-   :defer 1
    :diminish super-save-mode
-   :custom
-   (super-save-auto-save-when-idle t)
    :config
-   (super-save-mode +1))
+   (super-save-mode +1)
+   (setq super-save-auto-save-when-idle t))
  #+end_src
 * UI Setup
 ** Hide Useless UI
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/early-init.el
  (setq inhibit-startup-message t)
 
  (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -156,13 +124,11 @@
  (setq ring-bell-function 'ignore)
  #+end_src
 ** Frame Transparency and Maximize Windows
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
- ;; (push '(;; Set frame transparency and maximize windows by default.
-         (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-         (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
-         (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-         (add-to-list 'default-frame-alist '(fullscreen . maximized))
-         ;; ) graphic-only-plugins-setting)
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/early-init.el
+ (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+ (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+ (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+ (add-to-list 'default-frame-alist '(fullscreen . maximized))
  #+end_src
 ** Line Number
  #+begin_src emacs-lisp
@@ -185,17 +151,17 @@
  (defun dw/set-font-faces ()
    (message "Setting faces!")
    ;; set font
-   (set-face-attribute 'default nil :font "Victor Mono" :height 150)
+   (set-face-attribute 'default nil :font "Victor Mono" :height 140)
 
    ;; Set the fixed pitch face
-   (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 150)
+   (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 140)
 
    ;; Set the variable pitch face
-   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
+   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 140 :weight 'regular))
  #+end_src
 ** Fonts Ligature
 #+begin_src emacs-lisp
-(push '(use-package ligature
+(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
 	 :config
 	 ;; Enable the "www" ligature in every possible major mode
@@ -219,7 +185,7 @@
 					      "\\\\" "://"))
 	 ;; Enables ligature checks globally in all buffers. You can also do it
 	 ;; per mode with `ligature-mode'.
-	 (global-ligature-mode t)) graphic-only-plugins-setting)
+	 (global-ligature-mode t))
 #+end_src
 ** Icons Support 
  #+begin_src emacs-lisp
@@ -233,26 +199,19 @@
  #+end_src
 ** Change Theme Based On System Appearance
 #+begin_src emacs-lisp
-(if (not (display-graphic-p))
-    (load-theme 'doom-one t))
-
-(if (display-graphic-p)
-    (defun dw/apply-theme (appearance)
-      "Load theme, taking current system APPEARANCE into consideration."
-      (mapc #'disable-theme custom-enabled-themes)
-      (pcase appearance
-	('light (load-theme 'doom-solarized-light t))
-	('dark (load-theme 'doom-one t))))
-  )
+(defun dw/apply-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme 'doom-solarized-light t))
+    ('dark (load-theme 'doom-one t))))
 #+end_src
 ** Modeline 
  #+begin_src emacs-lisp
  (use-package doom-modeline
    :init (doom-modeline-mode 1)
-   :custom
-   (doom-modeline-window-width-limit fill-column) 
-   ;; (doom-modeline-major-mode-color-icon nil)
-   )
+   :config
+   (setq doom-modeline-env-version t))
  #+end_src
 ** Dashbard
  #+begin_src emacs-lisp
@@ -286,19 +245,19 @@
  #+end_src
 ** Nyan Mode
 #+begin_src emacs-lisp
-(push '(use-package nyan-mode
+(use-package nyan-mode
 	 :config
 	 (setq nyan-mode t)
 	 :custom
 	 (nyan-animate-nyancat t)
 	 (nyan-wavy-trail t)
-	 ) graphic-only-plugins-setting)
+	 )
 #+end_src
 ** Highlight TODOs
 #+begin_src emacs-lisp
 (use-package hl-todo
-  :defer t
-  :hook ((org-mode lsp-mode) . hl-todo-mode)
+  :demand t
+  :hook ((org-mode prog-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
@@ -311,7 +270,8 @@
 ** Highligh Numbers
 #+begin_src emacs-lisp
 (use-package highlight-numbers
-  :hook ((org-mode lsp-mode) . highlight-numbers-mode))
+  :demand t
+  :hook (prog-mode . highlight-numbers-mode))
 #+end_src
 ** UI in Deamon
 #+begin_src emacs-lisp
@@ -325,6 +285,7 @@
                 (with-selected-frame frame
                   (dw/set-font-faces))
 		(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+		(setq doom-modeline-window-width-limit fill-column)
 		))
   ;; (load-theme 'doom-one t)
   ;; (lab-themes-load-style 'dark)
@@ -332,10 +293,10 @@
   (dw/set-font-faces)
   )
 #+end_src
-* COMMENT Midnight Mode
+* Midnight Mode
 #+begin_src emacs-lisp
 (use-package midnight
-  :ensure nil
+  :demand t
   :config
   (setq midnight-mode 1)
   (midnight-delay-set 'midnight-delay "4:30am")
@@ -359,6 +320,7 @@
 - =?= - show these command bindings
 #+begin_src emacs-lisp
 (use-package ace-window
+  :demand t
   :bind ("C-x o" . ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
@@ -377,6 +339,7 @@
  (use-package dired
    :ensure nil
    :straight nil
+   :demand t
    :commands (dired dired-jump)
    :bind (("C-x C-j" . dired-jump))
    ;;:config
@@ -386,12 +349,15 @@
    )
  
  (use-package dired-single
+   :demand t
    :commands (dired dired-jump))
  
  (use-package all-the-icons-dired
+   :demand t
    :hook (dired-mode . all-the-icons-dired-mode))
  
  (use-package dired-hide-dotfiles
+   :demand t
    :hook (dired-mode . dired-hide-dotfiles-mode)
    ;;:config
    ;;(evil-collection-define-key 'normal 'dired-mode-map
@@ -399,11 +365,12 @@
    )
  
  (use-package diredfl
+   :demand t
    :hook (dired-mode . diredfl-mode)
    )
  #+end_src
 * Keybinding Management
-** COMMENT Keybindings by general.el
+** Keybindings by general.el
  #+begin_src emacs-lisp
  (use-package general
    :config
@@ -429,6 +396,7 @@
 ** Projectile
  #+begin_src emacs-lisp
  (use-package projectile
+   :demand t
    :diminish projectile-mode
    :config (projectile-mode)
    :custom ((projectile-completion-system 'ivy))
@@ -438,7 +406,7 @@
    (when (file-directory-p "~/Documents/Projects/Code")
      (setq projectile-project-search-path '("~/Documents/Projects/Code")))
    (setq projectile-switch-project-action #'projectile-dired))
-
+ 
  (use-package counsel-projectile
    :after projectile
    :config (counsel-projectile-mode))
@@ -448,6 +416,7 @@
  #+begin_src emacs-lisp
  (use-package ivy
    :diminish
+   :demand t
    :bind (("C-s" . swiper)
           :map ivy-minibuffer-map
           ("C-l" . ivy-alt-done)
@@ -462,8 +431,9 @@
           ("C-d" . ivy-reverse-i-search-kill))
    :init
    (ivy-mode 1))
-
+ 
  (use-package counsel
+   :demand t
    :bind (("M-x" . counsel-M-x)
           ("C-x b" . counsel-switch-buffer)
           ("C-x C-f" . counsel-find-file)
@@ -492,6 +462,7 @@
 ** Helpful Function Description
  #+begin_src emacs-lisp
  (use-package helpful
+   :demand t
    :commands (helpful-callable helpful-variable helpful-command helpful-key)
    :custom
    (counsel-describe-function-function #'helpful-callable)
@@ -510,8 +481,9 @@
    (org-indent-mode)
    (variable-pitch-mode 1)
    (visual-line-mode 1))
-
+ 
  (use-package org
+   :demand t
    :hook (org-mode . dw/org-mode-setup)
    :config
    (setq org-html-head-include-default-style nil)
@@ -525,24 +497,24 @@
          org-startup-folded 'content
          org-cycle-separator-lines 2)
    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-
+ 
    (setq org-html-htmlize-output-type nil)
-
+ 
   ;; config for images in org
    (auto-image-file-mode t)
    (setq org-image-actual-width nil)
    ;; default image width
    (setq org-image-actual-width '(300))
-
+ 
    (setq org-export-with-sub-superscripts nil)
-
+ 
    ;; 不要自动创建备份文件
    (setq make-backup-files nil)
-
+ 
    (require 'init-org-agenda)
-
+ 
    (use-package ob-browser)
-
+ 
    (org-babel-do-load-languages
     'org-babel-load-languages
     '((emacs-lisp . t)
@@ -555,10 +527,10 @@
       (R . t)
       (ditaa . t)
       (python . t)))
-
+ 
    (setq org-confirm-babel-evaluate nil)
    (push '("conf-unix" . conf-unix) org-src-lang-modes)
-
+ 
    ;; Edited from http://emacs.stackexchange.com/a/9838
    (defun dw/org-html-wrap-blocks-in-code (src backend info)
      "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
@@ -567,9 +539,9 @@
         "\\(</pre>\\)" "</code>\n\\1"
         (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
                                "<pre>\n<code class=\"\\1\">" src))))
-
+ 
    (require 'ox-html)
-
+ 
    (add-to-list 'org-export-filter-src-block-functions
              'dw/org-html-wrap-blocks-in-code)
    )
@@ -644,20 +616,21 @@
    (setq visual-fill-column-width 100
          visual-fill-column-center-text t)
    (visual-fill-column-mode 1))
-
+ 
  (use-package visual-fill-column
    :hook (org-mode . dw/org-mode-visual-fill))
  #+end_src
 ** Org download
  #+begin_src emacs-lisp
  (use-package org-download
-	   :ensure t 
-	   ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
-	   :bind ("C-S-y" . org-download-screenshot)
-	   :config
-	   (require 'org-download)
-	   ;; Drag and drop to Dired
-	   (add-hook 'dired-mode-hook 'org-download-enable))
+           :ensure t
+           :demand t
+           ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
+           :bind ("C-S-y" . org-download-screenshot)
+           :config
+           (require 'org-download)
+           ;; Drag and drop to Dired
+           (add-hook 'dired-mode-hook 'org-download-enable))
  #+end_src
 ** COMMENT Org Latex Impatient
  #+begin_src emacs-lisp
@@ -672,7 +645,7 @@
    (org-latex-impatient-posframe-position-handler 'posframe-poshandler-point-bottom-left-corner))
  #+end_src
 ** Org Agenda
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-org-agenda.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/lisp/init-org-agenda.el
 (with-eval-after-load 'org
   (setq org-agenda-files (list
 			  "~/Documents/Org/Tasks.org"
@@ -823,6 +796,7 @@
  #+begin_src emacs-lisp
  (use-package markdown-mode
   :ensure t
+  :demand t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
  #+end_src
@@ -832,7 +806,7 @@
    :after markdown-mode)
  #+end_src
 * Editing
-** COMMENT Evil Mode
+** Evil Mode
  #+begin_src emacs-lisp
  (defun dw/evil-hook ()
    (dolist (mode '(custom-mode
@@ -922,9 +896,9 @@
     "mI" 'evil-mc-make-cursor-in-visual-selection-beg
     "mA" 'evil-mc-make-cursor-in-visual-selection-end)
   #+end_src
-** Meow
+** COMMENT Meow
 *** Dvorak Simplified Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvorak.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/lisp/init-meow-dvorak.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
   (meow-leader-define-key
@@ -1006,7 +980,7 @@
 (provide 'init-meow-dvorak)
 #+end_src
 *** Dvorak Programmer Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvp.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/lisp/init-meow-dvp.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvp)
   (meow-normal-define-key
@@ -1087,7 +1061,7 @@
 (provide 'init-meow-dvp)
 #+end_src
 *** Qwerty Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-qwerty.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/daemon-emacs/lisp/init-meow-qwerty.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-overwrite-define-key
@@ -1192,19 +1166,21 @@
   (meow-setup)
   ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
   (meow-setup-line-number)
+  ;; 如果你需要自动的 mode-line
+  ;;(meow-setup-indicator)
   ;;(add-to-list 'meow-normal-state-mode-list 'dashboard-mode)
-  ;; (setq meow-replace-state-name-list
-  ;; '((normal . "Ꮚ•ꈊ•Ꮚ")
-  ;;   (insert . "Ꮚ`ꈊ´Ꮚ")
-  ;;   (keypad . "Ꮚ'ꈊ'Ꮚ")
-  ;;   (motion . "Ꮚ-ꈊ-Ꮚ")))
+  (setq meow-replace-state-name-list
+  '((normal . "Ꮚ•ꈊ•Ꮚ")
+    (insert . "Ꮚ`ꈊ´Ꮚ")
+    (keypad . "Ꮚ'ꈊ'Ꮚ")
+    (motion . "Ꮚ-ꈊ-Ꮚ")))
   :bind ("C-g" . meow-insert-exit)
   )
 
 (meow-leader-define-key
  '("f" . find-file)
  '("b" . counsel-switch-buffer)
- '("t" . vterm-toggle)
+ '("v" . vterm)
  '("qr" . quickrun)
  '("oo" . ace-window)
  '("od" . ace-delete-window)
@@ -1234,13 +1210,14 @@ Make the selected parts be deletable
   #+begin_src emacs-lisp
   (use-package color-rg
     :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
+    :demand t
     :commands (color-rg-search-input
                color-rg-search-symbol
                color-rg-search-input-in-project
                color-rg-search-input-in-current-file
                color-rg-search-project-with-typ)
     )
-
+  
   ;; (dw/leader-key-def
   ;;   "c" '(:ignore t :which-key "color-rg")
   ;;   "cid" 'color-rg-search-input
@@ -1252,6 +1229,7 @@ Make the selected parts be deletable
 *** Multiple Cursors
   #+begin_src emacs-lisp
   (use-package multiple-cursors
+    :demand t
     :commands (mc/edit-lines mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this)
     :bind
     (("C-S-c C-S-c" . 'mc/edit-lines)
@@ -1268,7 +1246,7 @@ Make the selected parts be deletable
 This program can be used *WITHOUT* evil-mode!
 #+begin_src emacs-lisp
 (use-package evil-nerd-commenter
-  :defer t
+  :demand t
   :bind
   ("M-;" . 'evilnc-comment-or-uncomment-lines)
   ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
@@ -1283,13 +1261,14 @@ This program can be used *WITHOUT* evil-mode!
 (use-package rime
   :custom
   (default-input-method "rime")
-  (rime-librime-root "~/.dotfiles/Emacs/emacs-configs/my-emacs/librime/dist")
+  (rime-librime-root "~/.dotfiles/Emacs/emacs-configs/daemon-emacs/librime/dist")
   )
 #+end_src
 * Company
 ** Company Mode
  #+begin_src emacs-lisp
- (use-package company 
+ (use-package company
+   :demand t
    :hook (lsp-mode . company-mode)
    ;; :bind 
    ;; (:map company-active-map
@@ -1314,10 +1293,9 @@ This program can be used *WITHOUT* evil-mode!
    ;; ('tng' means 'tab and go')
    (company-tng-configure-default)
    ;;Completion based on AI
-   ;; (use-package company-tabnine
-   ;;   :config
-   ;;   (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
-   (push '(company-capf :with company-yasnippet :separate) company-backends)
+   (use-package company-tabnine
+     :config
+     (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
    )
  #+end_src
 ** Company Box
@@ -1334,32 +1312,37 @@ This program can be used *WITHOUT* evil-mode!
 *** Smart Parens
   #+begin_src emacs-lisp
   (use-package smartparens
-    :hook (lsp-mode . smartparens-mode))
+    :demand t
+    :hook (prog-mode . smartparens-mode))
   #+end_src
 *** Rainbow Brackets 
   #+begin_src emacs-lisp
   (use-package rainbow-delimiters
-    :hook (lsp-mode . rainbow-delimiters-mode))
+    :demand t
+    :hook (prog-mode . rainbow-delimiters-mode))
   #+end_src
 *** Hungry Delete
   #+begin_src emacs-lisp
   (use-package hungry-delete
-    :hook (lsp-mode . hungry-delete-mode))
+    :demand t
+    :hook (prog-mode . hungry-delete-mode))
   #+end_src
 *** Indent Guide
   #+begin_src emacs-lisp
   (use-package indent-guide
-    :hook (lsp-mode . indent-guide-mode))
+    :demand t
+    :hook (prog-mode . indent-guide-mode))
   #+end_src
 *** Format All
   #+begin_src emacs-lisp
   (use-package format-all
-    :hook (lsp-mode . format-all-mode)
+    :demand t
     :commands (format-all-ensure-formatter format-all-buffer))
   #+end_src
 *** quickrun.el
   #+begin_src emacs-lisp
   (use-package quickrun
+    :demand t
     :commands (quickrun)
     :config
     ;; set python3 as default
@@ -1368,7 +1351,7 @@ This program can be used *WITHOUT* evil-mode!
         (:exec . "%c %s") 
         (:tempfile . nil)) 
       :default "python"))
-
+  
   ;; Set up Keybindings
   ;; (dw/leader-key-def
   ;;   "r"  '(:ignore t :which-key "quickrun")
@@ -1386,7 +1369,8 @@ This program can be used *WITHOUT* evil-mode!
 *** Yasnippets
   #+begin_src emacs-lisp
   (use-package yasnippet
-    :hook ((lsp-mode org-mode) . yas-minor-mode)
+    :after company
+    :hook (prog-mode . yas-minor-mode)
     :config
     (setq yas-snippet-dirs
       '("~/.dotfiles/Emacs/snippets"))
@@ -1408,38 +1392,42 @@ This program can be used *WITHOUT* evil-mode!
   #+end_src
 ** Lsp
 *** LSP Mode
-**** Main Setting
   #+begin_src emacs-lisp 
-    (use-package lsp-mode
-      :commands (lsp lsp-deferred)
-      :hook (
-             ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
-             (lsp-mode . lsp-enable-which-key-integration))
-      :init
-      (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-      :custom
-      (lsp-headerline-breadcrumb-enable nil)
-      (lsp-signature-auto-activate nil)
-      (lsp-signature-render-documentation nil)
-      (lsp-log-io nil)
-      (lsp-idle-delay 0.500)
-      (lsp-completion-provider :capf)
-      :config
-      (add-to-list 'lsp-language-id-configuration '((scss-mode . "css")
-                                                    (less-css-mode . "css")))
-      )
+  (use-package lsp-mode
+    :demand t
+    :commands (lsp lsp-deferred)
+    :hook ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
+    :init
+    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+    :config
+    (lsp-enable-which-key-integration t)
+    (setq lsp-headerline-breadcrumb-segments nil)
+    ;; (setq lsp-headerline-breadcrumb-enable-symbol-numbers t)
+    (setq lsp-log-io nil)
+    (setq lsp-idle-delay 0.500)
+    (setq lsp-completion-provider :capf))
+  
+  ;; (dw/leader-key-def
+  ;;   "l"  '(:ignore t :which-key "lsp")
+  ;;   "ld" 'xref-find-definitions
+  ;;   "lr" 'xref-find-references
+  ;;   "ln" 'lsp-ui-find-next-reference
+  ;;   "lp" 'lsp-ui-find-prev-reference
+  ;;   "ls" 'counsel-imenu
+  ;;   "le" 'lsp-ui-flycheck-list
+  ;;   "lS" 'lsp-ui-sideline-mode
+  ;;   "lX" 'lsp-execute-code-action)
   #+end_src
 **** Lsp UI
   #+begin_src emacs-lisp
   (use-package lsp-ui
     :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-sideline-enable t)
-    (lsp-ui-sideline-show-hover t)
-    (lsp-ui-doc-position 'bottom)
-    (lsp-ui-imenu-auto-refresh t)
+    :config
+    (setq lsp-ui-sideline-enable t)
+    (setq lsp-ui-doc-position 'bottom)
+    (setq lsp-ui-imenu-auto-refresh t)
     )
-  
+
   (use-package lsp-ivy 
     :after lsp
     :commands lsp-ivy-workspace-symbol)
@@ -1452,7 +1440,6 @@ This program can be used *WITHOUT* evil-mode!
 **** Pyright
   #+begin_src emacs-lisp
   (use-package lsp-pyright
-    :defer t
     :hook (python-mode . (lambda ()
                             (require 'lsp-pyright)
                             (lsp))))
@@ -1495,35 +1482,39 @@ This program can be used *WITHOUT* evil-mode!
   #+end_src
 *** TS/JS
 #+begin_src emacs-lisp
-  (use-package typescript-mode
-    :mode "\\.ts\\'"
-    :config
-    (setq typescript-indent-level 2))
+(use-package typescript-mode
+  :demand t
+  :mode "\\.ts\\'"
+  :config
+  (setq typescript-indent-level 2))
 
-  (defun dw/set-js-indentation ()
-    (setq js-indent-level 2)
-    (setq evil-shift-width js-indent-level)
-    (setq-default tab-width 2))
+(defun dw/set-js-indentation ()
+  (setq js-indent-level 2)
+  (setq evil-shift-width js-indent-level)
+  (setq-default tab-width 2))
 
-  (use-package js2-mode
-    :mode "\\.jsx?\\'")
+(use-package js2-mode
+  :demand t
+  :mode "\\.jsx?\\'")
 
-  ;; Don't use built-in syntax checking
-  (setq js2-mode-show-strict-warnings nil)
+;; Don't use built-in syntax checking
+(setq js2-mode-show-strict-warnings nil)
 
-  ;; Set up proper indentation in JavaScript and JSON files
-  (add-hook 'js2-mode-hook #'dw/set-js-indentation)
-  (add-hook 'json-mode-hook #'dw/set-js-indentation)
+;; Set up proper indentation in JavaScript and JSON files
+(add-hook 'js2-mode-hook #'dw/set-js-indentation)
+(add-hook 'json-mode-hook #'dw/set-js-indentation)
 
-  (use-package prettier-js
-    :hook ((js2-mode . prettier-js-mode)
-           (typescript-mode . prettier-js-mode))
-    :config
-    (setq prettier-js-show-errors nil))
+(use-package prettier-js
+  :demand t
+  :hook ((js2-mode . prettier-js-mode)
+         (typescript-mode . prettier-js-mode))
+  :config
+  (setq prettier-js-show-errors nil))
 #+end_src
 *** CoffeeScript
 #+begin_src emacs-lisp
 (use-package coffee-mode
+  :demand t
   :mode "\\.coffee\\'"
   :config
   ;; automatically clean up bad whitespace
@@ -1548,15 +1539,16 @@ This program can be used *WITHOUT* evil-mode!
   )
 #+end_src
 *** Web (HTML/CSS)
-**** HTML
+**** HTML and CSS
   #+begin_src emacs-lisp
   (use-package web-mode
+    :demand t
     :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
-
+  
   ;; Impatient Html File
-  ;; (use-package impatient-mode
-  ;;   :after web-mode)
-
+  (use-package impatient-mode
+    :after web-mode)
+  
   ;; Preview the html file
   (use-package skewer-mode
     :after web-mode
@@ -1571,23 +1563,13 @@ This program can be used *WITHOUT* evil-mode!
     (use-package emmet-mode
       :hook (web-mode . emmet-mode))
   #+end_src
-**** SCSS/SASS
-#+begin_src emacs-lisp
-(use-package scss-mode
-  :mode "\\.scss\\'"
-  :custom
-  (scss-compile-at-save t)
-  (scss-output-directory "../css")
-  (scss-sass-command "sass --no-source-map")
-  )
-
-#+end_src
 *** Latex
 **** latex-preview-pane
   Preview latex files as PDF in Emacs
   #+begin_src emacs-lisp
   (use-package latex-preview-pane
     :ensure t
+    :demand t
     :after (tex-mode Latex-mode latex-mode TeX-latex-mode))
   #+end_src
 **** AucTex
@@ -1597,6 +1579,7 @@ This program can be used *WITHOUT* evil-mode!
 **** CDLaTex
   #+begin_src emacs-lisp
   (use-package cdlatex
+    :demand t
     :hook 
     (org-mode . org-cdlatex-mode)
     (LaTeX-mode . cdlatex-mode)
@@ -1617,17 +1600,20 @@ This program can be used *WITHOUT* evil-mode!
 *** Swift
 #+begin_src emacs-lisp
 (use-package lsp-sourcekit
+  :demand t
   :after swift-mode
   :config
   (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 
 (use-package swift-mode
+  :demand t
   :mode "\\.swift\\'"
   :hook (swift-mode . (lambda () (lsp))))
 #+end_src
 *** Yaml
 #+begin_src emacs-lisp
 (use-package yaml-mode
+  :demand t
   :mode "\\.yaml\\'")
 #+end_src
 *** COMMENT R
@@ -1637,12 +1623,14 @@ This program can be used *WITHOUT* evil-mode!
 *** Json
 #+begin_src emacs-lisp
 (use-package json-mode
+  :demand t
   :mode "\\.json\\'")
 #+end_src
 ** Dap Debug Mode
 #+begin_src emacs-lisp
 ;; dap debug tools
 (use-package dap-mode
+  :demand t
   :commands dap-debug 
   :config
   ;; Set up Node debugging
@@ -1660,22 +1648,18 @@ brew install libtool libvterm
 #+end_src
 #+begin_src emacs-lisp
 (use-package vterm
+  :demand t
   :commands vterm
   :config
   ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-  (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
   (setq vterm-max-scrollback 10000))
-
-(use-package multi-vterm
-  :after vterm)
-
-(use-package vterm-toggle
-  :after vterm)
 #+end_src
 ** Git
 *** Magit
 #+begin_src emacs-lisp
 (use-package magit
+  :demand t
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
@@ -1687,6 +1671,7 @@ brew install libtool libvterm
 ** LeetCode Client
 #+begin_src emacs-lisp
 (use-package leetcode
+  :demand t
   :commands (leetcode start-leetcode)
   :custom
   (leetcode-prefer-language "python3")
@@ -1718,11 +1703,5 @@ Make Emacs/lsp more smooth
 Same as above
 #+begin_src emacs-lisp
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
-#+end_src
-* Load Plugings Based On Graphic Setting
-#+begin_src emacs-lisp
-(if (display-graphic-p)
-    (dolist (elisp-code graphic-only-plugins-setting)
-      (eval elisp-code)))
 #+end_src
 

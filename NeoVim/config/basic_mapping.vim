@@ -34,13 +34,13 @@ noremap <LEADER>h <C-w>h
 noremap <LEADER>l <C-w>l
 
 " Disable the default s key
-noremap s <nop>
+"noremap s <nop>
 
 " split the screens to up (horizontal), down (horizontal), left (vertical), right (vertical)
-noremap sk :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
-noremap sj :set splitbelow<CR>:split<CR>
-noremap sh :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
-noremap sl :set splitright<CR>:vsplit<CR>
+"noremap sk :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
+"noremap sj :set splitbelow<CR>:split<CR>
+"noremap sh :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
+"noremap sl :set splitright<CR>:vsplit<CR>
 
 " Resize splits with arrow keys
 noremap <leader><up> :res +5<CR>
@@ -49,13 +49,13 @@ noremap <leader><left> :vertical resize-5<CR>
 noremap <leader><right> :vertical resize+5<CR>
 
 " Place the two screens up and down
-noremap sh <C-w>t<C-w>K
+"noremap sh <C-w>t<C-w>K
 " Place the two screens side by side
-noremap sv <C-w>t<C-w>H
+"noremap sv <C-w>t<C-w>H
 
 " Rotate screens
-noremap srh <C-w>b<C-w>K
-noremap srv <C-w>b<C-w>H
+"noremap srh <C-w>b<C-w>K
+"noremap srv <C-w>b<C-w>H
 
 " Press <SPACE> + q to close the window below the current window
 noremap <LEADER>q <C-w>j:q<CR>
