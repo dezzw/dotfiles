@@ -5,23 +5,19 @@
 
 Dash/license.dash-license
 
+NeoVim/tmp/*
+
 Emacs/.DS_Storec
 Emacs/emacs-configs/.DS_Store
 
-Emacs/emacs-configs/my-emacs/.DS_Store
-Emacs/emacs-configs/my-emacs/.cache/*
-Emacs/emacs-configs/my-emacs/.extension/*
-Emacs/emacs-configs/my-emacs/eln-cache/*
-Emacs/emacs-configs/my-emacs/straight/*
+Emacs/emacs-configs/demacs-stable/.DS_Store
+Emacs/emacs-configs/demacs-stable/.cache/*
+Emacs/emacs-configs/demacs-stable/.extension/*
+Emacs/emacs-configs/demacs-stable/eln-cache/*
+Emacs/emacs-configs/demacs-stable/straight/*
 
-Emacs/emacs-configs/term-emacs/.DS_Store
-Emacs/emacs-configs/term-emacs/.cache/*
-Emacs/emacs-configs/term-emacs/.extension/*
-Emacs/emacs-configs/term-emacs/eln-cache/*
-Emacs/emacs-configs/term-emacs/straight/*
-
-Emacs/emacs-configs/daemon-emacs/.DS_Store
-Emacs/emacs-configs/daemon-emacs/.cache/*
-Emacs/emacs-configs/daemon-emacs/.extension/*
-Emacs/emacs-configs/daemon-emacs/eln-cache/*
-Emacs/emacs-configs/daemon-emacs/straight/*
+Emacs/emacs-configs/demacs-latest/.DS_Store
+Emacs/emacs-configs/demacs-latest/.cache/*
+Emacs/emacs-configs/demacs-latest/.extension/*
+Emacs/emacs-configs/demacs-latest/eln-cache/*
+Emacs/emacs-configs/demacs-latest/straight/*

@@ -1,7 +1,7 @@
+(setq graphic-only-plugins-setting ())
+
 (setq comp-async-jobs-number 7 
        comp-deferred-compilation t
-       ;; comp-deferred-compilation-black-list '()
-       ;; or it will be too annoying
        comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
@@ -45,7 +45,7 @@
   )
 
 ;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/daemon-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/demacs-stable/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 
@@ -68,10 +68,12 @@
                                               'run-at-end 'only-in-org-mode)))
 
 (use-package super-save
+  :defer 1
   :diminish super-save-mode
+  :custom
+  (super-save-auto-save-when-idle t)
   :config
-  (super-save-mode +1)
-  (setq super-save-auto-save-when-idle t))
+  (super-save-mode +1))
 
 ;; Enalbe column number
 (column-number-mode)
@@ -90,15 +92,15 @@
 (defun dw/set-font-faces ()
   (message "Setting faces!")
   ;; set font
-  (set-face-attribute 'default nil :font "Victor Mono" :height 140)
+  (set-face-attribute 'default nil :font "Victor Mono" :height 150)
 
   ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 140)
+  (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 150)
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 140 :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
 
-(use-package ligature
+(push '(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
 	 :config
 	 ;; Enable the "www" ligature in every possible major mode
@@ -122,7 +124,7 @@
 					      "\\\\" "://"))
 	 ;; Enables ligature checks globally in all buffers. You can also do it
 	 ;; per mode with `ligature-mode'.
-	 (global-ligature-mode t))
+	 (global-ligature-mode t)) graphic-only-plugins-setting)
 
 (use-package all-the-icons
   :custom
@@ -130,22 +132,27 @@
 
 (use-package doom-themes)
 
-(defun dw/apply-theme (appearance)
-  "Load theme, taking current system APPEARANCE into consideration."
-  (mapc #'disable-theme custom-enabled-themes)
-  (pcase appearance
-    ('light (load-theme 'doom-solarized-light t))
-    ('dark (load-theme 'doom-one t))))
+(if (not (display-graphic-p))
+    (load-theme 'doom-one t))
+
+(if (display-graphic-p)
+    (defun dw/apply-theme (appearance)
+      "Load theme, taking current system APPEARANCE into consideration."
+      (mapc #'disable-theme custom-enabled-themes)
+      (pcase appearance
+	('light (load-theme 'doom-solarized-light t))
+	('dark (load-theme 'doom-one t))))
+  )
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-env-version t))
+  :custom
+  (doom-modeline-window-width-limit fill-column)
+  )
 
 (use-package dashboard
   :init
   ;; Set the title
-  ;; (setq dashboard-banner-logo-title "Code Better, Live Longer!")
   ;; Set the banner
   (setq dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
   (setq dashboard-center-content t)
@@ -153,34 +160,23 @@
   (dashboard-setup-startup-hook)
   (setq dashboard-items '((recents  . 7)
                           (projects . 5)
-                          ;; To display today’s agenda items on the dashboard
-                          ;; (agenda . 5)
                           ))
-  ;; To show agenda for the upcoming seven days
-  ;; (setq dashboard-week-agenda t)
-  ;; To customize which categories from the agenda items should be visible in the dashboard
-  ;; (setq dashboard-org-agenda-categories '("Tasks" "Appointments"))
-  ;; To show all agenda entries
-  ;; (setq dashboard-filter-agenda-entry 'dashboard-no-filter-agenda)
-  ;; To have an extra filter
-  ;; (setq dashboard-match-agenda-entry nil)
-
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-init-info t)
   )
 
-(use-package nyan-mode
+(push '(use-package nyan-mode
 	 :config
 	 (setq nyan-mode t)
 	 :custom
 	 (nyan-animate-nyancat t)
 	 (nyan-wavy-trail t)
-	 )
+	 ) graphic-only-plugins-setting)
 
 (use-package hl-todo
-  :demand t
-  :hook ((org-mode prog-mode) . hl-todo-mode)
+  :defer t
+  :hook ((org-mode lsp-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
@@ -191,37 +187,23 @@
   )
 
 (use-package highlight-numbers
-  :demand t
-  :hook (prog-mode . highlight-numbers-mode))
+  :hook ((org-mode lsp-mode) . highlight-numbers-mode))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
               (lambda (frame)
                 (setq doom-modeline-icon t)
-		;; (load-theme 'doom-one t)
 		(add-hook 'ns-system-appearance-change-functions #'dw/apply-theme)
 		(dashboard-setup-startup-hook)
                 (with-selected-frame frame
                   (dw/set-font-faces))
 		(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-		(setq doom-modeline-window-width-limit fill-column)
 		))
-  ;; (load-theme 'doom-one t)
-  ;; (lab-themes-load-style 'dark)
   (add-hook 'ns-system-appearance-change-functions #'dw/apply-theme)
   (dw/set-font-faces)
   )
 
-(use-package midnight
-  :demand t
-  :config
-  (setq midnight-mode 1)
-  (midnight-delay-set 'midnight-delay "4:30am")
-  ;; (setq midnight-period 7200)
-  )
-
 (use-package ace-window
-  :demand t
   :bind ("C-x o" . ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
@@ -229,53 +211,28 @@
 (use-package edwina
   :config
   (setq display-buffer-base-action '(display-buffer-below-selected))
-  ;; (edwina-setup-dwm-keys)
   (edwina-mode 1))
 
 (use-package dired
   :ensure nil
   :straight nil
-  :demand t
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
-  ;;:config
-  ;;(evil-collection-define-key 'normal 'dired-mode-map
-  ;;  "d" 'dired-single-up-directory
-  ;;  "n" 'dired-single-buffer)
   )
 
 (use-package dired-single
-  :demand t
   :commands (dired dired-jump))
 
 (use-package all-the-icons-dired
-  :demand t
   :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package dired-hide-dotfiles
-  :demand t
   :hook (dired-mode . dired-hide-dotfiles-mode)
-  ;;:config
-  ;;(evil-collection-define-key 'normal 'dired-mode-map
-  ;;  "H" 'dired-hide-dotfiles-mode)
   )
 
 (use-package diredfl
-  :demand t
   :hook (dired-mode . diredfl-mode)
   )
-
-(use-package general
-  :config
-  (general-evil-setup t)
-
-  (general-create-definer dw/leader-key-def
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (general-create-definer dw/ctrl-c-keys
-    :prefix "C-c"))
 
 (use-package which-key
   :init (which-key-mode)
@@ -284,10 +241,8 @@
   (setq which-key-idle-delay 0.3))
 
 (use-package projectile
-  :demand t
   :diminish projectile-mode
   :config (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
@@ -295,52 +250,75 @@
     (setq projectile-project-search-path '("~/Documents/Projects/Code")))
   (setq projectile-switch-project-action #'projectile-dired))
 
-(use-package counsel-projectile
-  :after projectile
-  :config (counsel-projectile-mode))
-
-(use-package ivy
-  :diminish
-  :demand t
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("C-l" . ivy-alt-done)
-         ("C-n" . ivy-next-line)
-         ("C-p" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-p" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-p" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :init
-  (ivy-mode 1))
-
-(use-package counsel
-  :demand t
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-switch-buffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-histor))
+(use-package savehist
   :config
-  (setq ivy-initial-inputs-alist nil) ;; Don't start searches with ^
-  )
+  (setq history-length 25)
+  (savehist-mode 1))
 
-(use-package ivy-rich
-  :after ivy
+(defun dw/minibuffer-backward-kill (arg)
+  "When minibuffer is completing a file name delete up to parent
+folder, otherwise delete a word"
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+      (backward-kill-word arg)))
+
+(use-package vertico
+  :bind (:map vertico-map
+         ("C-j" . vertico-next)
+         ("C-k" . vertico-previous)
+         ("C-f" . vertico-exit)
+         :map minibuffer-local-map
+         ("M-h" . dw/minibuffer-backward-kill))
+  :custom
+  (vertico-cycle t)
   :init
-  (ivy-rich-mode 1))
+  (vertico-mode))
 
-(use-package ivy-posframe
- :after ivy
- :config
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (ivy-posframe-mode 1))
+(use-package corfu
+  :straight '(corfu :host github
+                    :repo "minad/corfu")
+  :bind (:map corfu-map
+         ("C-j" . corfu-next)
+         ("C-k" . corfu-previous)
+         ("C-f" . corfu-insert))
+  :custom
+  (corfu-cycle t)
+  :config
+  (corfu-global-mode))
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
+
+(defun dw/get-project-root ()
+  (when (fboundp 'projectile-project-root)
+    (projectile-project-root)))
+
+(use-package consult
+  :demand t
+  :bind (("C-s" . consult-line)
+         ("C-M-l" . consult-imenu)
+         ("C-M-j" . persp-switch-to-buffer*)
+         :map minibuffer-local-map
+         ("C-r" . consult-history))
+  :custom
+  (consult-project-root-function #'dw/get-project-root)
+  (completion-in-region-function #'consult-completion-in-region))
+
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
 
 (use-package helpful
-  :demand t
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
   (counsel-describe-function-function #'helpful-callable)
@@ -357,7 +335,6 @@
   (visual-line-mode 1))
 
 (use-package org
-  :demand t
   :hook (org-mode . dw/org-mode-setup)
   :config
   (setq org-html-head-include-default-style nil)
@@ -427,11 +404,6 @@
   :custom
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-;; Replace list hyphen(-) with dot(.)
-;; (font-lock-add-keywords 'org-mode
-;;                         '(("^ *\\([-]\\) "
-;;                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
 (with-eval-after-load 'org
   ;; Make sure org faces is available
   (require 'org-faces)
@@ -487,85 +459,56 @@
   :hook (org-mode . dw/org-mode-visual-fill))
 
 (use-package org-download
-          :ensure t
-          :demand t
-          ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
-          :bind ("C-S-y" . org-download-screenshot)
-          :config
-          (require 'org-download)
-          ;; Drag and drop to Dired
-          (add-hook 'dired-mode-hook 'org-download-enable))
+	  :ensure t 
+	  ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
+	  :bind ("C-S-y" . org-download-screenshot)
+	  :config
+	  (require 'org-download)
+	  ;; Drag and drop to Dired
+	  (add-hook 'dired-mode-hook 'org-download-enable))
 
 (use-package valign
   :hook (org-mode . valign-mode))
 
 (use-package markdown-mode
  :ensure t
- :demand t
  :mode ("README\\.md\\'" . gfm-mode)
  :init (setq markdown-command "multimarkdown"))
 
 (use-package edit-indirect
   :after markdown-mode)
 
-(defun dw/evil-hook ()
-  (dolist (mode '(custom-mode
-                  eshell-mode
-		  vterm-mode
-                  term-mode))
-    (add-to-list 'evil-emacs-state-modes mode)))
+;; For Qwerty
+(require 'init-meow-qwerty)
 
-(use-package evil
+(use-package meow
+  :demand t
   :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  (setq evil-respect-visual-line-mode t)
+  (meow-global-mode 1)
   :config
-  (add-hook 'evil-mode-hook 'dw/evil-hook)
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
-
-(use-package evil-collection
-  :after evil
-  :custom
-  (evil-collection-outline-bind-tab-p nil)
-  :config
-  (evil-collection-init))
-
-(unless (display-graphic-p)
-  (use-package evil-terminal-cursor-changer
-    :ensure t
-    :init
-    (evil-terminal-cursor-changer-activate)
-    :config
-     (setq evil-motion-state-cursor 'box)  ; █
-     (setq evil-visual-state-cursor 'box)  ; █
-     (setq evil-normal-state-cursor 'box)  ; █
-     (setq evil-insert-state-cursor 'bar)  ; ⎸
-     (setq evil-emacs-state-cursor  'hbar) ; _
-     )
+  ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
+  (meow-setup)
+  ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
+  (meow-setup-line-number)
+  :bind ("C-k" . meow-insert-exit)
   )
 
-(use-package evil-surround
-  :after evil
-  :config
-  (global-evil-surround-mode 1))
+(meow-leader-define-key
+ '("f" . find-file)
+ '("b" . consult-buffer)
+ '("t" . vterm-toggle)
+ '("qr" . quickrun)
+ '("oo" . ace-window)
+ '("od" . ace-delete-window)
+ '("dd" . dap-debug)
+ '("aa" . org-agenda)
+ '("al" . org-agenda-list)
+ '("ac" . org-capture)
+)
 
-(use-package evil-escape
-  :after evil
-  :config
-  (evil-escape-mode t)
-  (setq-default evil-escape-key-sequence "jk"))
+(meow-motion-overwrite-define-key
+ '("h" . dired-single-up-directory)
+ '("l" . dired-single-buffer))
 
 ;; set delete selection mode
 (delete-selection-mode t)
@@ -575,7 +518,6 @@
 
 (use-package color-rg
   :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
-  :demand t
   :commands (color-rg-search-input
              color-rg-search-symbol
              color-rg-search-input-in-project
@@ -583,16 +525,7 @@
              color-rg-search-project-with-typ)
   )
 
-;; (dw/leader-key-def
-;;   "c" '(:ignore t :which-key "color-rg")
-;;   "cid" 'color-rg-search-input
-;;   "csd" 'color-rg-search-symbol
-;;   "cip" 'color-rg-search-input-in-project
-;;   "cic" 'color-rg-search-input-in-current-file
-;;   "cit" 'color-rg-search-project-with-type)
-
 (use-package multiple-cursors
-  :demand t
   :commands (mc/edit-lines mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this)
   :bind
   (("C-S-c C-S-c" . 'mc/edit-lines)
@@ -604,26 +537,16 @@
   :after lsp)
 
 (use-package evil-nerd-commenter
-  :demand t
+  :defer t
   :bind
   ("M-;" . 'evilnc-comment-or-uncomment-lines)
   ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
   ("C-c c" . 'evilnc-copy-and-comment-lines)
   ("C-c p" . 'evilnc-comment-or-uncomment-paragraphs)
-  ;; :config
-  ;; (evilnc-default-hotkeys t)
   )
 
-(use-package company
-  :demand t
+(use-package company 
   :hook (lsp-mode . company-mode)
-  ;; :bind 
-  ;; (:map company-active-map
-  ;;       ("<tab>". company-complete-selection))
-  ;; (:map lsp-mode-map
-  ;;       ("<tab>" . company-indent-or-complete-common)
-  ;;       ("<M-n>" . company-select-next-or-abort)
-  ;;       ("<M-p>" . company-select-previous-or-abort))
   :custom
   (company-tooltip-align-annotations t)
   ;; Number the candidates (use M-1, M-2 etc to select completions)
@@ -635,7 +558,6 @@
   ;; Back to top when reach the end
   (company-selection-wrap-around t)
   :config
-  ;; (setq global-company-mode t)
   ;; Use tab key to cycle through suggestions.
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
@@ -652,27 +574,22 @@
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 (use-package smartparens
-  :demand t
-  :hook (prog-mode . smartparens-mode))
+  :hook (lsp-mode . smartparens-mode))
 
 (use-package rainbow-delimiters
-  :demand t
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (lsp-mode . rainbow-delimiters-mode))
 
 (use-package hungry-delete
-  :demand t
-  :hook (prog-mode . hungry-delete-mode))
+  :hook (lsp-mode . hungry-delete-mode))
 
 (use-package indent-guide
-  :demand t
-  :hook (prog-mode . indent-guide-mode))
+  :hook (lsp-mode . indent-guide-mode))
 
 (use-package format-all
-  :demand t
+  :hook (lsp-mode . format-all-mode)
   :commands (format-all-ensure-formatter format-all-buffer))
 
 (use-package quickrun
-  :demand t
   :commands (quickrun)
   :config
   ;; set python3 as default
@@ -682,21 +599,11 @@
       (:tempfile . nil)) 
     :default "python"))
 
-;; Set up Keybindings
-;; (dw/leader-key-def
-;;   "r"  '(:ignore t :which-key "quickrun")
-;;   "rr" 'quickrun
-;;   "ra" 'quickrun-with-arg
-;;   "rs" 'quickrun-shell
-;;   "rc" 'quickrun-compile-only
-;;   "re" 'quickrun-region)
-
 (use-package flycheck
   :hook (lsp-mode . flycheck-mode))
 
 (use-package yasnippet
-  :after company
-  :hook (prog-mode . yas-minor-mode)
+  :hook ((org-mode lsp-mode) . yas-minor-mode)
   :config
   (setq yas-snippet-dirs
     '("~/.dotfiles/Emacs/snippets"))
@@ -710,43 +617,32 @@
 (use-package auto-yasnippet
   :after yasnippet)
 
-;; (dw/leader-key-def
-;;   "a"  '(:ignore t :which-key "auto-snippets")
-;;   "aw" 'aya-create
-;;   "ay" 'aya-expand
-;;   "ao" 'aya-open-line)
-
 (use-package lsp-mode
-  :demand t
   :commands (lsp lsp-deferred)
-  :hook ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
+  :hook (
+         ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
   :init
   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :custom
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-signature-auto-activate nil)
+  (lsp-signature-render-documentation nil)
+  (lsp-log-io nil)
+  (lsp-idle-delay 0.500)
+  (lsp-completion-provider :capf)
   :config
-  (lsp-enable-which-key-integration t)
-  (setq lsp-headerline-breadcrumb-segments nil)
-  ;; (setq lsp-headerline-breadcrumb-enable-symbol-numbers t)
-  (setq lsp-log-io nil)
-  (setq lsp-idle-delay 0.500)
-  (setq lsp-completion-provider :capf))
-
-;; (dw/leader-key-def
-;;   "l"  '(:ignore t :which-key "lsp")
-;;   "ld" 'xref-find-definitions
-;;   "lr" 'xref-find-references
-;;   "ln" 'lsp-ui-find-next-reference
-;;   "lp" 'lsp-ui-find-prev-reference
-;;   "ls" 'counsel-imenu
-;;   "le" 'lsp-ui-flycheck-list
-;;   "lS" 'lsp-ui-sideline-mode
-;;   "lX" 'lsp-execute-code-action)
+  (add-to-list 'lsp-language-id-configuration '((scss-mode . "css")
+                                                (less-css-mode . "css")))
+  )
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-doc-position 'bottom)
-  (setq lsp-ui-imenu-auto-refresh t)
+  :custom
+  (lsp-ui-sideline-enable t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-position 'bottom)
+  (lsp-ui-imenu-auto-refresh t)
   )
 
 (use-package lsp-ivy 
@@ -757,6 +653,7 @@
   :commands lsp-treemacs-errors-list)
 
 (use-package lsp-pyright
+  :defer t
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp))))
@@ -766,18 +663,12 @@
   :config
   ;; auto activates the virtual environment if .python-version exists
   (use-package pyenv-mode-auto)
-  ) 
+  )
 
-
-;; (dw/leader-key-def
-;;   "p"  '(:ignore t :which-key "pyenv")
-;;   "pp" 'pyenv-mode
-;;   "ps" 'pyenv-mode-set
-;;   "pu" 'pyenv-mode-unset
-;;   "pr" 'run-python)
+(use-package nvm
+  :defer t)
 
 (use-package typescript-mode
-  :demand t
   :mode "\\.ts\\'"
   :config
   (setq typescript-indent-level 2))
@@ -788,7 +679,6 @@
   (setq-default tab-width 2))
 
 (use-package js2-mode
-  :demand t
   :mode "\\.jsx?\\'")
 
 ;; Don't use built-in syntax checking
@@ -799,14 +689,12 @@
 (add-hook 'json-mode-hook #'dw/set-js-indentation)
 
 (use-package prettier-js
-  :demand t
   :hook ((js2-mode . prettier-js-mode)
          (typescript-mode . prettier-js-mode))
   :config
   (setq prettier-js-show-errors nil))
 
 (use-package coffee-mode
-  :demand t
   :mode "\\.coffee\\'"
   :config
   ;; automatically clean up bad whitespace
@@ -831,12 +719,7 @@
   )
 
 (use-package web-mode
-  :demand t
   :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
-
-;; Impatient Html File
-(use-package impatient-mode
-  :after web-mode)
 
 ;; Preview the html file
 (use-package skewer-mode
@@ -850,15 +733,21 @@
 (use-package emmet-mode
   :hook (web-mode . emmet-mode))
 
+(use-package scss-mode
+  :mode "\\.scss\\'"
+  :custom
+  (scss-compile-at-save t)
+  (scss-output-directory "../css")
+  (scss-sass-command "sass --no-source-map")
+  )
+
 (use-package latex-preview-pane
   :ensure t
-  :demand t
   :after (tex-mode Latex-mode latex-mode TeX-latex-mode))
 
 (straight-use-package 'auctex)
 
 (use-package cdlatex
-  :demand t
   :hook 
   (org-mode . org-cdlatex-mode)
   (LaTeX-mode . cdlatex-mode)
@@ -866,27 +755,22 @@
   )
 
 (use-package lsp-sourcekit
-  :demand t
   :after swift-mode
   :config
   (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 
 (use-package swift-mode
-  :demand t
   :mode "\\.swift\\'"
   :hook (swift-mode . (lambda () (lsp))))
 
 (use-package yaml-mode
-  :demand t
   :mode "\\.yaml\\'")
 
 (use-package json-mode
-  :demand t
   :mode "\\.json\\'")
 
 ;; dap debug tools
 (use-package dap-mode
-  :demand t
   :commands dap-debug 
   :config
   ;; Set up Node debugging
@@ -897,15 +781,18 @@
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 (use-package vterm
-  :demand t
   :commands vterm
   :config
-  ;; (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-  ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
   (setq vterm-max-scrollback 10000))
 
+(use-package multi-vterm
+  :after vterm)
+
+(use-package vterm-toggle
+  :after vterm)
+
 (use-package magit
-  :demand t
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
@@ -915,7 +802,6 @@
 (global-set-key (kbd "C-M-;") 'magit-status)
 
 (use-package leetcode
-  :demand t
   :commands (leetcode start-leetcode)
   :custom
   (leetcode-prefer-language "python3")
@@ -940,3 +826,7 @@
 (setq gc-cons-threshold 100000000)
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+(if (display-graphic-p)
+    (dolist (elisp-code graphic-only-plugins-setting)
+      (eval elisp-code)))

@@ -1,10 +1,10 @@
 (setq graphic-only-plugins-setting ())
 
 (setq comp-async-jobs-number 7 
- comp-deferred-compilation t
- ;; comp-deferred-compilation-black-list '()
- ;; or it will be too annoying
- comp-async-report-warnings-errors nil)
+       comp-deferred-compilation t
+       ;; comp-deferred-compilation-black-list '()
+       ;; or it will be too annoying
+       comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq comp-deferred-compilation-deny-list ())
@@ -47,7 +47,7 @@
   )
 
 ;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/demacs-latest/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 
@@ -269,7 +269,7 @@
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
+  ;; :custom ((projectile-completion-system 'ivy))
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
@@ -277,47 +277,77 @@
     (setq projectile-project-search-path '("~/Documents/Projects/Code")))
   (setq projectile-switch-project-action #'projectile-dired))
 
-(use-package counsel-projectile
-  :after projectile
-  :config (counsel-projectile-mode))
+;; (use-package counsel-projectile
+;;   :after projectile
+;;   :config (counsel-projectile-mode))
 
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("C-l" . ivy-alt-done)
-         ("C-n" . ivy-next-line)
-         ("C-p" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-p" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-p" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :init
-  (ivy-mode 1))
-
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-switch-buffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-histor))
+(use-package savehist
   :config
-  (setq ivy-initial-inputs-alist nil) ;; Don't start searches with ^
-  )
+  (setq history-length 25)
+  (savehist-mode 1))
 
-(use-package ivy-rich
-  :after ivy
+(defun dw/minibuffer-backward-kill (arg)
+  "When minibuffer is completing a file name delete up to parent
+folder, otherwise delete a word"
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+      (backward-kill-word arg)))
+
+(use-package vertico
+  :bind (:map vertico-map
+         ("C-j" . vertico-next)
+         ("C-k" . vertico-previous)
+         ("C-f" . vertico-exit)
+         :map minibuffer-local-map
+         ("M-h" . dw/minibuffer-backward-kill))
+  :custom
+  (vertico-cycle t)
   :init
-  (ivy-rich-mode 1))
+  (vertico-mode))
 
-(use-package ivy-posframe
- :after ivy
- :config
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (ivy-posframe-mode 1))
+(use-package corfu
+  :straight '(corfu :host github
+                    :repo "minad/corfu")
+  :bind (:map corfu-map
+         ("C-j" . corfu-next)
+         ("C-k" . corfu-previous)
+         ("C-f" . corfu-insert))
+  :custom
+  (corfu-cycle t)
+  :config
+  (corfu-global-mode))
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
+
+(defun dw/get-project-root ()
+  (when (fboundp 'projectile-project-root)
+    (projectile-project-root)))
+
+(use-package consult
+  :demand t
+  :bind (("C-s" . consult-line)
+         ("C-M-l" . consult-imenu)
+         ("C-M-j" . persp-switch-to-buffer*)
+         :map minibuffer-local-map
+         ("C-r" . consult-history))
+  :custom
+  (consult-project-root-function #'dw/get-project-root)
+  (completion-in-region-function #'consult-completion-in-region))
+
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
 
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
@@ -482,10 +512,7 @@
  :init (setq markdown-command "multimarkdown"))
 
 (use-package edit-indirect
-  :after markdown-mode)
-
-;; For DVP
-;; (require 'init-meow-dvp)
+  :commands (markdown-edit-code-block))
 
 ;; For Qwerty
 (require 'init-meow-qwerty)
@@ -505,12 +532,12 @@
   ;;   (insert . "Ꮚ`ꈊ´Ꮚ")
   ;;   (keypad . "Ꮚ'ꈊ'Ꮚ")
   ;;   (motion . "Ꮚ-ꈊ-Ꮚ")))
-  :bind ("C-g" . meow-insert-exit)
+  :bind ("C-k" . meow-insert-exit)
   )
 
 (meow-leader-define-key
  '("f" . find-file)
- '("b" . counsel-switch-buffer)
+ '("b" . consult-buffer)
  '("t" . vterm-toggle)
  '("qr" . quickrun)
  '("oo" . ace-window)
@@ -595,10 +622,10 @@
   ;; ('tng' means 'tab and go')
   (company-tng-configure-default)
   ;;Completion based on AI
-  ;; (use-package company-tabnine
-  ;;   :config
-  ;;   (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
-  (push '(company-capf :with company-yasnippet :separate) company-backends)
+  (use-package company-tabnine
+    :config
+    (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
+  ;; (push '(company-capf :with company-yasnippet :separate) company-backends)
   )
 
 ;; Add UI for Company
@@ -606,6 +633,24 @@
   :hook (company-mode . company-box-mode)
   :config
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+
+(use-package citre
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config)
+  ;; Bind your frequently used commands.
+  (global-set-key (kbd "C-x c j") 'citre-jump)
+  (global-set-key (kbd "C-x c J") 'citre-jump-back)
+  (global-set-key (kbd "C-x c p") 'citre-ace-peek)
+  ;; :config
+  ;; (setq
+   ;; Set this if readtags is not in your path.
+   ;; citre-readtags-program "/path/to/readtags"
+   ;; Set this if you use project management plugin like projectile.  It's
+   ;; only used to display paths relatively, and doesn't affect actual use.
+   ;; citre-project-root-function #'projectile-project-root))
+   )
 
 (use-package smartparens
   :hook (lsp-mode . smartparens-mode))
@@ -668,9 +713,9 @@
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :hook (
-         ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
+  ;; :hook (
+  ;;        ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
+  ;;        (lsp-mode . lsp-enable-which-key-integration))
   :init
   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
   :custom
@@ -694,9 +739,7 @@
   (lsp-ui-imenu-auto-refresh t)
   )
 
-(use-package lsp-ivy 
-  :after lsp
-  :commands lsp-ivy-workspace-symbol)
+
 (use-package lsp-treemacs
   :after lsp
   :commands lsp-treemacs-errors-list)

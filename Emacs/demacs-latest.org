@@ -1,11 +1,11 @@
 #+TITLE: Emacs Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/my-emacs/init.el :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/demacs-latest/init.el :mkdirp yes
 * Graphic Only Plugins Setting
 #+begin_src emacs-lisp
 (setq graphic-only-plugins-setting ())
 #+end_src
 * Some improve in early-init
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-latest/early-init.el
 (setq gc-cons-threshold most-positive-fixnum)
 
 (setq load-prefer-newer noninteractive)
@@ -95,7 +95,7 @@
 ** Update Load Path
 #+begin_src emacs-lisp
 ;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/demacs-latest/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 #+end_src
@@ -142,7 +142,7 @@
  #+end_src
 * UI Setup
 ** Hide Useless UI
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-latest/early-init.el
  (setq inhibit-startup-message t)
 
  (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -156,7 +156,7 @@
  (setq ring-bell-function 'ignore)
  #+end_src
 ** Frame Transparency and Maximize Windows
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-latest/early-init.el
  ;; (push '(;; Set frame transparency and maximize windows by default.
          (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
          (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
@@ -431,7 +431,7 @@
  (use-package projectile
    :diminish projectile-mode
    :config (projectile-mode)
-   :custom ((projectile-completion-system 'ivy))
+   ;; :custom ((projectile-completion-system 'ivy))
    :bind-keymap
    ("C-c p" . projectile-command-map)
    :init
@@ -439,55 +439,91 @@
      (setq projectile-project-search-path '("~/Documents/Projects/Code")))
    (setq projectile-switch-project-action #'projectile-dired))
 
- (use-package counsel-projectile
-   :after projectile
-   :config (counsel-projectile-mode))
+ ;; (use-package counsel-projectile
+ ;;   :after projectile
+ ;;   :config (counsel-projectile-mode))
  #+end_src
-* Ivy
-** Ivy Mode
- #+begin_src emacs-lisp
- (use-package ivy
-   :diminish
-   :bind (("C-s" . swiper)
-          :map ivy-minibuffer-map
-          ("C-l" . ivy-alt-done)
-          ("C-n" . ivy-next-line)
-          ("C-p" . ivy-previous-line)
-          :map ivy-switch-buffer-map
-          ("C-p" . ivy-previous-line)
-          ("C-l" . ivy-done)
-          ("C-d" . ivy-switch-buffer-kill)
-          :map ivy-reverse-i-search-map
-          ("C-p" . ivy-previous-line)
-          ("C-d" . ivy-reverse-i-search-kill))
-   :init
-   (ivy-mode 1))
-
- (use-package counsel
-   :bind (("M-x" . counsel-M-x)
-          ("C-x b" . counsel-switch-buffer)
-          ("C-x C-f" . counsel-find-file)
-          :map minibuffer-local-map
-          ("C-r" . 'counsel-minibuffer-histor))
-   :config
-   (setq ivy-initial-inputs-alist nil) ;; Don't start searches with ^
-   )
- #+end_src
-** Ivy Rich
- #+begin_src emacs-lisp
- (use-package ivy-rich
-   :after ivy
-   :init
-   (ivy-rich-mode 1))
- #+end_src
-** Ivy Posframe
- #+begin_src emacs-lisp
- (use-package ivy-posframe
-  :after ivy
+* Completion System
+** Preserve Minibuffer History with savehist-mode
+#+begin_src emacs-lisp
+(use-package savehist
   :config
-   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-   (ivy-posframe-mode 1))
- #+end_src
+  (setq history-length 25)
+  (savehist-mode 1))
+#+end_src
+** Completions with Vertico
+#+begin_src emacs-lisp
+(defun dw/minibuffer-backward-kill (arg)
+  "When minibuffer is completing a file name delete up to parent
+folder, otherwise delete a word"
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+      (backward-kill-word arg)))
+
+(use-package vertico
+  :bind (:map vertico-map
+         ("C-j" . vertico-next)
+         ("C-k" . vertico-previous)
+         ("C-f" . vertico-exit)
+         :map minibuffer-local-map
+         ("M-h" . dw/minibuffer-backward-kill))
+  :custom
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
+#+end_src
+** Completions in Regions with Corfu
+#+begin_src emacs-lisp
+(use-package corfu
+  :straight '(corfu :host github
+                    :repo "minad/corfu")
+  :bind (:map corfu-map
+         ("C-j" . corfu-next)
+         ("C-k" . corfu-previous)
+         ("C-f" . corfu-insert))
+  :custom
+  (corfu-cycle t)
+  :config
+  (corfu-global-mode))
+#+end_src
+** Improved Candidate Filtering with Orderless
+#+begin_src emacs-lisp
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
+#+end_src
+** Consult Commands
+#+begin_src emacs-lisp
+(defun dw/get-project-root ()
+  (when (fboundp 'projectile-project-root)
+    (projectile-project-root)))
+
+(use-package consult
+  :demand t
+  :bind (("C-s" . consult-line)
+         ("C-M-l" . consult-imenu)
+         ("C-M-j" . persp-switch-to-buffer*)
+         :map minibuffer-local-map
+         ("C-r" . consult-history))
+  :custom
+  (consult-project-root-function #'dw/get-project-root)
+  (completion-in-region-function #'consult-completion-in-region))
+#+end_src
+** Completion Annotations with Marginalia
+#+begin_src emacs-lisp
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+#+end_src
 * Helpful function
 ** Helpful Function Description
  #+begin_src emacs-lisp
@@ -672,7 +708,7 @@
    (org-latex-impatient-posframe-position-handler 'posframe-poshandler-point-bottom-left-corner))
  #+end_src
 ** Org Agenda
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-org-agenda.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-latest/lisp/init-org-agenda.el
 (with-eval-after-load 'org
   (setq org-agenda-files (list
 			  "~/Documents/Org/Tasks.org"
@@ -829,7 +865,7 @@
 ** Edit Code Block
  #+begin_src emacs-lisp
  (use-package edit-indirect
-   :after markdown-mode)
+   :commands (markdown-edit-code-block))
  #+end_src
 * Editing
 ** COMMENT Evil Mode
@@ -923,171 +959,8 @@
     "mA" 'evil-mc-make-cursor-in-visual-selection-end)
   #+end_src
 ** Meow
-*** Dvorak Simplified Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvorak.el
-(defun meow-setup ()
-  (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak)
-  (meow-leader-define-key
-   '("1" . meow-digit-argument)
-   '("2" . meow-digit-argument)
-   '("3" . meow-digit-argument)
-   '("4" . meow-digit-argument)
-   '("5" . meow-digit-argument)
-   '("6" . meow-digit-argument)
-   '("7" . meow-digit-argument)
-   '("8" . meow-digit-argument)
-   '("9" . meow-digit-argument)
-   '("0" . meow-digit-argument))
-  (meow-normal-define-key
-   '("0" . meow-expand-0)
-   '("9" . meow-expand-9)
-   '("8" . meow-expand-8)
-   '("7" . meow-expand-7)
-   '("6" . meow-expand-6)
-   '("5" . meow-expand-5)
-   '("4" . meow-expand-4)
-   '("3" . meow-expand-3)
-   '("2" . meow-expand-2)
-   '("1" . meow-expand-1)
-   '("-" . negative-argument)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
-   '("<" . meow-beginning-of-thing)
-   '(">" . meow-end-of-thing)
-   '("a" . meow-append)
-   '("A" . meow-open-below)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '("c" . meow-change)
-   '("C" . meow-change-save)
-   '("d" . meow-delete)
-   '("e" . meow-line)
-   '("f" . meow-find)
-   '("F" . meow-find-expand)
-   '("g" . meow-keyboard-quit)
-   '("G" . meow-goto-line)
-   '("h" . meow-left)
-   '("H" . meow-left-expand)
-   '("i" . meow-insert)
-   '("I" . meow-open-above)
-   '("j" . meow-join)
-   '("J" . delete-indentation)
-   '("k" . meow-kill)
-   '("l" . meow-till)
-   '("L" . meow-till-expand)
-   '("m" . meow-mark-word)
-   '("M" . meow-mark-symbol)
-   '("n" . meow-next)
-   '("N" . meow-next-expand)
-   '("o" . meow-block)
-   '("O" . meow-block-expand)
-   '("p" . meow-prev)
-   '("P" . meow-prev-expand)
-   '("q" . meow-quit)
-   '("r" . meow-replace)
-   '("R" . meow-replace-save)
-   '("s" . meow-search)
-   '("S" . meow-pop-search)
-   '("t" . meow-right)
-   '("T" . meow-right-expand)
-   '("u" . undo)
-   '("v" . meow-visit)
-   '("w" . meow-next-word)
-   '("W" . meow-next-symbol)
-   '("x" . meow-save)
-   '("y" . meow-yank)
-   '("z" . meow-pop-selection)
-   '("Z" . meow-pop-all-selection)
-   '("&" . meow-query-replace)
-   '("%" . meow-query-replace-regexp)
-   '("<escape>" . meow-last-buffer)))
-
-(provide 'init-meow-dvorak)
-#+end_src
-*** Dvorak Programmer Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-dvp.el
-(defun meow-setup ()
-  (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvp)
-  (meow-normal-define-key
-   '("*" . meow-expand-0)
-   '("=" . meow-expand-9)
-   '("!" . meow-expand-8)
-   '("[" . meow-expand-7)
-   '("]" . meow-expand-6)
-   '("{" . meow-expand-5)
-   '("+" . meow-expand-4)
-   '("}" . meow-expand-3)
-   '(")" . meow-expand-2)
-   '("(" . meow-expand-1)
-   '("1" . digit-argument)
-   '("2" . digit-argument)
-   '("3" . digit-argument)
-   '("4" . digit-argument)
-   '("5" . digit-argument)
-   '("6" . digit-argument)
-   '("7" . digit-argument)
-   '("8" . digit-argument)
-   '("9" . digit-argument)
-   '("0" . digit-argument)
-   '("-" . negative-argument)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
-   '("<" . meow-beginning-of-thing)
-   '(">" . meow-end-of-thing)
-   '("a" . meow-append)
-   '("A" . meow-open-below)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '("c" . meow-change)
-   '("C" . meow-change-save)
-   '("d" . meow-delete)
-   '("e" . meow-line)
-   '("f" . meow-find)
-   '("F" . meow-find-expand)
-   '("g" . meow-keyboard-quit)
-   '("G" . meow-goto-line)
-   '("h" . meow-left)
-   '("H" . meow-left-expand)
-   '("i" . meow-insert)
-   '("I" . meow-open-above)
-   '("j" . meow-join)
-   '("J" . delete-indentation)
-   '("k" . meow-kill)
-   '("l" . meow-till)
-   '("L" . meow-till-expand)
-   '("m" . meow-mark-word)
-   '("M" . meow-mark-symbol)
-   '("n" . meow-next)
-   '("N" . meow-next-expand)
-   '("o" . meow-block)
-   '("O" . meow-block-expand)
-   '("p" . meow-prev)
-   '("P" . meow-prev-expand)
-   '("q" . meow-quit)
-   '("r" . meow-replace)
-   '("R" . meow-replace-save)
-   '("s" . meow-search)
-   '("S" . meow-pop-search)
-   '("t" . meow-right)
-   '("T" . meow-right-expand)
-   '("u" . undo)
-   '("v" . meow-visit)
-   '("w" . meow-next-word)
-   '("W" . meow-next-symbol)
-   '("x" . meow-save)
-   '("y" . meow-yank)
-   '("z" . meow-pop-selection)
-   '("Z" . meow-pop-all-selection)
-   '("&" . meow-query-replace)
-   '("%" . meow-query-replace-regexp)
-   '("<escape>" . meow-last-buffer)))
-
-(provide 'init-meow-dvp)
-#+end_src
 *** Qwerty Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/my-emacs/lisp/init-meow-qwerty.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-latest/lisp/init-meow-qwerty.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-overwrite-define-key
@@ -1177,9 +1050,6 @@
 #+end_src
 *** Main Setting
 #+begin_src emacs-lisp
-;; For DVP
-;; (require 'init-meow-dvp)
-
 ;; For Qwerty
 (require 'init-meow-qwerty)
 
@@ -1198,12 +1068,12 @@
   ;;   (insert . "Ꮚ`ꈊ´Ꮚ")
   ;;   (keypad . "Ꮚ'ꈊ'Ꮚ")
   ;;   (motion . "Ꮚ-ꈊ-Ꮚ")))
-  :bind ("C-g" . meow-insert-exit)
+  :bind ("C-k" . meow-insert-exit)
   )
 
 (meow-leader-define-key
  '("f" . find-file)
- '("b" . counsel-switch-buffer)
+ '("b" . consult-buffer)
  '("t" . vterm-toggle)
  '("qr" . quickrun)
  '("oo" . ace-window)
@@ -1278,14 +1148,6 @@ This program can be used *WITHOUT* evil-mode!
   ;; (evilnc-default-hotkeys t)
   )
 #+end_src
-** COMMENT Emacs Rime
-#+begin_src emacs-lisp
-(use-package rime
-  :custom
-  (default-input-method "rime")
-  (rime-librime-root "~/.dotfiles/Emacs/emacs-configs/my-emacs/librime/dist")
-  )
-#+end_src
 * Company
 ** Company Mode
  #+begin_src emacs-lisp
@@ -1314,10 +1176,10 @@ This program can be used *WITHOUT* evil-mode!
    ;; ('tng' means 'tab and go')
    (company-tng-configure-default)
    ;;Completion based on AI
-   ;; (use-package company-tabnine
-   ;;   :config
-   ;;   (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
-   (push '(company-capf :with company-yasnippet :separate) company-backends)
+   (use-package company-tabnine
+     :config
+     (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
+   ;; (push '(company-capf :with company-yasnippet :separate) company-backends)
    )
  #+end_src
 ** Company Box
@@ -1329,6 +1191,26 @@ This program can be used *WITHOUT* evil-mode!
    (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
  #+end_src
+* Citre
+#+begin_src emacs-lisp
+(use-package citre
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config)
+  ;; Bind your frequently used commands.
+  (global-set-key (kbd "C-x c j") 'citre-jump)
+  (global-set-key (kbd "C-x c J") 'citre-jump-back)
+  (global-set-key (kbd "C-x c p") 'citre-ace-peek)
+  ;; :config
+  ;; (setq
+   ;; Set this if readtags is not in your path.
+   ;; citre-readtags-program "/path/to/readtags"
+   ;; Set this if you use project management plugin like projectile.  It's
+   ;; only used to display paths relatively, and doesn't affect actual use.
+   ;; citre-project-root-function #'projectile-project-root))
+   )
+#+end_src
 * Developing
 ** Developing tools
 *** Smart Parens
@@ -1412,9 +1294,9 @@ This program can be used *WITHOUT* evil-mode!
   #+begin_src emacs-lisp 
     (use-package lsp-mode
       :commands (lsp lsp-deferred)
-      :hook (
-             ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
-             (lsp-mode . lsp-enable-which-key-integration))
+      ;; :hook (
+      ;;        ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
+      ;;        (lsp-mode . lsp-enable-which-key-integration))
       :init
       (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
       :custom
@@ -1440,9 +1322,7 @@ This program can be used *WITHOUT* evil-mode!
     (lsp-ui-imenu-auto-refresh t)
     )
   
-  (use-package lsp-ivy 
-    :after lsp
-    :commands lsp-ivy-workspace-symbol)
+
   (use-package lsp-treemacs
     :after lsp
     :commands lsp-treemacs-errors-list)

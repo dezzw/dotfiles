@@ -5,9 +5,6 @@
 			  "~/Documents/Org/Habits.org"
 			  ))
 
-  ;; If you only want to see the agenda for today
-  ;; (setq org-agenda-span 'day)
-
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -15,7 +12,6 @@
   ;; Custom TODO states and Agendas
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	  ;; (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")
 	  ))
 
   (setq org-tag-alist
