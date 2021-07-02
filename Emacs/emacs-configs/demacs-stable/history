@@ -3,9 +3,9 @@
 
 (setq savehist-minibuffer-history-variables '(empty-history consult--buffer-history minibuffer-history consult--line-history file-name-history extended-command-history buffer-name-history))
 (setq consult--buffer-history '("demacs-stable.org􀀁" "*Messages*􀀁" "*dashboard*􀀁" "*Messages*􀀁" "*dashboard*􀀁" "*Messages*􀀁"))
-(setq minibuffer-history '("file" "$"))
+(setq minibuffer-history '("origin" "file" "$"))
 (setq consult--line-history '("yasni" "yas" "dashboa" "coun"))
 (setq file-name-history '("~/.dotfiles/.gitignore" "~/.dotfiles/Emacs/dashboard/banner.txt" "~/.dotfiles/Emacs/demacs-stable.org" "~/Desktop/Test/test_web.html" "~/Desktop/Test/test_py.py" "~/Desktop/Test/test_js.js" "~/.dotfiles/Emacs/emacs-configs/my-emacs/init.el" "~/.dotfiles/Ubersicht/istats.widget/index.jsx" "~/Documents/Projects/Web/AppStore_Expandable_Card/index.html" "~/Documents/Projects/Web/AppStore_Expandable_Card/style.css" "~/Documents/Projects/Web/AppStore_Expandable_Card/action.js" "~/Documents/Projects/Web/PuzzleCaptcha/js/script.js" "~/Documents/Projects/Web/PuzzleCaptcha/css/style.css" "~/Documents/Projects/Web/PuzzleCaptcha/index.html" "~/Desktop/Test/main.c" "~/Documents/Projects/Web/鼠标跟随/js/script.js" "~/Documents/Projects/Web/鼠标跟随/css/style.css" "~/Documents/Projects/Web/鼠标跟随/index.html" "~/Documents/Projects/Web/按钮式复选框/index.html" "~/Documents/Projects/Web/按钮式复选框/css/index.css" "~/Documents/Projects/Web/按钮式复选框/scss/index.scss"))
-(setq extended-command-history '("magit" "mc/mark-next-lines" "mc/edit-lines" "straight-remove-unused-repos"))
+(setq extended-command-history '("magit" "mc/mark-previous-lines" "mc/mark-next-lines" "magit" "mc/mark-next-lines" "mc/edit-lines" "straight-remove-unused-repos"))
 (setq buffer-name-history '("demacs-stable.org" "*Messages*" "*dashboard*" "*Messages*" "*dashboard*" "*Messages*" "*dashboard*" "*Async-native-compile-log*"))
 (setq projectile-project-command-history '#s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ()))
