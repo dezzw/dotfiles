@@ -539,6 +539,7 @@ folder, otherwise delete a word"
  '("f" . find-file)
  '("b" . consult-buffer)
  '("t" . vterm-toggle)
+ '("m" . magit)
  '("qr" . quickrun)
  '("oo" . ace-window)
  '("od" . ace-delete-window)
@@ -634,22 +635,23 @@ folder, otherwise delete a word"
   :config
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
+(defun dw/get-project-root ()
+  (when (fboundp 'projectile-project-root)
+    (projectile-project-root)))
+
 (use-package citre
   :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
   ;; Bind your frequently used commands.
-  (global-set-key (kbd "C-x c j") 'citre-jump)
-  (global-set-key (kbd "C-x c J") 'citre-jump-back)
-  (global-set-key (kbd "C-x c p") 'citre-ace-peek)
-  ;; :config
-  ;; (setq
-   ;; Set this if readtags is not in your path.
-   ;; citre-readtags-program "/path/to/readtags"
+  :bind (("C-x c j" . 'citre-jump)
+	   ("C-x c J" . 'citre-jump-back)
+	   ("C-x c p" .  'citre-ace-peek))
+  :custom
    ;; Set this if you use project management plugin like projectile.  It's
    ;; only used to display paths relatively, and doesn't affect actual use.
-   ;; citre-project-root-function #'projectile-project-root))
+   (citre-project-root-function #'dw/get-project-root)
    )
 
 (use-package smartparens
@@ -657,6 +659,14 @@ folder, otherwise delete a word"
 
 (use-package rainbow-delimiters
   :hook (lsp-mode . rainbow-delimiters-mode))
+
+(use-package rainbow-mode
+  :defer t
+  :hook (org-mode
+         emacs-lisp-mode
+         web-mode
+         typescript-mode
+         js2-mode))
 
 (use-package hungry-delete
   :hook (lsp-mode . hungry-delete-mode))
