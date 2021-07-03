@@ -1,1 +1,0 @@
-("~/.dotfiles/" "~/Desktop/Test/JS/")
