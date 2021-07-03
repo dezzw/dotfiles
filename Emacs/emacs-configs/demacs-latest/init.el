@@ -132,7 +132,8 @@
   :custom
   (all-the-icons-dired-monochrome t))
 
-(use-package doom-themes)
+(use-package doom-themes
+  :defer t)
 
 (if (not (display-graphic-p))
     (load-theme 'doom-one t))

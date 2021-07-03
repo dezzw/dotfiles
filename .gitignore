@@ -11,12 +11,29 @@ Emacs/.DS_Storec
 Emacs/emacs-configs/.DS_Store
 
 Emacs/emacs-configs/demacs-stable/.DS_Store
+Emacs/emacs-configs/demacs-stable/.dap-breakpoints
+Emacs/emacs-configs/demacs-stable/.lsp-session-v1
+Emacs/emacs-configs/demacs-stable/.mc-lists.el
+Emacs/emacs-configs/demacs-stable/history
+Emacs/emacs-configs/demacs-stable/projectile-bookmarks.eld
+Emacs/emacs-configs/demacs-stable/recentf
+Emacs/emacs-configs/demacs-stable/tramp
+Emacs/emacs-configs/demacs-stable/transient/*
 Emacs/emacs-configs/demacs-stable/.cache/*
 Emacs/emacs-configs/demacs-stable/.extension/*
 Emacs/emacs-configs/demacs-stable/eln-cache/*
 Emacs/emacs-configs/demacs-stable/straight/*
 
+
 Emacs/emacs-configs/demacs-latest/.DS_Store
+Emacs/emacs-configs/demacs-latest/.dap-breakpoints
+Emacs/emacs-configs/demacs-latest/.lsp-session-v1
+Emacs/emacs-configs/demacs-latest/.mc-lists.el
+Emacs/emacs-configs/demacs-latest/history
+Emacs/emacs-configs/demacs-latest/projectile-bookmarks.eld
+Emacs/emacs-configs/demacs-latest/recentf
+Emacs/emacs-configs/demacs-latest/tramp
+Emacs/emacs-configs/demacs-latest/transient/*
 Emacs/emacs-configs/demacs-latest/.cache/*
 Emacs/emacs-configs/demacs-latest/.extension/*
 Emacs/emacs-configs/demacs-latest/eln-cache/*

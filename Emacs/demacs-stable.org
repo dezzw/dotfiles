@@ -199,7 +199,8 @@
  #+end_src
 ** Themes
  #+begin_src emacs-lisp
- (use-package doom-themes)
+  (use-package doom-themes
+    :defer t)
  #+end_src
 ** Change Theme Based On System Appearance
 #+begin_src emacs-lisp
