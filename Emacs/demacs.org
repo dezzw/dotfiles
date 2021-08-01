@@ -110,13 +110,21 @@
 The package make emacs auto save the files
  #+begin_src emacs-lisp
  (use-package super-save
-   :defer t
    :diminish super-save-mode
    :custom
    (super-save-auto-save-when-idle t)
    :config
    (super-save-mode +1))
  #+end_src
+** Midnight-Mode
+#+begin_src emacs-lisp
+(use-package midnight
+  :if (daemonp)
+  :config
+  (midnight-mode t)
+  (setq midnight-period 7200)
+  )
+#+end_src
 * UI Setup
 ** Hide Useless UI
  #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
@@ -172,7 +180,6 @@ The package make emacs auto save the files
 #+begin_src emacs-lisp
 (push '(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
-	 :defer t
 	 :config
 	 ;; Enable the "www" ligature in every possible major mode
 	 (ligature-set-ligatures 't '("www"))
@@ -205,8 +212,7 @@ The package make emacs auto save the files
  #+end_src
 ** Themes
  #+begin_src emacs-lisp
-  (use-package doom-themes
-    :defer t)
+  (use-package doom-themes)
  #+end_src
 ** Change Theme Based On System Appearance
 #+begin_src emacs-lisp
@@ -252,7 +258,6 @@ The package make emacs auto save the files
 ** Nyan Mode
 #+begin_src emacs-lisp
 (push '(use-package nyan-mode
-	 :defer t
 	 :custom
 	 (nyan-mode t)
 	 (nyan-animate-nyancat t)
@@ -262,7 +267,6 @@ The package make emacs auto save the files
 ** Highlight TODOs
 #+begin_src emacs-lisp
 (use-package hl-todo
-  :defer t
   :hook ((org-mode lsp-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
@@ -379,7 +383,6 @@ The package make emacs auto save the files
 ** Projectile
  #+begin_src emacs-lisp
  (use-package projectile
-   :defer t
    :diminish projectile-mode
    :config (projectile-mode)
    :bind-keymap
@@ -491,7 +494,6 @@ folder, otherwise delete a word"
    (visual-line-mode 1))
  
  (use-package org
-   :defer t
    :hook (org-mode . dw/org-mode-setup)
    :config
    (setq org-html-head-include-default-style nil)
@@ -922,7 +924,6 @@ Make the selected parts be deletable
 This program can be used *WITHOUT* evil-mode!
 #+begin_src emacs-lisp
 (use-package evil-nerd-commenter
-  :defer t
   :bind
   ("M-;" . 'evilnc-comment-or-uncomment-lines)
   ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
@@ -1002,7 +1003,6 @@ This program can be used *WITHOUT* evil-mode!
 *** Rainbow Mode
 #+begin_src emacs-lisp
 (use-package rainbow-mode
-  :defer t
   :hook ((org-mode lsp-mode) . rainbow-mode))
 #+end_src
 *** Hungry Delete
@@ -1103,7 +1103,6 @@ This program can be used *WITHOUT* evil-mode!
 **** Pyright
   #+begin_src emacs-lisp
   (use-package lsp-pyright
-    :defer t
     :hook (python-mode . (lambda ()
                             (require 'lsp-pyright)
                             (lsp-deferred))))

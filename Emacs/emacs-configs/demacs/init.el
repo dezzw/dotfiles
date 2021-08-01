@@ -74,12 +74,18 @@
                                               'run-at-end 'only-in-org-mode)))
 
 (use-package super-save
-  :defer t
   :diminish super-save-mode
   :custom
   (super-save-auto-save-when-idle t)
   :config
   (super-save-mode +1))
+
+(use-package midnight
+  :if (daemonp)
+  :config
+  (midnight-mode t)
+  (setq midnight-period 7200)
+  )
 
 ;; Enalbe column number
 (column-number-mode)
@@ -108,7 +114,6 @@
 
 (push '(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
-	 :defer t
 	 :config
 	 ;; Enable the "www" ligature in every possible major mode
 	 (ligature-set-ligatures 't '("www"))
@@ -137,8 +142,7 @@
    :custom
    (all-the-icons-dired-monochrome t)) graphic-only-plugins-setting)
 
-(use-package doom-themes
-  :defer t)
+(use-package doom-themes)
 
 (if (not (display-graphic-p))
     (load-theme 'doom-one t))
@@ -176,7 +180,6 @@
   )
 
 (push '(use-package nyan-mode
-	 :defer t
 	 :custom
 	 (nyan-mode t)
 	 (nyan-animate-nyancat t)
@@ -184,7 +187,6 @@
 	 ) graphic-only-plugins-setting)
 
 (use-package hl-todo
-  :defer t
   :hook ((org-mode lsp-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
@@ -266,7 +268,6 @@
   (setq which-key-idle-delay 0.3))
 
 (use-package projectile
-  :defer t
   :diminish projectile-mode
   :config (projectile-mode)
   :bind-keymap
@@ -358,7 +359,6 @@ folder, otherwise delete a word"
   (visual-line-mode 1))
 
 (use-package org
-  :defer t
   :hook (org-mode . dw/org-mode-setup)
   :config
   (setq org-html-head-include-default-style nil)
@@ -560,7 +560,6 @@ folder, otherwise delete a word"
   :after lsp)
 
 (use-package evil-nerd-commenter
-  :defer t
   :bind
   ("M-;" . 'evilnc-comment-or-uncomment-lines)
   ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
@@ -624,7 +623,6 @@ folder, otherwise delete a word"
   :hook (lsp-mode . rainbow-delimiters-mode))
 
 (use-package rainbow-mode
-  :defer t
   :hook ((org-mode lsp-mode) . rainbow-mode))
 
 (use-package hungry-delete
@@ -703,7 +701,6 @@ folder, otherwise delete a word"
   :commands lsp-treemacs-errors-list)
 
 (use-package lsp-pyright
-  :defer t
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred))))
