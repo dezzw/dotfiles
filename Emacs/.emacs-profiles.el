@@ -1,5 +1,2 @@
-(("default" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/demacs-stable")))
- ("doom" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/doom-core")
-           (env . (("DOOMDIR" . "~/.dotfiles/Emacs/emacs-configs/doom-emacs")))))
- ("latest" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/demacs-latest")))
+(("default" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/demacs")))
  )

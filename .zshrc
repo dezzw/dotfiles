@@ -1,4 +1,3 @@
-
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
     print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
@@ -114,7 +113,7 @@ export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
 
 ### Cofig NVM
 # Add default node to path
-export PATH=$HOME/.nvm/versions/node/v14.17.0/bin:$PATH
+export PATH=$HOME/.nvm/versions/node/v14.17.3/bin:$PATH
 
 # set path of nvm
 export NVM_DIR="$HOME/.nvm"
@@ -122,6 +121,28 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh" --no-use
 # This loads nvm bash_completion
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm" --no-use
+
+# place this after nvm initialization!
+# autoload -U add-zsh-hook
+# load-nvmrc() {
+#   local node_version="$(nvm version)"
+#   local nvmrc_path="$(nvm_find_nvmrc)"
+
+#   if [ -n "$nvmrc_path" ]; then
+#     local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+#     if [ "$nvmrc_node_version" = "N/A" ]; then
+#       nvm install
+#     elif [ "$nvmrc_node_version" != "$node_version" ]; then
+#       nvm use
+#     fi
+#   elif [ "$node_version" != "$(nvm version default)" ]; then
+#     echo "Reverting to nvm default version"
+#     nvm use default
+#   fi
+# }
+# add-zsh-hook chpwd load-nvmrc
+# load-nvmrc
 
 ### End of Config NVM
 
@@ -151,14 +172,6 @@ alias p="python3"
 alias vim="vim"
 alias v="nvim"
 
-# alias for emacs
-# alias emacs='emacs -nw'
-alias kille="emacsclient -e '(kill-emacs)'"
-alias ec='emacsclient -c -a ""'
-alias sec='sudo emacsclient -a ""'
-alias eterm='emacs -nw --with-profile term'
-alias edoom='emacs --with-profile doom'
-
 # alias to delet extra latex output file
 alias clean_file="python ~/Documents/Projects/Python/Del_aditional_tex_file/main.py"
 
@@ -180,3 +193,6 @@ alias hideDesktop="defaults write com.apple.finder CreateDesktop -bool FALSE; ki
 alias showDesktop="defaults write com.apple.finder CreateDesktop -bool true; killall Finder"
 
 ### End of Alias Management
+
+### Source Other Shells Files
+source ~/.dotfiles/Shells/emacs-cmds.sh

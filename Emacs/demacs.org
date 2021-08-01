@@ -1,11 +1,7 @@
-#+TITLE: Emacs Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/demacs-stable/init.el :mkdirp yes
-* Graphic Only Plugins Setting
-#+begin_src emacs-lisp
-(setq graphic-only-plugins-setting ())
-#+end_src
+#+TITLE: DEmacs Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/demacs/init.el :mkdirp yes
 * Some improve in early-init
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-stable/early-init.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
 (setq gc-cons-threshold most-positive-fixnum)
 
 (setq load-prefer-newer noninteractive)
@@ -47,27 +43,36 @@
 (straight-use-package 'use-package)
 (setq use-package-verbose t)
 
+(if (daemonp)
+    (setq use-package-always-demand t))
+
 ;; Load the helper package for commands like `straight-x-clean-unused-repos'
 (require 'straight-x)
-#+end_src
-#+begin_src emacs-lisp
+
+
 (setq package-enable-at-startup nil)
+#+end_src
+* Graphic Only Plugins Setting
+#+begin_src emacs-lisp
+(setq graphic-only-plugins-setting ())
 #+end_src
 * Pathes
 ** Exact Path on MacOs
  The package is help emacs to find exact path in the shell
 #+begin_src emacs-lisp
 ;; Find Executable Path on OS X
-(use-package exec-path-from-shell
-  :init
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
-  )
+;; (push '
+ (use-package exec-path-from-shell
+	 :init
+	 (when (memq window-system '(mac ns))
+	   (exec-path-from-shell-initialize))
+	  )
+;;graphic-only-plugins-setting)
  #+end_src
 ** Update Load Path
 #+begin_src emacs-lisp
 ;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/demacs-stable/lisp" load-path)
+(push "~/.dotfiles/Emacs/emacs-configs/demacs/lisp" load-path)
 
 (push "~/Documents/Org" load-path)
 #+end_src
@@ -102,10 +107,10 @@
                                                'run-at-end 'only-in-org-mode)))
  #+end_src
 ** Auto-Saving Changed Files
- The package make emacs auto save the files
+The package make emacs auto save the files
  #+begin_src emacs-lisp
  (use-package super-save
-   :defer 1
+   :defer t
    :diminish super-save-mode
    :custom
    (super-save-auto-save-when-idle t)
@@ -114,7 +119,7 @@
  #+end_src
 * UI Setup
 ** Hide Useless UI
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-stable/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
  (setq inhibit-startup-message t)
 
  (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -128,7 +133,7 @@
  (setq ring-bell-function 'ignore)
  #+end_src
 ** Frame Transparency and Maximize Windows
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-stable/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
  (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
  (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
@@ -167,6 +172,7 @@
 #+begin_src emacs-lisp
 (push '(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
+	 :defer t
 	 :config
 	 ;; Enable the "www" ligature in every possible major mode
 	 (ligature-set-ligatures 't '("www"))
@@ -193,9 +199,9 @@
 #+end_src
 ** Icons Support 
  #+begin_src emacs-lisp
- (use-package all-the-icons
-   :custom
-   (all-the-icons-dired-monochrome t))
+ (push '(use-package all-the-icons
+    :custom
+    (all-the-icons-dired-monochrome t)) graphic-only-plugins-setting)
  #+end_src
 ** Themes
  #+begin_src emacs-lisp
@@ -222,6 +228,7 @@
    :init (doom-modeline-mode 1)
    :custom
    (doom-modeline-window-width-limit fill-column)
+   (doom-modeline-icon (display-graphic-p))
    )
  #+end_src
 ** Dashbard
@@ -245,9 +252,9 @@
 ** Nyan Mode
 #+begin_src emacs-lisp
 (push '(use-package nyan-mode
-	 :config
-	 (setq nyan-mode t)
+	 :defer t
 	 :custom
+	 (nyan-mode t)
 	 (nyan-animate-nyancat t)
 	 (nyan-wavy-trail t)
 	 ) graphic-only-plugins-setting)
@@ -284,7 +291,26 @@
 		(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 		))
   (add-hook 'ns-system-appearance-change-functions #'dw/apply-theme)
-  (dw/set-font-faces)
+  (if (display-graphic-p)
+      (dw/set-font-faces)
+    )
+  )
+#+end_src
+* Buffer Management
+** Perspective.el
+#+begin_src emacs-lisp
+(if (not (daemonp))
+    (use-package perspective
+      :demand t
+      :bind (("C-M-k" . persp-switch)
+             ("C-M-n" . persp-next)
+             ("C-x k" . persp-kill-buffer*))
+      :custom
+      (persp-initial-frame-name "Main")
+      :config
+      ;; Running `persp-mode' multiple times resets the perspective list...
+      (unless (equal persp-mode t)
+	(persp-mode)))
   )
 #+end_src
 * Window Management
@@ -311,6 +337,7 @@
 ** Edwina
 #+begin_src emacs-lisp
 (use-package edwina
+  :disabled
   :config
   (setq display-buffer-base-action '(display-buffer-below-selected))
   (edwina-mode 1))
@@ -319,25 +346,24 @@
 ** Dired
  #+begin_src emacs-lisp
  (use-package dired
-   :ensure nil
-   :straight nil
-   :commands (dired dired-jump)
-   :bind (("C-x C-j" . dired-jump))
-   )
+    :straight nil
+    :commands (dired dired-jump)
+    :bind (("C-x C-j" . dired-jump))
+    )
  
  (use-package dired-single
    :commands (dired dired-jump))
  
- (use-package all-the-icons-dired
-   :hook (dired-mode . all-the-icons-dired-mode))
+ (push '(use-package all-the-icons-dired
+          :hook (dired-mode . all-the-icons-dired-mode)) graphic-only-plugins-setting)
  
  (use-package dired-hide-dotfiles
-   :hook (dired-mode . dired-hide-dotfiles-mode)
-   )
+    :hook (dired-mode . dired-hide-dotfiles-mode)
+    )
  
  (use-package diredfl
-   :hook (dired-mode . diredfl-mode)
-   )
+    :hook (dired-mode . diredfl-mode)
+    )
  #+end_src
 * Keybinding Management
 ** Keybinding Panel (which-key)
@@ -353,6 +379,7 @@
 ** Projectile
  #+begin_src emacs-lisp
  (use-package projectile
+   :defer t
    :diminish projectile-mode
    :config (projectile-mode)
    :bind-keymap
@@ -363,13 +390,6 @@
    (setq projectile-switch-project-action #'projectile-dired))
  #+end_src
 * Completion System
-** Preserve Minibuffer History with savehist-mode
-#+begin_src emacs-lisp
-(use-package savehist
-  :config
-  (setq history-length 25)
-  (savehist-mode 1))
-#+end_src
 ** Completions with Vertico
 #+begin_src emacs-lisp
 (defun dw/minibuffer-backward-kill (arg)
@@ -395,6 +415,30 @@ folder, otherwise delete a word"
   :init
   (vertico-mode))
 #+end_src
+** Preserve Minibuffer History with savehist-mode
+#+begin_src emacs-lisp
+(use-package savehist
+  :config
+  (setq history-length 25)
+  (savehist-mode 1))
+#+end_src
+** Improved Candidate Filtering with Orderless
+#+begin_src emacs-lisp
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
+#+end_src
+** Completion Annotations with Marginalia
+#+begin_src emacs-lisp
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+#+end_src
 ** Completions in Regions with Corfu
 #+begin_src emacs-lisp
 (use-package corfu
@@ -408,14 +452,6 @@ folder, otherwise delete a word"
   (corfu-cycle t)
   :config
   (corfu-global-mode))
-#+end_src
-** Improved Candidate Filtering with Orderless
-#+begin_src emacs-lisp
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
 #+end_src
 ** Consult Commands
 #+begin_src emacs-lisp
@@ -434,27 +470,15 @@ folder, otherwise delete a word"
   (consult-project-root-function #'dw/get-project-root)
   (completion-in-region-function #'consult-completion-in-region))
 #+end_src
-** Completion Annotations with Marginalia
-#+begin_src emacs-lisp
-(use-package marginalia
-  :after vertico
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init
-  (marginalia-mode))
-#+end_src
 * Helpful function
 ** Helpful Function Description
  #+begin_src emacs-lisp
  (use-package helpful
    :commands (helpful-callable helpful-variable helpful-command helpful-key)
-   :custom
-   (counsel-describe-function-function #'helpful-callable)
-   (counsel-describe-variable-function #'helpful-variable)
    :bind
-   ([remap describe-function] . counsel-describe-function)
+   ([remap describe-function] . helpful-function)
    ([remap describe-command] . helpful-command)
-   ([remap describe-variable] . counsel-describe-variable)
+   ([remap describe-variable] . helpful-variable)
    ([remap describe-key] . helpful-key))
  #+end_src
 
@@ -465,8 +489,9 @@ folder, otherwise delete a word"
    (org-indent-mode)
    (variable-pitch-mode 1)
    (visual-line-mode 1))
-
+ 
  (use-package org
+   :defer t
    :hook (org-mode . dw/org-mode-setup)
    :config
    (setq org-html-head-include-default-style nil)
@@ -479,25 +504,27 @@ folder, otherwise delete a word"
          org-src-preserve-indentation nil
          org-startup-folded 'content
          org-cycle-separator-lines 2)
+   
    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-
+ 
    (setq org-html-htmlize-output-type nil)
-
+ 
   ;; config for images in org
    (auto-image-file-mode t)
    (setq org-image-actual-width nil)
    ;; default image width
    (setq org-image-actual-width '(300))
-
+ 
    (setq org-export-with-sub-superscripts nil)
-
+ 
    ;; 不要自动创建备份文件
    (setq make-backup-files nil)
-
-   (require 'init-org-agenda)
-
+ 
+   (with-eval-after-load 'org-agenda
+       (require 'init-org-agenda))
+ 
    (use-package ob-browser)
-
+ 
    (org-babel-do-load-languages
     'org-babel-load-languages
     '((emacs-lisp . t)
@@ -505,15 +532,12 @@ folder, otherwise delete a word"
       (java . t)
       (C . t)
       (js . t)
-      (css . t)
       (browser . t)
-      (R . t)
-      (ditaa . t)
       (python . t)))
-
+ 
    (setq org-confirm-babel-evaluate nil)
    (push '("conf-unix" . conf-unix) org-src-lang-modes)
-
+ 
    ;; Edited from http://emacs.stackexchange.com/a/9838
    (defun dw/org-html-wrap-blocks-in-code (src backend info)
      "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
@@ -522,9 +546,9 @@ folder, otherwise delete a word"
         "\\(</pre>\\)" "</code>\n\\1"
         (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
                                "<pre>\n<code class=\"\\1\">" src))))
-
+ 
    (require 'ox-html)
-
+ 
    (add-to-list 'org-export-filter-src-block-functions
              'dw/org-html-wrap-blocks-in-code)
    )
@@ -540,7 +564,7 @@ folder, otherwise delete a word"
  #+end_src
 ** Fonts
  #+begin_src emacs-lisp
- (with-eval-after-load 'org
+(push '(with-eval-after-load 'org
    ;; Make sure org faces is available
    (require 'org-faces)
    ;; Make sure org-indent face is available
@@ -565,7 +589,7 @@ folder, otherwise delete a word"
    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-   )
+   ) graphic-only-plugins-setting)
  #+end_src
 ** Src Block Templates
  #+begin_src emacs-lisp
@@ -601,16 +625,16 @@ folder, otherwise delete a word"
 ** Org download
  #+begin_src emacs-lisp
  (use-package org-download
-	   :ensure t 
-	   ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
-	   :bind ("C-S-y" . org-download-screenshot)
-	   :config
-	   (require 'org-download)
-	   ;; Drag and drop to Dired
-	   (add-hook 'dired-mode-hook 'org-download-enable))
+   :disabled
+   ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
+   :bind ("C-S-y" . org-download-screenshot)
+   :config
+   (require 'org-download)
+   ;; Drag and drop to Dired
+   (add-hook 'dired-mode-hook 'org-download-enable))
  #+end_src
 ** Org Agenda
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-stable/lisp/init-org-agenda.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/lisp/init-org-agenda.el
 (with-eval-after-load 'org
   (setq org-agenda-files (list
 			  "~/Documents/Org/Tasks.org"
@@ -722,19 +746,18 @@ folder, otherwise delete a word"
 ** Mardown Mode
  #+begin_src emacs-lisp
  (use-package markdown-mode
-  :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
  #+end_src
 ** Edit Code Block
  #+begin_src emacs-lisp
  (use-package edit-indirect
-   :after markdown-mode)
+   :commands markdown-edit-code-block)
  #+end_src
 * Editing
 ** Meow
 *** Qwerty Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs-stable/lisp/init-meow-qwerty.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/lisp/init-meow-qwerty.el
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-overwrite-define-key
@@ -836,14 +859,14 @@ folder, otherwise delete a word"
   (meow-setup)
   ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
   (meow-setup-line-number)
-  :bind ("C-k" . meow-insert-exit)
+  ;; :bind ("C-k" . meow-insert-exit)
+  (add-to-list 'meow-mode-state-list '(inferior-emacs-lisp-mode . normal))
   )
 
 (meow-leader-define-key
  '("f" . find-file)
- '("b" . consult-buffer)
+ '("b" . switch-to-buffer)
  '("t" . vterm-toggle)
- '("m" . magit)
  '("qr" . quickrun)
  '("oo" . ace-window)
  '("od" . ace-delete-window)
@@ -926,20 +949,23 @@ This program can be used *WITHOUT* evil-mode!
    ;; Use tab key to cycle through suggestions.
    ;; ('tng' means 'tab and go')
    (company-tng-configure-default)
-   ;;Completion based on AI
-   (use-package company-tabnine
-     :config
-     (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
+ 
    )
+ 
+ ;;Completion based on AI 
+ (use-package company-tabnine
+   :after company
+   :config
+   (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
  #+end_src
 ** Company Box
  #+begin_src emacs-lisp
- ;; Add UI for Company
- (use-package company-box
-   :hook (company-mode . company-box-mode)
-   :config
-   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
+  ;; Add UI for Company
+ (push '(use-package company-box
+          :hook (company-mode . company-box-mode)
+          :config
+          (setq company-box-icons-alist 'company-box-icons-all-the-icons)) graphic-only-plugins-setting)
+ 
  #+end_src
 * Citre
 #+begin_src emacs-lisp
@@ -948,7 +974,6 @@ This program can be used *WITHOUT* evil-mode!
     (projectile-project-root)))
 
 (use-package citre
-  :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
@@ -978,11 +1003,7 @@ This program can be used *WITHOUT* evil-mode!
 #+begin_src emacs-lisp
 (use-package rainbow-mode
   :defer t
-  :hook (org-mode
-         emacs-lisp-mode
-         web-mode
-         typescript-mode
-         js2-mode))
+  :hook ((org-mode lsp-mode) . rainbow-mode))
 #+end_src
 *** Hungry Delete
   #+begin_src emacs-lisp
@@ -992,7 +1013,7 @@ This program can be used *WITHOUT* evil-mode!
 *** Indent Guide
   #+begin_src emacs-lisp
   (use-package indent-guide
-    :hook (lsp-mode . indent-guide-mode))
+    :hook (lsp-mode. indent-guide-mode))
   #+end_src
 *** Format All
   #+begin_src emacs-lisp
@@ -1032,30 +1053,30 @@ This program can be used *WITHOUT* evil-mode!
   
   ;; auto insert
   (use-package auto-yasnippet
+    :disabled
     :after yasnippet)
   #+end_src
 ** Lsp
 *** LSP Mode
 **** Main Setting
   #+begin_src emacs-lisp 
-    (use-package lsp-mode
-      :commands (lsp lsp-deferred)
-      :hook (
-             ((sh-mode typescript-mode js-mode web-mode python-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp)
-             (lsp-mode . lsp-enable-which-key-integration))
-      :init
-      (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-      :custom
-      (lsp-headerline-breadcrumb-enable nil)
-      (lsp-signature-auto-activate nil)
-      (lsp-signature-render-documentation nil)
-      (lsp-log-io nil)
-      (lsp-idle-delay 0.500)
-      (lsp-completion-provider :capf)
-      :config
-      (add-to-list 'lsp-language-id-configuration '((scss-mode . "css")
-                                                    (less-css-mode . "css")))
-      )
+  (use-package lsp-mode
+    :commands (lsp lsp-deferred)
+    :hook (((sh-mode typescript-mode js2-mode web-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp-deferred)
+           (lsp-mode . lsp-enable-which-key-integration))
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    :custom
+    (lsp-headerline-breadcrumb-enable nil)
+    (lsp-signature-auto-activate nil)
+    (lsp-signature-render-documentation nil)
+    (lsp-log-io nil)
+    (lsp-idle-delay 0.500)
+    (lsp-completion-provider :capf)
+    :config
+    (add-to-list 'lsp-language-id-configuration '((scss-mode . "css")
+                                                  (less-css-mode . "css")))
+    )
   #+end_src
 **** Lsp UI
   #+begin_src emacs-lisp
@@ -1068,9 +1089,11 @@ This program can be used *WITHOUT* evil-mode!
     (lsp-ui-imenu-auto-refresh t)
     )
   
-  (use-package lsp-ivy 
+  (use-package lsp-ivy
+    :disabled
     :after lsp
     :commands lsp-ivy-workspace-symbol)
+  
   (use-package lsp-treemacs
     :after lsp
     :commands lsp-treemacs-errors-list)
@@ -1083,21 +1106,22 @@ This program can be used *WITHOUT* evil-mode!
     :defer t
     :hook (python-mode . (lambda ()
                             (require 'lsp-pyright)
-                            (lsp))))
+                            (lsp-deferred))))
   #+end_src
 **** pyenv
   #+begin_src emacs-lisp
-  (use-package pyenv-mode
-    :hook (python-mode . pyenv-mode)
-    :config
+    (use-package pyenv-mode
+      :hook (python-mode . pyenv-mode)
+      )
+    
     ;; auto activates the virtual environment if .python-version exists
-    (use-package pyenv-mode-auto)
-    ) 
+    (use-package pyenv-mode-auto
+      :after pyenv-mode)
   #+end_src
 *** TS/JS
 #+begin_src emacs-lisp
 (use-package nvm
-  :defer t)
+  :after (typescript-mode js2-mode))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
@@ -1110,16 +1134,18 @@ This program can be used *WITHOUT* evil-mode!
   (setq-default tab-width 2))
 
 (use-package js2-mode
-  :mode "\\.jsx?\\'")
+  :mode "\\.m?jsx?\\'"
+	:config
 
-;; Don't use built-in syntax checking
-(setq js2-mode-show-strict-warnings nil)
+	;; Don't use built-in syntax checking
+	(setq js2-mode-show-strict-warnings nil)
 
-;; Set up proper indentation in JavaScript and JSON files
-(add-hook 'js2-mode-hook #'dw/set-js-indentation)
-(add-hook 'json-mode-hook #'dw/set-js-indentation)
+	;; Set up proper indentation in JavaScript
+	(add-hook 'js2-mode-hook #'dw/set-js-indentation)
+	)
 
 (use-package prettier-js
+	:disabled
   :hook ((js2-mode . prettier-js-mode)
          (typescript-mode . prettier-js-mode))
   :config
@@ -1182,12 +1208,158 @@ This program can be used *WITHOUT* evil-mode!
   )
 
 #+end_src
+*** Java
+#+begin_src emacs-lisp
+(use-package lsp-java
+  :hook (java-mode . lsp-deferred)
+  )
+#+end_src
 *** Latex
 **** latex-preview-pane
   Preview latex files as PDF in Emacs
   #+begin_src emacs-lisp
   (use-package latex-preview-pane
-    :ensure t
+    :commands (latex-preview-pane-mode latex-preview-pane-update))
+  #+end_src
+**** AucTex
+#+begin_src emacs-lisp
+(straight-use-package 'auctex)
+ #+end_src
+**** CDLaTex
+  #+begin_src emacs-lisp
+  (use-package cdlatex
+    :hook 
+    (org-mode . org-cdlatex-mode)
+    (LaTeX-mode . cdlatex-mode)
+    (latex-mode . cdlatex-mode)
+    )
+  #+end_src
+*** Swift
+#+begin_src emacs-lisp
+(use-package swift-mode
+  :mode "\\.swift\\'"
+  :hook (swift-mode . (lambda () (lsp-deferred))))
+
+(use-package lsp-sourcekit
+  :after swift-mode
+  :config
+  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
+#+end_src
+*** Yaml
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :mode "\\.yaml\\'")
+#+end_src
+*** R
+#+begin_src emacs-lisp
+(use-package ess
+  :disabled)
+#+end_src
+*** Json
+#+begin_src emacs-lisp
+(use-package json-mode
+  :mode "\\.json\\'"
+	:config
+	(add-hook 'json-mode-hook #'dw/set-js-indentation))
+#+end_src
+** Dap Debug Mode
+#+begin_src emacs-lisp
+;; dap debug tools
+(use-package dap-mode
+  :commands dap-debug
+  :custom
+  (dap-auto-configure-features '(sessions locals controls tooltip))
+  :config
+	;; Set up python debugging
+	(require 'dap-python)
+	
+	;; Set up chrome debugging
+	(require 'dap-chrome)
+	(dap-chrome-setup)
+)
+
+;; Don't use built-in syntax checking
+(setq js2-mode-show-strict-warnings nil)
+
+;; Set up proper indentation in JavaScript and JSON files
+(add-hook 'js2-mode-hook #'dw/set-js-indentation)
+(add-hook 'json-mode-hook #'dw/set-js-indentation)
+
+(use-package prettier-js
+	:disabled
+  :hook ((js2-mode . prettier-js-mode)
+         (typescript-mode . prettier-js-mode))
+  :config
+  (setq prettier-js-show-errors nil))
+#+end_src
+*** CoffeeScript
+#+begin_src emacs-lisp
+(use-package coffee-mode
+  :mode "\\.coffee\\'"
+  :config
+  ;; automatically clean up bad whitespace
+  (setq whitespace-action '(auto-cleanup))
+  ;; This gives you a tab of 2 spaces
+  (custom-set-variables '(coffee-tab-width 2))
+  
+  (use-package sourcemap)
+  ;; generating sourcemap by '-m' option. And you must set '--no-header' option
+  (setq coffee-args-compile '("-c" "--no-header" "-m"))
+  (add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
+
+  ;; If you want to remove sourcemap file after jumping corresponding point
+  (defun my/coffee-after-compile-hook (props)
+    (sourcemap-goto-corresponding-point props)
+    (delete-file (plist-get props :sourcemap)))
+  (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook)
+  )
+
+(use-package flymake-coffee
+  :hook (coffee-mode . flymake-coffee)
+  )
+#+end_src
+*** Web (HTML/CSS)
+**** HTML
+  #+begin_src emacs-lisp
+  (use-package web-mode
+    :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
+
+  ;; Preview the html file
+  (use-package skewer-mode
+    :after web-mode
+    :config
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode)
+    (add-hook 'web-mode-hook 'skewer-html-mode))
+  #+end_src
+**** Emmet
+  #+begin_src emacs-lisp
+    (use-package emmet-mode
+      :hook (web-mode . emmet-mode))
+  #+end_src
+**** SCSS/SASS
+#+begin_src emacs-lisp
+(use-package scss-mode
+  :mode "\\.scss\\'"
+  :custom
+  (scss-compile-at-save t)
+  (scss-output-directory "../css")
+  (scss-sass-command "sass --no-source-map")
+  )
+
+#+end_src
+*** Java
+#+begin_src emacs-lisp
+(use-package lsp-java
+  :hook (java-mode . lsp-deferred)
+  )
+#+end_src
+*** Latex
+**** latex-preview-pane
+  Preview latex files as PDF in Emacs
+  #+begin_src emacs-lisp
+  (use-package latex-preview-pane
     :after (tex-mode Latex-mode latex-mode TeX-latex-mode))
   #+end_src
 **** AucTex
@@ -1203,17 +1375,6 @@ This program can be used *WITHOUT* evil-mode!
     (latex-mode . cdlatex-mode)
     )
   #+end_src
-**** COMMENT Lsp-Latex
-  Need to download language server
-  #+begin_src emacs-lisp
-  (use-package lsp-latex
-    :after (tex-mode Latex-mode latex-mode TeX-latex-mode)
-    :config
-    (add-hook 'tex-mode-hook 'lsp)
-    (add-hook 'latex-mode-hook 'lsp)
-    (add-hook 'Latex-mode-hook 'lsp)
-    (add-hook 'TeX-latex-mode-hook 'lsp))
-  #+end_src
 *** Swift
 #+begin_src emacs-lisp
 (use-package lsp-sourcekit
@@ -1223,16 +1384,17 @@ This program can be used *WITHOUT* evil-mode!
 
 (use-package swift-mode
   :mode "\\.swift\\'"
-  :hook (swift-mode . (lambda () (lsp))))
+  :hook (swift-mode . (lambda () (lsp-deferred))))
 #+end_src
 *** Yaml
 #+begin_src emacs-lisp
 (use-package yaml-mode
   :mode "\\.yaml\\'")
 #+end_src
-*** COMMENT R
+*** R
 #+begin_src emacs-lisp
-(use-package ess)
+(use-package ess
+  :disabled)
 #+end_src
 *** Json
 #+begin_src emacs-lisp
@@ -1243,14 +1405,23 @@ This program can be used *WITHOUT* evil-mode!
 #+begin_src emacs-lisp
 ;; dap debug tools
 (use-package dap-mode
-  :commands dap-debug 
+  :commands dap-debug
+  :custom
+  (dap-auto-configure-features '(sessions locals controls tooltip))
   :config
-  ;; Set up Node debugging
-  (require 'dap-node)
-  (dap-node-setup) ;; Automatically installs Node debug adapter if needed
-
+  ;; Set up python debugging
   (require 'dap-python)
-  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
+
+  ;; Set up chrome debugging
+  (require 'dap-chrome)
+  (dap-chrome-setup)
+
+  ;; Set up node debugging
+  (require 'dap-node)
+  (dap-node-setup)
+
+  (require 'dap-java)
+  )
 #+end_src
 ** Term/Shells
 *** Vterm
@@ -1266,10 +1437,33 @@ brew install libtool libvterm
   (setq vterm-max-scrollback 10000))
 
 (use-package multi-vterm
-  :after vterm)
+  :commands multi-vterm)
 
 (use-package vterm-toggle
-  :after vterm)
+  :commands vterm-toggle)
+#+end_src
+** Tmux
+*** Emamux
+#+begin_src emacs-lisp
+(if (not (display-graphic-p))
+	 (use-package emamux
+	   :bind ("C-z" . emamux:keymap)
+	   ;; :config
+	   ;; (global-set-key (kbd "C-z") emamux:keymap)
+	   )
+  )
+#+end_src
+*** Tmux-pane
+#+begin_src emacs-lisp
+(if (not (display-graphic-p))
+    (use-package tmux-pane
+      :disabled
+      :config
+      (tmux-pane-mode)
+      )
+  )
+
+
 #+end_src
 ** Git
 *** Magit
@@ -1320,7 +1514,7 @@ Same as above
 #+end_src
 * Load Plugings Based On Graphic Setting
 #+begin_src emacs-lisp
-(if (display-graphic-p)
+(if (or (daemonp) (display-graphic-p))
     (dolist (elisp-code graphic-only-plugins-setting)
       (eval elisp-code)))
 #+end_src
