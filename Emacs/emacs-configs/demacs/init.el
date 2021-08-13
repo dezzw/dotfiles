@@ -1,6 +1,6 @@
 (setq comp-async-jobs-number 7 
- comp-deferred-compilation t
- comp-async-report-warnings-errors nil)
+       comp-deferred-compilation t
+       comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq comp-deferred-compilation-deny-list ())
@@ -216,7 +216,7 @@
     )
   )
 
-(if (not (daemonp))
+(if (or (not (daemonp)) (string= (daemonp) "main"))
     (use-package perspective
       :demand t
       :bind (("C-M-k" . persp-switch)
@@ -1030,6 +1030,6 @@ folder, otherwise delete a word"
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-(if (or (daemonp) (display-graphic-p))
+(if (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty"))))
     (dolist (elisp-code graphic-only-plugins-setting)
       (eval elisp-code)))

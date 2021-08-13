@@ -303,7 +303,7 @@ The package make emacs auto save the files
 * Buffer Management
 ** Perspective.el
 #+begin_src emacs-lisp
-(if (not (daemonp))
+(if (or (not (daemonp)) (string= (daemonp) "main"))
     (use-package perspective
       :demand t
       :bind (("C-M-k" . persp-switch)
@@ -1527,7 +1527,7 @@ Same as above
 #+end_src
 * Load Plugings Based On Graphic Setting
 #+begin_src emacs-lisp
-(if (or (daemonp) (display-graphic-p))
+(if (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty"))))
     (dolist (elisp-code graphic-only-plugins-setting)
       (eval elisp-code)))
 #+end_src
