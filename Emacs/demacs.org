@@ -488,72 +488,73 @@ folder, otherwise delete a word"
 * Org Mode
 ** Config Basic Org mode
  #+begin_src emacs-lisp
- (defun dw/org-mode-setup ()
-   (org-indent-mode)
-   (variable-pitch-mode 1)
-   (visual-line-mode 1))
- 
- (use-package org
-   :hook (org-mode . dw/org-mode-setup)
-   :config
-   (setq org-html-head-include-default-style nil)
-   (setq org-ellipsis " ▾"
-         org-hide-emphasis-markers nil
-         org-src-fontify-natively t
-         org-src-tab-acts-natively t
-         org-edit-src-content-indentation 0
-         org-hide-block-startup nil
-         org-src-preserve-indentation nil
-         org-startup-folded 'content
-         org-cycle-separator-lines 2)
-   
-   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
- 
-   (setq org-html-htmlize-output-type nil)
- 
-  ;; config for images in org
-   (auto-image-file-mode t)
-   (setq org-image-actual-width nil)
-   ;; default image width
-   (setq org-image-actual-width '(300))
- 
-   (setq org-export-with-sub-superscripts nil)
- 
-   ;; 不要自动创建备份文件
-   (setq make-backup-files nil)
- 
-   (with-eval-after-load 'org-agenda
-       (require 'init-org-agenda))
- 
-   (use-package ob-browser)
- 
-   (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((emacs-lisp . t)
-      (latex . t)
-      (java . t)
-      (C . t)
-      (js . t)
-      (browser . t)
-      (python . t)))
- 
-   (setq org-confirm-babel-evaluate nil)
-   (push '("conf-unix" . conf-unix) org-src-lang-modes)
- 
-   ;; Edited from http://emacs.stackexchange.com/a/9838
-   (defun dw/org-html-wrap-blocks-in-code (src backend info)
-     "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
-     (when (org-export-derived-backend-p backend 'html)
-       (replace-regexp-in-string
-        "\\(</pre>\\)" "</code>\n\\1"
-        (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
-                               "<pre>\n<code class=\"\\1\">" src))))
- 
-   (require 'ox-html)
- 
-   (add-to-list 'org-export-filter-src-block-functions
-             'dw/org-html-wrap-blocks-in-code)
-   )
+  (defun dw/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (visual-line-mode 1))
+  
+  (use-package org
+    :hook (org-mode . dw/org-mode-setup)
+    :config
+    (setq org-html-head-include-default-style nil)
+    (setq org-ellipsis " ▾"
+          org-hide-emphasis-markers nil
+          org-src-fontify-natively t
+          org-src-tab-acts-natively t
+          org-edit-src-content-indentation 0
+          org-hide-block-startup nil
+          org-src-preserve-indentation nil
+          org-startup-folded 'content
+          org-cycle-separator-lines 2)
+    
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  
+    (setq org-html-htmlize-output-type nil)
+  
+   ;; config for images in org
+    (auto-image-file-mode t)
+    (setq org-image-actual-width nil)
+    ;; default image width
+    (setq org-image-actual-width '(300))
+  
+    (setq org-export-with-sub-superscripts nil)
+  
+    ;; 不要自动创建备份文件
+    (setq make-backup-files nil)
+  
+    (with-eval-after-load 'org-agenda
+        (require 'init-org-agenda))
+  
+    (use-package ob-browser
+      :defer t)
+  
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (latex . t)
+       (java . t)
+       (C . t)
+       (js . t)
+       (browser . t)
+       (python . t)))
+  
+    (setq org-confirm-babel-evaluate nil)
+    (push '("conf-unix" . conf-unix) org-src-lang-modes)
+  
+    ;; Edited from http://emacs.stackexchange.com/a/9838
+    (defun dw/org-html-wrap-blocks-in-code (src backend info)
+      "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
+      (when (org-export-derived-backend-p backend 'html)
+        (replace-regexp-in-string
+         "\\(</pre>\\)" "</code>\n\\1"
+         (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
+                                "<pre>\n<code class=\"\\1\">" src))))
+  
+    (require 'ox-html)
+  
+    (add-to-list 'org-export-filter-src-block-functions
+              'dw/org-html-wrap-blocks-in-code)
+    )
  #+end_src
 ** Bullets
  #+begin_src emacs-lisp
@@ -924,6 +925,7 @@ Make the selected parts be deletable
 This program can be used *WITHOUT* evil-mode!
 #+begin_src emacs-lisp
 (use-package evil-nerd-commenter
+  :commands (evilnc-comment-or-uncomment-lines)
   :bind
   ("M-;" . 'evilnc-comment-or-uncomment-lines)
   ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
@@ -975,6 +977,7 @@ This program can be used *WITHOUT* evil-mode!
     (projectile-project-root)))
 
 (use-package citre
+  :commands (citre-jump citre-ace-peek)
   :init
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
@@ -983,10 +986,13 @@ This program can be used *WITHOUT* evil-mode!
 	   ("C-x c J" . 'citre-jump-back)
 	   ("C-x c p" .  'citre-ace-peek))
   :custom
-   ;; Set this if you use project management plugin like projectile.  It's
-   ;; only used to display paths relatively, and doesn't affect actual use.
-   (citre-project-root-function #'dw/get-project-root)
-   )
+  ;; Set this if you use project management plugin like projectile.  It's
+  ;; only used to display paths relatively, and doesn't affect actual use.
+  (citre-project-root-function #'dw/get-project-root)
+  (citre-use-project-root-when-creating-tags t)
+  (citre-prompt-language-for-ctags-command t)
+  (citre-auto-enable-citre-mode-modes '(prog-mode))
+  )
 #+end_src
 * Developing
 ** Developing tools
@@ -1103,6 +1109,7 @@ This program can be used *WITHOUT* evil-mode!
 **** Pyright
   #+begin_src emacs-lisp
   (use-package lsp-pyright
+    :after python-mode
     :hook (python-mode . (lambda ()
                             (require 'lsp-pyright)
                             (lsp-deferred))))
@@ -1499,6 +1506,13 @@ brew install libtool libvterm
   (leetcode-quit)
   (global-line-numebrs-mode t)
   )
+#+end_src
+* Utilities
+** Clipboard managers
+#+begin_src emacs-lisp
+(use-package cliphist
+	:commands (cliphist-paste-item cliphist-select-item)
+	)
 #+end_src
 * Increase memory/garbage 
 Make Emacs/lsp more smooth

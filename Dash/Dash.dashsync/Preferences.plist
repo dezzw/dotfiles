@@ -158,10 +158,25 @@
 				<key>date</key>
 				<date>2021-04-28T13:57:15Z</date>
 			</dict>
+			<key>http://kapeli.com/feeds/Clojure.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2021-08-12T14:41:42Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/CoffeeScript.xml</key>
 			<dict>
 				<key>date</key>
 				<date>2021-04-28T13:52:05Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Common_Lisp.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2021-08-12T14:42:34Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Docker.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2021-08-12T14:51:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Emacs_Lisp.xml</key>
 			<dict>
@@ -218,6 +233,11 @@
 				<key>date</key>
 				<date>2021-04-28T13:57:59Z</date>
 			</dict>
+			<key>http://kapeli.com/feeds/VueJS.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2021-08-12T14:47:53Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/jQuery.xml</key>
 			<dict>
 				<key>date</key>
@@ -236,11 +256,6 @@
 		</dict>
 		<key>uninstalled</key>
 		<dict>
-			<key>http://kapeli.com/feeds/Common_Lisp.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2021-03-31T11:10:36Z</date>
-			</dict>
 			<key>http://kapeli.com/feeds/R.xml</key>
 			<dict>
 				<key>date</key>

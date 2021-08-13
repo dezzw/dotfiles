@@ -1,6 +1,6 @@
 (setq comp-async-jobs-number 7 
-       comp-deferred-compilation t
-       comp-async-report-warnings-errors nil)
+ comp-deferred-compilation t
+ comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq comp-deferred-compilation-deny-list ())
@@ -390,7 +390,8 @@ folder, otherwise delete a word"
   (with-eval-after-load 'org-agenda
       (require 'init-org-agenda))
 
-  (use-package ob-browser)
+  (use-package ob-browser
+    :defer t)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -560,6 +561,7 @@ folder, otherwise delete a word"
   :after lsp)
 
 (use-package evil-nerd-commenter
+  :commands (evilnc-comment-or-uncomment-lines)
   :bind
   ("M-;" . 'evilnc-comment-or-uncomment-lines)
   ("C-c l" . 'evilnc-quick-comment-or-uncomment-to-the-line)
@@ -603,6 +605,7 @@ folder, otherwise delete a word"
     (projectile-project-root)))
 
 (use-package citre
+  :commands (citre-jump citre-ace-peek)
   :init
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
@@ -611,10 +614,13 @@ folder, otherwise delete a word"
 	   ("C-x c J" . 'citre-jump-back)
 	   ("C-x c p" .  'citre-ace-peek))
   :custom
-   ;; Set this if you use project management plugin like projectile.  It's
-   ;; only used to display paths relatively, and doesn't affect actual use.
-   (citre-project-root-function #'dw/get-project-root)
-   )
+  ;; Set this if you use project management plugin like projectile.  It's
+  ;; only used to display paths relatively, and doesn't affect actual use.
+  (citre-project-root-function #'dw/get-project-root)
+  (citre-use-project-root-when-creating-tags t)
+  (citre-prompt-language-for-ctags-command t)
+  (citre-auto-enable-citre-mode-modes '(prog-mode))
+  )
 
 (use-package smartparens
   :hook (lsp-mode . smartparens-mode))
@@ -701,6 +707,7 @@ folder, otherwise delete a word"
   :commands lsp-treemacs-errors-list)
 
 (use-package lsp-pyright
+  :after python-mode
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred))))
@@ -1014,6 +1021,10 @@ folder, otherwise delete a word"
   (leetcode-quit)
   (global-line-numebrs-mode t)
   )
+
+(use-package cliphist
+	:commands (cliphist-paste-item cliphist-select-item)
+	)
 
 (setq gc-cons-threshold 100000000)
 
