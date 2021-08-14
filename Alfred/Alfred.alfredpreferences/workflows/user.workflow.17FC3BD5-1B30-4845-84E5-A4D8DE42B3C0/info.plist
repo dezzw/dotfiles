@@ -75,7 +75,7 @@
 			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>keyword</key>
 				<string>es start</string>
 				<key>subtext</key>
@@ -100,7 +100,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS=/usr/local/bin/emacs
+				<string>EMACS="/usr/local/bin/emacs"
 
 if [[ -z $1 ]]; then
 	$EMACS --daemon=main
@@ -137,7 +137,7 @@ fi</string>
 			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>keyword</key>
 				<string>es stop</string>
 				<key>subtext</key>
@@ -162,8 +162,8 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS=/usr/local/bin/emacs
-EMACSCLIENT=/usr/local/bin/emacsclient
+				<string>EMACS="/usr/local/bin/emacs"
+EMACSCLIENT="/usr/local/bin/emacsclient"
 
 if [[ -z $1 ]]; then
     ps aux | grep -i 'emacs.* --bg-daemon' | grep -v 'grep' \
@@ -206,18 +206,35 @@ fi</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>em</string>
+				<key>subtext</key>
+				<string>GUI Client for main purposes</string>
+				<key>text</key>
+				<string>Start Main Emacs Client</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>6E12F27D-1B66-42BB-BADC-F90847D9AF47</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT=/usr/local/bin/emacsclient
+				<string>EMACSCLIENT="/usr/local/bin/emacsclient"
 
-if [[ $# -eq 0 ]]; then
-    $EMACSCLIENT -nc --socket-name=main
-elif [[ -n $1 ]]; then
-    $EMACSCLIENT -nc --socket-name=main $1
-fi</string>
+$EMACSCLIENT --socket-name=main -nc</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -236,28 +253,7 @@ fi</string>
 			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>em</string>
-				<key>subtext</key>
-				<string>GUI Client for main purposes</string>
-				<key>text</key>
-				<string>Start Main Emacs Client</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>6E12F27D-1B66-42BB-BADC-F90847D9AF47</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
+				<integer>2</integer>
 				<key>keyword</key>
 				<string>ec</string>
 				<key>subtext</key>
@@ -265,7 +261,7 @@ fi</string>
 				<key>text</key>
 				<string>Start Coding Emacs Client</string>
 				<key>withspace</key>
-				<true/>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.keyword</string>
@@ -282,7 +278,7 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT=/usr/local/bin/emacsclient
+				<string>EMACSCLIENT="/usr/local/bin/emacsclient"
 
 if [[ $# -eq 0 ]]; then
     $EMACSCLIENT -nc --socket-name=coding
@@ -339,7 +335,7 @@ fi</string>
 		<key>B0F9FCDE-0FAD-4CAA-A551-CBB9E30F3EEF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>50</integer>
+			<integer>65</integer>
 			<key>ypos</key>
 			<integer>570</integer>
 		</dict>
@@ -368,7 +364,7 @@ fi</string>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>webaddress</key>
 	<string>https://www.unclealone.github.io</string>
 </dict>
