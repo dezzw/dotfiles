@@ -623,7 +623,9 @@ folder, otherwise delete a word"
   )
 
 (use-package smartparens
-  :hook (lsp-mode . smartparens-mode))
+  :hook (lsp-mode . smartparens-mode)
+  :init
+  (require 'smartparens-config))
 
 (use-package rainbow-delimiters
   :hook (lsp-mode . rainbow-delimiters-mode))
@@ -635,7 +637,15 @@ folder, otherwise delete a word"
   :hook (lsp-mode . hungry-delete-mode))
 
 (use-package indent-guide
-  :hook (lsp-mode. indent-guide-mode))
+  :disabled
+  :hook (lsp-mode . indent-guide-mode))
+
+(use-package highlight-indent-guides
+  :hook (prog-mode . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-delay 0)
+  (highlight-indent-guides-method 'character)
+  )
 
 (use-package format-all
   :hook (lsp-mode . format-all-mode)
