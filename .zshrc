@@ -7,6 +7,7 @@ if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
         print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
 
+
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
@@ -196,3 +197,4 @@ alias showDesktop="defaults write com.apple.finder CreateDesktop -bool true; kil
 
 ### Source Other Shells Files
 source ~/.dotfiles/Shells/emacs-cmds.sh
+source ~/.dotfiles/Shells/doom-emacs-cmds.sh

@@ -9,3 +9,5 @@ echo "Finish Upgrading"
 echo "Start cleaning up"
 brew cleanup
 echo "Finish Cleaning"
+
+
