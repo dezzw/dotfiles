@@ -1,6 +1,6 @@
 (setq comp-async-jobs-number 7 
-       comp-deferred-compilation t
-       comp-async-report-warnings-errors nil)
+ comp-deferred-compilation t
+ comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq comp-deferred-compilation-deny-list ())
@@ -147,7 +147,7 @@
 (if (not (display-graphic-p))
     (load-theme 'doom-one t))
 
-(if (display-graphic-p)
+(if (or (display-graphic-p) (not (string= (daemonp) "tty")))
     (defun dw/apply-theme (appearance)
       "Load theme, taking current system APPEARANCE into consideration."
       (mapc #'disable-theme custom-enabled-themes)
@@ -215,6 +215,11 @@
       (dw/set-font-faces)
     )
   )
+
+(use-package smooth-scrolling
+  :defer t
+  :config
+  (smooth-scrolling-mode 1))
 
 (if (or (not (daemonp)) (string= (daemonp) "main"))
     (use-package perspective
@@ -578,7 +583,7 @@ folder, otherwise delete a word"
   ;; starts with 1 character
   (company-minimum-prefix-length 1)
   ;; Trigger completion immediately
-  (company-idle-delay 0)
+  (company-idle-delay 0.2)
   ;; Back to top when reach the end
   (company-selection-wrap-around t)
   :config
@@ -622,33 +627,35 @@ folder, otherwise delete a word"
   (citre-auto-enable-citre-mode-modes '(prog-mode))
   )
 
+(show-paren-mode t)
+
 (use-package smartparens
-  :hook (lsp-mode . smartparens-mode)
+  :hook ((prog-mode lsp-mode) . smartparens-mode)
   :init
   (require 'smartparens-config))
 
 (use-package rainbow-delimiters
-  :hook (lsp-mode . rainbow-delimiters-mode))
+  :hook ((prog-mode lsp-mode) . rainbow-delimiters-mode))
 
 (use-package rainbow-mode
-  :hook ((org-mode lsp-mode) . rainbow-mode))
+  :hook ((org-mode prog-mode lsp-mode) . rainbow-mode))
 
 (use-package hungry-delete
-  :hook (lsp-mode . hungry-delete-mode))
+  :hook ((prog-mode lsp-mode) . hungry-delete-mode))
 
 (use-package indent-guide
   :disabled
   :hook (lsp-mode . indent-guide-mode))
 
 (use-package highlight-indent-guides
-  :hook (prog-mode . highlight-indent-guides-mode)
+  :hook ((prog-mode lsp-mode) . highlight-indent-guides-mode)
   :custom
   (highlight-indent-guides-delay 0)
   (highlight-indent-guides-method 'character)
   )
 
 (use-package format-all
-  :hook (lsp-mode . format-all-mode)
+  :hook ((prog-mode lsp-mode) . format-all-mode)
   :commands (format-all-ensure-formatter format-all-buffer))
 
 (use-package quickrun
@@ -843,6 +850,8 @@ folder, otherwise delete a word"
   :mode "\\.json\\'"
 	:config
 	(add-hook 'json-mode-hook #'dw/set-js-indentation))
+
+(setq sh-indentation 4)
 
 ;; dap debug tools
 (use-package dap-mode

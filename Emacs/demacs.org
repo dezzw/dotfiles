@@ -219,7 +219,7 @@ The package make emacs auto save the files
 (if (not (display-graphic-p))
     (load-theme 'doom-one t))
 
-(if (display-graphic-p)
+(if (or (display-graphic-p) (not (string= (daemonp) "tty")))
     (defun dw/apply-theme (appearance)
       "Load theme, taking current system APPEARANCE into consideration."
       (mapc #'disable-theme custom-enabled-themes)
@@ -299,6 +299,13 @@ The package make emacs auto save the files
       (dw/set-font-faces)
     )
   )
+#+end_src
+** Smooth Scolling
+#+begin_src emacs-lisp
+(use-package smooth-scrolling
+  :defer t
+  :config
+  (smooth-scrolling-mode 1))
 #+end_src
 * Buffer Management
 ** Perspective.el
@@ -945,7 +952,7 @@ This program can be used *WITHOUT* evil-mode!
    ;; starts with 1 character
    (company-minimum-prefix-length 1)
    ;; Trigger completion immediately
-   (company-idle-delay 0)
+   (company-idle-delay 0.2)
    ;; Back to top when reach the end
    (company-selection-wrap-around t)
    :config
@@ -996,27 +1003,31 @@ This program can be used *WITHOUT* evil-mode!
 #+end_src
 * Developing
 ** Developing tools
+*** Hightlight Parens
+#+begin_src emacs-lisp
+(show-paren-mode t)
+#+end_src
 *** Smart Parens
   #+begin_src emacs-lisp
   (use-package smartparens
-    :hook (lsp-mode . smartparens-mode)
+    :hook ((prog-mode lsp-mode) . smartparens-mode)
     :init
     (require 'smartparens-config))
   #+end_src
 *** Rainbow Brackets 
   #+begin_src emacs-lisp
   (use-package rainbow-delimiters
-    :hook (lsp-mode . rainbow-delimiters-mode))
+    :hook ((prog-mode lsp-mode) . rainbow-delimiters-mode))
   #+end_src
 *** Rainbow Mode
 #+begin_src emacs-lisp
 (use-package rainbow-mode
-  :hook ((org-mode lsp-mode) . rainbow-mode))
+  :hook ((org-mode prog-mode lsp-mode) . rainbow-mode))
 #+end_src
 *** Hungry Delete
   #+begin_src emacs-lisp
   (use-package hungry-delete
-    :hook (lsp-mode . hungry-delete-mode))
+    :hook ((prog-mode lsp-mode) . hungry-delete-mode))
   #+end_src
 *** Indent Guide
   #+begin_src emacs-lisp
@@ -1025,7 +1036,7 @@ This program can be used *WITHOUT* evil-mode!
     :hook (lsp-mode . indent-guide-mode))
   
   (use-package highlight-indent-guides
-    :hook (prog-mode . highlight-indent-guides-mode)
+    :hook ((prog-mode lsp-mode) . highlight-indent-guides-mode)
     :custom
     (highlight-indent-guides-delay 0)
     (highlight-indent-guides-method 'character)
@@ -1034,7 +1045,7 @@ This program can be used *WITHOUT* evil-mode!
 *** Format All
   #+begin_src emacs-lisp
   (use-package format-all
-    :hook (lsp-mode . format-all-mode)
+    :hook ((prog-mode lsp-mode) . format-all-mode)
     :commands (format-all-ensure-formatter format-all-buffer))
   #+end_src
 *** quickrun.el
@@ -1277,6 +1288,10 @@ This program can be used *WITHOUT* evil-mode!
   :mode "\\.json\\'"
 	:config
 	(add-hook 'json-mode-hook #'dw/set-js-indentation))
+#+end_src
+*** Shell
+#+begin_src emacs-lisp
+(setq sh-indentation 4)
 #+end_src
 ** Dap Debug Mode
 #+begin_src emacs-lisp

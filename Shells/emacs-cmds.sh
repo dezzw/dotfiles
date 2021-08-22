@@ -51,6 +51,7 @@ function es() {
         if [[ -z $2 ]]; then
             $EMACS --daemon=main
             $EMACS --daemon=coding
+	    $EMACS --daemon=tty
         else
             case $2 in
                 m)
@@ -62,6 +63,9 @@ function es() {
                 t)
                     $EMACS --daemon=tty
                     ;;
+		dm)
+		    $EMACS --with-profile doom --daemon=doom
+		    ;;
                 *)
                     $EMACS --daemon="$2"
                     ;;
@@ -88,6 +92,10 @@ function es() {
                 t)
                     $EMACSCLIENT -n --socket-name=tty -e '(kill-emacs)'
                     ;;
+		dm)
+                    $EMACSCLIENT -n --with-profile doom --socket-name=doom -e '(kill-emacs)'
+                    ;;
+
                 *)
                     $EMACSCLIENT -n --socket-name="$2" -e '(kill-emacs)'
                     ;;
