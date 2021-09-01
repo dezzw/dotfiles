@@ -2,6 +2,19 @@
 
 (setq load-prefer-newer noninteractive)
 
+;; Add my library path to load-path
+(push "~/.dotfiles/Emacs/emacs-configs/demacs/elisp" load-path)
+
+(push "~/Documents/Org" load-path)
+
+;; 关闭备份
+(setq make-backup-files nil
+     auto-save-default nil)
+
+(setq auto-window-vscroll nil)
+
+(global-auto-revert-mode 1)
+
 (setq inhibit-startup-message t)
 
 (scroll-bar-mode -1)        ; Disable visible scrollbar

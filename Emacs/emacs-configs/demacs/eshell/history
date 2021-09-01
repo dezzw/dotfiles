@@ -1,0 +1,13 @@
+find-file .emacs-profiles.el
+ls
+exa
+exa -la
+cd .dotfiles/
+l
+zsh
+exa -lt
+exa -lT
+clear
+clear
+sleep 5 && (message "finished")
+exit

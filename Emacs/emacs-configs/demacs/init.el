@@ -1,6 +1,6 @@
-(setq comp-async-jobs-number 7 
- comp-deferred-compilation t
- comp-async-report-warnings-errors nil)
+(setq comp-async-jobs-number 7
+      comp-deferred-compilation t
+	 comp-async-report-warnings-errors nil)
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq comp-deferred-compilation-deny-list ())
@@ -50,19 +50,6 @@
 	  )
 ;;graphic-only-plugins-setting)
 
-;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/demacs/lisp" load-path)
-
-(push "~/Documents/Org" load-path)
-
-;; 关闭备份
-(setq make-backup-files nil
-      auto-save-default nil)
-
-(setq auto-window-vscroll nil)
-
-(global-auto-revert-mode 1)
-
 ;; Since we don't want to disable org-confirm-babel-evaluate all
 ;; of the time, do it around the after-save-hook
 (defun dw/org-babel-tangle-dont-ask ()
@@ -75,6 +62,7 @@
 
 (use-package super-save
   :diminish super-save-mode
+  :defer t
   :custom
   (super-save-auto-save-when-idle t)
   :config
@@ -142,7 +130,13 @@
    :custom
    (all-the-icons-dired-monochrome t)) graphic-only-plugins-setting)
 
-(use-package doom-themes)
+(use-package doom-themes
+  :config
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+
+  ;; (doom-themes-org-config)
+  )
 
 (if (not (display-graphic-p))
     (load-theme 'doom-one t))
@@ -163,23 +157,25 @@
   (doom-modeline-icon (display-graphic-p))
   )
 
+(use-package page-break-lines) 
+
 (use-package dashboard
-  :init
-  ;; Set the title
-  ;; Set the banner
-  (setq dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
-  (setq dashboard-center-content t)
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-items '((recents  . 7)
-                          (projects . 5)
-                          ))
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-set-init-info t)
-  )
+    :custom
+    ;; Set the banner
+    (dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
+    (dashboard-center-content t)
+    (dashboard-items '((recents  . 7)
+                                        (projects . 5)
+                                        ))
+    (dashboard-set-heading-icons t)
+    (dashboard-set-file-icons t)
+    (dashboard-set-init-info t)
+    :config
+    (dashboard-setup-startup-hook)
+    )
 
 (push '(use-package nyan-mode
+	 :defer t
 	 :custom
 	 (nyan-mode t)
 	 (nyan-animate-nyancat t)
@@ -237,8 +233,8 @@
 
 (use-package ace-window
   :bind ("C-x o" . ace-window)
-  :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  :custom
+  (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package edwina
   :disabled
@@ -368,7 +364,7 @@ folder, otherwise delete a word"
   :config
   (setq org-html-head-include-default-style nil)
   (setq org-ellipsis " ▾"
-        org-hide-emphasis-markers nil
+        org-hide-emphasis-markers t
         org-src-fontify-natively t
         org-src-tab-acts-natively t
         org-edit-src-content-indentation 0
@@ -394,36 +390,6 @@ folder, otherwise delete a word"
 
   (with-eval-after-load 'org-agenda
       (require 'init-org-agenda))
-
-  (use-package ob-browser
-    :defer t)
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (latex . t)
-     (java . t)
-     (C . t)
-     (js . t)
-     (browser . t)
-     (python . t)))
-
-  (setq org-confirm-babel-evaluate nil)
-  (push '("conf-unix" . conf-unix) org-src-lang-modes)
-
-  ;; Edited from http://emacs.stackexchange.com/a/9838
-  (defun dw/org-html-wrap-blocks-in-code (src backend info)
-    "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
-    (when (org-export-derived-backend-p backend 'html)
-      (replace-regexp-in-string
-       "\\(</pre>\\)" "</code>\n\\1"
-       (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
-                              "<pre>\n<code class=\"\\1\">" src))))
-
-  (require 'ox-html)
-
-  (add-to-list 'org-export-filter-src-block-functions
-            'dw/org-html-wrap-blocks-in-code)
   )
 
 ;; change bullets for headings
@@ -460,6 +426,56 @@ folder, otherwise delete a word"
    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
    ) graphic-only-plugins-setting)
 
+(defun dw/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . dw/org-mode-visual-fill))
+
+(use-package valign
+  :hook (org-mode . valign-mode))
+
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
+
+(with-eval-after-load "org-export-dispatch"
+  ;; Edited from http://emacs.stackexchange.com/a/9838
+  (defun dw/org-html-wrap-blocks-in-code (src backend info)
+    "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
+    (when (org-export-derived-backend-p backend 'html)
+      (replace-regexp-in-string
+       "\\(</pre>\\)" "</code>\n\\1"
+       (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
+				 "<pre>\n<code class=\"\\1\">" src))))
+
+  (require 'ox-html)
+
+  (add-to-list 'org-export-filter-src-block-functions
+               'dw/org-html-wrap-blocks-in-code)
+  )
+
+(with-eval-after-load "org"
+  (use-package ob-browser
+    :defer t)
+
+  (with-eval-after-load "ob"
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (latex . t)
+       (java . t)
+       (C . t)
+       (js . t)
+       (browser . t)
+       (python . t)))
+    )
+
+  (setq org-confirm-babel-evaluate nil)
+  (push '("conf-unix" . conf-unix) org-src-lang-modes)
+  )
+
 ;; This is needed as of Org 9.2
 (with-eval-after-load 'org
   (require 'org-tempo)
@@ -475,17 +491,9 @@ folder, otherwise delete a word"
   (add-to-list 'org-structure-template-alist '("html" . "src browser :out"))
   (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
   (add-to-list 'org-structure-template-alist '("la" . "latex"))
-  (add-to-list 'org-structure-template-alist '("r" . "src R"))
-  (add-to-list 'org-structure-template-alist '("d" . "src ditaa :file ../images/.png :cmdline -E"))
+  ;; (add-to-list 'org-structure-template-alist '("r" . "src R"))
+  ;; (add-to-list 'org-structure-template-alist '("d" . "src ditaa :file ../images/.png :cmdline -E"))
  )
-
-(defun dw/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
-
-(use-package visual-fill-column
-  :hook (org-mode . dw/org-mode-visual-fill))
 
 (use-package org-download
   :disabled
@@ -496,8 +504,28 @@ folder, otherwise delete a word"
   ;; Drag and drop to Dired
   (add-hook 'dired-mode-hook 'org-download-enable))
 
-(use-package valign
-  :hook (org-mode . valign-mode))
+(use-package org-roam
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Documents/Org/Notes")
+  (org-roam-completion-everywhere t)
+  (org-roam-completion-system 'default)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today)
+	 :map org-mode-map
+	 ("C-M-i" . completion-at-point)
+	 )
+  :config
+  (org-roam-db-autosync-mode)
+  ;; (org-roam-setup)
+  (require 'org-roam-protocol)
+  )
 
 (use-package markdown-mode
  :mode ("README\\.md\\'" . gfm-mode)
@@ -505,6 +533,33 @@ folder, otherwise delete a word"
 
 (use-package edit-indirect
   :commands markdown-edit-code-block)
+
+(use-package deft
+  :commands (deft)
+  :config (setq deft-directory "~/Documents/Org/Notes"
+                deft-recursive t
+                deft-extensions '("md" "org"))
+
+  ;;https://github.com/jrblevin/deft/issues/75#issuecomment-905031872
+  (defun cm/deft-parse-title (file contents)
+    "Parse the given FILE and CONTENTS and determine the title.
+  If `deft-use-filename-as-title' is nil, the title is taken to
+  be the first non-empty line of the FILE.  Else the base name of the FILE is
+  used as title."
+    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+      (if begin
+	  (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+	(deft-base-filename file))))
+  
+  (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
+  
+  (setq deft-strip-summary-regexp
+	(concat "\\("
+		"[\n\t]" ;; blank
+		"\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+		"\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+		"\\)"))
+  )
 
 ;; For Qwerty
 (require 'init-meow-qwerty)
@@ -525,10 +580,12 @@ folder, otherwise delete a word"
 (meow-leader-define-key
  '("f" . find-file)
  '("b" . switch-to-buffer)
- '("t" . vterm-toggle)
+ '("tt" . vterm-toggle)
+ '("tm" . mutil-vterm)
  '("qr" . quickrun)
- '("oo" . ace-window)
- '("od" . ace-delete-window)
+ '("wo" . ace-window)
+ '("wd" . ace-delete-window)
+ '("wt" . treemacs-select-window)
  '("dd" . dap-debug)
  '("aa" . org-agenda)
  '("al" . org-agenda-list)
@@ -574,22 +631,27 @@ folder, otherwise delete a word"
   ("C-c p" . 'evilnc-comment-or-uncomment-paragraphs)
   )
 
+(use-package avy
+  :commands (avy-goto-char avy-goto-word-0 avy-goto-line)
+  :bind ("C-;" . avy-goto-char))
+
 (use-package company 
   :hook (lsp-mode . company-mode)
   :custom
   (company-tooltip-align-annotations t)
-  ;; Number the candidates (use M-1, M-2 etc to select completions)
+  ;; ;; Number the candidates (use M-1, M-2 etc to select completions)
   (company-show-numbers t)
-  ;; starts with 1 character
+  ;; ;; starts with 1 character
   (company-minimum-prefix-length 1)
-  ;; Trigger completion immediately
+  ;; ;; Trigger completion immediately
   (company-idle-delay 0.2)
-  ;; Back to top when reach the end
+  ;; ;; Back to top when reach the end
   (company-selection-wrap-around t)
   :config
   ;; Use tab key to cycle through suggestions.
   ;; ('tng' means 'tab and go')
-  (company-tng-configure-default)
+  ;; (company-tng-configure-default)
+  ;; (require 'company_init)
 
   )
 
@@ -672,6 +734,7 @@ folder, otherwise delete a word"
   :hook (lsp-mode . flycheck-mode))
 
 (use-package yasnippet
+  :defer t
   :hook ((org-mode lsp-mode) . yas-minor-mode)
   :config
   (setq yas-snippet-dirs
@@ -687,6 +750,18 @@ folder, otherwise delete a word"
   :disabled
   :after yasnippet)
 
+(use-package minimap
+  :commands (minimap-mode)
+  :custom
+  (minimap-window-location 'right))
+
+(use-package treemacs
+  :commands (treemacs))
+
+(use-package treemacs-all-the-icons
+  :disabled
+  :after treemacs)
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :hook (((sh-mode typescript-mode js2-mode web-mode css-mode Latex-mode TeX-latex-mode c-mode cc-mode) . lsp-deferred)
@@ -701,8 +776,8 @@ folder, otherwise delete a word"
   (lsp-idle-delay 0.500)
   (lsp-completion-provider :capf)
   :config
-  (add-to-list 'lsp-language-id-configuration '((scss-mode . "css")
-                                                (less-css-mode . "css")))
+  (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
+  (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css"))
   )
 
 (use-package lsp-ui
@@ -724,7 +799,8 @@ folder, otherwise delete a word"
   :commands lsp-treemacs-errors-list)
 
 (use-package lsp-pyright
-  :after python-mode
+  :defer t
+  ;; :after python-mode
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred))))
@@ -751,7 +827,7 @@ folder, otherwise delete a word"
   (setq-default tab-width 2))
 
 (use-package js2-mode
-  :mode "\\.m?jsx?\\'"
+  :mode "\\.m?js\\'"
 	:config
 
 	;; Don't use built-in syntax checking
@@ -760,6 +836,10 @@ folder, otherwise delete a word"
 	;; Set up proper indentation in JavaScript
 	(add-hook 'js2-mode-hook #'dw/set-js-indentation)
 	)
+
+(use-package rjsx-mode
+  :mode "\\.jsx\\'"
+  )
 
 (use-package prettier-js
 	:disabled
@@ -814,6 +894,12 @@ folder, otherwise delete a word"
   (scss-output-directory "../css")
   (scss-sass-command "sass --no-source-map")
   )
+
+(use-package json-mode
+  :mode "\\.json\\'"
+  :config
+	;; Set up proper indentation in JSON
+  (add-hook 'json-mode-hook #'dw/set-js-indentation))
 
 (use-package lsp-java
   :hook (java-mode . lsp-deferred)
@@ -843,124 +929,10 @@ folder, otherwise delete a word"
 (use-package yaml-mode
   :mode "\\.yaml\\'")
 
-(use-package ess
-  :disabled)
-
-(use-package json-mode
-  :mode "\\.json\\'"
-	:config
-	(add-hook 'json-mode-hook #'dw/set-js-indentation))
-
 (setq sh-indentation 4)
 
-;; dap debug tools
-(use-package dap-mode
-  :commands dap-debug
-  :custom
-  (dap-auto-configure-features '(sessions locals controls tooltip))
-  :config
-	;; Set up python debugging
-	(require 'dap-python)
-	
-	;; Set up chrome debugging
-	(require 'dap-chrome)
-	(dap-chrome-setup)
-)
-
-;; Don't use built-in syntax checking
-(setq js2-mode-show-strict-warnings nil)
-
-;; Set up proper indentation in JavaScript and JSON files
-(add-hook 'js2-mode-hook #'dw/set-js-indentation)
-(add-hook 'json-mode-hook #'dw/set-js-indentation)
-
-(use-package prettier-js
-	:disabled
-  :hook ((js2-mode . prettier-js-mode)
-         (typescript-mode . prettier-js-mode))
-  :config
-  (setq prettier-js-show-errors nil))
-
-(use-package coffee-mode
-  :mode "\\.coffee\\'"
-  :config
-  ;; automatically clean up bad whitespace
-  (setq whitespace-action '(auto-cleanup))
-  ;; This gives you a tab of 2 spaces
-  (custom-set-variables '(coffee-tab-width 2))
-  
-  (use-package sourcemap)
-  ;; generating sourcemap by '-m' option. And you must set '--no-header' option
-  (setq coffee-args-compile '("-c" "--no-header" "-m"))
-  (add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
-
-  ;; If you want to remove sourcemap file after jumping corresponding point
-  (defun my/coffee-after-compile-hook (props)
-    (sourcemap-goto-corresponding-point props)
-    (delete-file (plist-get props :sourcemap)))
-  (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook)
-  )
-
-(use-package flymake-coffee
-  :hook (coffee-mode . flymake-coffee)
-  )
-
-(use-package web-mode
-  :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
-
-;; Preview the html file
-(use-package skewer-mode
-  :after web-mode
-  :config
-  (add-hook 'js2-mode-hook 'skewer-mode)
-  (add-hook 'css-mode-hook 'skewer-css-mode)
-  (add-hook 'html-mode-hook 'skewer-html-mode)
-  (add-hook 'web-mode-hook 'skewer-html-mode))
-
-(use-package emmet-mode
-  :hook (web-mode . emmet-mode))
-
-(use-package scss-mode
-  :mode "\\.scss\\'"
-  :custom
-  (scss-compile-at-save t)
-  (scss-output-directory "../css")
-  (scss-sass-command "sass --no-source-map")
-  )
-
-(use-package lsp-java
-  :hook (java-mode . lsp-deferred)
-  )
-
-(use-package latex-preview-pane
-  :after (tex-mode Latex-mode latex-mode TeX-latex-mode))
-
-(straight-use-package 'auctex)
-
-(use-package cdlatex
-  :hook 
-  (org-mode . org-cdlatex-mode)
-  (LaTeX-mode . cdlatex-mode)
-  (latex-mode . cdlatex-mode)
-  )
-
-(use-package lsp-sourcekit
-  :after swift-mode
-  :config
-  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
-
-(use-package swift-mode
-  :mode "\\.swift\\'"
-  :hook (swift-mode . (lambda () (lsp-deferred))))
-
-(use-package yaml-mode
-  :mode "\\.yaml\\'")
-
 (use-package ess
   :disabled)
-
-(use-package json-mode
-  :mode "\\.json\\'")
 
 ;; dap debug tools
 (use-package dap-mode
@@ -1045,7 +1017,31 @@ folder, otherwise delete a word"
 	:commands (cliphist-paste-item cliphist-select-item)
 	)
 
-(setq gc-cons-threshold 100000000)
+(use-package diff-hl
+  :hook (dired-mode . diff-hl-dired-mode-unless-remote)
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh)
+  :config
+  ;; use margin instead of fringe
+  (diff-hl-margin-mode))
+
+(use-package osx-trash
+  :config
+  (when (eq system-type 'darwin)
+  (osx-trash-setup))
+  (setq delete-by-moving-to-trash t))
+
+(use-package fzf
+  :commands (fzf)
+  )
+
+;; ( gc-cons-threshold 100000000)
+
+(use-package gcmh
+  :hook (after-init . gcmh-mode)
+  :custom
+  (gcmh-idle-delay 0.5) ;; doom is using 0.5, default is 15s
+  (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
+  )
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
