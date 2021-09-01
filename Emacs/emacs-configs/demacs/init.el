@@ -92,10 +92,10 @@
 (defun dw/set-font-faces ()
   (message "Setting faces!")
   ;; set font
-  (set-face-attribute 'default nil :font "Victor Mono" :height 150)
+  (set-face-attribute 'default nil :font "JetBrains Mono" :height 140)
 
   ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 150)
+  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 140)
 
   ;; Set the variable pitch face
   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
@@ -632,8 +632,7 @@ folder, otherwise delete a word"
   )
 
 (use-package avy
-  :commands (avy-goto-char avy-goto-word-0 avy-goto-line)
-  :bind ("C-;" . avy-goto-char))
+  :commands (avy-goto-char avy-goto-word-0 avy-goto-line))
 
 (use-package company 
   :hook (lsp-mode . company-mode)
