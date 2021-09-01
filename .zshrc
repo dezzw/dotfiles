@@ -114,7 +114,7 @@ export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
 
 ### Cofig NVM
 # Add default node to path
-export PATH=$HOME/.nvm/versions/node/v14.17.3/bin:$PATH
+export PATH=$HOME/.nvm/versions/node/v14.17.5/bin:$PATH
 
 # set path of nvm
 export NVM_DIR="$HOME/.nvm"
