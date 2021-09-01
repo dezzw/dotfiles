@@ -1,0 +1,1 @@
+/Users/desmond/.dotfiles/Emacs/emacs-configs/beta_emacs/straight/repos/emacs-dashboard/banners/2.txt
