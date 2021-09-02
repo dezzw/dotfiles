@@ -1,4 +1,3 @@
-
 #+TITLE: DEmacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/demacs/init.el :mkdirp yes 
 * Some improve in early-init
@@ -214,13 +213,13 @@ The package make emacs auto save the files
  #+end_src
 ** Themes
  #+begin_src emacs-lisp
-  (use-package doom-themes
-    :config
-    (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-    (doom-themes-treemacs-config)
-  
-    ;; (doom-themes-org-config)
-    )
+ (use-package doom-themes
+   :config
+   (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+   (doom-themes-treemacs-config)
+ 
+   ;; (doom-themes-org-config)
+   )
  #+end_src
 ** Change Theme Based On System Appearance
 #+begin_src emacs-lisp
@@ -951,7 +950,7 @@ folder, otherwise delete a word"
   (meow-setup)
   ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
   (meow-setup-line-number)
-  ;; :bind ("C-k" . meow-insert-exit)
+  ;;:bind ("" . meow-insert-exit)
   (add-to-list 'meow-mode-state-list '(inferior-emacs-lisp-mode . normal))
   )
 
@@ -1033,7 +1032,7 @@ This program can be used *WITHOUT* evil-mode!
 ** Company Mode
  #+begin_src emacs-lisp
  (use-package company 
-   :hook (lsp-mode . company-mode)
+   :hook ((prog-mode lsp-mode) . company-mode)
    :custom
    (company-tooltip-align-annotations t)
    ;; ;; Number the candidates (use M-1, M-2 etc to select completions)
@@ -1434,11 +1433,52 @@ This program can be used *WITHOUT* evil-mode!
 Vitual Termianl
 # brew install libtool libvterm 
 #+begin_src emacs-lisp
-(use-package vterm
-  :commands vterm
-  :config
-  (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-  (setq vterm-max-scrollback 10000))
+;; (use-package vterm
+;;   :commands vterm
+;;   :config
+;;   (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+;;   (setq vterm-max-scrollback 10000))
+
+;; Copy from https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-shell.el
+;; Better term
+;; @see https://github.com/akermu/emacs-libvterm#installation
+(when (and module-file-suffix           ; dynamic module
+           (executable-find "cmake")
+           (executable-find "libtool")
+           (executable-find "make"))
+  (use-package vterm
+    :init
+    (setq vterm-always-compile-module t)
+
+    (with-no-warnings
+      (when (posframe-workable-p)
+        (defvar vterm-posframe--frame nil)
+        (defun vterm-posframe-toggle ()
+          "Toggle `vterm' child frame."
+          (interactive)
+          (let ((buffer (vterm--internal #'ignore 100))
+                (width  (max 80 (/ (frame-width) 2)))
+                (height (/ (frame-height) 2)))
+            (if (frame-live-p vterm-posframe--frame)
+                (progn
+                  (posframe-delete-frame buffer)
+                  (setq vterm-posframe--frame nil))
+              (setq vterm-posframe--frame
+                    (posframe-show
+                     buffer
+                     :poshandler #'posframe-poshandler-frame-center
+                     :left-fringe 8
+                     :right-fringe 8
+                     :width width
+                     :height height
+                     :min-width width
+                     :min-height height
+                     :internal-border-width 3
+                     :internal-border-color (face-foreground 'font-lock-comment-face nil t)
+                     :background-color (face-background 'tooltip nil t)
+                     :accept-focus t)))))
+        (bind-key "C-`" #'vterm-posframe-toggle)))))
+
 
 (use-package multi-vterm
   :commands multi-vterm)
