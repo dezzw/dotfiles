@@ -266,7 +266,7 @@
 	<key>isPinned</key>
 	<false/>
 	<key>menuIconBehavior</key>
-	<integer>1</integer>
+	<integer>0</integer>
 	<key>placeholderDelimiter</key>
 	<string>__</string>
 	<key>profiles</key>
