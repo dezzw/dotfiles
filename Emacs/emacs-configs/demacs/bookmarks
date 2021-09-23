@@ -2,9 +2,14 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored"
- (filename . "~/Documents/Org/Notes/20210831220616-array.org")
- (front-context-string)
- (rear-context-string . "\n#+title: Array\n")
- (position . 83))
+(("org-refile-last-stored"
+ (filename . "~/Documents/Org/Planner/Tasks.org")
+ (front-context-string . "** DONE Watch Ma")
+ (rear-context-string . "ri 12:08]\n:END:\n")
+ (position . 429))
+("org-capture-last-stored"
+ (filename . "~/Documents/Org/Notes/20210906210448-eco101h5f.org")
+ (front-context-string . "* Principles of ")
+ (rear-context-string . "itle: ECO101H5F\n")
+ (position . 87))
 )

@@ -4,7 +4,7 @@
 
 ;; Add my library path to load-path
 (push "~/.dotfiles/Emacs/emacs-configs/demacs/elisp" load-path)
-
+(push "~/.dotfiles/Emacs/elisp" load-path)
 (push "~/Documents/Org" load-path)
 
 ;; 关闭备份

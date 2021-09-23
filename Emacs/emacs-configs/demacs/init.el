@@ -39,16 +39,15 @@
 
 (setq package-enable-at-startup nil)
 
-(setq graphic-only-plugins-setting ())
+(setq gui-only-plugins-setting ())
+(setq tui-only-plugins-setting ())
 
 ;; Find Executable Path on OS X
-;; (push '
- (use-package exec-path-from-shell
-	 :init
-	 (when (memq window-system '(mac ns))
-	   (exec-path-from-shell-initialize))
-	  )
-;;graphic-only-plugins-setting)
+(use-package exec-path-from-shell
+  :init
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize))
+  )
 
 ;; Since we don't want to disable org-confirm-babel-evaluate all
 ;; of the time, do it around the after-save-hook
@@ -62,7 +61,6 @@
 
 (use-package super-save
   :diminish super-save-mode
-  :defer t
   :custom
   (super-save-auto-save-when-idle t)
   :config
@@ -124,11 +122,11 @@
 					      "\\\\" "://"))
 	 ;; Enables ligature checks globally in all buffers. You can also do it
 	 ;; per mode with `ligature-mode'.
-	 (global-ligature-mode t)) graphic-only-plugins-setting)
+	 (global-ligature-mode t)) gui-only-plugins-setting)
 
 (push '(use-package all-the-icons
    :custom
-   (all-the-icons-dired-monochrome t)) graphic-only-plugins-setting)
+   (all-the-icons-dired-monochrome t)) gui-only-plugins-setting)
 
 (use-package doom-themes
   :config
@@ -160,19 +158,22 @@
 (use-package page-break-lines) 
 
 (use-package dashboard
-    :custom
-    ;; Set the banner
-    (dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
-    (dashboard-center-content t)
-    (dashboard-items '((recents  . 7)
-                                        (projects . 5)
-                                        ))
-    (dashboard-set-heading-icons t)
-    (dashboard-set-file-icons t)
-    (dashboard-set-init-info t)
-    :config
-    (dashboard-setup-startup-hook)
-    )
+  :custom
+  ;; Set the banner
+  (dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
+  (dashboard-center-content t)
+  (dashboard-items '((recents  . 7)
+                     (projects . 5)
+                     (agenda . 3)
+                     ))
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-set-init-info t)
+  (dashboard-week-agenda nil)
+  (dashboard-agenda-release-buffers t)
+  :config
+  (dashboard-setup-startup-hook)
+  )
 
 (push '(use-package nyan-mode
 	 :defer t
@@ -180,21 +181,22 @@
 	 (nyan-mode t)
 	 (nyan-animate-nyancat t)
 	 (nyan-wavy-trail t)
-	 ) graphic-only-plugins-setting)
+	 ) gui-only-plugins-setting)
 
 (use-package hl-todo
-  :hook ((org-mode lsp-mode) . hl-todo-mode)
+  :hook ((org-mode prog-mode  lsp-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
         ("FIXME"  . "#FF0000")
         ("DEBUG"  . "#A020F0")
         ("NEXT" . "#FF4500")
+	("TBA" . "#61d290")
         ("UNCHECK"   . "#1E90FF")))
   )
 
 (use-package highlight-numbers
-  :hook ((org-mode lsp-mode) . highlight-numbers-mode))
+  :hook ((prog-mode  lsp-mode) . highlight-numbers-mode))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -252,7 +254,7 @@
   :commands (dired dired-jump))
 
 (push '(use-package all-the-icons-dired
-         :hook (dired-mode . all-the-icons-dired-mode)) graphic-only-plugins-setting)
+         :hook (dired-mode . all-the-icons-dired-mode)) gui-only-plugins-setting)
 
 (use-package dired-hide-dotfiles
    :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -270,6 +272,7 @@
 
 (use-package projectile
   :diminish projectile-mode
+  :defer 1
   :config (projectile-mode)
   :bind-keymap
   ("C-c p" . projectile-command-map)
@@ -346,6 +349,28 @@ folder, otherwise delete a word"
   (consult-project-root-function #'dw/get-project-root)
   (completion-in-region-function #'consult-completion-in-region))
 
+(use-package color-rg
+  :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
+  :commands (color-rg-search-input
+             color-rg-search-symbol
+             color-rg-search-input-in-project
+             color-rg-search-input-in-current-file
+             color-rg-search-project-with-typ)
+  )
+
+(use-package embark
+  :bind (("C-S-a" . embark-act)
+         :map minibuffer-local-map
+         ("C-d" . embark-act))
+  :config
+
+  ;; Show Embark actions via which-key
+  (setq embark-action-indicator
+        (lambda (map)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator))
+
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :bind
@@ -355,42 +380,47 @@ folder, otherwise delete a word"
   ([remap describe-key] . helpful-key))
 
 (defun dw/org-mode-setup ()
-  (org-indent-mode)
-  (variable-pitch-mode 1)
-  (visual-line-mode 1))
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (visual-line-mode 1))
 
-(use-package org
-  :hook (org-mode . dw/org-mode-setup)
-  :config
-  (setq org-html-head-include-default-style nil)
-  (setq org-ellipsis " ▾"
-        org-hide-emphasis-markers t
-        org-src-fontify-natively t
-        org-src-tab-acts-natively t
-        org-edit-src-content-indentation 0
-        org-hide-block-startup nil
-        org-src-preserve-indentation nil
-        org-startup-folded 'content
-        org-cycle-separator-lines 2)
+  (use-package org
+    :hook (org-mode . dw/org-mode-setup)
+    :config
+    (setq org-html-head-include-default-style nil)
+    (setq org-ellipsis " ▾"
+          org-hide-emphasis-markers t
+          org-src-fontify-natively t
+          org-src-tab-acts-natively t
+          org-edit-src-content-indentation 0
+          org-hide-block-startup nil
+          org-src-preserve-indentation nil
+          org-startup-folded 'content
+          org-cycle-separator-lines 2)
 
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 
-  (setq org-html-htmlize-output-type nil)
+    (setq org-html-htmlize-output-type nil)
 
- ;; config for images in org
-  (auto-image-file-mode t)
-  (setq org-image-actual-width nil)
-  ;; default image width
-  (setq org-image-actual-width '(300))
+   ;; config for images in org
+    (auto-image-file-mode t)
+    (setq org-image-actual-width nil)
+    ;; default image width
+    (setq org-image-actual-width '(300))
 
-  (setq org-export-with-sub-superscripts nil)
+    (setq org-export-with-sub-superscripts nil)
 
-  ;; 不要自动创建备份文件
-  (setq make-backup-files nil)
+    ;; 不要自动创建备份文件
+    (setq make-backup-files nil)
 
-  (with-eval-after-load 'org-agenda
+    (with-eval-after-load 'org-agenda
       (require 'init-org-agenda))
-  )
+
+    (with-eval-after-load "meow"
+      (meow-leader-define-key
+       '("a" . org-agenda))
+      )
+)
 
 ;; change bullets for headings
 (use-package org-bullets
@@ -424,7 +454,7 @@ folder, otherwise delete a word"
    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-   ) graphic-only-plugins-setting)
+   ) gui-only-plugins-setting)
 
 (defun dw/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -434,8 +464,9 @@ folder, otherwise delete a word"
 (use-package visual-fill-column
   :hook (org-mode . dw/org-mode-visual-fill))
 
-(use-package valign
-  :hook (org-mode . valign-mode))
+(push '(use-package valign
+         :hook (org-mode . valign-mode)
+         ) gui-only-plugins-setting)
 
 (use-package org-appear
   :hook (org-mode . org-appear-mode))
@@ -469,7 +500,8 @@ folder, otherwise delete a word"
        (C . t)
        (js . t)
        (browser . t)
-       (python . t)))
+       (python . t)
+       (R .t)))
     )
 
   (setq org-confirm-babel-evaluate nil)
@@ -491,7 +523,7 @@ folder, otherwise delete a word"
   (add-to-list 'org-structure-template-alist '("html" . "src browser :out"))
   (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
   (add-to-list 'org-structure-template-alist '("la" . "latex"))
-  ;; (add-to-list 'org-structure-template-alist '("r" . "src R"))
+  (add-to-list 'org-structure-template-alist '("r" . "src R"))
   ;; (add-to-list 'org-structure-template-alist '("d" . "src ditaa :file ../images/.png :cmdline -E"))
  )
 
@@ -575,22 +607,20 @@ folder, otherwise delete a word"
   (meow-setup-line-number)
   ;;:bind ("" . meow-insert-exit)
   (add-to-list 'meow-mode-state-list '(inferior-emacs-lisp-mode . normal))
+  (add-to-list 'meow-mode-state-list '(org-agenda-mode . normal))
   )
 
 (meow-leader-define-key
  '("f" . find-file)
  '("b" . switch-to-buffer)
- '("tt" . vterm-toggle)
- '("tm" . mutil-vterm)
  '("qr" . quickrun)
  '("wo" . ace-window)
  '("wd" . ace-delete-window)
  '("wt" . treemacs-select-window)
  '("dd" . dap-debug)
- '("aa" . org-agenda)
- '("al" . org-agenda-list)
- '("ac" . org-capture)
 )
+
+(require 'open-files)
 
 (meow-motion-overwrite-define-key
  '("h" . dired-single-up-directory)
@@ -601,15 +631,6 @@ folder, otherwise delete a word"
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-(use-package color-rg
-  :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
-  :commands (color-rg-search-input
-             color-rg-search-symbol
-             color-rg-search-input-in-project
-             color-rg-search-input-in-current-file
-             color-rg-search-project-with-typ)
-  )
 
 (use-package multiple-cursors
   :commands (mc/edit-lines mc/mark-next-like-this mc/mark-previous-like-this mc/mark-all-like-this)
@@ -634,8 +655,14 @@ folder, otherwise delete a word"
 (use-package avy
   :commands (avy-goto-char avy-goto-word-0 avy-goto-line))
 
+(meow-leader-define-key
+ '("tc" . avy-goto-char)
+ '("tw" . avy-goto-word-0)
+ '("tl" . avy-goto-line)
+ )
+
 (use-package company 
-  :hook ((prog-mode lsp-mode) . company-mode)
+  :hook ((lsp-mode prog-mode conf-mode) . company-mode)
   :custom
   (company-tooltip-align-annotations t)
   ;; ;; Number the candidates (use M-1, M-2 etc to select completions)
@@ -651,12 +678,11 @@ folder, otherwise delete a word"
   ;; ('tng' means 'tab and go')
   ;; (company-tng-configure-default)
   ;; (require 'company_init)
-
   )
 
 ;;Completion based on AI 
 (use-package company-tabnine
-  :after company
+  :after lsp
   :config
   (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
 
@@ -664,7 +690,8 @@ folder, otherwise delete a word"
 (push '(use-package company-box
          :hook (company-mode . company-box-mode)
          :config
-         (setq company-box-icons-alist 'company-box-icons-all-the-icons)) graphic-only-plugins-setting)
+         (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+         ) gui-only-plugins-setting)
 
 (defun dw/get-project-root ()
   (when (fboundp 'projectile-project-root)
@@ -693,7 +720,15 @@ folder, otherwise delete a word"
 (use-package smartparens
   :hook ((prog-mode lsp-mode) . smartparens-mode)
   :init
-  (require 'smartparens-config))
+  (require 'smartparens-config)
+  :config
+  (define-key smartparens-mode-map (kbd "M-r") #'sp-rewrap-sexp)    
+  (define-key smartparens-mode-map (kbd "M-s") #'sp-unwrap-sexp)
+  (define-key smartparens-mode-map (kbd "M-[") #'sp-wrap-square)
+  (define-key smartparens-mode-map (kbd "M-{") #'sp-wrap-curly)
+  (define-key smartparens-mode-map (kbd "C-)") #'sp-forward-slurp-sexp)
+  (define-key smartparens-mode-map (kbd "C-}") #'sp-forward-barf-sexp)
+  )
 
 (use-package rainbow-delimiters
   :hook ((prog-mode lsp-mode) . rainbow-delimiters-mode))
@@ -931,7 +966,7 @@ folder, otherwise delete a word"
 (setq sh-indentation 4)
 
 (use-package ess
-  :disabled)
+  :mode "\\.R\\'")
 
 ;; dap debug tools
 (use-package dap-mode
@@ -967,6 +1002,7 @@ folder, otherwise delete a word"
            (executable-find "libtool")
            (executable-find "make"))
   (use-package vterm
+    :defer 1
     :init
     (setq vterm-always-compile-module t)
 
@@ -1006,30 +1042,35 @@ folder, otherwise delete a word"
 (use-package vterm-toggle
   :commands vterm-toggle)
 
-(if (not (display-graphic-p))
-	 (use-package emamux
+(meow-leader-define-key
+ '("tt" . vterm-toggle)
+ '("tm" . multi-vterm)
+ '("tp" . vterm-posframe-toggle)
+ )
+
+(push '(use-package emamux
 	   :bind ("C-z" . emamux:keymap)
 	   ;; :config
 	   ;; (global-set-key (kbd "C-z") emamux:keymap)
-	   )
-  )
+	   ) tui-only-plugins-setting)
 
-(if (not (display-graphic-p))
-    (use-package tmux-pane
+(push '(use-package tmux-pane
       :disabled
       :config
       (tmux-pane-mode)
-      )
-  )
+      ) tui-only-plugins-setting)
 
 (use-package magit
-  :commands (magit-status magit-get-current-branch)
+  :commands (magit magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 ;; Add a super-convenient global binding for magit-status since
 ;; I use it 8 million times a day
 (global-set-key (kbd "C-M-;") 'magit-status)
+
+(use-package magit-delta
+  :hook (magit-mode . magit-delta-mode))
 
 (use-package leetcode
   :commands (leetcode start-leetcode)
@@ -1060,11 +1101,13 @@ folder, otherwise delete a word"
 (use-package diff-hl
   :hook (dired-mode . diff-hl-dired-mode-unless-remote)
   :hook (magit-post-refresh . diff-hl-magit-post-refresh)
+  :hook (prog-mode . diff-hl-mode)
   :config
   ;; use margin instead of fringe
   (diff-hl-margin-mode))
 
 (use-package osx-trash
+  :defer 1
   :config
   (when (eq system-type 'darwin)
   (osx-trash-setup))
@@ -1073,6 +1116,20 @@ folder, otherwise delete a word"
 (use-package fzf
   :commands (fzf)
   )
+
+(push '(use-package clipetty
+      :hook (after-init . global-clipetty-mode)
+      ) tui-only-plugins-setting)
+
+(use-package password-store
+  :commands (password-store-copy password-store-insert)
+  :config
+  (setq password-store-password-length 12))
+
+(use-package auth-source-pass
+  :disabled
+  :config
+  (auth-source-pass-enable))
 
 ;; ( gc-cons-threshold 100000000)
 
@@ -1085,6 +1142,12 @@ folder, otherwise delete a word"
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
+;; GUI Only Plugins
 (if (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty"))))
-    (dolist (elisp-code graphic-only-plugins-setting)
-      (eval elisp-code)))
+    (dolist (gui-plugins gui-only-plugins-setting)
+      (eval gui-plugins)))
+
+;; TUI Only Plugins
+(if (or (not (display-graphic-p)) (string= (daemonp) "tty"))
+    (dolist (tui-plugins tui-only-plugins-setting)
+      (eval tui-plugins)))

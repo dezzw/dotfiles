@@ -1,5 +1,5 @@
 #+TITLE: DEmacs Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/demacs/init.el :mkdirp yes 
+#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/demacs/init.el :mkdirp yes
 * Some improve in early-init
 #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
 (setq gc-cons-threshold most-positive-fixnum)
@@ -52,28 +52,27 @@
 
 (setq package-enable-at-startup nil)
 #+end_src
-* Graphic Only Plugins Setting
+* Graphic Based Plugins Setting
 #+begin_src emacs-lisp
-(setq graphic-only-plugins-setting ())
+(setq gui-only-plugins-setting ())
+(setq tui-only-plugins-setting ())
 #+end_src
 * Pathes
 ** Exact Path on MacOs
  The package is help emacs to find exact path in the shell
 #+begin_src emacs-lisp
 ;; Find Executable Path on OS X
-;; (push '
- (use-package exec-path-from-shell
-	 :init
-	 (when (memq window-system '(mac ns))
-	   (exec-path-from-shell-initialize))
-	  )
-;;graphic-only-plugins-setting)
+(use-package exec-path-from-shell
+  :init
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize))
+  )
  #+end_src
 ** Update Load Path
 #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
 ;; Add my library path to load-path
 (push "~/.dotfiles/Emacs/emacs-configs/demacs/elisp" load-path)
-
+(push "~/.dotfiles/Emacs/elisp" load-path)
 (push "~/Documents/Org" load-path)
 #+end_src
 * Auto Doing something
@@ -94,7 +93,7 @@
  (global-auto-revert-mode 1)
  #+end_src
 ** Auto-Tangle emacs.org File
- Tangle (form a new file) on save
+Tangle (form a new file) on save
  #+begin_src emacs-lisp
  ;; Since we don't want to disable org-confirm-babel-evaluate all
  ;; of the time, do it around the after-save-hook
@@ -111,7 +110,6 @@ The package make emacs auto save the files
  #+begin_src emacs-lisp
  (use-package super-save
    :diminish super-save-mode
-   :defer t
    :custom
    (super-save-auto-save-when-idle t)
    :config
@@ -203,13 +201,13 @@ The package make emacs auto save the files
 					      "\\\\" "://"))
 	 ;; Enables ligature checks globally in all buffers. You can also do it
 	 ;; per mode with `ligature-mode'.
-	 (global-ligature-mode t)) graphic-only-plugins-setting)
+	 (global-ligature-mode t)) gui-only-plugins-setting)
 #+end_src
 ** Icons Support 
  #+begin_src emacs-lisp
  (push '(use-package all-the-icons
     :custom
-    (all-the-icons-dired-monochrome t)) graphic-only-plugins-setting)
+    (all-the-icons-dired-monochrome t)) gui-only-plugins-setting)
  #+end_src
 ** Themes
  #+begin_src emacs-lisp
@@ -246,22 +244,25 @@ The package make emacs auto save the files
  #+end_src
 ** Dashbard
  #+begin_src emacs-lisp
- (use-package page-break-lines) 
- 
- (use-package dashboard
-     :custom
-     ;; Set the banner
-     (dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
-     (dashboard-center-content t)
-     (dashboard-items '((recents  . 7)
-                                         (projects . 5)
-                                         ))
-     (dashboard-set-heading-icons t)
-     (dashboard-set-file-icons t)
-     (dashboard-set-init-info t)
-     :config
-     (dashboard-setup-startup-hook)
-     )
+  (use-package page-break-lines) 
+  
+  (use-package dashboard
+    :custom
+    ;; Set the banner
+    (dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt")
+    (dashboard-center-content t)
+    (dashboard-items '((recents  . 7)
+                       (projects . 5)
+                       (agenda . 3)
+                       ))
+    (dashboard-set-heading-icons t)
+    (dashboard-set-file-icons t)
+    (dashboard-set-init-info t)
+    (dashboard-week-agenda nil)
+    (dashboard-agenda-release-buffers t)
+    :config
+    (dashboard-setup-startup-hook)
+    )
  #+end_src
 ** Nyan Mode
 #+begin_src emacs-lisp
@@ -271,25 +272,26 @@ The package make emacs auto save the files
 	 (nyan-mode t)
 	 (nyan-animate-nyancat t)
 	 (nyan-wavy-trail t)
-	 ) graphic-only-plugins-setting)
+	 ) gui-only-plugins-setting)
 #+end_src
 ** Highlight TODOs
 #+begin_src emacs-lisp
 (use-package hl-todo
-  :hook ((org-mode lsp-mode) . hl-todo-mode)
+  :hook ((org-mode prog-mode  lsp-mode) . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
       '(("TODO"   . "#FF0000")
         ("FIXME"  . "#FF0000")
         ("DEBUG"  . "#A020F0")
         ("NEXT" . "#FF4500")
+	("TBA" . "#61d290")
         ("UNCHECK"   . "#1E90FF")))
   )
 #+end_src
 ** Highligh Numbers
 #+begin_src emacs-lisp
 (use-package highlight-numbers
-  :hook ((org-mode lsp-mode) . highlight-numbers-mode))
+  :hook ((prog-mode  lsp-mode) . highlight-numbers-mode))
 #+end_src
 ** UI in Deamon
 #+begin_src emacs-lisp
@@ -375,7 +377,7 @@ The package make emacs auto save the files
    :commands (dired dired-jump))
  
  (push '(use-package all-the-icons-dired
-          :hook (dired-mode . all-the-icons-dired-mode)) graphic-only-plugins-setting)
+          :hook (dired-mode . all-the-icons-dired-mode)) gui-only-plugins-setting)
  
  (use-package dired-hide-dotfiles
     :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -400,6 +402,7 @@ The package make emacs auto save the files
  #+begin_src emacs-lisp
  (use-package projectile
    :diminish projectile-mode
+   :defer 1
    :config (projectile-mode)
    :bind-keymap
    ("C-c p" . projectile-command-map)
@@ -489,6 +492,32 @@ folder, otherwise delete a word"
   (consult-project-root-function #'dw/get-project-root)
   (completion-in-region-function #'consult-completion-in-region))
 #+end_src
+** Color Rg
+  #+begin_src emacs-lisp
+  (use-package color-rg
+    :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
+    :commands (color-rg-search-input
+               color-rg-search-symbol
+               color-rg-search-input-in-project
+               color-rg-search-input-in-current-file
+               color-rg-search-project-with-typ)
+    )
+  #+end_src
+** Embark
+#+begin_src emacs-lisp
+(use-package embark
+  :bind (("C-S-a" . embark-act)
+         :map minibuffer-local-map
+         ("C-d" . embark-act))
+  :config
+
+  ;; Show Embark actions via which-key
+  (setq embark-action-indicator
+        (lambda (map)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator))
+#+end_src
 * Helpful function
 ** Helpful Function Description
  #+begin_src emacs-lisp
@@ -504,43 +533,48 @@ folder, otherwise delete a word"
 * Org Mode
 ** Config Basic Org mode
  #+begin_src emacs-lisp
- (defun dw/org-mode-setup ()
-   (org-indent-mode)
-   (variable-pitch-mode 1)
-   (visual-line-mode 1))
+   (defun dw/org-mode-setup ()
+     (org-indent-mode)
+     (variable-pitch-mode 1)
+     (visual-line-mode 1))
  
- (use-package org
-   :hook (org-mode . dw/org-mode-setup)
-   :config
-   (setq org-html-head-include-default-style nil)
-   (setq org-ellipsis " ▾"
-         org-hide-emphasis-markers t
-         org-src-fontify-natively t
-         org-src-tab-acts-natively t
-         org-edit-src-content-indentation 0
-         org-hide-block-startup nil
-         org-src-preserve-indentation nil
-         org-startup-folded 'content
-         org-cycle-separator-lines 2)
+   (use-package org
+     :hook (org-mode . dw/org-mode-setup)
+     :config
+     (setq org-html-head-include-default-style nil)
+     (setq org-ellipsis " ▾"
+           org-hide-emphasis-markers t
+           org-src-fontify-natively t
+           org-src-tab-acts-natively t
+           org-edit-src-content-indentation 0
+           org-hide-block-startup nil
+           org-src-preserve-indentation nil
+           org-startup-folded 'content
+           org-cycle-separator-lines 2)
  
-   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+     (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
  
-   (setq org-html-htmlize-output-type nil)
+     (setq org-html-htmlize-output-type nil)
  
-  ;; config for images in org
-   (auto-image-file-mode t)
-   (setq org-image-actual-width nil)
-   ;; default image width
-   (setq org-image-actual-width '(300))
+    ;; config for images in org
+     (auto-image-file-mode t)
+     (setq org-image-actual-width nil)
+     ;; default image width
+     (setq org-image-actual-width '(300))
  
-   (setq org-export-with-sub-superscripts nil)
+     (setq org-export-with-sub-superscripts nil)
  
-   ;; 不要自动创建备份文件
-   (setq make-backup-files nil)
+     ;; 不要自动创建备份文件
+     (setq make-backup-files nil)
  
-   (with-eval-after-load 'org-agenda
+     (with-eval-after-load 'org-agenda
        (require 'init-org-agenda))
-   )
+ 
+     (with-eval-after-load "meow"
+       (meow-leader-define-key
+        '("a" . org-agenda))
+       )
+ )
  #+end_src
 ** Apperance of Org
 *** Bullets
@@ -579,7 +613,7 @@ folder, otherwise delete a word"
    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-   ) graphic-only-plugins-setting)
+   ) gui-only-plugins-setting)
  #+end_src
 *** Set Margins for Modes
  #+begin_src emacs-lisp
@@ -593,8 +627,9 @@ folder, otherwise delete a word"
  #+end_src
 *** Properly Align Tables
  #+begin_src emacs-lisp
- (use-package valign
-   :hook (org-mode . valign-mode))
+ (push '(use-package valign
+          :hook (org-mode . valign-mode)
+          ) gui-only-plugins-setting)
  #+end_src
 *** Auto-show Markup Symbols
 #+begin_src emacs-lisp
@@ -635,7 +670,8 @@ folder, otherwise delete a word"
        (C . t)
        (js . t)
        (browser . t)
-       (python . t)))
+       (python . t)
+       (R .t)))
     )
 
   (setq org-confirm-babel-evaluate nil)
@@ -659,7 +695,7 @@ folder, otherwise delete a word"
    (add-to-list 'org-structure-template-alist '("html" . "src browser :out"))
    (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
    (add-to-list 'org-structure-template-alist '("la" . "latex"))
-   ;; (add-to-list 'org-structure-template-alist '("r" . "src R"))
+   (add-to-list 'org-structure-template-alist '("r" . "src R"))
    ;; (add-to-list 'org-structure-template-alist '("d" . "src ditaa :file ../images/.png :cmdline -E"))
   )
  #+end_src
@@ -701,12 +737,26 @@ folder, otherwise delete a word"
 #+end_src
 ** Org Agenda
 #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/elisp/init-org-agenda.el
-(with-eval-after-load 'org
-  (setq org-agenda-files (list
-			  "~/Documents/Org/Tasks.org"
-			  "~/Documents/Org/Days.org"
-			  "~/Documents/Org/Habits.org"
-			  ))
+(with-eval-after-load "org"
+  
+  (setq planner-path "~/Documents/Org/Planner/")
+
+  (defun dw/update-planner-files ()
+
+    (setq planner-files (directory-files planner-path))
+    (setq planner-files (cdr planner-files))
+    (setq planner-files (cdr planner-files))
+    (setq planner-files (cdr planner-files))
+    
+    (let (value)
+      (while planner-files
+	(setq value (cons (concat planner-path (car planner-files)) value))
+	(setq planner-files (cdr planner-files))
+	)
+      value))
+
+  (setq org-agenda-files (dw/update-planner-files))
+
 
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
@@ -714,72 +764,139 @@ folder, otherwise delete a word"
 
   ;; Custom TODO states and Agendas
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+	'((sequence "TODO(t)" "NEXT(n)" "TBA(b)" "|" "DONE(d!)")
 	  ))
 
   (setq org-tag-alist
 	'((:startgroup)
-					; Put mutually exclusive tags here
+	  ;; Put mutually exclusive tags here
 	  (:endgroup)
-	  ("@review" . ?R)
-	  ("@assignment" . ?A)
-	  ("@pratice" . ?P)
-	  ("planning" . ?p)
+	  ("review" . ?r)
+	  ("assignment" . ?a)
+	  ("test" . ?t)
+	  ("quiz" . ?q)
+	  ("final" . ?f)
+	  ("pratice" . ?p)
+	  ("emacs" . ?e)
 	  ("note" . ?n)
 	  ("idea" . ?i)))
 
-  ;; Configure custom agenda views
-  (setq org-agenda-custom-commands
-	'(("d" "Dashboard"
-	   ((agenda "" ((org-deadline-warning-days 7)))
-	    (todo "NEXT"
-		  ((org-agenda-overriding-header "Next Tasks")))
-	    (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-	  ("n" "Next Tasks"
-	   ((todo "NEXT"
-		  ((org-agenda-overriding-header "Next Tasks")))))
+  (use-package org-super-agenda
+    :hook (org-agenda-mode . org-super-agenda-mode)
+    :init
+    (setq org-agenda-skip-scheduled-if-done t
+          org-agenda-skip-deadline-if-done t
+          org-agenda-compact-blocks t
+	  org-agenda-start-with-log-mode t
+          org-agenda-start-day "+0d"
+	  org-agenda-include-diary t
+	  org-agenda-time-leading-zero t
+	  org-agenda-span 1)
+  
+    
+    (setq org-agenda-custom-commands
+	  '(("D" "Dashboard"
+             ((agenda "" ((org-agenda-span 'day)
 
-
-	  ("W" "Work Tasks" tags-todo "+work")
-
-	  ;; Low-effort next actions
-	  ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-	   ((org-agenda-overriding-header "Low Effort Tasks")
-	    (org-agenda-max-todos 20)
-	    (org-agenda-files org-agenda-files)))
-
-	  ("w" "Workflow Status"
-	   ((todo "WAIT"
-		  ((org-agenda-overriding-header "Waiting on External")
-		   (org-agenda-files org-agenda-files)))
-	    (todo "REVIEW"
-		  ((org-agenda-overriding-header "In Review")
-		   (org-agenda-files org-agenda-files)))
-	    (todo "PLAN"
-		  ((org-agenda-overriding-header "In Planning")
-		   (org-agenda-todo-list-sublevels nil)
-		   (org-agenda-files org-agenda-files)))
-	    (todo "BACKLOG"
-		  ((org-agenda-overriding-header "Project Backlog")
-		   (org-agenda-todo-list-sublevels nil)
-		   (org-agenda-files org-agenda-files)))
-	    (todo "READY"
-		  ((org-agenda-overriding-header "Ready for Work")
-		   (org-agenda-files org-agenda-files)))
-	    (todo "ACTIVE"
-		  ((org-agenda-overriding-header "Active Projects")
-		   (org-agenda-files org-agenda-files)))
-	    (todo "COMPLETED"
-		  ((org-agenda-overriding-header "Completed Projects")
-		   (org-agenda-files org-agenda-files)))
-	    (todo "CANC"
-		  ((org-agenda-overriding-header "Cancelled Projects")
-		   (org-agenda-files org-agenda-files)))))))
+			  (org-super-agenda-groups
+			   '((:name "Today"
+                                    :time-grid t
+                                    :date today
+                                    :scheduled today
+                                    :order 1)))))
+              (alltodo "" ((org-agenda-overriding-header "")
+			   (org-super-agenda-groups
+                            '((:name "Next to do"
+                                     :todo "NEXT"
+                                     :order 1)
+                              (:name "Important"
+                                     :priority "A"
+                                     :order 6)
+                              (:name "Due Today"
+                                     :deadline today
+                                     :order 2)
+                              (:name "Due Soon"
+                                     :deadline future
+                                     :order 8)
+                              (:name "Overdue"
+                                     :deadline past
+                                     :order 7)
+                              (:name "Assignments"
+                                     :tag "assignment"
+                                     :order 10)
+			      (:name "Tests/Quiz"
+				     :tag ("test" "quiz")
+				     :order 10)
+			      (:name "Final Exam"
+				     :tag "final"
+				     :order  9)
+                              (:name "Projects"
+                                     :tag "Project"
+                                     :order 14)
+                              (:name "Emacs"
+                                     :tag "Emacs"
+                                     :order 13)
+                              (:name "To read"
+                                     :tag "Read"
+                                     :order 30)
+                              (:name "trivial"
+                                     :priority<= "C"
+                                     :tag ("Trivial" "Unimportant")
+                                     :todo ("SOMEDAY" )
+                                     :order 90)
+                              ))))))
+	    ("A" "Assignments"
+	     ((agenda "" ((org-agenda-span 'day)
+			  (org-super-agenda-groups
+			   '((:name "Today"
+				    :time-grid t
+				    :and (:tag "assignment" :deadline today)
+				    )
+			     (:discard (:anything t))))))
+	      (tags "assignment" ((org-agenda-overriding-header "")
+				  (org-super-agenda-groups
+				   '((:name "Due Today"
+					    :and (:tag "assignment" :deadline today)
+					    )
+				     (:name "Next to do"
+					    :and (:todo "NEXT" :tag "assignment")
+					    :order 2)
+				     (:name "Due Soon"
+					    :and (:tag "assignment" :deadline future)
+					    :order 3)
+				     (:name "Overdue"
+					    :and (:tag "assignment" :deadline past)
+					    :order 99)
+				     (:discard (:anything t))))))))
+	    ("T" "Tests/Quiz"
+	     ((agenda "" ((org-agenda-span 'day)
+			  (org-agenda-include-deadlines nil)
+			  (org-super-agenda-groups
+			   '((:name "Today"
+				    :and (:scheduled today :tag "test")
+				    :time-grid t)
+			     (:discard (:anything t))))))
+	      (tags "\\(?:final\\|quiz\\|test\\)" ((org-agenda-overriding-header "")
+						   (org-super-agenda-groups
+						    '((:name "Tests"
+							     :and (:tag "test" :scheduled future)
+							     )
+						      (:name "Quiz"
+							     :and (:tag "quiz" :scheduled future)
+							     )
+						      (:name "Final Exam"
+							     :and (:tag "final" :scheduled future)
+							     )
+						      (:discard (:anything t))))))))
+	    )
+	  )
+    )
+  
 
   ;; Refiling
   (setq org-refile-targets
-	'(("Archive.org" :maxlevel . 1)))
+	'(("~/Documents/Org/Planner/Archive.org" :maxlevel . 1)))
 
   ;; Save Org buffers after refiling!
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -792,7 +909,7 @@ folder, otherwise delete a word"
 
   (setq org-capture-templates
 	`(("t" "Tasks / Projects")
-	  ("tt" "Task" entry (file+olp "~/Documents/Org/Tasks.org" "Inbox")
+	  ("tt" "Task" entry (file+olp "~/Documents/Org/Planner/Tasks.org" "Inbox")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)))
 
   ;; Habit Tracking
@@ -800,6 +917,7 @@ folder, otherwise delete a word"
   (add-to-list 'org-modules 'org-habit)
   (setq org-habit-graph-column 60)
   )
+
 
 (provide 'init-org-agenda)
 #+end_src
@@ -868,7 +986,9 @@ folder, otherwise delete a word"
    '("7" . meow-digit-argument)
    '("8" . meow-digit-argument)
    '("9" . meow-digit-argument)
-   '("0" . meow-digit-argument))
+   '("0" . meow-digit-argument)
+   '("/" . meow-keypad-describe-key)
+   '("?" . meow-cheatsheet))
   (meow-normal-define-key
    '("0" . meow-expand-0)
    '("9" . meow-expand-9)
@@ -893,45 +1013,53 @@ folder, otherwise delete a word"
    '("c" . meow-change)
    '("C" . meow-change-save)
    '("d" . meow-delete)
-   '("x" . meow-line)
+   '("D" . meow-backward-delete)
+   '("e" . meow-next-word)
+   '("E" . meow-next-symbol)
    '("f" . meow-find)
    '("F" . meow-find-expand)
-   '("g" . meow-keyboard-quit)
-   '("G" . meow-goto-line)
+   '("g" . meow-cancel)
+   '("G" . meow-grab)
    '("h" . meow-left)
    '("H" . meow-left-expand)
    '("i" . meow-insert)
    '("I" . meow-open-above)
+   '("j" . meow-next)
+   '("J" . meow-next-expand)
+   '("k" . meow-prev)
+   '("K" . meow-prev-expand)
+   '("l" . meow-right)
+   '("L" . meow-right-expand)
    '("m" . meow-join)
-   '("M" . delete-indentation)
+   '("n" . meow-search)
+   '("N" . meow-pop-search)
+   '("o" . meow-block)
+   '("O" . meow-block-expand)
+   '("p" . meow-yank)
+   '("P" . meow-yank-pop)
+   '("q" . meow-quit)
+   '("Q" . meow-goto-line)
+   '("r" . meow-replace)
+   '("R" . meow-swap-grab)
    '("s" . meow-kill)
    '("t" . meow-till)
    '("T" . meow-till-expand)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-visit)
+   '("V" . meow-kmacro-matches)
    '("w" . meow-mark-word)
    '("W" . meow-mark-symbol)
-   '("j" . meow-next)
-   '("J" . meow-next-expand)
-   '("o" . meow-block)
-   '("O" . meow-block-expand)
-   '("k" . meow-prev)
-   '("K" . meow-prev-expand)
-   '("q" . meow-quit)
-   '("r" . meow-replace)
-   '("R" . meow-replace-save)
-   '("n" . meow-search)
-   '("N" . meow-pop-search)
-   '("l" . meow-right)
-   '("L" . meow-right-expand)
-   '("u" . undo)
-   '("v" . meow-visit)
-   '("e" . meow-next-word)
-   '("E" . meow-next-symbol)
+   '("x" . meow-line)
+   '("X" . meow-kmacro-lines)
    '("y" . meow-save)
-   '("p" . meow-yank)
+   '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
    '("Z" . meow-pop-all-selection)
    '("&" . meow-query-replace)
    '("%" . meow-query-replace-regexp)
+   '("'" . repeat)
+   '("\\" . quoted-insert)
    '("<escape>" . meow-last-buffer)))
 
 (provide 'init-meow-qwerty)
@@ -952,22 +1080,20 @@ folder, otherwise delete a word"
   (meow-setup-line-number)
   ;;:bind ("" . meow-insert-exit)
   (add-to-list 'meow-mode-state-list '(inferior-emacs-lisp-mode . normal))
+  (add-to-list 'meow-mode-state-list '(org-agenda-mode . normal))
   )
 
 (meow-leader-define-key
  '("f" . find-file)
  '("b" . switch-to-buffer)
- '("tt" . vterm-toggle)
- '("tm" . mutil-vterm)
  '("qr" . quickrun)
  '("wo" . ace-window)
  '("wd" . ace-delete-window)
  '("wt" . treemacs-select-window)
  '("dd" . dap-debug)
- '("aa" . org-agenda)
- '("al" . org-agenda-list)
- '("ac" . org-capture)
 )
+
+(require 'open-files)
 
 (meow-motion-overwrite-define-key
  '("h" . dired-single-up-directory)
@@ -984,17 +1110,6 @@ Make the selected parts be deletable
   #+begin_src emacs-lisp
   ;; Make ESC quit prompts
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-  #+end_src
-*** Color Rg
-  #+begin_src emacs-lisp
-  (use-package color-rg
-    :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
-    :commands (color-rg-search-input
-               color-rg-search-symbol
-               color-rg-search-input-in-project
-               color-rg-search-input-in-current-file
-               color-rg-search-project-with-typ)
-    )
   #+end_src
 *** Multiple Cursors
   #+begin_src emacs-lisp
@@ -1027,12 +1142,18 @@ This program can be used *WITHOUT* evil-mode!
 #+begin_src emacs-lisp
 (use-package avy
   :commands (avy-goto-char avy-goto-word-0 avy-goto-line))
+
+(meow-leader-define-key
+ '("tc" . avy-goto-char)
+ '("tw" . avy-goto-word-0)
+ '("tl" . avy-goto-line)
+ )
 #+end_src
 * Company
 ** Company Mode
  #+begin_src emacs-lisp
  (use-package company 
-   :hook ((prog-mode lsp-mode) . company-mode)
+   :hook ((lsp-mode prog-mode conf-mode) . company-mode)
    :custom
    (company-tooltip-align-annotations t)
    ;; ;; Number the candidates (use M-1, M-2 etc to select completions)
@@ -1048,14 +1169,14 @@ This program can be used *WITHOUT* evil-mode!
    ;; ('tng' means 'tab and go')
    ;; (company-tng-configure-default)
    ;; (require 'company_init)
- 
    )
  
  ;;Completion based on AI 
  (use-package company-tabnine
-   :after company
+   :after lsp
    :config
    (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
+ 
  #+end_src
 ** Company Box
  #+begin_src emacs-lisp
@@ -1063,9 +1184,9 @@ This program can be used *WITHOUT* evil-mode!
  (push '(use-package company-box
           :hook (company-mode . company-box-mode)
           :config
-          (setq company-box-icons-alist 'company-box-icons-all-the-icons)) graphic-only-plugins-setting)
- 
- #+end_src
+          (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+          ) gui-only-plugins-setting)
+#+end_src
 * Citre
 #+begin_src emacs-lisp
 (defun dw/get-project-root ()
@@ -1101,7 +1222,15 @@ This program can be used *WITHOUT* evil-mode!
   (use-package smartparens
     :hook ((prog-mode lsp-mode) . smartparens-mode)
     :init
-    (require 'smartparens-config))
+    (require 'smartparens-config)
+    :config
+    (define-key smartparens-mode-map (kbd "M-r") #'sp-rewrap-sexp)    
+    (define-key smartparens-mode-map (kbd "M-s") #'sp-unwrap-sexp)
+    (define-key smartparens-mode-map (kbd "M-[") #'sp-wrap-square)
+    (define-key smartparens-mode-map (kbd "M-{") #'sp-wrap-curly)
+    (define-key smartparens-mode-map (kbd "C-)") #'sp-forward-slurp-sexp)
+    (define-key smartparens-mode-map (kbd "C-}") #'sp-forward-barf-sexp)
+    )
   #+end_src
 *** Rainbow Brackets 
   #+begin_src emacs-lisp
@@ -1403,7 +1532,7 @@ This program can be used *WITHOUT* evil-mode!
 *** R
 #+begin_src emacs-lisp
 (use-package ess
-  :disabled)
+  :mode "\\.R\\'")
 #+end_src
 
 ** Dap Debug Mode
@@ -1431,7 +1560,9 @@ This program can be used *WITHOUT* evil-mode!
 ** Term/Shells
 *** Vterm
 Vitual Termianl
-# brew install libtool libvterm 
+#+begin_src shell
+brew install libtool libvterm
+#+end_src
 #+begin_src emacs-lisp
 ;; (use-package vterm
 ;;   :commands vterm
@@ -1447,6 +1578,7 @@ Vitual Termianl
            (executable-find "libtool")
            (executable-find "make"))
   (use-package vterm
+    :defer 1
     :init
     (setq vterm-always-compile-module t)
 
@@ -1485,41 +1617,47 @@ Vitual Termianl
 
 (use-package vterm-toggle
   :commands vterm-toggle)
+
+(meow-leader-define-key
+ '("tt" . vterm-toggle)
+ '("tm" . multi-vterm)
+ '("tp" . vterm-posframe-toggle)
+ )
 #+end_src
 ** Tmux
 *** Emamux
 #+begin_src emacs-lisp
-(if (not (display-graphic-p))
-	 (use-package emamux
+(push '(use-package emamux
 	   :bind ("C-z" . emamux:keymap)
 	   ;; :config
 	   ;; (global-set-key (kbd "C-z") emamux:keymap)
-	   )
-  )
+	   ) tui-only-plugins-setting)
 #+end_src
 *** Tmux-pane
 #+begin_src emacs-lisp
-(if (not (display-graphic-p))
-    (use-package tmux-pane
+(push '(use-package tmux-pane
       :disabled
       :config
       (tmux-pane-mode)
-      )
-  )
-
-
+      ) tui-only-plugins-setting)
 #+end_src
 ** Git
 *** Magit
 #+begin_src emacs-lisp
 (use-package magit
-  :commands (magit-status magit-get-current-branch)
+  :commands (magit magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 ;; Add a super-convenient global binding for magit-status since
 ;; I use it 8 million times a day
 (global-set-key (kbd "C-M-;") 'magit-status)
+#+end_src
+*** Magit-Delta
+Highlight diff by using delta
+#+begin_src emacs-lisp
+(use-package magit-delta
+  :hook (magit-mode . magit-delta-mode))
 #+end_src
 ** LeetCode Client
 #+begin_src emacs-lisp
@@ -1557,6 +1695,7 @@ Vitual Termianl
 (use-package diff-hl
   :hook (dired-mode . diff-hl-dired-mode-unless-remote)
   :hook (magit-post-refresh . diff-hl-magit-post-refresh)
+  :hook (prog-mode . diff-hl-mode)
   :config
   ;; use margin instead of fringe
   (diff-hl-margin-mode))
@@ -1564,6 +1703,7 @@ Vitual Termianl
 ** Use Trash in Emacs
 #+begin_src emacs-lisp
 (use-package osx-trash
+  :defer 1
   :config
   (when (eq system-type 'darwin)
   (osx-trash-setup))
@@ -1574,6 +1714,26 @@ Vitual Termianl
 (use-package fzf
   :commands (fzf)
   )
+#+end_src
+** Clipetty
+Clipetty is a minor mode for terminal (TTY) users that sends text that you kill in Emacs to your Operating System's clipboard
+#+begin_src emacs-lisp
+(push '(use-package clipetty
+      :hook (after-init . global-clipetty-mode)
+      ) tui-only-plugins-setting)
+#+end_src
+* Pass
+** pass-store.el
+#+begin_src emacs-lisp
+(use-package password-store
+  :commands (password-store-copy password-store-insert)
+  :config
+  (setq password-store-password-length 12))
+
+(use-package auth-source-pass
+  :disabled
+  :config
+  (auth-source-pass-enable))
 #+end_src
 * Increase memory/garbage 
 Make Emacs/lsp more smooth
@@ -1595,8 +1755,14 @@ Same as above
 #+end_src
 * Load Plugings Based On Graphic Setting
 #+begin_src emacs-lisp
+;; GUI Only Plugins
 (if (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty"))))
-    (dolist (elisp-code graphic-only-plugins-setting)
-      (eval elisp-code)))
+    (dolist (gui-plugins gui-only-plugins-setting)
+      (eval gui-plugins)))
+
+;; TUI Only Plugins
+(if (or (not (display-graphic-p)) (string= (daemonp) "tty"))
+    (dolist (tui-plugins tui-only-plugins-setting)
+      (eval tui-plugins)))
 #+end_src
 
