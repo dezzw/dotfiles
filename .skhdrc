@@ -1,8 +1,8 @@
 # open application
-cmd - return : open /Applications/iTerm.app
-cmd - e : emacsclient -s daemon -c -n -a ""
-shift + cmd - e: emacs
-cmd - b : open /Applications/Google\ Chrome.app
+#cmd - return : open /Applications/iTerm.app
+#cmd - e : emacsclient -s daemon -c -n -a ""
+#shift + cmd - e: emacs
+#cmd - b : open /Applications/Google\ Chrome.app
 
 
 # --- Window Management ---

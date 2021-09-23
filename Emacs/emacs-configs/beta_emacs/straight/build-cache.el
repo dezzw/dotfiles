@@ -3,7 +3,7 @@
 
 "28.0.50"
 
-#s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ("org-elpa" ("2021-09-01 20:55:59" nil (:local-repo nil :package "org-elpa" :type git)) "melpa" ("2021-09-01 20:55:59" nil (:type git :host github :repo "melpa/melpa" :build nil :package "melpa" :local-repo "melpa")) "gnu-elpa-mirror" ("2021-09-01 20:55:59" nil (:type git :host github :repo "emacs-straight/gnu-elpa-mirror" :build nil :package "gnu-elpa-mirror" :local-repo "gnu-elpa-mirror")) "el-get" ("2021-09-01 20:55:59" nil (:type git :host github :repo "dimitri/el-get" :build nil :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :flavor melpa :package "el-get" :local-repo "el-get")) "emacsmirror-mirror" ("2021-09-01 20:55:59" nil (:type git :host github :repo "emacs-straight/emacsmirror-mirror" :build nil :package "emacsmirror-mirror" :local-repo "emacsmirror-mirror")) "straight" ("2021-09-01 20:55:59" ("emacs") (:type git :host github :repo "raxod502/straight.el" :files ("straight*.el") :branch "master" :package "straight" :local-repo "straight.el")) "dashboard" ("2021-09-01 20:55:59" ("emacs") (:type git :flavor melpa :files (:defaults "banners" "dashboard-pkg.el") :host github :repo "emacs-dashboard/emacs-dashboard" :package "dashboard" :local-repo "emacs-dashboard")) "use-package" ("2021-09-01 20:55:59" ("emacs" "bind-key") (:type git :flavor melpa :files (:defaults (:exclude "bind-key.el" "bind-chord.el" "use-package-chords.el" "use-package-ensure-system-package.el") "use-package-pkg.el") :host github :repo "jwiegley/use-package" :package "use-package" :local-repo "use-package")) "bind-key" ("2021-09-01 20:55:59" nil (:flavor melpa :files ("bind-key.el" "bind-key-pkg.el") :package "bind-key" :local-repo "use-package" :type git :repo "jwiegley/use-package" :host github)) "gcmh" ("2021-09-01 20:55:59" ("emacs") (:type git :flavor melpa :host gitlab :repo "koral/gcmh" :package "gcmh" :local-repo "gcmh"))))
+#s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ("org-elpa" ("2021-09-08 15:15:59" nil (:local-repo nil :package "org-elpa" :type git)) "melpa" ("2021-09-08 15:15:59" nil (:type git :host github :repo "melpa/melpa" :build nil :package "melpa" :local-repo "melpa")) "gnu-elpa-mirror" ("2021-09-08 15:15:59" nil (:type git :host github :repo "emacs-straight/gnu-elpa-mirror" :build nil :package "gnu-elpa-mirror" :local-repo "gnu-elpa-mirror")) "el-get" ("2021-09-08 15:15:59" nil (:type git :host github :repo "dimitri/el-get" :build nil :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :flavor melpa :package "el-get" :local-repo "el-get")) "emacsmirror-mirror" ("2021-09-08 15:15:59" nil (:type git :host github :repo "emacs-straight/emacsmirror-mirror" :build nil :package "emacsmirror-mirror" :local-repo "emacsmirror-mirror")) "straight" ("2021-09-08 15:15:59" ("emacs") (:type git :host github :repo "raxod502/straight.el" :files ("straight*.el") :branch "master" :package "straight" :local-repo "straight.el")) "dashboard" ("2021-09-08 15:15:59" ("emacs") (:type git :flavor melpa :files (:defaults "banners" "dashboard-pkg.el") :host github :repo "emacs-dashboard/emacs-dashboard" :package "dashboard" :local-repo "emacs-dashboard")) "use-package" ("2021-09-08 15:15:59" ("emacs" "bind-key") (:type git :flavor melpa :files (:defaults (:exclude "bind-key.el" "bind-chord.el" "use-package-chords.el" "use-package-ensure-system-package.el") "use-package-pkg.el") :host github :repo "jwiegley/use-package" :package "use-package" :local-repo "use-package")) "bind-key" ("2021-09-08 15:15:59" nil (:flavor melpa :files ("bind-key.el" "bind-key-pkg.el") :package "bind-key" :local-repo "use-package" :type git :repo "jwiegley/use-package" :host github)) "gcmh" ("2021-09-08 15:15:59" ("emacs") (:type git :flavor melpa :host gitlab :repo "koral/gcmh" :package "gcmh" :local-repo "gcmh")) "org-super-agenda" ("2021-09-08 15:18:45" ("emacs" "s" "dash" "org" "ht" "ts") (:type git :flavor melpa :host github :repo "alphapapa/org-super-agenda" :package "org-super-agenda" :local-repo "org-super-agenda")) "s" ("2021-09-08 15:18:45" nil (:type git :flavor melpa :files ("s.el" "s-pkg.el") :host github :repo "magnars/s.el" :package "s" :local-repo "s.el")) "dash" ("2021-09-08 15:18:45" ("emacs") (:type git :flavor melpa :files ("dash.el" "dash.texi" "dash-pkg.el") :host github :repo "magnars/dash.el" :package "dash" :local-repo "dash.el")) "org" ("2021-09-08 15:18:45" ("emacs") (:type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")) :package "org")) "ht" ("2021-09-08 15:18:45" ("dash") (:type git :flavor melpa :files ("ht.el" "ht-pkg.el") :host github :repo "Wilfred/ht.el" :package "ht" :local-repo "ht.el")) "ts" ("2021-09-08 15:18:45" ("emacs" "dash" "s") (:type git :flavor melpa :host github :repo "alphapapa/ts.el" :package "ts" :local-repo "ts.el"))))
 
 #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ("straight" ((straight-x straight-autoloads straight) (autoload 'straight-remove-unused-repos "straight" "Remove unused repositories from the repos directory.
 A repo is considered \"unused\" if it was not explicitly requested via
@@ -459,10 +459,63 @@ evaluate `(default-value 'gcmh-mode)'.
 The mode's hook is called both when the mode is enabled and when
 it is disabled.
 
-(fn &optional ARG)" t nil) (register-definition-prefixes "gcmh" '("gcmh-")) (provide 'gcmh-autoloads))))
+(fn &optional ARG)" t nil) (register-definition-prefixes "gcmh" '("gcmh-")) (provide 'gcmh-autoloads)) "s" ((s s-autoloads) (register-definition-prefixes "s" '("s-")) (provide 's-autoloads)) "dash" ((dash dash-autoloads) (autoload 'dash-fontify-mode "dash" "Toggle fontification of Dash special variables.
 
-#s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (org-elpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 9 "melpa" nil "gnu-elpa-mirror" nil "el-get" nil "emacsmirror-mirror" nil "straight" nil "dashboard" nil "use-package" nil "bind-key" nil "gcmh" nil)) melpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "gnu-elpa-mirror" nil "el-get" (el-get :type git :flavor melpa :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :host github :repo "dimitri/el-get") "emacsmirror-mirror" nil "straight" nil "dashboard" (dashboard :type git :flavor melpa :files (:defaults "banners" "dashboard-pkg.el") :host github :repo "emacs-dashboard/emacs-dashboard") "use-package" (use-package :type git :flavor melpa :files (:defaults (:exclude "bind-key.el" "bind-chord.el" "use-package-chords.el" "use-package-ensure-system-package.el") "use-package-pkg.el") :host github :repo "jwiegley/use-package") "bind-key" (bind-key :type git :flavor melpa :files ("bind-key.el" "bind-key-pkg.el") :host github :repo "jwiegley/use-package") "gcmh" (gcmh :type git :flavor melpa :host gitlab :repo "koral/gcmh"))) gnu-elpa-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 3 "emacsmirror-mirror" nil "straight" nil)) el-get #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 1 "emacsmirror-mirror" nil "straight" nil)) emacsmirror-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "straight" (straight :type git :host github :repo "emacsmirror/straight")))))
+This is a minor mode.  If called interactively, toggle the
+`Dash-Fontify mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
 
-("org-elpa" "melpa" "gnu-elpa-mirror" "el-get" "emacsmirror-mirror" "straight" "emacs" "use-package" "bind-key" "gcmh" "dashboard")
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `dash-fontify-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+Dash-Fontify mode is a buffer-local minor mode intended for Emacs
+Lisp buffers.  Enabling it causes the special variables bound in
+anaphoric Dash macros to be fontified.  These anaphoras include
+`it', `it-index', `acc', and `other'.  In older Emacs versions
+which do not dynamically detect macros, Dash-Fontify mode
+additionally fontifies Dash macro calls.
+
+See also `dash-fontify-mode-lighter' and
+`global-dash-fontify-mode'.
+
+(fn &optional ARG)" t nil) (put 'global-dash-fontify-mode 'globalized-minor-mode t) (defvar global-dash-fontify-mode nil "Non-nil if Global Dash-Fontify mode is enabled.
+See the `global-dash-fontify-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-dash-fontify-mode'.") (custom-autoload 'global-dash-fontify-mode "dash" nil) (autoload 'global-dash-fontify-mode "dash" "Toggle Dash-Fontify mode in all buffers.
+With prefix ARG, enable Global Dash-Fontify mode if ARG is positive;
+otherwise, disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Dash-Fontify mode is enabled in all buffers where
+`dash--turn-on-fontify-mode' would do it.
+
+See `dash-fontify-mode' for more information on Dash-Fontify mode.
+
+(fn &optional ARG)" t nil) (autoload 'dash-register-info-lookup "dash" "Register the Dash Info manual with `info-lookup-symbol'.
+This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t nil) (register-definition-prefixes "dash" '("!cdr" "!cons" "--" "->" "-a" "-butlast" "-c" "-d" "-e" "-f" "-gr" "-i" "-juxt" "-keep" "-l" "-m" "-no" "-o" "-p" "-r" "-s" "-t" "-u" "-value-to-list" "-when-let" "-zip" "dash-")) (provide 'dash-autoloads)) "org" ((ob-comint org-ctags ox-texinfo ol-doi org-refile org-version org-num ol-mhe ob-shell org-attach ob-C org-entities ob-dot ob-sql ol-eww org-datetree org-macro ob-eval ob-abc ob-groovy ob-shen ox-icalendar org-mobile ob-processing oc-csl ob-picolisp ob-octave org-table ox-html ol ob-plantuml ol-docview ob-exp ob-ditaa ob-scheme ol-gnus org-mouse org-inlinetask ob-fortran ob-haskell org-id ob-vala oc ob-css org-compat ob-coq org-element ob ob-calc ob-python org-agenda ob-ocaml org-tempo ob-ref ob-tangle ob-lilypond ob-clojure org-lint ol-eshell ox-latex org-pcomplete org-duration ox-beamer ol-info ob-ebnf ob-table ol-rmail ox-odt org-protocol ob-latex org-archive ol-w3m ob-sed ob-perl ob-eshell org-plot org-clock ob-awk ob-stan org-list ob-sqlite org-macs ox-man ol-bbdb org-loaddefs ol-irc org ob-J ob-ledger org-capture ob-asymptote org-colview org-goto ob-R ob-ruby ob-sass ob-matlab ox oc-natbib ob-core ob-makefile org-timer ob-org ob-forth ob-io oc-biblatex ob-lob ob-gnuplot org-faces org-habit ox-koma-letter ob-js ob-screen org-footnote ob-mscgen oc-basic ol-bibtex ob-hledger ob-java ob-lua ox-md org-install ox-ascii org-keys ob-lisp org-attach-git ob-emacs-lisp ob-maxima org-crypt org-feed org-src ox-org org-indent ox-publish)) "ht" ((ht ht-autoloads) (register-definition-prefixes "ht" 'nil) (provide 'ht-autoloads)) "ts" ((ts ts-autoloads) (register-definition-prefixes "ts" '("ts-" "ts<" "ts=" "ts>")) (provide 'ts-autoloads)) "org-super-agenda" ((org-super-agenda-autoloads org-super-agenda) (defvar org-super-agenda-mode nil "Non-nil if Org-Super-Agenda mode is enabled.
+See the `org-super-agenda-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `org-super-agenda-mode'.") (custom-autoload 'org-super-agenda-mode "org-super-agenda" nil) (autoload 'org-super-agenda-mode "org-super-agenda" "Global minor mode to group items in Org agenda views according to `org-super-agenda-groups'.
+With prefix argument ARG, turn on if positive, otherwise off.
+
+(fn &optional ARG)" t nil) (register-definition-prefixes "org-super-agenda" '("org-super-agenda-")) (provide 'org-super-agenda-autoloads))))
+
+#s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (org-elpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 9 "melpa" nil "gnu-elpa-mirror" nil "el-get" nil "emacsmirror-mirror" nil "straight" nil "dashboard" nil "use-package" nil "bind-key" nil "gcmh" nil "org-super-agenda" nil "s" nil "dash" nil "org" (org :type git :repo "https://code.orgmode.org/bzg/org-mode.git" :local-repo "org" :depth full :pre-build (straight-recipes-org-elpa--build) :build (:not autoloads) :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*"))) "ht" nil "ts" nil)) melpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "gnu-elpa-mirror" nil "el-get" (el-get :type git :flavor melpa :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :host github :repo "dimitri/el-get") "emacsmirror-mirror" nil "straight" nil "dashboard" (dashboard :type git :flavor melpa :files (:defaults "banners" "dashboard-pkg.el") :host github :repo "emacs-dashboard/emacs-dashboard") "use-package" (use-package :type git :flavor melpa :files (:defaults (:exclude "bind-key.el" "bind-chord.el" "use-package-chords.el" "use-package-ensure-system-package.el") "use-package-pkg.el") :host github :repo "jwiegley/use-package") "bind-key" (bind-key :type git :flavor melpa :files ("bind-key.el" "bind-key-pkg.el") :host github :repo "jwiegley/use-package") "gcmh" (gcmh :type git :flavor melpa :host gitlab :repo "koral/gcmh") "org-super-agenda" (org-super-agenda :type git :flavor melpa :host github :repo "alphapapa/org-super-agenda") "s" (s :type git :flavor melpa :files ("s.el" "s-pkg.el") :host github :repo "magnars/s.el") "dash" (dash :type git :flavor melpa :files ("dash.el" "dash.texi" "dash-pkg.el") :host github :repo "magnars/dash.el") "ht" (ht :type git :flavor melpa :files ("ht.el" "ht-pkg.el") :host github :repo "Wilfred/ht.el") "ts" (ts :type git :flavor melpa :host github :repo "alphapapa/ts.el"))) gnu-elpa-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 3 "emacsmirror-mirror" nil "straight" nil)) el-get #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 1 "emacsmirror-mirror" nil "straight" nil)) emacsmirror-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "straight" (straight :type git :host github :repo "emacsmirror/straight")))))
+
+("org-elpa" "melpa" "gnu-elpa-mirror" "el-get" "emacsmirror-mirror" "straight" "emacs" "use-package" "bind-key" "gcmh" "dashboard" "org-super-agenda" "s" "dash" "org" "ht" "ts")
 
 t

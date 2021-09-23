@@ -23,3 +23,5 @@ Emacs/emacs-configs/demacs/.cache/*
 Emacs/emacs-configs/demacs/.extension/*
 Emacs/emacs-configs/demacs/eln-cache/*
 Emacs/emacs-configs/demacs/straight/*
+
+Emacs/emacs-configs/beta_emacs/straight/*
