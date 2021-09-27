@@ -170,3 +170,13 @@ function et() {
         echo '  - 1: run emacsclient to open FILES.'
     fi
 }
+
+function magit() {
+    if [[ $(uname) == "Linux" ]]; then
+        EMACSCLIENT="/usr/bin/emacsclient"
+    else
+        EMACSCLIENT="/usr/local/bin/emacsclient"
+    fi
+
+    $EMACSCLIENT -nw --socket-name=tty -e "(magit)"
+}
