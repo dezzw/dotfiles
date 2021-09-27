@@ -3,7 +3,7 @@
 .DS_Store
 */.DS_Store
 
-Dash/license.dash-license
+Dash/*.dash-license
 
 NeoVim/tmp/*
 
