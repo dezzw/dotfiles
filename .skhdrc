@@ -12,16 +12,16 @@
 #            v
 #            j
 # focus window
-cmd - h : yabai -m window --focus west
-cmd - j : yabai -m window --focus south
-cmd - k : yabai -m window --focus north
-cmd - l : yabai -m window --focus east
+alt - h : yabai -m window --focus west
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east
 
 # move managed window
-cmd + ctrl - h : yabai -m window --warp west
-cmd + ctrl - j : yabai -m window --warp south
-cmd + ctrl - k : yabai -m window --warp north
-cmd + ctrl - l : yabai -m window --warp east
+alt + ctrl - h : yabai -m window --warp west
+alt + ctrl - j : yabai -m window --warp south
+alt + ctrl - k : yabai -m window --warp north
+alt + ctrl - l : yabai -m window --warp east
 
 # balance size of windows
 shift + ctrl - b : yabai -m space --balance
@@ -47,17 +47,16 @@ shift + ctrl - e : yabai -m window --toggle split
 
 # --- Space Management
 # fast focus desktop/space
-cmd - r : yabai -m space --focus recent
-cmd - 1 : yabai -m space --focus 1
-cmd - 2 : yabai -m space --focus 2
-cmd - 3 : yabai -m space --focus 3
-cmd - n : yabai -m space --focus next || yabai -m space --focus first
-cmd - p : yabai -m space --focus prev || yabai -m space --focus last
+alt - r : yabai -m space --focus recent
+alt - 1 : yabai -m space --focus 1
+alt - 2 : yabai -m space --focus 2
+alt - 3 : yabai -m space --focus 3
+alt - n : yabai -m space --focus next || yabai -m space --focus first
+alt - p : yabai -m space --focus prev || yabai -m space --focus last
 
 # send window to desktop and follow focus
-alt + cmd - n : yabai -m window --space next; yabai -m space --focus next
-alt + cmd - 1 : yabai -m window --space 1; yabai -m space --focus 1
-alt + cmd - 2 : yabai -m window --space  2; yabai -m space --focus 2
-alt + cmd - 3 : yabai -m window --space 3; yabai -m space --focus 3
-alt + cmd - p : yabai -m window --space prev; yabai -m space --focus prev
-  
+alt + ctrl - n : yabai -m window --space next; yabai -m space --focus next
+alt + ctrl - 1 : yabai -m window --space 1; yabai -m space --focus 1
+alt + ctrl - 2 : yabai -m window --space  2; yabai -m space --focus 2
+alt + ctrl - 3 : yabai -m window --space 3; yabai -m space --focus 3
+alt + ctrl - p : yabai -m window --space prev; yabai -m space --focus prev
