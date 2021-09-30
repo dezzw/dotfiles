@@ -1,3 +1,6 @@
+" Set leader key
+let mapleader = " "
+
 set multiple-cursors
 set surround
 set easymotion
@@ -31,3 +34,8 @@ nnoremap H ^
 " Move to the end of line
 nnoremap L $
 
+" Run the code
+:map <leader>r <Action>(Run)
+
+" Format the code
+:map \r <Action>(ReformatCode)

@@ -3,7 +3,7 @@
 #cmd - e : emacsclient -s daemon -c -n -a ""
 #shift + cmd - e: emacs
 #cmd - b : open /Applications/Google\ Chrome.app
-
+cmd - e : emacsclient -e "(emacs-everywhere)"
 
 # --- Window Management ---
 #            k
