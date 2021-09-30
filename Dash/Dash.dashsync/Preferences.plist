@@ -198,6 +198,11 @@
 				<key>date</key>
 				<date>2021-04-28T13:57:04Z</date>
 			</dict>
+			<key>http://kapeli.com/feeds/Java_SE16.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2021-09-29T16:01:45Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/Java_SE8.xml</key>
 			<dict>
 				<key>date</key>
