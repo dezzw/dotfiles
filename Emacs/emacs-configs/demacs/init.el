@@ -1,3 +1,5 @@
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
 (setq comp-async-jobs-number 7
       comp-deferred-compilation t
 	 comp-async-report-warnings-errors nil)
@@ -39,6 +41,15 @@
 
 (setq package-enable-at-startup nil)
 
+;; ( gc-cons-threshold 100000000)
+
+(use-package gcmh
+  :hook (after-init . gcmh-mode)
+  :custom
+  (gcmh-idle-delay 0.5) ;; doom is using 0.5, default is 15s
+  (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
+  )
+
 (setq gui-only-plugins-setting ())
 (setq tui-only-plugins-setting ())
 
@@ -64,7 +75,8 @@
   :custom
   (super-save-auto-save-when-idle t)
   :config
-  (super-save-mode +1))
+  (super-save-mode +1)
+  )
 
 (use-package midnight
   :if (daemonp)
@@ -219,7 +231,7 @@
   :config
   (smooth-scrolling-mode 1))
 
-(if (or (not (daemonp)) (string= (daemonp) "main"))
+(if (not (daemonp))
     (use-package perspective
       :demand t
       :bind (("C-M-k" . persp-switch)
@@ -750,6 +762,10 @@ folder, otherwise delete a word"
   (highlight-indent-guides-method 'character)
   )
 
+(use-package aggressive-indent
+  :hook (prog-mode . aggressive-indent-mode)
+  )
+
 (use-package format-all
   :hook ((prog-mode lsp-mode) . format-all-mode)
   :commands (format-all-ensure-formatter format-all-buffer))
@@ -934,6 +950,10 @@ folder, otherwise delete a word"
   :config
 	;; Set up proper indentation in JSON
   (add-hook 'json-mode-hook #'dw/set-js-indentation))
+
+(use-package ccls
+  :after (c-mode c++-mode)
+  )
 
 (use-package lsp-java
   :hook (java-mode . lsp-deferred)
@@ -1121,6 +1141,10 @@ folder, otherwise delete a word"
       :hook (after-init . global-clipetty-mode)
       ) tui-only-plugins-setting)
 
+(if (daemonp)
+    (use-package emacs-everywhere)
+)
+
 (use-package password-store
   :commands (password-store-copy password-store-insert)
   :config
@@ -1130,17 +1154,6 @@ folder, otherwise delete a word"
   :disabled
   :config
   (auth-source-pass-enable))
-
-;; ( gc-cons-threshold 100000000)
-
-(use-package gcmh
-  :hook (after-init . gcmh-mode)
-  :custom
-  (gcmh-idle-delay 0.5) ;; doom is using 0.5, default is 15s
-  (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
-  )
-
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; GUI Only Plugins
 (if (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty"))))

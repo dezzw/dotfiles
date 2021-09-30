@@ -6,6 +6,11 @@
 
 (setq load-prefer-newer noninteractive)
 #+end_src
+* Increase the amount of data which Emacs reads from the process
+Same as above
+#+begin_src emacs-lisp
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+#+end_src
 * Native Compilation
  #+begin_src emacs-lisp
 (setq comp-async-jobs-number 7
@@ -52,6 +57,19 @@
 
 (setq package-enable-at-startup nil)
 #+end_src
+* Increase memory/garbage 
+Make Emacs/lsp more smooth
+#+begin_src emacs-lisp
+;; ( gc-cons-threshold 100000000)
+
+(use-package gcmh
+  :hook (after-init . gcmh-mode)
+  :custom
+  (gcmh-idle-delay 0.5) ;; doom is using 0.5, default is 15s
+  (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
+  )
+#+end_src
+
 * Graphic Based Plugins Setting
 #+begin_src emacs-lisp
 (setq gui-only-plugins-setting ())
@@ -113,7 +131,8 @@ The package make emacs auto save the files
    :custom
    (super-save-auto-save-when-idle t)
    :config
-   (super-save-mode +1))
+   (super-save-mode +1)
+   )
  #+end_src
 ** Midnight-Mode
 #+begin_src emacs-lisp
@@ -321,7 +340,7 @@ The package make emacs auto save the files
 * Buffer Management
 ** Perspective.el
 #+begin_src emacs-lisp
-(if (or (not (daemonp)) (string= (daemonp) "main"))
+(if (not (daemonp))
     (use-package perspective
       :demand t
       :bind (("C-M-k" . persp-switch)
@@ -1260,6 +1279,12 @@ This program can be used *WITHOUT* evil-mode!
     (highlight-indent-guides-method 'character)
     )
   #+end_src
+*** aggressive-indent
+#+begin_src emacs-lisp
+(use-package aggressive-indent
+  :hook (prog-mode . aggressive-indent-mode)
+  )
+#+end_src
 *** Format All
   #+begin_src emacs-lisp
   (use-package format-all
@@ -1482,6 +1507,12 @@ This program can be used *WITHOUT* evil-mode!
   :config
 	;; Set up proper indentation in JSON
   (add-hook 'json-mode-hook #'dw/set-js-indentation))
+#+end_src
+*** C/C++
+#+begin_src emacs-lisp
+(use-package ccls
+  :after (c-mode c++-mode)
+  )
 #+end_src
 *** Java
 #+begin_src emacs-lisp
@@ -1722,6 +1753,12 @@ Clipetty is a minor mode for terminal (TTY) users that sends text that you kill 
       :hook (after-init . global-clipetty-mode)
       ) tui-only-plugins-setting)
 #+end_src
+** Emacs Everywhere
+#+begin_src emacs-lisp
+(if (daemonp)
+    (use-package emacs-everywhere)
+)
+#+end_src
 * Pass
 ** pass-store.el
 #+begin_src emacs-lisp
@@ -1734,24 +1771,6 @@ Clipetty is a minor mode for terminal (TTY) users that sends text that you kill 
   :disabled
   :config
   (auth-source-pass-enable))
-#+end_src
-* Increase memory/garbage 
-Make Emacs/lsp more smooth
-#+begin_src emacs-lisp
-;; ( gc-cons-threshold 100000000)
-
-(use-package gcmh
-  :hook (after-init . gcmh-mode)
-  :custom
-  (gcmh-idle-delay 0.5) ;; doom is using 0.5, default is 15s
-  (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
-  )
-#+end_src
-
-* Increase the amount of data which Emacs reads from the process
-Same as above
-#+begin_src emacs-lisp
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 * Load Plugings Based On Graphic Setting
 #+begin_src emacs-lisp

@@ -52,6 +52,7 @@ function es() {
             $EMACS --daemon=main
             $EMACS --daemon=coding
 	    $EMACS --daemon=tty
+	    $EMACS --daemon
         else
             case $2 in
                 m)
@@ -74,11 +75,14 @@ function es() {
 
     elif [[ "$1" == "stop" ]]; then
         if [[ -z $2 ]]; then
-            ps aux | grep -i 'emacs.* --bg-daemon' | grep -v 'grep' \
+
+	    $EMACSCLIENT -n -e '(kill-emacs)'
+	    
+	    ps aux | grep -i 'emacs.* --bg-daemon' | grep -v 'grep' \
                 | awk '{print $2 "\t" $9 "\tEmacs " $12}' > $tmpfile
             while read line; do
                 servername=$(echo "$line" | sed 's/\0123,4\012//' | sed 's/.*=//')
-                $EMACSCLIENT -n --socket-name=$servername   -e '(kill-emacs)'
+		$EMACSCLIENT -n --socket-name=$servername   -e '(kill-emacs)'
             done < $tmpfile
             rm -f $tmpfile
         else
