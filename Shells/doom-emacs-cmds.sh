@@ -16,9 +16,27 @@ function edm() {
     fi
 
     if [[ $# -eq 0 ]]; then
-        $EMACSCLIENT -nc --with-profile doom --socket-name=doom
+        $EMACSCLIENT -nc --socket-name=doom
     elif [[ -n $1 ]]; then
-        $EMACSCLIENT -nc --with-profile doom --socket-name=doom $1
+        $EMACSCLIENT -nc  --socket-name=doom $1
+    else
+        echo 'usage: 0 or 1 argument'
+        echo '  - 0: connet "emacsclient -nc" to "coding" server;'
+        echo '  - 1: run emacsclient to open FILES.'
+    fi
+}
+
+function edt() {
+    if [[ $(uname) == "Linux" ]]; then
+        EMACSCLIENT="/usr/bin/emacsclient"
+    else
+        EMACSCLIENT="/usr/local/bin/emacsclient"
+    fi
+
+    if [[ $# -eq 0 ]]; then
+        $EMACSCLIENT -nw --socket-name=doom
+    elif [[ -n $1 ]]; then
+        $EMACSCLIENT -nw  --socket-name=doom $1
     else
         echo 'usage: 0 or 1 argument'
         echo '  - 0: connet "emacsclient -nc" to "coding" server;'

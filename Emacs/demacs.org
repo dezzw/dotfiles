@@ -46,7 +46,7 @@ Same as above
 
 ;; Use straight.el for use-package expressions
 (straight-use-package 'use-package)
-(setq use-package-verbose t)
+;; (setq use-package-verbose t)
 
 (if (daemonp)
     (setq use-package-always-demand t))
@@ -57,6 +57,7 @@ Same as above
 
 (setq package-enable-at-startup nil)
 #+end_src
+
 * Increase memory/garbage 
 Make Emacs/lsp more smooth
 #+begin_src emacs-lisp
@@ -572,7 +573,7 @@ folder, otherwise delete a word"
            org-cycle-separator-lines 2)
  
      (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
- 
+     
      (setq org-html-htmlize-output-type nil)
  
     ;; config for images in org
@@ -1342,6 +1343,12 @@ This program can be used *WITHOUT* evil-mode!
 (use-package treemacs-all-the-icons
   :disabled
   :after treemacs)
+#+end_src
+*** Undo-Tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode 1))
 #+end_src
 ** Lsp
 *** LSP Mode

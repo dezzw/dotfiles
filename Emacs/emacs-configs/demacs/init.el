@@ -30,7 +30,7 @@
 
 ;; Use straight.el for use-package expressions
 (straight-use-package 'use-package)
-(setq use-package-verbose t)
+;; (setq use-package-verbose t)
 
 (if (daemonp)
     (setq use-package-always-demand t))
@@ -811,6 +811,10 @@ folder, otherwise delete a word"
 (use-package treemacs-all-the-icons
   :disabled
   :after treemacs)
+
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode 1))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)

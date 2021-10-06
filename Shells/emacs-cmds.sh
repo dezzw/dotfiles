@@ -50,7 +50,7 @@ function es() {
     elif [[ "$1" == "start" ]]; then
         if [[ -z $2 ]]; then
             $EMACS --daemon=main
-            $EMACS --daemon=coding
+            $EMACS --daemon=doom --with-profile doom
 	    $EMACS --daemon=tty
 	    $EMACS --daemon
         else

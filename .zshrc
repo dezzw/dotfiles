@@ -82,6 +82,8 @@ zinit light sindresorhus/pure
 # set jek8 as default
 #export JAVA_HOME=$JAVA_8_HOME
 
+export PATH_TO_FX="/Library/Java/JavaFx/javafx-sdk-17.0.0.1/lib/"
+
 export PATH="$HOME/.jenv/bin:$PATH"
 #eval "$(jenv init -)" # Managed by zsh-jenv-load now
 
