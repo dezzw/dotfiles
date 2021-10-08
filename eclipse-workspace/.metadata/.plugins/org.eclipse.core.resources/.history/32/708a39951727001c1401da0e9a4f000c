@@ -1,0 +1,5 @@
+package lab01;
+
+interface A {
+	void aMethod();
+}

@@ -1,0 +1,13 @@
+package lab01;
+
+
+public class Aclass implements C{
+	public static void main(String[] args) {
+        Aclass x = new Aclass();
+        x.bMethod();
+    }
+    @Override
+    void bMethod() {
+        System.out.println("aMethod implementation");
+    }
+}

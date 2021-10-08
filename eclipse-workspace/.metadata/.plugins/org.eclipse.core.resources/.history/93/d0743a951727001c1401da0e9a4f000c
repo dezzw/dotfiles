@@ -1,0 +1,5 @@
+package lab01;
+
+public interface B {
+	int bMethod();
+}

@@ -1,0 +1,8 @@
+package lab01;
+
+public class C{
+	
+	public int amountOfMaterial(int width, int length) {
+		return (int)(Math.ceil(length * width));
+	}
+}
