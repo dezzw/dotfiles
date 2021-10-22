@@ -1,0 +1,27 @@
+package assignment1;
+
+import java.util.Scanner;
+import java.util.Stack;
+
+import assignment1.Exceptions.InvalidMoveException;
+
+public class TESTStack {
+
+    static Stack<Integer> stack = new Stack<Integer>();
+
+    public static void main(String[] args) {
+    	int row, col;
+    	
+    	Scanner scanner = new Scanner(System.in);
+		System.out.print("Please input your move (e.g. colraw, E2): ");
+		String input = scanner.next();
+		try {
+			row = Utils.convertCharToInt(input.charAt(0));
+			col = Utils.convertCharToInt(input.charAt(1));
+			System.out.println(row);
+		} catch (InvalidMoveException e) {
+			System.out.println("Not an Invalid Move");
+		}
+		scanner.close();
+    }
+}

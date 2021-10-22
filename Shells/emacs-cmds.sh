@@ -6,12 +6,12 @@ function es() {
     if [[ $(uname) == "Linux" ]]; then
         EMACS="/usr/bin/emacs"
     else
-        EMACS="/usr/local/bin/emacs"
+        EMACS="/Users/dez/.nix-profile/bin/emacs"
     fi
     if [[ $(uname) == "Linux" ]]; then
         EMACSCLIENT="/usr/bin/emacsclient"
     else
-        EMACSCLIENT="/usr/local/bin/emacsclient"
+        EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
     fi
 
     if [[ $# -eq 0 ]] || [[ "$1" == "list" ]]; then
@@ -123,7 +123,7 @@ function em() {
     if [[ $(uname) == "Linux" ]]; then
         EMACSCLIENT="/usr/bin/emacsclient"
     else
-        EMACSCLIENT="/usr/local/bin/emacsclient"
+        EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
     fi
 
     if [[ $# -eq 0 ]]; then
@@ -142,7 +142,7 @@ function ec() {
     if [[ $(uname) == "Linux" ]]; then
         EMACSCLIENT="/usr/bin/emacsclient"
     else
-        EMACSCLIENT="/usr/local/bin/emacsclient"
+        EMACSCLIENT=="/Users/dez/.nix-profile/bin/emacsclient"
     fi
 
     if [[ $# -eq 0 ]]; then
@@ -161,7 +161,7 @@ function et() {
     if [[ $(uname) == "Linux" ]]; then
         EMACSCLIENT="/usr/bin/emacsclient"
     else
-        EMACSCLIENT="/usr/local/bin/emacsclient"
+        EMACSCLIENT=="/Users/dez/.nix-profile/bin/emacsclient"
     fi
 
     if [[ $# -eq 0 ]]; then
@@ -179,7 +179,7 @@ function magit() {
     if [[ $(uname) == "Linux" ]]; then
         EMACSCLIENT="/usr/bin/emacsclient"
     else
-        EMACSCLIENT="/usr/local/bin/emacsclient"
+        EMACSCLIENT=="/Users/dez/.nix-profile/bin/emacsclient"
     fi
 
     $EMACSCLIENT -nw --socket-name=tty -e "(magit)"

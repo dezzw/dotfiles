@@ -193,7 +193,7 @@ The package make emacs auto save the files
    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 140)
 
    ;; Set the variable pitch face
-   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
+   ;; (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
  #+end_src
 ** Fonts Ligature
 #+begin_src emacs-lisp

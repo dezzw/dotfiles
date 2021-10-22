@@ -12,7 +12,7 @@ function edm() {
     if [[ $(uname) == "Linux" ]]; then
         EMACSCLIENT="/usr/bin/emacsclient"
     else
-        EMACSCLIENT="/usr/local/bin/emacsclient"
+        EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
     fi
 
     if [[ $# -eq 0 ]]; then
@@ -30,7 +30,7 @@ function edt() {
     if [[ $(uname) == "Linux" ]]; then
         EMACSCLIENT="/usr/bin/emacsclient"
     else
-        EMACSCLIENT="/usr/local/bin/emacsclient"
+        EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
     fi
 
     if [[ $# -eq 0 ]]; then

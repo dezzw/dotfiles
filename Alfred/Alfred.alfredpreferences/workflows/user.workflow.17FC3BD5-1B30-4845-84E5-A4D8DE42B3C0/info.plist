@@ -34,6 +34,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>61514DC2-A4C4-4CE2-8620-20AF3832FCAC</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>03650A4E-ADBA-483E-98BC-FE995A1F161C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>6E12F27D-1B66-42BB-BADC-F90847D9AF47</key>
 		<array>
 			<dict>
@@ -113,6 +126,98 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>EMACS=/Users/dez/.nix-profile/Applications/Emacs.app
+
+open -a $EMACS</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>03650A4E-ADBA-483E-98BC-FE995A1F161C</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>agenda</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Emacs Agenda</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>F5C68B3D-9017-4AAC-A20A-48FC8FC73CE7</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
+
+$EMACSCLIENT -cn -e "(org-agenda-list)"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6FF006C0-93FA-4238-9689-A3EAB042A129</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>emacs</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Emacs App</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>61514DC2-A4C4-4CE2-8620-20AF3832FCAC</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>keyword</key>
@@ -139,7 +244,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS="/usr/local/bin/emacs"
+				<string>EMACS="/Users/dez/.nix-profile/bin/emacs"
 
 if [[ -z $1 ]]; then
 	$EMACS --daemon=main
@@ -176,52 +281,6 @@ fi</string>
 			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>agenda</string>
-				<key>subtext</key>
-				<string></string>
-				<key>text</key>
-				<string>Emacs Agenda</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>F5C68B3D-9017-4AAC-A20A-48FC8FC73CE7</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>EMACSCLIENT="/usr/local/bin/emacsclient"
-
-$EMACSCLIENT -cn -e "(org-agenda-list)"</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>6FF006C0-93FA-4238-9689-A3EAB042A129</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>keyword</key>
 				<string>es stop</string>
@@ -247,8 +306,8 @@ $EMACSCLIENT -cn -e "(org-agenda-list)"</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS="/usr/local/bin/emacs"
-EMACSCLIENT="/usr/local/bin/emacsclient"
+				<string>EMACS="/Users/dez/.nix-profile/bin/emacs"
+EMACSCLIENT="/Users/dez/.nix-profile/bin/emacslient"
 
 if [[ -z $1 ]]; then
     ps aux | grep -i 'emacs.* --bg-daemon' | grep -v 'grep' \
@@ -296,7 +355,7 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT="/usr/local/bin/emacsclient"
+				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
 
 $EMACSCLIENT --socket-name=main -nc</string>
 				<key>scriptargtype</key>
@@ -337,12 +396,33 @@ $EMACSCLIENT --socket-name=main -nc</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>ec</string>
+				<key>subtext</key>
+				<string>GUI Client for coding purposes</string>
+				<key>text</key>
+				<string>Start Coding Emacs Client</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B0F9FCDE-0FAD-4CAA-A551-CBB9E30F3EEF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT="/usr/local/bin/emacsclient"
+				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
 
 if [[ $# -eq 0 ]]; then
     $EMACSCLIENT -nc --socket-name=coding
@@ -366,54 +446,12 @@ fi</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>ec</string>
-				<key>subtext</key>
-				<string>GUI Client for coding purposes</string>
-				<key>text</key>
-				<string>Start Coding Emacs Client</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>B0F9FCDE-0FAD-4CAA-A551-CBB9E30F3EEF</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>keyword</key>
-				<string>doom</string>
-				<key>subtext</key>
-				<string></string>
-				<key>text</key>
-				<string>Start Doom-Emacs</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>0881968D-0F71-4DF7-AA3A-7AB8AA2A9235</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS="/usr/local/bin/emacs"
+				<string>EMACS="/Users/dez/.nix-profile/bin/emacs"
 
 DOOM="$EMACS --with-profile doom"
 
@@ -435,6 +473,27 @@ fi</string>
 			<string>2A7EC18C-33CC-46C9-8CAB-A15109FB6598</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>doom</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Start Doom-Emacs</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>0881968D-0F71-4DF7-AA3A-7AB8AA2A9235</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -465,7 +524,7 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT="/usr/local/bin/emacsclient"
+				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
 
 if [[ $# -eq 0 ]]; then
     $EMACSCLIENT -nc --socket-name=doom
@@ -491,103 +550,117 @@ fi</string>
 	<string>This workfollow is used to control the eamcs servers (daemon) and their clients.</string>
 	<key>uidata</key>
 	<dict>
+		<key>03650A4E-ADBA-483E-98BC-FE995A1F161C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>380</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
 		<key>0881968D-0F71-4DF7-AA3A-7AB8AA2A9235</key>
 		<dict>
 			<key>xpos</key>
-			<integer>65</integer>
+			<integer>75</integer>
 			<key>ypos</key>
-			<integer>725</integer>
+			<integer>575</integer>
 		</dict>
 		<key>1610128E-1A65-481E-A6BB-69BA1B22D667</key>
 		<dict>
 			<key>xpos</key>
-			<integer>360</integer>
+			<integer>865</integer>
 			<key>ypos</key>
-			<integer>50</integer>
+			<integer>255</integer>
 		</dict>
 		<key>2A7EC18C-33CC-46C9-8CAB-A15109FB6598</key>
 		<dict>
 			<key>xpos</key>
-			<integer>360</integer>
+			<integer>370</integer>
 			<key>ypos</key>
-			<integer>725</integer>
+			<integer>575</integer>
 		</dict>
 		<key>3E554F3A-9D95-4D8B-9797-FDE6FDA14DCD</key>
 		<dict>
 			<key>xpos</key>
-			<integer>50</integer>
+			<integer>555</integer>
 			<key>ypos</key>
-			<integer>50</integer>
+			<integer>255</integer>
+		</dict>
+		<key>61514DC2-A4C4-4CE2-8620-20AF3832FCAC</key>
+		<dict>
+			<key>xpos</key>
+			<integer>80</integer>
+			<key>ypos</key>
+			<integer>100</integer>
 		</dict>
 		<key>6E12F27D-1B66-42BB-BADC-F90847D9AF47</key>
 		<dict>
 			<key>xpos</key>
-			<integer>55</integer>
+			<integer>555</integer>
 			<key>ypos</key>
-			<integer>400</integer>
+			<integer>415</integer>
 		</dict>
 		<key>6FF006C0-93FA-4238-9689-A3EAB042A129</key>
 		<dict>
 			<key>xpos</key>
-			<integer>785</integer>
+			<integer>865</integer>
 			<key>ypos</key>
-			<integer>60</integer>
+			<integer>100</integer>
 		</dict>
 		<key>9273F864-226C-448C-BA45-C404BF368E28</key>
 		<dict>
 			<key>xpos</key>
-			<integer>355</integer>
+			<integer>870</integer>
 			<key>ypos</key>
-			<integer>400</integer>
+			<integer>415</integer>
 		</dict>
 		<key>AE71BD54-5BB1-4032-A5EA-8E2800C04ACF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>65</integer>
+			<integer>560</integer>
 			<key>ypos</key>
-			<integer>865</integer>
+			<integer>575</integer>
 		</dict>
 		<key>B0F9FCDE-0FAD-4CAA-A551-CBB9E30F3EEF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>65</integer>
+			<integer>75</integer>
 			<key>ypos</key>
-			<integer>570</integer>
+			<integer>420</integer>
 		</dict>
 		<key>B8073925-55B1-4079-8359-459C675EBA76</key>
 		<dict>
 			<key>xpos</key>
-			<integer>360</integer>
+			<integer>875</integer>
 			<key>ypos</key>
-			<integer>865</integer>
+			<integer>575</integer>
 		</dict>
 		<key>CFD369C7-D2A2-4712-B97F-04606B5AD2DA</key>
 		<dict>
 			<key>xpos</key>
-			<integer>355</integer>
+			<integer>375</integer>
 			<key>ypos</key>
-			<integer>230</integer>
+			<integer>260</integer>
 		</dict>
 		<key>E686AB1E-CD4D-47CB-A519-8A7B943D2844</key>
 		<dict>
 			<key>xpos</key>
-			<integer>360</integer>
+			<integer>370</integer>
 			<key>ypos</key>
-			<integer>570</integer>
+			<integer>420</integer>
 		</dict>
 		<key>F5C68B3D-9017-4AAC-A20A-48FC8FC73CE7</key>
 		<dict>
 			<key>xpos</key>
-			<integer>570</integer>
+			<integer>550</integer>
 			<key>ypos</key>
-			<integer>60</integer>
+			<integer>100</integer>
 		</dict>
 		<key>F846F785-2FD2-4688-B4FA-77AC867B86C8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>55</integer>
+			<integer>75</integer>
 			<key>ypos</key>
-			<integer>230</integer>
+			<integer>260</integer>
 		</dict>
 	</dict>
 	<key>variablesdontexport</key>

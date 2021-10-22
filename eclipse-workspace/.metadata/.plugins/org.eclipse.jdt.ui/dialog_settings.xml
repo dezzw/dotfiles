@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item key="org.eclipse.jdt.ui.lastextjar" value="/Users/desmond/Downloads/javafx-sdk-17.0.0.1/lib"/>
+	<item key="org.eclipse.jdt.ui.lastextjar" value="/Users/dez/Downloads/javafx-sdk-17.0.0.1/lib"/>
 	<item key="org.eclipse.jdt.ui.last.selected.jre.kind2" value="2"/>
 	<item key="org.eclipse.jdt.ui.last.selected.execution.enviroment" value="JavaSE-16"/>
 	<item key="org.eclipse.jdt.ui.last.external.project" value="/Users/desmond/Library/Mobile Documents/com~apple~CloudDocs/UTM/UTM@Course/2021Fall/CSC207H5F/lab04"/>
@@ -32,7 +32,7 @@
 		<item key="pageIndex" value="2"/>
 	</section>
 	<section name="ClasspathContainerSelectionPage">
-		<item key="index" value="3"/>
+		<item key="index" value="1"/>
 	</section>
 	<section name="org.eclipse.jdt.internal.ui.wizards.buildpaths.NewVariableEntryDialog">
 		<item key="DIALOG_X_ORIGIN" value="175"/>
