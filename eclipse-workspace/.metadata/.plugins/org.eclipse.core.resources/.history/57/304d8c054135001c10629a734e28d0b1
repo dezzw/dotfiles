@@ -1,0 +1,52 @@
+package lab05;
+
+import java.util.*;
+
+public class StockService extends Observable{
+
+	private List<Observer> traders = new ArrayList<>();
+	private HashMap<String, Double> stockInfo = new HashMap<>();
+	
+	@Override
+	public void register(Observer o) {
+		if (this.traders.indexOf(o) == -1) {
+			this.traders.add(o);
+//			((StockTrader) o).setObservable(this);
+			o.update(this.getObservableState());
+		}
+	}
+
+	@Override
+	public void unregister(Observer o) {
+		int index = this.traders.indexOf(o);
+		if (index >= 0) {
+			this.traders.remove(index);
+			o.update(new HashMap<String, Double>());
+		}
+	}
+
+	@Override
+	public void notifyObserver() {
+		for (Observer trader : this.traders) {
+			trader.update(this.getObservableState());
+		}
+	}
+	
+	public void addPrice(String stockName, double price) {
+		
+		if (this.stockInfo.containsKey(stockName)) {
+			this.stockInfo.replace(stockName, price);
+		} else {
+			this.stockInfo.put(stockName, price);
+		}
+		
+		this.setObservableState(this.getStocks());
+	}
+	
+	public HashMap<String, Double> getStocks() {
+		HashMap<String, Double> stocksCopy = new HashMap<>();
+		stocksCopy.putAll(this.stockInfo);
+		return stocksCopy;
+	}
+
+}

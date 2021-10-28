@@ -1,0 +1,22 @@
+package lab05;
+
+public class Stock {
+	public static void main(String[] args) {
+		StockService stocks = new StockService();
+		stocks.addPrice("MSFT", 100.0);
+		
+		StockTrader tr1 = new StockTrader();
+		stocks.unregister(tr1);
+		stocks.register(tr1);
+		stocks.register(tr1);
+		System.out.println(tr1.getStockPrice("MSFT"));
+		stocks.unregister(tr1);
+
+		stocks.addPrice("MSFT", 150.2);
+		System.out.println(tr1.getStockPrice("M"));
+		System.out.println(tr1.getStockPrice("MSFT"));
+		stocks.addPrice("TESLA", 800.00);
+		
+		
+	}
+}

@@ -1,0 +1,11 @@
+package lab05;
+
+public class stacks {
+	public static void main(String[] args) {
+		StockService stocks = new StockService();
+		stocks.addPrice("MSFT", 100.0);
+		
+		StockTrader tr1 = new StockTrader(stocks);
+		System.out.println(tr1.getStockPrice("MSFT"));
+	}
+}

@@ -1,0 +1,41 @@
+package lab05;
+
+import java.util.*;
+
+public class StockTrader implements Observer{
+
+	private Observable subject;
+	private HashMap<String, Double> observerState;
+	
+	public StockTrader() {
+		this.observerState = new HashMap<>();
+	}
+	
+	public StockTrader(Observable subject) {
+		this.subject.register(this);
+	}
+	
+	@Override
+	public void update(HashMap<String, Double> newData) {
+		this.observerState = newData;
+		System.out.println("Updated");
+	}
+	
+	public double getStockPrice(String stock) {
+		if (!this.observerState.isEmpty() && this.observerState.containsKey(stock)) {
+			return this.observerState.get(stock);
+		}
+		return -1;
+	}
+	
+//	public void setObservable(Observable subject) {
+//		if (subject != null) {
+//			this.subject = subject;
+//			this.observerState = this.subject.getObservableState();
+//		} else {
+//			this.observerState = new HashMap<String, Double>();
+//		}
+		
+	}
+
+}

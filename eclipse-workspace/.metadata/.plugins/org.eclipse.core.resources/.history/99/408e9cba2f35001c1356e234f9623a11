@@ -1,0 +1,7 @@
+package lab05;
+
+public interface Observer {
+	
+	void update();
+
+}

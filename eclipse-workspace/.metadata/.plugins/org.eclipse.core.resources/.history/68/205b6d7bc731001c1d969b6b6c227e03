@@ -1,0 +1,16 @@
+package assignment1;
+
+import java.util.Stack;
+
+public class moveStack {
+    protected static Stack<Move> moveStack = new Stack<Move>();
+
+    public static void pushMove(Move move) {
+        moveStack.push(move);
+    }
+
+    public static Move popMove() {
+        return moveStack.pop();
+    }
+
+}

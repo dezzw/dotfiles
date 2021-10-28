@@ -47,7 +47,7 @@
   # programs.fish.enable = true;
 
   fonts.enableFontDir = true;
-  fonts.fonts = with pkgs; [ roboto roboto-mono ];
+  fonts.fonts = with pkgs; [ roboto roboto-mono mononoki];
 
   homebrew.enable = true;
   homebrew.autoUpdate = true;
@@ -81,5 +81,9 @@
     "jetbrains-toolbox"
     "visual-studio-code"
     "zoom"
+    "spotify"
+    "google-chrome"
+    "obs"
+    "alacritty"
   ];
 }

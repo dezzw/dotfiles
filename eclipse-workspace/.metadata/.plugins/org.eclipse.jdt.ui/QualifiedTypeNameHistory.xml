@@ -11,7 +11,6 @@
     <fullyQualifiedTypeName name="javafx.scene.control.TextField"/>
     <fullyQualifiedTypeName name="javafx.scene.input.MouseEvent"/>
     <fullyQualifiedTypeName name="javafx.scene.input.InputMethodHighlight"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
     <fullyQualifiedTypeName name="java.lang.CharSequence"/>
     <fullyQualifiedTypeName name="javafx.scene.control.Tab"/>
     <fullyQualifiedTypeName name="javax.management.modelmbean.ModelMBeanNotificationBroadcaster"/>
@@ -19,13 +18,22 @@
     <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
     <fullyQualifiedTypeName name="assignment1.Musketeer"/>
     <fullyQualifiedTypeName name="java.lang.Boolean"/>
-    <fullyQualifiedTypeName name="assignment1.Piece"/>
     <fullyQualifiedTypeName name="assignment1.Cell"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="java.beans.PropertyVetoException"/>
-    <fullyQualifiedTypeName name="assignment1.Piece.Type"/>
     <fullyQualifiedTypeName name="java.util.Scanner"/>
-    <fullyQualifiedTypeName name="assignment1.HumanAgent"/>
     <fullyQualifiedTypeName name="assignment1.Utils"/>
     <fullyQualifiedTypeName name="assignment1.Coordinate"/>
+    <fullyQualifiedTypeName name="assignment1.HumanAgent"/>
+    <fullyQualifiedTypeName name="assignment1.Board"/>
+    <fullyQualifiedTypeName name="assignment1.Piece"/>
+    <fullyQualifiedTypeName name="assignment1.Piece.Type"/>
+    <fullyQualifiedTypeName name="lab05.Observer"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="java.lang.System"/>
+    <fullyQualifiedTypeName name="java.lang.Double"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="lab05.StockService"/>
+    <fullyQualifiedTypeName name="lab05.StockTrader"/>
+    <fullyQualifiedTypeName name="lab05.Observable"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
 </qualifiedTypeNameHistroy>

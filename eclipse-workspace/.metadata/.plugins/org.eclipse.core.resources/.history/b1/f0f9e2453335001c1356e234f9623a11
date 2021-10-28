@@ -1,0 +1,23 @@
+package lab05;
+
+import java.util.*;
+
+public class StockTrader implements Observer{
+
+	private Observable server;
+	private HashMap<String, Double> stocks = new HashMap<>();
+	
+	@Override
+	public void update(HashMap<String, Double> newStocks) {
+		this.stocks = ((StockService) this.server).getStocks();
+		System.out.println("The stock information has been updated!");
+	}
+	
+	public double getStockPrice(String stock) {
+		if (!this.stocks.isEmpty() && this.stocks.containsKey(stock)) {
+			return this.stocks.get(stock);
+		}
+		return -1;
+	}
+
+}

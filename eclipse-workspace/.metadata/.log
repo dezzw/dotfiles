@@ -999,3 +999,1390 @@ Binding(COMMAND+SHIFT+T,
 !MESSAGE Save operation warnings.
 !SUBENTRY 1 org.eclipse.core.resources 2 234 2021-10-15 16:47:33.725
 !MESSAGE The project description file (.project) for 'w04-prep' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+!SESSION 2021-10-20 12:31:43.265 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-20 12:31:47.720
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-20 12:31:47.720
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6e67a8c0,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5960f17,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.jdt.ui 4 10001 2021-10-20 12:34:46.927
+!MESSAGE Internal Error
+!STACK 0
+org.eclipse.jface.text.BadLocationException
+	at org.eclipse.jface.text.AbstractDocument.getChar(AbstractDocument.java:783)
+	at org.eclipse.core.internal.filebuffers.SynchronizableDocument.getChar(SynchronizableDocument.java:141)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaSourceHover.getBracketHoverInfo(JavaSourceHover.java:177)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaSourceHover.getHoverInfo(JavaSourceHover.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaSourceHover.getHoverInfo2(JavaSourceHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.e4.ui.workbench 4 2 2021-10-20 16:55:17.730
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.e4.ui.workbench".
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.core.expressions.IEvaluationContext.getDefaultVariable()" because "this.evalContext" is null
+	at org.eclipse.ui.internal.handlers.LegacyHandlerService.getCurrentState(LegacyHandlerService.java:572)
+	at org.eclipse.egit.ui.internal.selection.SelectionUtils.getEvaluationContext(SelectionUtils.java:534)
+	at org.eclipse.egit.ui.internal.selection.SelectionUtils.getStructuredSelection(SelectionUtils.java:237)
+	at org.eclipse.egit.ui.internal.selection.RepositorySourceProvider.selectionChanged(RepositorySourceProvider.java:90)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.notifyListeners(SelectionService.java:266)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.handleSelectionChanged(SelectionService.java:98)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.lambda$0(SelectionService.java:72)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator$1.run(SelectionAggregator.java:123)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator.notifyListeners(SelectionAggregator.java:120)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator$5.lambda$0(SelectionAggregator.java:220)
+	at org.eclipse.e4.core.contexts.RunAndTrack.runExternalCode(RunAndTrack.java:59)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator$5.changed(SelectionAggregator.java:220)
+	at org.eclipse.e4.core.internal.contexts.TrackableComputationExt.update(TrackableComputationExt.java:105)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.runAndTrack(EclipseContext.java:346)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator.track(SelectionAggregator.java:205)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator.setPart(SelectionAggregator.java:114)
+	at jdk.internal.reflect.GeneratedMethodAccessor54.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:58)
+	at org.eclipse.e4.core.internal.contexts.ContextObjectSupplier$ContextInjectionListener.update(ContextObjectSupplier.java:95)
+	at org.eclipse.e4.core.internal.contexts.TrackableComputationExt.update(TrackableComputationExt.java:103)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.processScheduled(EclipseContext.java:364)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.dispose(EclipseContext.java:188)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.clearContext(PartRenderingEngine.java:985)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:958)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.workbench.renderers.swt.ContributedPartRenderer.disposeWidget(ContributedPartRenderer.java:274)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:937)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.workbench.renderers.swt.ElementReferenceRenderer.disposeWidget(ElementReferenceRenderer.java:113)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:937)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:892)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:892)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.ui.internal.WorkbenchWindow.hardClose(WorkbenchWindow.java:2087)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1719)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1743)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1743)
+	at org.eclipse.ui.internal.Workbench$11.run(Workbench.java:1108)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1091)
+	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1392)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1392)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1368)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1716)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1743)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1743)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1752)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$2(WorkbenchWindow.java:503)
+	at org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer.lambda$4(WBWRenderer.java:570)
+	at org.eclipse.swt.events.ShellListener$2.shellClosed(ShellListener.java:102)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:102)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1522)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1545)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1530)
+	at org.eclipse.swt.widgets.Shell.closeWidget(Shell.java:624)
+	at org.eclipse.swt.widgets.Shell.windowShouldClose(Shell.java:2518)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6154)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Widget.callSuper(Widget.java:235)
+	at org.eclipse.swt.widgets.Widget.windowSendEvent(Widget.java:2160)
+	at org.eclipse.swt.widgets.Shell.windowSendEvent(Shell.java:2487)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6281)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Display.applicationSendEvent(Display.java:5525)
+	at org.eclipse.swt.widgets.Display.applicationProc(Display.java:5668)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSend(Native Method)
+	at org.eclipse.swt.internal.cocoa.NSApplication.sendEvent(NSApplication.java:117)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3880)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2021-10-20 16:55:17.737
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.core.expressions.IEvaluationContext.getDefaultVariable()" because "this.evalContext" is null
+	at org.eclipse.ui.internal.handlers.LegacyHandlerService.getCurrentState(LegacyHandlerService.java:572)
+	at org.eclipse.egit.ui.internal.selection.SelectionUtils.getEvaluationContext(SelectionUtils.java:534)
+	at org.eclipse.egit.ui.internal.selection.SelectionUtils.getStructuredSelection(SelectionUtils.java:237)
+	at org.eclipse.egit.ui.internal.selection.RepositorySourceProvider.selectionChanged(RepositorySourceProvider.java:90)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.notifyListeners(SelectionService.java:266)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.handleSelectionChanged(SelectionService.java:98)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.lambda$0(SelectionService.java:72)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator$1.run(SelectionAggregator.java:123)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator.notifyListeners(SelectionAggregator.java:120)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator$5.lambda$0(SelectionAggregator.java:220)
+	at org.eclipse.e4.core.contexts.RunAndTrack.runExternalCode(RunAndTrack.java:59)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator$5.changed(SelectionAggregator.java:220)
+	at org.eclipse.e4.core.internal.contexts.TrackableComputationExt.update(TrackableComputationExt.java:105)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.runAndTrack(EclipseContext.java:346)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator.track(SelectionAggregator.java:205)
+	at org.eclipse.e4.ui.internal.workbench.SelectionAggregator.setPart(SelectionAggregator.java:114)
+	at jdk.internal.reflect.GeneratedMethodAccessor54.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:58)
+	at org.eclipse.e4.core.internal.contexts.ContextObjectSupplier$ContextInjectionListener.update(ContextObjectSupplier.java:95)
+	at org.eclipse.e4.core.internal.contexts.TrackableComputationExt.update(TrackableComputationExt.java:103)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.processScheduled(EclipseContext.java:364)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.dispose(EclipseContext.java:188)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.clearContext(PartRenderingEngine.java:985)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:958)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.workbench.renderers.swt.ContributedPartRenderer.disposeWidget(ContributedPartRenderer.java:274)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:937)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.workbench.renderers.swt.ElementReferenceRenderer.disposeWidget(ElementReferenceRenderer.java:113)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:937)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:892)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:892)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.ui.internal.WorkbenchWindow.hardClose(WorkbenchWindow.java:2087)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1719)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1743)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1743)
+	at org.eclipse.ui.internal.Workbench$11.run(Workbench.java:1108)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1091)
+	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1392)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1392)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1368)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1716)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1743)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1743)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1752)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$2(WorkbenchWindow.java:503)
+	at org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer.lambda$4(WBWRenderer.java:570)
+	at org.eclipse.swt.events.ShellListener$2.shellClosed(ShellListener.java:102)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:102)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1522)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1545)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1530)
+	at org.eclipse.swt.widgets.Shell.closeWidget(Shell.java:624)
+	at org.eclipse.swt.widgets.Shell.windowShouldClose(Shell.java:2518)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6154)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Widget.callSuper(Widget.java:235)
+	at org.eclipse.swt.widgets.Widget.windowSendEvent(Widget.java:2160)
+	at org.eclipse.swt.widgets.Shell.windowSendEvent(Shell.java:2487)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6281)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Display.applicationSendEvent(Display.java:5525)
+	at org.eclipse.swt.widgets.Display.applicationProc(Display.java:5668)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSend(Native Method)
+	at org.eclipse.swt.internal.cocoa.NSApplication.sendEvent(NSApplication.java:117)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3880)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+!SESSION 2021-10-24 16:07:10.793 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-24 16:07:15.108
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-24 16:07:15.108
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@fceab5d,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@79445efb,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 18:44:50.987
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 18:55:33.215
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 18:55:39.503
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 18:58:39.412
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 19:27:19.434
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 19:31:18.693
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 19:31:45.132
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+!SESSION 2021-10-24 19:47:02.362 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-24 19:47:07.362
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-24 19:47:07.362
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@174e1b99,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@53a09566,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SESSION 2021-10-24 20:01:36.727 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-24 20:01:40.816
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-24 20:01:40.816
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@73da303e,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@24068086,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 20:42:43.398
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 20:43:14.821
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 20:44:07.153
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 20:45:45.580
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 20:50:01.399
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 20:50:10.076
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 21:25:51.615
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 21:25:58.047
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 21:30:21.596
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 21:36:06.017
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2021-10-24 21:36:52.139
+!MESSAGE 
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.ui.texteditor.ITextEditor.isDirty()" because "this.fTextEditor" is null
+	at org.eclipse.ui.texteditor.AbstractTextEditor$TextEditorSavable.isDirty(AbstractTextEditor.java:7166)
+	at org.eclipse.ui.internal.Workbench.getFilteredSaveables(Workbench.java:3447)
+	at org.eclipse.ui.internal.Workbench.saveAll(Workbench.java:3420)
+	at org.eclipse.ui.ide.IDE$1.run(IDE.java:1494)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.ide.IDE.saveAllEditors(IDE.java:1482)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.doSave(SaveScopeResourcesHandler.java:228)
+	at org.eclipse.debug.internal.ui.launchConfigurations.SaveScopeResourcesHandler.handleStatus(SaveScopeResourcesHandler.java:182)
+	at org.eclipse.debug.internal.ui.sourcelookup.Prompter.lambda$0(Prompter.java:73)
+	at org.eclipse.ui.internal.PendingSyncExec.run(PendingSyncExec.java:68)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:171)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:185)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4262)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3885)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+!SESSION 2021-10-24 21:59:09.900 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-24 21:59:14.298
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-24 21:59:14.298
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@71e7c13f,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@2295566b,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.ui.workbench 4 2 2021-10-24 22:24:12.254
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.core.expressions.IEvaluationContext.getDefaultVariable()" because "this.evalContext" is null
+	at org.eclipse.ui.internal.handlers.LegacyHandlerService.getCurrentState(LegacyHandlerService.java:572)
+	at org.eclipse.egit.ui.internal.selection.SelectionUtils.getEvaluationContext(SelectionUtils.java:534)
+	at org.eclipse.egit.ui.internal.selection.SelectionUtils.getStructuredSelection(SelectionUtils.java:237)
+	at org.eclipse.egit.ui.internal.selection.RepositorySourceProvider.selectionChanged(RepositorySourceProvider.java:90)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.notifyListeners(SelectionService.java:266)
+	at org.eclipse.ui.internal.e4.compatibility.SelectionService.notifyListeners(SelectionService.java:178)
+	at org.eclipse.ui.internal.WorkbenchWindow$WWinPartService.partActivated(WorkbenchWindow.java:3163)
+	at org.eclipse.ui.internal.WorkbenchPage$3.run(WorkbenchPage.java:4892)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.internal.WorkbenchPage.firePartActivated(WorkbenchPage.java:4889)
+	at org.eclipse.ui.internal.WorkbenchPage$E4PartListener.partActivated(WorkbenchPage.java:219)
+	at org.eclipse.e4.ui.internal.workbench.PartServiceImpl$2.run(PartServiceImpl.java:249)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.firePartActivated(PartServiceImpl.java:246)
+	at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.activate(PartServiceImpl.java:770)
+	at org.eclipse.e4.ui.internal.workbench.PartServiceImpl.setPart(PartServiceImpl.java:217)
+	at jdk.internal.reflect.GeneratedMethodAccessor52.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:58)
+	at org.eclipse.e4.core.internal.contexts.ContextObjectSupplier$ContextInjectionListener.update(ContextObjectSupplier.java:95)
+	at org.eclipse.e4.core.internal.contexts.TrackableComputationExt.update(TrackableComputationExt.java:103)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.processScheduled(EclipseContext.java:364)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.dispose(EclipseContext.java:188)
+	at org.eclipse.ui.part.PageSite.dispose(PageSite.java:163)
+	at org.eclipse.ui.part.PageBookView.removePage(PageBookView.java:818)
+	at org.eclipse.ui.part.PageBookView.dispose(PageBookView.java:470)
+	at org.eclipse.debug.ui.AbstractDebugView.dispose(AbstractDebugView.java:425)
+	at org.eclipse.debug.internal.ui.views.variables.VariablesView.dispose(VariablesView.java:432)
+	at org.eclipse.ui.internal.e4.compatibility.CompatibilityPart.invalidate(CompatibilityPart.java:264)
+	at org.eclipse.ui.internal.e4.compatibility.CompatibilityPart.destroy(CompatibilityPart.java:421)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:58)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:995)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.processAnnotated(InjectorImpl.java:960)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.uninject(InjectorImpl.java:201)
+	at org.eclipse.e4.core.internal.di.Requestor.uninject(Requestor.java:177)
+	at org.eclipse.e4.core.internal.contexts.ContextObjectSupplier$ContextInjectionListener.update(ContextObjectSupplier.java:89)
+	at org.eclipse.e4.core.internal.contexts.TrackableComputationExt.update(TrackableComputationExt.java:103)
+	at org.eclipse.e4.core.internal.contexts.EclipseContext.removeListenersTo(EclipseContext.java:491)
+	at org.eclipse.e4.core.contexts.ContextInjectionFactory.uninject(ContextInjectionFactory.java:184)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:946)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.workbench.renderers.swt.ElementReferenceRenderer.disposeWidget(ElementReferenceRenderer.java:113)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:937)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:892)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:892)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.safeRemoveGui(PartRenderingEngine.java:899)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.removeGui(PartRenderingEngine.java:844)
+	at org.eclipse.ui.internal.WorkbenchWindow.hardClose(WorkbenchWindow.java:2087)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1719)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1743)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1743)
+	at org.eclipse.ui.internal.Workbench$11.run(Workbench.java:1108)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1091)
+	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1392)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1392)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1368)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1716)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1743)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:74)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1743)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1752)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$2(WorkbenchWindow.java:503)
+	at org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer.lambda$4(WBWRenderer.java:570)
+	at org.eclipse.swt.events.ShellListener$2.shellClosed(ShellListener.java:102)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:102)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1522)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1545)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1530)
+	at org.eclipse.swt.widgets.Shell.closeWidget(Shell.java:624)
+	at org.eclipse.swt.widgets.Shell.windowShouldClose(Shell.java:2518)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6154)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Widget.callSuper(Widget.java:235)
+	at org.eclipse.swt.widgets.Widget.windowSendEvent(Widget.java:2160)
+	at org.eclipse.swt.widgets.Shell.windowSendEvent(Shell.java:2487)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6281)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Display.applicationSendEvent(Display.java:5525)
+	at org.eclipse.swt.widgets.Display.applicationProc(Display.java:5668)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSend(Native Method)
+	at org.eclipse.swt.internal.cocoa.NSApplication.sendEvent(NSApplication.java:117)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3880)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1041)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:401)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+!SESSION 2021-10-24 22:24:21.069 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-24 22:24:24.920
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-24 22:24:24.920
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@71e7c13f,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@2295566b,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SESSION 2021-10-24 22:30:07.054 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-24 22:30:11.497
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-24 22:30:11.497
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@53a09566,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@1c815814,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SESSION 2021-10-24 22:57:08.310 -----------------------------------------------
+eclipse.buildId=4.21.0.I20210906-0500
+java.version=16.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/dez/.eclipse_keyring
+
+!ENTRY org.eclipse.jface 2 0 2021-10-24 22:57:12.415
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-10-24 22:57:12.415
+!MESSAGE A conflict occurred for COMMAND+SHIFT+T:
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@174e1b99,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(COMMAND+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@53a09566,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)

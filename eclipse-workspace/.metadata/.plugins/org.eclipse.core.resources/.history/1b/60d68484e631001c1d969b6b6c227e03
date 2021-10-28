@@ -1,0 +1,37 @@
+package assignment1;
+
+public class RandomAgent extends Agent {
+
+    public RandomAgent(Board board) {
+        super(board);
+    }
+
+    /**
+     * Gets a valid random move the RandomAgent can do.
+     * @return a valid Move that the RandomAgent can perform on the Board
+     */
+    @Override
+    public Move getMove() { // TODO
+    	Move newMove, validMove = null;
+    	Boolean flag = true;
+    	
+    	while (flag) {
+    		int fromCol = (int) (Math.random() * 4);
+        	int fromRow = (int) (Math.random() * 4);
+        	int toCol = (int) (Math.random() * 4);
+        	int toRow = (int) (Math.random() * 4);
+        	
+        	Cell fromCell = board.getCell(new Coordinate(fromRow, fromCol));
+        	Cell toCell = board.getCell(new Coordinate(toRow, toCol));
+        	
+        	newMove = new Move(fromCell, toCell);
+        	
+        	if (board.isValidMove(newMove)) {
+        		validMove = newMove;
+        		flag = false;
+        	}
+    	}
+    	
+        return validMove;
+    }
+}

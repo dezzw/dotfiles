@@ -1,0 +1,79 @@
+package lab05;
+
+import java.util.*;
+
+public class StockService extends Observable{
+
+	public List<Observer> traders;
+	private List<String[]> stocks;
+	private String[] newStockInfo;
+	
+	public StockService() {
+		this.traders = new ArrayList<>();
+		this.stocks = new ArrayList<>();
+		
+		this.setObservableState(false);
+	}
+	
+	@Override
+	public void register(Observer o) {
+		if (this.traders.indexOf(o) == -1) {
+			this.traders.add(o);
+		}
+	}
+
+	@Override
+	public void unregister(Observer o) {
+		int index = this.traders.indexOf(o);
+		if (index >= 0) {
+			this.traders.remove(index);
+		}
+	}
+
+	@Override
+	public void notifyObserver() {
+		if (this.getObservableState()) {
+			for (Observer trader : this.traders) {
+				trader.update();
+			}
+			this.setObservableState(false);
+		}
+	}
+	
+	public void addPrice(String stockName, double price) {
+		boolean isContain = false;
+		this.newStockInfo = new String[2];
+		this.newStockInfo[0] = stockName;
+		this.newStockInfo[1] = Double.toString(price);
+
+		for (String[] info : this.stocks) {
+			if (info[0].equals(stockName)) {
+				info[1] = Double.toString(price);
+				isContain = true;
+			}
+		}
+		
+		if (!isContain) {
+			this.stocks.add(this.newStockInfo);
+		}
+		
+		this.setObservableState(true);
+	}
+	
+	public String[] getStockInfo(String stockName) {
+		String[] stockCopy = new String[2];
+		for (String[] info : this.stocks) {
+			if (info[0].equals(stockName)) {
+				stockCopy[0] = info[0];
+				stockCopy[1] = info[1];
+				return stockCopy;
+			}
+		}
+		
+		stockCopy[0] = "";
+		stockCopy[1] = "0.0";
+		
+		return stockCopy;
+	}
+
+}

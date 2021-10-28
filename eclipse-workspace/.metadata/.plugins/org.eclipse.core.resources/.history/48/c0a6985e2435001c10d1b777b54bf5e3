@@ -1,0 +1,21 @@
+package lab05;
+
+public class StockTrader implements Observer{
+
+	private Observable server;
+	private String[]
+	
+	public SrockTrader() {
+		
+	}
+	
+	@Override
+	public void update() {
+		
+	}
+	
+	public double getStockPrice(String stock) {
+		
+	}
+
+}

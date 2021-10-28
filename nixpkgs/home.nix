@@ -59,7 +59,10 @@ in
     exa
     stow
     ripgrep
-ripgrep  ];
+
+    # tex
+    texlive.combined.scheme-full
+  ];
 
   programs.git = {
     enable = true;

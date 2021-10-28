@@ -30,5 +30,8 @@
     (LaTeX-mode . cdlatex-mode)
     (latex-mode . cdlatex-mode))
 
+(use-package xenops
+  :hook ((latex-mode LaTeX-mode org-mode) . xenops-mode))
+
 (provide 'init-tex)
 ;;; init-tex.el ends here
