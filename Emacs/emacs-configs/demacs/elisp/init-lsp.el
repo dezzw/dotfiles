@@ -62,15 +62,10 @@
   ;; Set up python debugging
   (require 'dap-python)
 
-  ;; Set up chrome debugging
-  (require 'dap-chrome)
-  (dap-chrome-setup)
-
   ;; Set up node debugging
   (require 'dap-node)
   (dap-node-setup)
-
-  (require 'dap-java))
+)
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here

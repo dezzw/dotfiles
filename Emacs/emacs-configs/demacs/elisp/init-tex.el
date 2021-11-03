@@ -25,13 +25,14 @@
     :commands (latex-preview-pane-mode latex-preview-pane-update))
 
 (use-package cdlatex
-    :hook
-    (org-mode . org-cdlatex-mode)
-    (LaTeX-mode . cdlatex-mode)
-    (latex-mode . cdlatex-mode))
+  :hook
+  (org-mode . org-cdlatex-mode)
+  (LaTeX-mode . cdlatex-mode)
+  (latex-mode . cdlatex-mode))
 
-(use-package xenops
-  :hook ((latex-mode LaTeX-mode org-mode) . xenops-mode))
+;; (use-package xenops
+;;   :hook ((latex-mode LaTeX-mode) . xenops-mode)
+;;   )
 
 (provide 'init-tex)
 ;;; init-tex.el ends here

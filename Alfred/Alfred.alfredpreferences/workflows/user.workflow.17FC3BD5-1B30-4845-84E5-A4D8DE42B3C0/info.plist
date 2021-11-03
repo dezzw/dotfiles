@@ -131,9 +131,9 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS=/Users/dez/.nix-profile/Applications/Emacs.app
+				<string>EMACS=/Users/dez/.nix-profile/bin/emacs
 
-open -a $EMACS</string>
+$EMACS</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>

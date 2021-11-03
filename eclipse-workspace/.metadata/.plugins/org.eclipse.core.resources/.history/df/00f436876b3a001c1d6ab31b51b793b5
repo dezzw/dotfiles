@@ -1,0 +1,8 @@
+package mid2011;
+
+public class SumStatistic extends Statistic {
+	
+	public void addValue(float value) {
+		super.addValue(this.getValue() + value);
+	}
+}

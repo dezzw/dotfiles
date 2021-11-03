@@ -1,0 +1,22 @@
+package question4;
+
+import java.util.*;
+
+public class UniversityUnit implements Observer, Member {
+	private List<Member> members;
+	
+	public UniversityUnit() {
+		this.members = new ArrayList<>();
+	}
+	
+	public void addMember(Member m) {
+		this.members.add(m);
+	}
+	
+	@Override
+	public void update(Object o) {
+		((Observer) o).update(o);
+	}
+	
+	
+}

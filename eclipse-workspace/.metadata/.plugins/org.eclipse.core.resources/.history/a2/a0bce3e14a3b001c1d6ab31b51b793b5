@@ -1,0 +1,17 @@
+package question8;
+
+public class ExceptionQuestion {
+	public int helper(int n) throws IncalidArgumentException {
+		if (n < 0) throw new IncalidArgumentException();
+		return n;
+	}
+	
+	public boolean doSomething(int n) throws IncalidArgumentException{
+		return helper(n) > 0;
+	}
+	
+	public static void main(String[] args) {
+		ExceptionQuestion e = new ExceptionQuestion();
+		System.out.println(e.doSomething(-1));
+	}
+}

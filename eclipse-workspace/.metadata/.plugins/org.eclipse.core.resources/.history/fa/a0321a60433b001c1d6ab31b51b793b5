@@ -1,0 +1,25 @@
+package mid2011;
+
+public class Statistic {
+	private double value;
+	
+	public Statistic() {
+		this.value = 0;
+	}
+	
+	public double getValue() {
+		return this.value;
+	}
+	
+	public void addValue(double value) {
+		this.value = value;
+	}
+	
+	public String toString() {
+		return "" + this.value;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(Statistic.class);
+	}
+}

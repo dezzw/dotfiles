@@ -8,19 +8,25 @@
 
   nix.binaryCaches = [
     "https://cachix.org/api/v1/cache/nix-community"
+    
+    "https://cachix.org/api/v1/cache/emacs"
   ];
+
+  nix.binaryCachePublicKeys = [
+    "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY="
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+  ];
+
+  nix.trustedBinaryCaches = config.nix.binaryCaches;
+  
+  nixpkgs.overlays = [
+    (import ../overlays)
+  ];
+
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
-
-  imports = [
-    ./wm.nix
-  ];
-
-  nixpkgs.overlays = [
-    (import ../overlays)
-  ];
 
   nix.trustedUsers = [ "root" "dez" ];
 
@@ -36,7 +42,6 @@
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
-  environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/macintosh.nix";
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
@@ -47,7 +52,7 @@
   # programs.fish.enable = true;
 
   fonts.enableFontDir = true;
-  fonts.fonts = with pkgs; [ roboto roboto-mono mononoki];
+  fonts.fonts = with pkgs; [ cantarell-fonts roboto roboto-mono mononoki ];
 
   homebrew.enable = true;
   homebrew.autoUpdate = true;
@@ -85,5 +90,6 @@
     "google-chrome"
     "obs"
     "alacritty"
+    "appcleaner"
   ];
 }

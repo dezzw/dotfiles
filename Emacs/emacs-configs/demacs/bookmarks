@@ -8,8 +8,8 @@
  (rear-context-string . "ri 12:08]\n:END:\n")
  (position . 429))
 ("org-capture-last-stored"
- (filename . "~/Documents/Org/Notes/20210906210448-eco101h5f.org")
- (front-context-string . "* Principles of ")
- (rear-context-string . "itle: ECO101H5F\n")
- (position . 87))
+ (filename . "~/Documents/Org/Notes/20211102170347-review.org")
+ (front-context-string . "\n* MAT232H5 \n** ")
+ (rear-context-string . "#+title: Review\n")
+ (position . 84))
 )

@@ -38,12 +38,13 @@
 (require 'init-r)
 (require 'init-yaml)
 (require 'init-tex)
+(require 'init-nix)
 
 ;; Tool
 (require 'init-tool)
 (require 'init-git)
 (require 'init-pass)
-(require 'init-term)
+;; (require 'init-term)
 (require 'init-tmux)
 (require 'init-leetcode)
 

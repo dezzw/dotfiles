@@ -1,0 +1,21 @@
+package mid2011;
+
+public class Statistic {
+	private float value;
+	
+	public Statistic() {
+		this.value = 0;
+	}
+	
+	public float getValue() {
+		return this.value;
+	}
+	
+	public void addValue(float value) {
+		this.value = value;
+	}
+	
+	public String toString() {
+		return "" + this.value;
+	}
+}

@@ -1,0 +1,57 @@
+package university;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+import managers.StudentManager;
+
+public class DemoManager {
+
+    public static void main(String[] args) throws IOException {
+        demoStudentManager();
+        
+        String path =
+                "/Users/dez/Library/Mobile Documents/com~apple~CloudDocs/UTM/UTM@Course/2021Fall/CSC207H5F/w06-prep/students.ser";
+        
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+        //对象的反序列化。 
+        StudentManager sm = null;
+		try {
+			sm = (StudentManager)ois.readObject();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println(sm);
+        ois.close();
+
+    }
+
+    public static void demoStudentManager() throws IOException {
+
+        String csvPath =
+                "/Users/dez/Library/Mobile Documents/com~apple~CloudDocs/UTM/UTM@Course/2021Fall/CSC207H5F/w06-prep/students.csv";
+        StudentManager sm = new StudentManager();    
+        System.out.println(sm);
+
+        // Loads data from a CSV for first launch of the program
+        sm.readFromCSVFile(csvPath);
+        System.out.println(sm);
+        
+        Student newStudent = new Student(new String[] {"Dez", "Wong"},
+                "10102000", "F", "1122334455");
+        
+        // adds a new student to StudentManager sm's records
+        sm.add(newStudent);
+        System.out.println(sm);
+        
+        // ser isn't a standard extension.    
+        String path =
+                "/Users/dez/Library/Mobile Documents/com~apple~CloudDocs/UTM/UTM@Course/2021Fall/CSC207H5F/w06-prep/students.ser";
+        
+        // Writes the existing Student objects to file.
+        // This data is serialized and written to file as a sequence of bytes.
+        sm.saveToFile(path);
+    }
+}

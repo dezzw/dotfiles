@@ -1,0 +1,11 @@
+package question4;
+
+public class Student implements Observer, Member{
+
+	@Override
+	public void update(Object o) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

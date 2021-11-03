@@ -1,0 +1,25 @@
+package question4;
+
+import java.util.*;
+
+public class UniversityUnit implements Observer{
+	private List<UniversityUnit> units;
+	private List<Student> studens;
+	
+	public UniversityUnit() {
+		this.units = new ArrayList<>();
+		this.studens = new ArrayList<>();
+	}
+	
+	public void addMember() {
+		
+	}
+	
+	@Override
+	public void update(Object o) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+}

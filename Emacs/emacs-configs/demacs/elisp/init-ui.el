@@ -33,9 +33,17 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (defun dw/set-font-faces ()
-   (message "Setting faces!")
-   ;; set font
-   (set-face-attribute 'default nil :font "JetBrains Mono" :height 140))
+  (message "Setting faces!")
+  ;; set font
+  ;; (set-face-attribute 'default nil :font "JetBrains Mono" :height 150)
+  (set-face-attribute 'default nil :font "Fira Code" :height 150)
+  
+  ;; Set the fixed pitch face
+  ;; (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 150)
+  (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 150)
+
+  ;; Set the variable pitch face
+  (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
 
 (push '(use-package ligature
 	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")

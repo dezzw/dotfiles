@@ -1,0 +1,17 @@
+package question9;
+
+public abstract class Equipment implements IPed{
+	private String name;
+	private int id;
+	private static int count = 0;
+	
+	public Equipment(String name) {
+		this.name = name;
+		this.id = count;
+	}
+	
+	@Override
+	public String getIP() {
+		return this.name.hashCode() + "" +this.id;
+	}
+}

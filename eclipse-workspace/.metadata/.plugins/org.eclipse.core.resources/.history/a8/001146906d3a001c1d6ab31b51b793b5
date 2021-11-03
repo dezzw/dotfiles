@@ -1,0 +1,10 @@
+package mid2011;
+
+public class MaxStatistic extends Statistic{
+	
+	public void addValue(float value) {
+		if (this.getValue() < value) {
+			super.addValue(value);
+		}
+	}
+}
