@@ -10,7 +10,7 @@
 
   nix.binaryCaches = [
     "https://cachix.org/api/v1/cache/nix-community"
-    
+
     "https://cachix.org/api/v1/cache/emacs"
   ];
 
@@ -20,7 +20,7 @@
   ];
 
   nix.trustedBinaryCaches = config.nix.binaryCaches;
-  
+
   nixpkgs.overlays = [
     (import ../overlays)
   ];
@@ -37,10 +37,14 @@
   # $ nix-env -qaP | grep wget
   environment.shells = [ pkgs.zsh ];
   environment.systemPackages = [ pkgs.zsh pkgs.gcc pkgs.git ];
-  programs.bash.enable = false;
+  programs.bash.enable = enable;
 
   # Create /etc/bashrc that loads the nix-darwin environment.
-  programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh = {
+    enable = true;
+    enableCompletion = false;
+    interactiveShellInit = "autoload -U compinit && compinit";
+  };
   # programs.fish.enable = true;
  
   environment.variables.EDITOR = "nvim";

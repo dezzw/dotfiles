@@ -33,14 +33,7 @@ in
     # nix
     rnix-lsp
 
-    #cach
-    cachix
-
-    # direnv
-    direnv
-
     # tools
-    comma
     jump
     exa
     stow
@@ -93,7 +86,7 @@ in
       plugins = [
         { name = "zsh-users/zsh-autosuggestions"; } # Simple plugin installation
 	      { name = "zsh-users/zsh-syntax-highlighting"; }
-        { name = "spwhitt/nix-zsh-completions"; }
+        # { name = "spwhitt/nix-zsh-completions"; }
 	      { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
       ];
     };
@@ -106,6 +99,12 @@ in
     '';
   };
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv = {
+      enable = true;
+    };
+  };
 
   programs.emacs.enable = true;
 
@@ -130,26 +129,32 @@ in
        ("beta" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/beta_emacs")))
       )
   '';
+  
+  programs.neovim = {
+    enable = true;
 
-  # programs.neovim = {
-  #   enable = true;
-  #   extraConfig = ''
-  #       colorscheme gruvbox
-  #       let g:context_nvim_no_redraw = 1
-  #       set mouse=a
-  #       set number
-  #       set termguicolors
-  #     '';
-  #   plugins = with pkgs.vimPlugins; [
-  #       editorconfig-vim
-  #       gruvbox-community
-  #       vim-airline
-  #       vim-elixir
-  #       vim-nix
-  #     ]; # Only loaded if programs.neovim.extraConfig is set
-  #   viAlias = true;
-  #   vimAlias = true;
-  #   vimdiffAlias = true;
-  # };
+    package = pkgs.neovim-nightly;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
 
+    withNodeJs = true;
+    withPython3 = true;
+
+    extraConfig = ''
+      set number relativenumber
+      set nobackup
+      set clipboard=unnamed
+    '';
+
+    plugins = with pkgs.vimPlugins; [
+      nord-vim
+      lightline-vim
+      vim-nix
+      telescope-nvim
+      nvim-lspconfig
+      completion-nvim
+      nvim-tree-lua
+    ];
+  };
 }

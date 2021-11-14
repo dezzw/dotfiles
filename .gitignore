@@ -1,5 +1,7 @@
 .log/*
 
+result/
+
 .DS_Store
 */.DS_Store
 
