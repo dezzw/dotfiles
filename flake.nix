@@ -9,11 +9,14 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
     spacebar.url = "github:cmacrae/spacebar";
+    nix-direnv.url = "github:nix-community/nix-direnv";
 
     # Follows
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
+
+    comma = { url = "github:Shopify/comma"; flake = false; };
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs:
@@ -21,12 +24,12 @@
       commonDarwinConfig = [
         ./nixpkgs/darwin/macintosh.nix
         home-manager.darwinModules.home-manager
-
-        {
+	      {
           nixpkgs.overlays = with inputs; [
             emacs.overlay
             emacs-overlay.overlay
             spacebar.overlay
+            nix-direnv.overlay
           ];
         }
       ];
@@ -41,10 +44,9 @@
               ./nixpkgs/darwin/wm.nix
               # ./darwin/macintosh.nix
               # ./darwin/wm.nix
-              ./nixpkgs/home.nix
               
             ];
           };
         };
       };
-      }
+}

@@ -1,0 +1,27 @@
+package assignment2;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javafx.scene.control.ListView;
+
+public class TEST {
+	public static void getFiles() { // TODO
+		Path dirName = Paths.get("boards");
+		DirectoryStream<Path> dir = null;
+    	try {
+			dir = Files.newDirectoryStream(dirName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	System.out.println(dir);
+    }
+	
+	public static void main(String[] args) {
+		TEST.getFiles();
+	}
+}

@@ -21,18 +21,17 @@
 
 ;; Pyright
 (use-package lsp-pyright
-  :defer t
   ;; :after python-mode
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp-deferred))))
 
-(use-package pyenv-mode
-  :hook (python-mode . pyenv-mode))
+;; (use-package pyenv-mode
+;;   :hook (python-mode . pyenv-mode))
 
-;; auto activates the virtual environment if .python-version exists
-(use-package pyenv-mode-auto
-  :after pyenv-mode)
+;; ;; auto activates the virtual environment if .python-version exists
+;; (use-package pyenv-mode-auto
+;;   :after pyenv-mode)
 
 (provide 'init-py)
 ;;; init-py.el ends here

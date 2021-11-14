@@ -52,7 +52,6 @@ function es() {
             $EMACS --daemon=main
             $EMACS --daemon=doom --with-profile doom
 	    $EMACS --daemon=tty
-	    $EMACS --daemon
         else
             case $2 in
                 m)

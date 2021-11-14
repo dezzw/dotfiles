@@ -3,8 +3,14 @@
 	<item key="org.eclipse.jdt.ui.lastextjar" value="/Users/dez/Downloads/javafx-sdk-17.0.0.1/lib"/>
 	<item key="org.eclipse.jdt.ui.last.selected.jre.kind2" value="2"/>
 	<item key="org.eclipse.jdt.ui.last.selected.execution.enviroment" value="JavaSE-16"/>
-	<item key="org.eclipse.jdt.ui.last.external.project" value="/Users/dez/Library/Mobile Documents/com~apple~CloudDocs/UTM/UTM@Course/2021Fall/CSC207H5F/a1Test"/>
+	<item key="org.eclipse.jdt.ui.last.external.project" value="/Users/dez/Library/Mobile Documents/com~apple~CloudDocs/UTM/UTM@Course/2021Fall/CSC207H5F/a2"/>
 	<item key="org.eclipse.jdt.ui.last.selected.create.moduleinfo" value="false"/>
+	<item key="SearchScopeActionGroup.search_scope_type" value="1"/>
+	<item key="CallHierarchyViewPart.call_mode" value="0"/>
+	<item key="CallHierarchyViewPart.field_mode" value="2"/>
+	<item key="CallHierarchyViewPart.ratio3" value="500"/>
+	<item key="CallHierarchyViewPart.orientation" value="3"/>
+	<item key="CallHierarchyViewPart.ratio1" value="500"/>
 	<section name="org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart">
 		<item key="group_libraries" value="true"/>
 		<item key="layout" value="2"/>
@@ -58,5 +64,13 @@
 		<item key="org.eclipse.jdt.internal.ui.typehierarchy.HierarchyInformationControlDIALOG_HEIGHT" value="400"/>
 		<item key="org.eclipse.jdt.internal.ui.typehierarchy.HierarchyInformationControlDIALOG_USE_PERSISTED_SIZE" value="true"/>
 		<item key="org.eclipse.jdt.internal.ui.typehierarchy.HierarchyInformationControlDIALOG_USE_PERSISTED_LOCATION" value="false"/>
+	</section>
+	<section name="SearchInDialog">
+		<item key="SearchInSources" value="true"/>
+		<item key="SearchInProjects" value="true"/>
+		<item key="SearchInJRE" value="true"/>
+		<item key="SearchInAppLibs" value="true"/>
+	</section>
+	<section name="CallHierarchySearchScope">
 	</section>
 </section>

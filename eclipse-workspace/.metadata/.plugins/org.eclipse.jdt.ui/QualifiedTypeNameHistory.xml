@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="javafx.event.EventHandler"/>
-    <fullyQualifiedTypeName name="javafx.application.Application"/>
-    <fullyQualifiedTypeName name="lab04.PrimeTester"/>
-    <fullyQualifiedTypeName name="lab04.PrimeTesterEventHandler"/>
-    <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
-    <fullyQualifiedTypeName name="javafx.event.ActionEvent"/>
-    <fullyQualifiedTypeName name="javafx.scene.control.Label"/>
-    <fullyQualifiedTypeName name="javafx.scene.layout.HBox"/>
-    <fullyQualifiedTypeName name="javafx.scene.control.TextField"/>
-    <fullyQualifiedTypeName name="javafx.scene.input.MouseEvent"/>
-    <fullyQualifiedTypeName name="javafx.scene.input.InputMethodHighlight"/>
-    <fullyQualifiedTypeName name="java.lang.CharSequence"/>
-    <fullyQualifiedTypeName name="javafx.scene.control.Tab"/>
-    <fullyQualifiedTypeName name="javax.management.modelmbean.ModelMBeanNotificationBroadcaster"/>
-    <fullyQualifiedTypeName name="javax.swing.border.Border"/>
-    <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
-    <fullyQualifiedTypeName name="assignment1.Musketeer"/>
     <fullyQualifiedTypeName name="java.lang.Boolean"/>
     <fullyQualifiedTypeName name="assignment1.Cell"/>
     <fullyQualifiedTypeName name="java.beans.PropertyVetoException"/>
@@ -28,9 +11,7 @@
     <fullyQualifiedTypeName name="assignment1.Piece"/>
     <fullyQualifiedTypeName name="assignment1.Piece.Type"/>
     <fullyQualifiedTypeName name="lab05.Observer"/>
-    <fullyQualifiedTypeName name="java.lang.System"/>
     <fullyQualifiedTypeName name="java.lang.Double"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
     <fullyQualifiedTypeName name="lab05.StockService"/>
     <fullyQualifiedTypeName name="lab05.StockTrader"/>
     <fullyQualifiedTypeName name="lab05.Observable"/>
@@ -58,4 +39,25 @@
     <fullyQualifiedTypeName name="question9.Equipment"/>
     <fullyQualifiedTypeName name="question9.Robots"/>
     <fullyQualifiedTypeName name="question9.MonitoredList"/>
+    <fullyQualifiedTypeName name="assignment2.TEST"/>
+    <fullyQualifiedTypeName name="java.nio.file.DirectoryStream"/>
+    <fullyQualifiedTypeName name="java.nio.file.Files"/>
+    <fullyQualifiedTypeName name="java.nio.file.Paths"/>
+    <fullyQualifiedTypeName name="javafx.scene.control.SelectionMode"/>
+    <fullyQualifiedTypeName name="javafx.scene.control.MultipleSelectionModel"/>
+    <fullyQualifiedTypeName name="assignment2.Cell"/>
+    <fullyQualifiedTypeName name="javafx.scene.layout.GridPane"/>
+    <fullyQualifiedTypeName name="assignment2.ThreeMusketeers.GameMode"/>
+    <fullyQualifiedTypeName name="java.lang.System"/>
+    <fullyQualifiedTypeName name="assignment2.Piece"/>
+    <fullyQualifiedTypeName name="assignment2.Piece.Type"/>
+    <fullyQualifiedTypeName name="assignment2.BoardPanel"/>
+    <fullyQualifiedTypeName name="javafx.animation.PauseTransition"/>
+    <fullyQualifiedTypeName name="assignment2.ThreeMusketeers"/>
+    <fullyQualifiedTypeName name="java.lang.reflect.Field"/>
+    <fullyQualifiedTypeName name="java.io.FileWriter"/>
+    <fullyQualifiedTypeName name="javafx.util.Duration"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="assignment2.RandomAgent"/>
+    <fullyQualifiedTypeName name="assignment2.HumanAgent"/>
 </qualifiedTypeNameHistroy>

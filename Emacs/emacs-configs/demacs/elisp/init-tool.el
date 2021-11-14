@@ -63,17 +63,24 @@
     :commands (format-all-ensure-formatter format-all-buffer))
 
 (use-package quickrun
-    :commands (quickrun)
-    :config
-    ;; set python3 as default
-    (quickrun-add-command "python"
-      '((:command . "python3")
-        (:exec . "%c %s")
-        (:tempfile . nil))
-      :default "python"))
+  :commands (quickrun)
+  :config
+  ;; set python3 as default
+  (quickrun-add-command "python"
+    '((:command . "python3")
+      (:exec . "%c %s")
+      (:tempfile . nil))
+    :default "python")
+  
+  (defun run_unittest()
+    (interactive)
+    (setq quickrun-option-command "python3 -m unittest")
+    (quickrun)
+    )
+  )
 
 (use-package flycheck
-      :hook (lsp-mode . flycheck-mode))
+  :hook (lsp-mode . flycheck-mode))
 
 (use-package minimap
   :commands (minimap-mode)

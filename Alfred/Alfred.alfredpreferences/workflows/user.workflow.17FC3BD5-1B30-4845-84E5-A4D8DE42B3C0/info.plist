@@ -202,9 +202,9 @@ $EMACSCLIENT -cn -e "(org-agenda-list)"</string>
 				<key>keyword</key>
 				<string>emacs</string>
 				<key>subtext</key>
-				<string></string>
+				<string>Full Emacs</string>
 				<key>text</key>
-				<string>Emacs App</string>
+				<string>Start Emacs</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -380,7 +380,7 @@ $EMACSCLIENT --socket-name=main -nc</string>
 				<key>keyword</key>
 				<string>em</string>
 				<key>subtext</key>
-				<string>GUI Client for main purposes</string>
+				<string>Emacs GUI Client for main socket</string>
 				<key>text</key>
 				<string>Start Main Emacs Client</string>
 				<key>withspace</key>
@@ -401,7 +401,7 @@ $EMACSCLIENT --socket-name=main -nc</string>
 				<key>keyword</key>
 				<string>ec</string>
 				<key>subtext</key>
-				<string>GUI Client for coding purposes</string>
+				<string>Emacs GUI Client for coding socket</string>
 				<key>text</key>
 				<string>Start Coding Emacs Client</string>
 				<key>withspace</key>
@@ -482,7 +482,7 @@ fi</string>
 				<key>keyword</key>
 				<string>doom</string>
 				<key>subtext</key>
-				<string></string>
+				<string>Full Doom Emacs</string>
 				<key>text</key>
 				<string>Start Doom-Emacs</string>
 				<key>withspace</key>
@@ -503,7 +503,7 @@ fi</string>
 				<key>keyword</key>
 				<string>edm</string>
 				<key>subtext</key>
-				<string></string>
+				<string>Doom Emacs GUI Client</string>
 				<key>text</key>
 				<string>Start Doom-Emacs client</string>
 				<key>withspace</key>
