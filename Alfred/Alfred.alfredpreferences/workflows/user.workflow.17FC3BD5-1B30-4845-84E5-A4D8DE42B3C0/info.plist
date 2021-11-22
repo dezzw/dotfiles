@@ -131,7 +131,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS=/Users/dez/.nix-profile/bin/emacs
+				<string>EMACS="/etc/profiles/per-user/dez/bin/emacs"
 
 $EMACS</string>
 				<key>scriptargtype</key>
@@ -177,7 +177,7 @@ $EMACS</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
+				<string>EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
 
 $EMACSCLIENT -cn -e "(org-agenda-list)"</string>
 				<key>scriptargtype</key>
@@ -244,7 +244,7 @@ $EMACSCLIENT -cn -e "(org-agenda-list)"</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS="/Users/dez/.nix-profile/bin/emacs"
+				<string>EMACS="/etc/profiles/per-user/dez/bin/emacs"
 
 if [[ -z $1 ]]; then
 	$EMACS --daemon=main
@@ -306,8 +306,8 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS="/Users/dez/.nix-profile/bin/emacs"
-EMACSCLIENT="/Users/dez/.nix-profile/bin/emacslient"
+				<string>EMACS="/etc/profiles/per-user/dez/bin/emacs"
+EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
 
 if [[ -z $1 ]]; then
     ps aux | grep -i 'emacs.* --bg-daemon' | grep -v 'grep' \
@@ -355,7 +355,7 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
+				<string>EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
 
 $EMACSCLIENT --socket-name=main -nc</string>
 				<key>scriptargtype</key>
@@ -422,7 +422,7 @@ $EMACSCLIENT --socket-name=main -nc</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
+				<string>EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
 
 if [[ $# -eq 0 ]]; then
     $EMACSCLIENT -nc --socket-name=coding
@@ -451,7 +451,7 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACS="/Users/dez/.nix-profile/bin/emacs"
+				<string>EMACS="/etc/profiles/per-user/dez/bin/emacs"
 
 DOOM="$EMACS --with-profile doom"
 
@@ -524,7 +524,7 @@ fi</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
+				<string>EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
 
 if [[ $# -eq 0 ]]; then
     $EMACSCLIENT -nc --socket-name=doom

@@ -30,9 +30,11 @@
   (LaTeX-mode . cdlatex-mode)
   (latex-mode . cdlatex-mode))
 
-;; (use-package xenops
-;;   :hook ((latex-mode LaTeX-mode) . xenops-mode)
-;;   )
+(use-package xenops
+  :hook ((latex-mode LaTeX-mode org-mode) . xenops-mode)
+  :config
+  (setq xenops-math-image-scale-factor 2.0)
+  )
 
 (provide 'init-tex)
 ;;; init-tex.el ends here

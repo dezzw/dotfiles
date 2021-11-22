@@ -1,0 +1,267 @@
+package lab07;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+
+import stack.*;
+
+public class Graph<T> implements GraphInterface<T> {
+	public static final int DEF_CAPACITY = 10;
+	public static final int NULL_EDGE = 0;
+	public static final int DEFAULT_WEIGHT = 1;
+	private int numVertices;
+	private int maxVertices;
+	private T[] vertices;
+	private int[][] edges;
+	private boolean[] marks; // marks[i] is mark for vertices[i]
+
+	public Graph() {
+		numVertices = 0;
+		maxVertices = DEF_CAPACITY;
+		vertices = (T[]) new Object[DEF_CAPACITY];
+		marks = new boolean[DEF_CAPACITY];
+		edges = new int[DEF_CAPACITY][DEF_CAPACITY];
+	}
+	
+	public Graph(int maxV)
+	// Instantiates a graph with capacity maxV.
+	{
+		numVertices = 0;
+		maxVertices = maxV;
+		vertices = (T[]) new Object[maxV];
+		marks = new boolean[maxV];
+		edges = new int[maxV][maxV];
+	}
+
+	public boolean isEmpty()
+	// Returns true if this graph is empty; otherwise, returns false.
+	{
+		return (numVertices == 0);
+	}
+
+	public boolean isFull()
+	// Returns true if this graph is full; otherwise, returns false.
+	{
+		return (numVertices == maxVertices);
+	}
+
+	// Please complete the code for the following method.
+	public void addVertex(T vertex) throws GraphIsFullException,
+			VertexExistsException {
+		// If graph is full, it throws GraphIsFullException
+		// If vertex is already in this graph, it throws VertexExistsException
+		// Otherwise adds vertex to this graph.
+		//
+		// Your code goes here
+		Boolean isExists = false;
+		
+		for (T elm : this.vertices) {
+			if (elm != null && elm.equals(vertex)) {
+				isExists = true;
+			}
+		}
+		
+		if (isFull()) {
+			throw new GraphIsFullException();
+		} else if (isExists) {
+			throw new VertexExistsException();
+		} else {
+			this.vertices[numVertices] = vertex;
+			numVertices++;
+		}
+		
+	}
+
+	// Please complete the code for the following method.
+	public void addEdge(T fromVertex, T toVertex)
+	// Adds an edge with the specified weight from fromVertex to toVertex.
+	{
+         // Your code goes here
+		int fromIndex = -1, toIndex = -1;
+		if (!fromVertex.equals(toVertex)) {
+			for (int i = 0; i < this.vertices.length; i++) {
+				if (this.vertices[i] != null && this.vertices[i].equals(fromVertex)) {
+					fromIndex = i;
+				}
+				if (this.vertices[i] != null && this.vertices[i].equals(toVertex)) {
+					toIndex = i;
+				}
+			}
+			
+			if (fromIndex != -1 && toIndex != -1) {
+				this.edges[fromIndex][toIndex] = DEFAULT_WEIGHT;
+				this.edges[toIndex][fromIndex] = DEFAULT_WEIGHT;
+			}
+		}
+		
+	}
+
+	// Please complete the code for the following method.
+	public Queue<T> getToVertices(T vertex)
+	// Returns a queue of the vertices that are adjacent from vertex.
+	{
+		// Your code goes here
+		Queue<T> adjacentVertex = new LinkedList<>();
+		
+		int vertexIndex = -1;
+		
+		for (int i = 0; i < this.vertices.length; i++) {
+			if (this.vertices[i] != null && this.vertices[i].equals(vertex)) {
+				vertexIndex = i;
+			}
+		}
+		
+		for (int col = 0; col < this.edges.length; col++) {
+			if (this.edges[vertexIndex][col] == DEFAULT_WEIGHT) {
+				adjacentVertex.add(this.vertices[col]);
+			}
+		}
+		
+		return adjacentVertex;
+	}
+
+	public void clearMarks()
+	// Sets marks for all vertices to false.
+	{
+		for (int i = 0; i < numVertices; i++)
+			marks[i] = false;
+	}
+
+	// Please complete the code for the following method.
+	// A correctly working method gets up to 1 mark
+
+	public void markVertex(T vertex)
+	// Sets mark for vertex to true.
+	{
+		// Your code goes here
+		for (int i = 0; i < this.vertices.length; i++) {
+			if (this.vertices[i] != null && this.vertices[i].equals(vertex)) {
+				this.marks[i] = true;
+			}
+		}
+	}
+
+	// Please complete the code for the following method.
+	public boolean isMarked(T vertex)
+	// Returns true if vertex is marked; otherwise, returns false.
+	{
+		for (int i = 0; i < this.vertices.length; i++) {
+			if (this.vertices[i] != null && this.vertices[i].equals(vertex)) {
+				return this.marks[i];
+			}
+		}
+		return false;
+	}
+
+	// Please complete the code for the following method.
+	private Set<T> DFSVisit(T startVertex)
+	// Uses depth-first search algorithm to visit as much vertices as
+	// possible
+	// starting from startVertex.
+	// In the process, keeps track of all vertices reachable from
+	// startVertex
+	// by adding them to a Set<T> variable.
+	// Once done, returns the Set<T> that we build up.
+	//
+	{
+		// Your code goes here
+		Set<T> result = new HashSet<>();
+		LinkedStack<T> process = new LinkedStack<>();
+		this.clearMarks();
+		
+		result.add(startVertex);
+		process.push(startVertex);
+		this.markVertex(startVertex);
+		
+		Queue<T> adjacentVertex = this.getToVertices(startVertex);
+		
+		while (!process.isEmpty()) {
+			for (T vertex : adjacentVertex) {
+				if (!this.isMarked(vertex)) {
+					process.push(vertex);
+					result.add(vertex);
+					this.markVertex(vertex); 
+				}				
+			}
+			
+			adjacentVertex = this.getToVertices(process.top());
+			process.pop();
+		}
+		
+		
+		return result;
+	}
+
+	// Please complete the code for the following method.
+	public ArrayList<Set<T>> connectedComponents()
+	// Returns a list of connected components of the graph
+	// For each vertex that does not belong to the connected components
+	// already on the list,
+	// call DFSVisit to obtain a set of vertices connected to the current
+	// vertex
+	// Add the set to the list
+	{
+		// Your code goes here
+		ArrayList<Set<T>> result = new ArrayList<Set<T>>();
+		
+		Set<T> vertexes = this.DFSVisit(this.vertices[0]);
+		
+		ArrayList<T> missedVertex = new ArrayList<>();
+		
+		result.add(vertexes);
+		
+		for (T vertex : this.vertices) {
+			if (!vertexes.contains(vertex)) {
+				missedVertex.add(vertex);
+			}
+		}
+
+		while (!missedVertex.isEmpty()) {
+			Set<T> newVertexes = this.DFSVisit(missedVertex.get(0));
+			result.add(newVertexes);
+			missedVertex.remove(0);
+			
+			for (T elm : newVertexes) {
+				missedVertex.remove(elm);
+			}
+		}
+		
+		return result;
+	}
+	
+//	public static void main(String[] args) {
+//		Graph<Integer> g = new Graph<>(8);
+//		try {
+//			g.addVertex(1);
+//			g.addVertex(2);
+//			g.addVertex(3);
+//			g.addVertex(4);
+//			g.addVertex(5);
+//			g.addVertex(6);
+//			g.addVertex(7);
+//			g.addVertex(8);
+//
+//			g.addEdge(1, 3);
+//			g.addEdge(1, 7);
+//			g.addEdge(1, 6);
+//			g.addEdge(6, 7);
+//			g.addEdge(6, 5);
+//			g.addEdge(6, 2);
+//			g.addEdge(4, 8);
+//
+//		} catch (GraphIsFullException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (VertexExistsException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		System.out.println(g.connectedComponents());
+//		
+//	}
+
+}

@@ -98,5 +98,8 @@
     "obs"
     "alacritty"
     "appcleaner"
+    "kap"
+    "soundflower"
+    "typora"
   ];
 }
