@@ -1,0 +1,7 @@
+cd .dotfiles
+la
+ls -al
+cd Emacs/
+cd emacs-configs/demacs/
+up dotfiles
+e flake.nix

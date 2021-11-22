@@ -1,18 +1,19 @@
 #!/bin/bash
 
+if [[ $(uname) == "Linux" ]]; then
+    EMACS="/usr/bin/emacs"
+else
+    EMACS="/etc/profiles/per-user/dez/bin/emacs"
+fi
+if [[ $(uname) == "Linux" ]]; then
+    EMACSCLIENT="/usr/bin/emacsclient"
+else
+    EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
+fi
+
 function es() {
     tmpfile="$HOME/.tmp.stdout"
 
-    if [[ $(uname) == "Linux" ]]; then
-        EMACS="/usr/bin/emacs"
-    else
-        EMACS="/Users/dez/.nix-profile/bin/emacs"
-    fi
-    if [[ $(uname) == "Linux" ]]; then
-        EMACSCLIENT="/usr/bin/emacsclient"
-    else
-        EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
-    fi
 
     if [[ $# -eq 0 ]] || [[ "$1" == "list" ]]; then
         ps aux | grep -i 'emacs.* --bg-daemon' | grep -v 'grep' \
@@ -50,7 +51,6 @@ function es() {
     elif [[ "$1" == "start" ]]; then
         if [[ -z $2 ]]; then
             $EMACS --daemon=main
-            $EMACS --daemon=doom --with-profile doom
 	    $EMACS --daemon=tty
         else
             case $2 in
@@ -119,11 +119,6 @@ function es() {
 
 # emacsclient: main
 function em() {
-    if [[ $(uname) == "Linux" ]]; then
-        EMACSCLIENT="/usr/bin/emacsclient"
-    else
-        EMACSCLIENT="/Users/dez/.nix-profile/bin/emacsclient"
-    fi
 
     if [[ $# -eq 0 ]]; then
         $EMACSCLIENT -nc --socket-name=main
@@ -138,11 +133,6 @@ function em() {
 
 # emacsclient: coding
 function ec() {
-    if [[ $(uname) == "Linux" ]]; then
-        EMACSCLIENT="/usr/bin/emacsclient"
-    else
-        EMACSCLIENT=="/Users/dez/.nix-profile/bin/emacsclient"
-    fi
 
     if [[ $# -eq 0 ]]; then
         $EMACSCLIENT -nc --socket-name=coding
@@ -157,11 +147,6 @@ function ec() {
 
 # emacsclient: tty (emacs in console)
 function et() {
-    if [[ $(uname) == "Linux" ]]; then
-        EMACSCLIENT="/usr/bin/emacsclient"
-    else
-        EMACSCLIENT=="/Users/dez/.nix-profile/bin/emacsclient"
-    fi
 
     if [[ $# -eq 0 ]]; then
         $EMACSCLIENT -nw --socket-name=tty
@@ -175,11 +160,6 @@ function et() {
 }
 
 function magit() {
-    if [[ $(uname) == "Linux" ]]; then
-        EMACSCLIENT="/usr/bin/emacsclient"
-    else
-        EMACSCLIENT=="/Users/dez/.nix-profile/bin/emacsclient"
-    fi
 
     $EMACSCLIENT -nw --socket-name=tty -e "(magit)"
 }

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move &apos;example_1.txt&apos; to &apos;lab07-UncleAlone&apos;" description="Move &apos;example_1.txt&apos; to &apos;lab07-UncleAlone&apos;" destination="/lab07-UncleAlone" element1="/lab05/example_1.txt" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1636933292982" updateReferences="true"/>
+</session>

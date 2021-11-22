@@ -6,5 +6,14 @@
 	<item key="org.eclipse.jdt.debug.ui.jre_preference_page_context.columnWidth2" value="84"/>
 	<item key="org.eclipse.jdt.debug.ui.jre_preference_page_context.sortColumn" value="1"/>
 	<section name="expressionHistory">
+		<item key="expressionHistoryEntry_0" value="[&#x0A;[0, 0, 1, 0, 0, 1, 1, 0], &#x0A;[0, 0, 0, 0, 0, 1, 0, 0], &#x0A;[1, 0, 0, 0, 0, 0, 0, 0], &#x0A;[0, 0, 0, 0, 0, 0, 0, 1], &#x0A;[0, 0, 0, 0, 0, 1, 0, 0], &#x0A;[1, 1, 0, 0, 1, 0, 1, 0], &#x0A;[1, 0, 0, 0, 0, 1, 0, 0], &#x0A;[0, 0, 0, 1, 0, 0, 0, 0]]"/>
+		<item key="expressionHistoryEntryCount" value="2"/>
+		<item key="expressionHistoryEntry_1" value="[0, 0, 0, 0, 0, 0, 0, 0]"/>
+	</section>
+	<section name="org.eclipse.jdt.internal.debug.ui.ExpressionInformationControlCreator$ExpressionInformationControl">
+		<item key="WIDTH" value="775"/>
+		<item key="HEIGHT" value="192"/>
+		<item key="SashWeightTree" value="200"/>
+		<item key="SashWeightDetails" value="200"/>
 	</section>
 </section>

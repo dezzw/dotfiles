@@ -46,6 +46,7 @@
 (require 'init-git)
 (require 'init-pass)
 (require 'init-term)
+(require 'init-eshell)
 (require 'init-tmux)
 (require 'init-leetcode)
 
