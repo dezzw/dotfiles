@@ -49,6 +49,7 @@
             system = "x86_64-darwin";
 
             modules = commonDarwinConfig ++ [
+              ./system/homebrew.nix
               # ./nixpkgs/darwin/macintosh.nix
               # ./nixpkgs/darwin/wm.nix
               # ./darwin/macintosh.nix
