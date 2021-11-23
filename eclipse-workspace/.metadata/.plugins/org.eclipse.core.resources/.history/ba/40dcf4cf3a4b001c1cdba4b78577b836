@@ -1,0 +1,8 @@
+bin
+*.class
+.DS_Store
+/.metadata/
+.classpath
+.project
+.settings
+
