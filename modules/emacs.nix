@@ -35,6 +35,7 @@
     rnix-lsp
 
     texlab
-    
-  ]
+
+    universal-ctags
+  ];
 }

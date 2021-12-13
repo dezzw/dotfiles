@@ -30,8 +30,9 @@
     let
       homeManagerCommonConfig = {
         imports = [
-          ./home
-          ./modules
+          ./home/home.nix
+          ./modules/emacs.nix
+          ./modules/nvim.nix
         ];
       };
       
