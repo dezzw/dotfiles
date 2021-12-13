@@ -1,0 +1,15 @@
+package assignment1;
+
+public class RestartBoard implements ThreeMusketeersCommand {
+	
+	private Board board;
+	
+	public RestartBoard(Board board)	{
+		
+	}
+	
+	@Override
+	public void execute() {
+		
+	}
+}

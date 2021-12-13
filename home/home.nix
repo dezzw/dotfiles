@@ -25,22 +25,18 @@ in
     # nodejs
     nodejs
     nodePackages.typescript
-    nodePackages.typescript-language-server
-    nodePackages.bash-language-server
-    nodePackages.vscode-css-languageserver-bin
-    nodePackages.vscode-html-languageserver-bin
-
-    # nix
-    rnix-lsp
 
     # tools
     jump
     exa
     stow
     ripgrep
+    aria
 
     # tex
     texlive.combined.scheme-full
+
+    comma
   ];
 
   programs.git = {
@@ -106,55 +102,5 @@ in
     };
   };
 
-  programs.emacs.enable = true;
 
-  programs.emacs.package =
-    (
-      pkgs.emacsWithPackagesFromUsePackage {
-        alwaysEnsure = true;
-        alwaysTangle = true;
-
-        # Custom overlay derived from 'emacs' flake input
-        package = pkgs.emacs;
-        config = ../Emacs/emacs-configs/demacs/init.el;
-
-      }
-    );
-
-  home.file.".emacs-profiles.el".text = ''
-      (("default" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/demacs")))
-       ("doom" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/doom-core")
-	      ;;(env . (("DOOMDIR" . "~/.dotfiles/Emacs/emacs-configs/doom")))))
-	    ))
-       ("beta" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/beta_emacs")))
-      )
-  '';
-  
-  programs.neovim = {
-    enable = true;
-
-    package = pkgs.neovim-nightly;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-
-    withNodeJs = true;
-    withPython3 = true;
-
-    extraConfig = ''
-      set number relativenumber
-      set nobackup
-      set clipboard=unnamed
-    '';
-
-    plugins = with pkgs.vimPlugins; [
-      nord-vim
-      lightline-vim
-      vim-nix
-      telescope-nvim
-      nvim-lspconfig
-      completion-nvim
-      nvim-tree-lua
-    ];
-  };
 }

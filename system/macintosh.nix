@@ -20,11 +20,14 @@
   ];
 
   nix.trustedBinaryCaches = config.nix.binaryCaches;
+  
+  # nixpkgs.config.allowBroken = true;
 
   nixpkgs.overlays = [
     (import ../overlays)
   ];
-
+  
+  # nixpkgs.config.allowBroken = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

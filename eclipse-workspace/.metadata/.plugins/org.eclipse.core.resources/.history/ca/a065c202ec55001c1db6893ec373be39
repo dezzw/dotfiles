@@ -1,0 +1,16 @@
+package assignment1;
+
+public class RestoreBoard implements ThreeMusketeersCommand {
+	
+	private ThreeMusketeers threeMusketeers;
+	
+	public RestoreBoard(ThreeMusketeers threeMusketeers) {
+		this.threeMusketeers = threeMusketeers;
+	}
+
+	@Override
+	public void execute() {
+
+	}
+
+}

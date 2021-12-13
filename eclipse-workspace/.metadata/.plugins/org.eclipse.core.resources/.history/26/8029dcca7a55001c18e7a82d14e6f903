@@ -1,0 +1,16 @@
+package assignment1;
+
+public class Observable {
+	
+	public int size = 5;
+	public final Observer[][] observers = new Observer[size][size];
+	
+	public void add(Cell cell, int row, int col) {
+		this.observers[row][col] = cell;
+	}
+	
+	public void notifyObservers(Cell cell, Piece piece) {
+		observers[cell.getCoordinate().row][cell.getCoordinate().col].update(piece);
+	}
+
+}

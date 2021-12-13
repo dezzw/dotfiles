@@ -1,0 +1,16 @@
+package assignment1;
+
+public class RestartBoard implements ThreeMusketeersCommand {
+	
+	private ThreeMusketeers threeMusketeers;
+	
+	public RestartBoard(ThreeMusketeers threeMusketeers)	{
+		this.threeMusketeers = threeMusketeers;
+	}
+	
+	@Override
+	public void execute() {
+		this.threeMusketeers = new ThreeMusketeers(this.threeMusketeers.lastSession);
+		this.threeMusketeers.play();
+	}
+}
