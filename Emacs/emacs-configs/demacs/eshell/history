@@ -5,3 +5,12 @@ cd Emacs/
 cd emacs-configs/demacs/
 up dotfiles
 e flake.nix
+la
+ls -al
+ls -alt
+ls -alT
+exa -al
+exa -T
+cd
+cd
+ exit

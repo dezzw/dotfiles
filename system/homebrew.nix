@@ -40,5 +40,6 @@
     "appcleaner"
     "kap"
     "soundflower"
+    "ubersicht"
   ];
 }

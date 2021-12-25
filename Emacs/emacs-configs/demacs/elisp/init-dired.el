@@ -39,5 +39,8 @@
   :hook (dired-mode . diredfl-mode)
   )
 
+(use-package dired-posframe
+  :bind ("C-*" . dired-posframe-show))
+
 (provide 'init-dired)
 ;;; init-dired.el ends here

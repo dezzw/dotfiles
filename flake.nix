@@ -63,7 +63,7 @@
 
             modules = commonDarwinConfig ++ [
               ./system/homebrew.nix
-              ./system/wm.nix
+              # ./system/wm.nix
             ];
           };
         };

@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = ''
@@ -23,12 +22,6 @@
   
   # nixpkgs.config.allowBroken = true;
 
-  nixpkgs.overlays = [
-    (import ../overlays)
-  ];
-  
-  # nixpkgs.config.allowBroken = true;
-
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
@@ -39,7 +32,11 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.shells = [ pkgs.zsh ];
-  environment.systemPackages = [ pkgs.zsh pkgs.gcc pkgs.git ];
+  environment.systemPackages = with pkgs;[
+    zsh 
+    gcc 
+    git 
+  ];
   programs.bash.enable = true;
 
   # Create /etc/bashrc that loads the nix-darwin environment.
@@ -62,5 +59,13 @@
 
 
   fonts.enableFontDir = true;
-  fonts.fonts = with pkgs; [ cantarell-fonts roboto roboto-mono mononoki emacs-all-the-icons-fonts ];
+  fonts.fonts = with pkgs; [
+    cantarell-fonts
+    roboto
+    roboto-mono
+    mononoki
+    emacs-all-the-icons-fonts
+    font-awesome
+    nerdfonts
+  ];
 }

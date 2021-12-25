@@ -1,15 +1,5 @@
 { config, pkgs, ... }:
 
-let
-  comma = import ( pkgs.fetchFromGitHub {
-      owner = "Shopify";
-      repo = "comma";
-      rev = "4a62ec17e20ce0e738a8e5126b4298a73903b468";
-      sha256 = "0n5a3rnv9qnnsrl76kpi6dmaxmwj1mpdd2g0b4n1wfimqfaz6gi1";
-  }) {};
-
-in
-
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -19,13 +9,16 @@ in
     nixUnstable
 
     # c/c++
-    ccls
     cmake
 
     # nodejs
     nodejs
     nodePackages.typescript
 
+    rustc
+    ghc
+    sbcl
+    
     # tools
     jump
     exa
@@ -36,7 +29,7 @@ in
     # tex
     texlive.combined.scheme-full
 
-    comma
+    browserpass
   ];
 
   programs.git = {
@@ -76,6 +69,7 @@ in
       ls = "exa";
       la = "exa -la";
       lt = "exa -laT";
+      pip = "pip3";
     };
     zplug = {
       enable = true;
@@ -84,9 +78,11 @@ in
 	      { name = "zsh-users/zsh-syntax-highlighting"; }
         # { name = "spwhitt/nix-zsh-completions"; }
 	      { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
+              { name = "marlonrichert/zsh-autocomplete";}
       ];
     };
     initExtra = ''
+    
      . $HOME/.p10k.zsh
      . $HOME/.dotfiles/Shells/emacs-cmds.sh
      . $HOME/.dotfiles/Shells/doom-emacs-cmds.sh
@@ -102,5 +98,11 @@ in
     };
   };
 
+  programs.gpg = {
+    enable = true;
+  };
 
+  programs.password-store = {
+    enable = true;
+  };
 }

@@ -27,15 +27,17 @@
 
   home.packages = with pkgs; [
     # Language Server
+    ccls
+    
     nodePackages.typescript-language-server
     nodePackages.bash-language-server
     nodePackages.vscode-css-languageserver-bin
     nodePackages.vscode-html-languageserver-bin
 
     rnix-lsp
-
-    texlab
-
+    
     universal-ctags
+
+    ispell
   ];
 }

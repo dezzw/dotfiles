@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="javafx.scene.control.MultipleSelectionModel"/>
-    <fullyQualifiedTypeName name="assignment2.Cell"/>
-    <fullyQualifiedTypeName name="javafx.scene.layout.GridPane"/>
-    <fullyQualifiedTypeName name="assignment2.ThreeMusketeers.GameMode"/>
-    <fullyQualifiedTypeName name="java.lang.System"/>
-    <fullyQualifiedTypeName name="assignment2.Piece"/>
-    <fullyQualifiedTypeName name="assignment2.Piece.Type"/>
-    <fullyQualifiedTypeName name="assignment2.BoardPanel"/>
-    <fullyQualifiedTypeName name="javafx.animation.PauseTransition"/>
-    <fullyQualifiedTypeName name="assignment2.ThreeMusketeers"/>
-    <fullyQualifiedTypeName name="java.lang.reflect.Field"/>
-    <fullyQualifiedTypeName name="java.io.FileWriter"/>
-    <fullyQualifiedTypeName name="javafx.util.Duration"/>
     <fullyQualifiedTypeName name="assignment2.RandomAgent"/>
     <fullyQualifiedTypeName name="assignment2.HumanAgent"/>
     <fullyQualifiedTypeName name="lab07.GraphIsFullException"/>
@@ -25,12 +12,10 @@
     <fullyQualifiedTypeName name="java.util.Set"/>
     <fullyQualifiedTypeName name="java.util.Scanner"/>
     <fullyQualifiedTypeName name="lab07.Graph"/>
-    <fullyQualifiedTypeName name="java.lang.Integer"/>
     <fullyQualifiedTypeName name="java.lang.Runnable"/>
     <fullyQualifiedTypeName name="java.security.MessageDigest"/>
     <fullyQualifiedTypeName name="lab09.MD5BreakNumericMT"/>
     <fullyQualifiedTypeName name="java.lang.Thread"/>
-    <fullyQualifiedTypeName name="java.util.Iterator"/>
     <fullyQualifiedTypeName name="java.util.Enumeration"/>
     <fullyQualifiedTypeName name="adapter.IteratorEnumerationTestDrive"/>
     <fullyQualifiedTypeName name="adapter.IteratorEnumeration"/>
@@ -50,7 +35,6 @@
     <fullyQualifiedTypeName name="assignment1.Command"/>
     <fullyQualifiedTypeName name="assignment1.MusketeersOperator"/>
     <fullyQualifiedTypeName name="assignment1.CellMove"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="assignment1.SaveBoard"/>
     <fullyQualifiedTypeName name="assignment1.CreateCell"/>
     <fullyQualifiedTypeName name="assignment1.RestartBoard"/>
@@ -60,4 +44,20 @@
     <fullyQualifiedTypeName name="assignment1.ThreeMusketeersCommand"/>
     <fullyQualifiedTypeName name="assignment1.RestoreBoard"/>
     <fullyQualifiedTypeName name="assignment1.ThreeMusketeers"/>
+    <fullyQualifiedTypeName name="q7.DigitsIterator"/>
+    <fullyQualifiedTypeName name="q7.Digits"/>
+    <fullyQualifiedTypeName name="java.lang.Integer"/>
+    <fullyQualifiedTypeName name="q4.LinkedList"/>
+    <fullyQualifiedTypeName name="q4.Tail"/>
+    <fullyQualifiedTypeName name="java.util.Observable"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="q8.Observer"/>
+    <fullyQualifiedTypeName name="java.lang.Iterable"/>
+    <fullyQualifiedTypeName name="java.util.Iterator"/>
+    <fullyQualifiedTypeName name="question8.HeapIterator"/>
+    <fullyQualifiedTypeName name="java.lang.Exception"/>
+    <fullyQualifiedTypeName name="question8.HeapFullException"/>
+    <fullyQualifiedTypeName name="java.util.Arrays"/>
+    <fullyQualifiedTypeName name="java.lang.ArrayIndexOutOfBoundsException"/>
+    <fullyQualifiedTypeName name="java.lang.reflect.Array"/>
 </qualifiedTypeNameHistroy>

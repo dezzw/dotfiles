@@ -24,7 +24,9 @@
   ;; :after python-mode
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
-                         (lsp-deferred))))
+                         (lsp-deferred)))
+  :config
+  (setq dap-python-debugger 'debugpy))
 
 ;; (use-package pyenv-mode
 ;;   :hook (python-mode . pyenv-mode))
