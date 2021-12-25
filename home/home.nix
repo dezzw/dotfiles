@@ -34,7 +34,7 @@
 
   programs.git = {
     enable = true;
-    userName  = "UncleAlone";
+    userName  = "dezzw";
     userEmail = "desmond.pc.w@gmail.com";
     delta = {
       enable = true;
