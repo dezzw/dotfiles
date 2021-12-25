@@ -1,15 +1,5 @@
 { config, pkgs, ... }:
 
-let
-  comma = import ( pkgs.fetchFromGitHub {
-      owner = "Shopify";
-      repo = "comma";
-      rev = "4a62ec17e20ce0e738a8e5126b4298a73903b468";
-      sha256 = "0n5a3rnv9qnnsrl76kpi6dmaxmwj1mpdd2g0b4n1wfimqfaz6gi1";
-  }) {};
-
-in
-
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -19,28 +9,27 @@ in
     nixUnstable
 
     # c/c++
-    ccls
     cmake
 
     # nodejs
     nodejs
     nodePackages.typescript
-    nodePackages.typescript-language-server
-    nodePackages.bash-language-server
-    nodePackages.vscode-css-languageserver-bin
-    nodePackages.vscode-html-languageserver-bin
 
-    # nix
-    rnix-lsp
-
+    rustc
+    ghc
+    sbcl
+    
     # tools
     jump
     exa
     stow
     ripgrep
+    aria
 
     # tex
     texlive.combined.scheme-full
+
+    browserpass
   ];
 
   programs.git = {
@@ -80,6 +69,7 @@ in
       ls = "exa";
       la = "exa -la";
       lt = "exa -laT";
+      pip = "pip3";
     };
     zplug = {
       enable = true;
@@ -88,9 +78,11 @@ in
 	      { name = "zsh-users/zsh-syntax-highlighting"; }
         # { name = "spwhitt/nix-zsh-completions"; }
 	      { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
+              { name = "marlonrichert/zsh-autocomplete";}
       ];
     };
     initExtra = ''
+    
      . $HOME/.p10k.zsh
      . $HOME/.dotfiles/Shells/emacs-cmds.sh
      . $HOME/.dotfiles/Shells/doom-emacs-cmds.sh
@@ -106,55 +98,11 @@ in
     };
   };
 
-  programs.emacs.enable = true;
-
-  programs.emacs.package =
-    (
-      pkgs.emacsWithPackagesFromUsePackage {
-        alwaysEnsure = true;
-        alwaysTangle = true;
-
-        # Custom overlay derived from 'emacs' flake input
-        package = pkgs.emacs;
-        config = ../Emacs/emacs-configs/demacs/init.el;
-
-      }
-    );
-
-  home.file.".emacs-profiles.el".text = ''
-      (("default" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/demacs")))
-       ("doom" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/doom-core")
-	      ;;(env . (("DOOMDIR" . "~/.dotfiles/Emacs/emacs-configs/doom")))))
-	    ))
-       ("beta" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/beta_emacs")))
-      )
-  '';
-  
-  programs.neovim = {
+  programs.gpg = {
     enable = true;
+  };
 
-    package = pkgs.neovim-nightly;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-
-    withNodeJs = true;
-    withPython3 = true;
-
-    extraConfig = ''
-      set number relativenumber
-      set nobackup
-      set clipboard=unnamed
-    '';
-
-    plugins = with pkgs.vimPlugins; [
-      nord-vim
-      lightline-vim
-      vim-nix
-      telescope-nvim
-      nvim-lspconfig
-      completion-nvim
-      nvim-tree-lua
-    ];
+  programs.password-store = {
+    enable = true;
   };
 }

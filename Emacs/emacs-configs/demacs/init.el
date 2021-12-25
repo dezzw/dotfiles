@@ -50,6 +50,8 @@
 (require 'init-tmux)
 (require 'init-leetcode)
 
+(require 'init-eaf)
+
 (if (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty"))))
     (dolist (gui-plugins gui-only-plugins-setting)
       (eval gui-plugins)))

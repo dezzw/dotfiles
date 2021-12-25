@@ -7,6 +7,7 @@
   homebrew.global.brewfile = true;
   homebrew.global.noLock = true;
 
+
   homebrew.taps = [
     "homebrew/core"
     "homebrew/cask"
@@ -33,14 +34,12 @@
     "jetbrains-toolbox"
     "visual-studio-code"
     "zoom"
-    "spotify"
     "google-chrome"
     "obs"
     "alacritty"
     "appcleaner"
     "kap"
     "soundflower"
-    "typora"
-    "steam"
+    "ubersicht"
   ];
 }

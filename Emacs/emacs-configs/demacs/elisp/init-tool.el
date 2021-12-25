@@ -119,9 +119,12 @@
 (use-package fzf
   :commands (fzf))
 
+(use-package wucuo
+  :hook ((prog-mode text-mode) . #'wucuo-start))
+
 (push '(use-package clipetty
-      :hook (after-init . global-clipetty-mode)
-      ) tui-only-plugins-setting)
+	 :hook (after-init . global-clipetty-mode)
+	 ) tui-only-plugins-setting)
 
 (if (daemonp)
     (use-package emacs-everywhere))

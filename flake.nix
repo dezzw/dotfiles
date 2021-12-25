@@ -2,9 +2,16 @@
   description = "systems configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    darwin.url = "github:lnl7/nix-darwin";
-    home-manager.url = "github:nix-community/home-manager";
+    nixos.url = "github:NixOS/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:Nixos/nixpkgs/staging-next";
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     emacs.url = "github:cmacrae/emacs";
@@ -14,24 +21,30 @@
     nix-direnv.url = "github:nix-community/nix-direnv";
 
     # Follows
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
 
     comma = { url = "github:Shopify/comma"; flake = false; };
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, darwin, home, ... }@inputs:
     let
+      homeManagerCommonConfig = {
+        imports = [
+          ./home/home.nix
+          ./modules/emacs.nix
+          ./modules/nvim.nix
+        ];
+      };
+      
       commonDarwinConfig = [
         ./system/macintosh.nix
-        home-manager.darwinModules.home-manager
+        home.darwinModules.home-manager
         {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            users.users.dez.home = "/Users/dez";
-            home-manager.users.dez = import ./home/home.nix;
-          }
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          users.users.dez.home = "/Users/dez";
+          home-manager.users.dez = homeManagerCommonConfig;
+        }
 	      {
           nixpkgs.overlays = with inputs; [
             emacs.overlay
@@ -50,10 +63,7 @@
 
             modules = commonDarwinConfig ++ [
               ./system/homebrew.nix
-              # ./nixpkgs/darwin/macintosh.nix
-              # ./nixpkgs/darwin/wm.nix
-              # ./darwin/macintosh.nix
-              # ./darwin/wm.nix 
+              # ./system/wm.nix
             ];
           };
         };

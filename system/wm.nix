@@ -12,8 +12,8 @@ in {
       # window_border_width = 5;
       # active_window_border_color = "0xffd9adad";
       # normal_window_border_color = "0xff3b4252";
-      # focus_follows_mouse = "autoraise";
-      focus_follows_mouse = "off";
+      focus_follows_mouse = "autoraise";
+      # focus_follows_mouse = "off";
       mouse_follows_focus = "off";
       mouse_drop_action = "stack";
       window_placement = "second_child";
@@ -36,6 +36,8 @@ in {
       external_bar = "main:26:0";
     };
     extraConfig = pkgs.lib.mkDefault ''
+      sudo yabai --load-sa
+      yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
       # rules
       yabai -m rule --add app='System Preferences' manage=off
       yabai -m rule --add app='Dash'               manage=off
@@ -51,8 +53,8 @@ in {
   services.skhd.skhdConfig = let
     modMask = "cmd";
     moveMask = "ctrl + cmd";
-    myTerminal = "emacsclient -a '' -nc --eval '(peel/vterm)'";
-    myEditor = "emacsclient -a '' -nc";
+    myTerminal = "emacsclient -s main -a '' -nc --eval '(eshell)'";
+    myEditor = "emacsclient -s main -a '' -nc";
     myBrowser = "open /Safari.app";
     noop = "/dev/null";
     prefix = "${pkgs.yabai}/bin/yabai -m";
@@ -122,7 +124,7 @@ in {
       ${modMask} + shift - return               : ${myEditor}
       ${modMask} - b                            : ${myBrowser}
       # reset  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-      ${modMask} - q                            : pkill yabai; pkill skhd; osascript -e 'display notification "wm restarted"'
+      ${modMask} + shift - q                            : pkill yabai; pkill skhd; osascript -e 'display notification "wm restarted"'
   '';
 
   services.spacebar.enable = true;
