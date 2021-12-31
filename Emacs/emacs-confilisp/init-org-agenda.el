@@ -18,14 +18,14 @@
 
   (setq org-agenda-files (dw/update-planner-files))
 
-  (setq org-columns-default-format "%20CATEGORY(Category) %65ITEM(Task) %TODO %6Effort(Estim){:}  %6CLOCKSUM(Clock) %TAGS")
+
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
 
   ;; Custom TODO states and Agendas
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+	'((sequence "TODO(t)" "NEXT(n)" "TBA(b)" "|" "DONE(d!)")
 	  ))
 
   (setq org-tag-alist

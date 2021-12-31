@@ -11,8 +11,11 @@
 
         # Custom overlay derived from 'emacs' flake input
         package = pkgs.emacs;
-        config = ../Emacs/emacs-configs/demacs/init.el;
+        config = ../Emacs/demacs-darwin.org;
 
+        extraEmacsPackages = epkgs: with epkgs;[
+
+        ];
       }
     );
 
@@ -28,7 +31,7 @@
   home.packages = with pkgs; [
     # Language Server
     ccls
-    
+
     nodePackages.typescript-language-server
     nodePackages.bash-language-server
     nodePackages.vscode-css-languageserver-bin

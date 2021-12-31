@@ -13,4 +13,5 @@ exa -al
 exa -T
 cd
 cd
- exit
+exit
+rm -rf emacs-configs/demacs/elisp/

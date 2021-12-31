@@ -17,7 +17,6 @@
 
     rustc
     ghc
-    sbcl
     
     # tools
     jump

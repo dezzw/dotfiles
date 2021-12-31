@@ -1,7 +1,7 @@
 #+TITLE: DEmacs Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle  ~/.dotfiles/Emacs/emacs-configs/demacs/init.el :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp :tangle  ~/.emacs.d/init.el :mkdirp yes
 * Some improve in early-init
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
 (setq gc-cons-threshold most-positive-fixnum)
 
 (setq load-prefer-newer noninteractive)
@@ -11,53 +11,6 @@ Same as above
 #+begin_src emacs-lisp
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
-* Native Compilation
- #+begin_src emacs-lisp
-(setq comp-async-jobs-number 7
-      comp-deferred-compilation t
-	 comp-async-report-warnings-errors nil)
-(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
- #+end_src
-* Package Management
-** Straight.el
-#+begin_src emacs-lisp
-(setq comp-deferred-compilation-deny-list ())
-(setq straight-vc-git-default-clone-depth 1)
-
-(setq straight-disable-native-compile
-      (when (fboundp 'native-comp-available-p)
-	(not (native-comp-available-p))))
-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-;; Always use straight to install on systems other than Linux
-(setq straight-use-package-by-default t)
-
-;; Use straight.el for use-package expressions
-(straight-use-package 'use-package)
-;; (setq use-package-verbose t)
-
-(if (daemonp)
-    (setq use-package-always-demand t))
-
-;; Load the helper package for commands like `straight-x-clean-unused-repos'
-(require 'straight-x)
-
-
-(setq package-enable-at-startup nil)
-#+end_src
-
 * Increase memory/garbage 
 Make Emacs/lsp more smooth
 #+begin_src emacs-lisp
@@ -71,44 +24,91 @@ Make Emacs/lsp more smooth
   )
 #+end_src
 
+* Native Compilation
+ #+begin_src emacs-lisp
+(setq comp-async-jobs-number 7
+      comp-deferred-compilation t
+	 comp-async-report-warnings-errors nil)
+(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+ #+end_src
+* Package Management
+** Straight.el
+#+begin_src emacs-lisp
+  (setq comp-deferred-compilation-deny-list ())
+  (setq straight-vc-git-default-clone-depth 1)
+
+  (setq straight-disable-native-compile
+	(when (fboundp 'native-comp-available-p)
+	  (not (native-comp-available-p))))
+
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
+  ;; Always use straight to install on systems other than Linux
+  ;; (setq straight-use-package-by-default t)
+
+  ;; Use straight.el for use-package expressions
+  (straight-use-package 'use-package)
+  ;; (setq use-package-verbose t)
+
+  (if (daemonp)
+      (setq use-package-always-demand t))
+
+  ;; Load the helper package for commands like `straight-x-clean-unused-repos'
+  (require 'straight-x)
+
+  (setq use-package-always-ensure t)
+
+
+  (setq package-enable-at-startup nil)
+#+end_src
+
 * Graphic Based Plugins Setting
 #+begin_src emacs-lisp
 (setq gui-only-plugins-setting ())
 (setq tui-only-plugins-setting ())
 #+end_src
 * Pathes
-** Exact Path on MacOs
+** Exact Path on Macos
  The package is help emacs to find exact path in the shell
 #+begin_src emacs-lisp
 ;; Find Executable Path on OS X
 (use-package exec-path-from-shell
   :init
   (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
-  )
+    (exec-path-from-shell-initialize)))
  #+end_src
 ** Update Load Path
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
 ;; Add my library path to load-path
-(push "~/.dotfiles/Emacs/emacs-configs/demacs/elisp" load-path)
 (push "~/.dotfiles/Emacs/elisp" load-path)
 (push "~/Documents/Org" load-path)
 #+end_src
 * Auto Doing something
 ** Stop Backup and "Auto-Save"
  Stop backup and auto-save (save as a backup) made by emacs
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
  ;; 关闭备份
  (setq make-backup-files nil
       auto-save-default nil)
  #+end_src
 ** Stop Auto-Change Vertical Scroll Size
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
  (setq auto-window-vscroll nil)
  #+end_src
 ** Auto-Reverting Changed Files
  auto allow the outside changes
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
  (global-auto-revert-mode 1)
  #+end_src
 ** Auto-Tangle emacs.org File
@@ -132,21 +132,11 @@ The package make emacs auto save the files
    :custom
    (super-save-auto-save-when-idle t)
    :config
-   (super-save-mode +1)
-   )
+   (super-save-mode +1))
  #+end_src
-** Midnight-Mode
-#+begin_src emacs-lisp
-(use-package midnight
-  :if (daemonp)
-  :config
-  (midnight-mode t)
-  (setq midnight-period 7200)
-  )
-#+end_src
 * UI Setup
 ** Hide Useless UI
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
  (setq inhibit-startup-message t)
 
  (scroll-bar-mode -1)        ; Disable visible scrollbar
@@ -160,7 +150,7 @@ The package make emacs auto save the files
  (setq ring-bell-function 'ignore)
  #+end_src
 ** Frame Transparency and Maximize Windows
- #+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/early-init.el
+ #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
  (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
  (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
@@ -187,41 +177,42 @@ The package make emacs auto save the files
  (defun dw/set-font-faces ()
    (message "Setting faces!")
    ;; set font
-   (set-face-attribute 'default nil :font "JetBrains Mono" :height 140)
+   (set-face-attribute 'default nil :font "Fira Code" :height 140)
 
    ;; Set the fixed pitch face
-   (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 140)
+   (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 140)
 
    ;; Set the variable pitch face
-   ;; (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
+   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
  #+end_src
 ** Fonts Ligature
 #+begin_src emacs-lisp
-(push '(use-package ligature
-	 :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
-	 :config
-	 ;; Enable the "www" ligature in every possible major mode
-	 (ligature-set-ligatures 't '("www"))
-	 ;; Enable traditional ligature support in eww-mode, if the
-	 ;; `variable-pitch' face supports it
-	 (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-	 ;; Enable all Cascadia Code ligatures in programming modes
-	 (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-					      ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-					      "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-					      "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-					      "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-					      "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-					      "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-					      "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-					      ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-					      "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-					      "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-					      "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-					      "\\\\" "://"))
-	 ;; Enables ligature checks globally in all buffers. You can also do it
-	 ;; per mode with `ligature-mode'.
-	 (global-ligature-mode t)) gui-only-plugins-setting)
+  (push '(use-package ligature
+	   :ensure nil
+	   :straight (ligature.el :type git :host github :repo "mickeynp/ligature.el")
+	   :config
+	   ;; Enable the "www" ligature in every possible major mode
+	   (ligature-set-ligatures 't '("www"))
+	   ;; Enable traditional ligature support in eww-mode, if the
+	   ;; `variable-pitch' face supports it
+	   (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+	   ;; Enable all Cascadia Code ligatures in programming modes
+	   (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+						":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+						"!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+						"<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+						"<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+						"..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+						"~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+						"[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+						">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+						"<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+						"##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+						"?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+						"\\\\" "://"))
+	   ;; Enables ligature checks globally in all buffers. You can also do it
+	   ;; per mode with `ligature-mode'.
+	   (global-ligature-mode t)) gui-only-plugins-setting)
 #+end_src
 ** Icons Support 
  #+begin_src emacs-lisp
@@ -235,11 +226,13 @@ The package make emacs auto save the files
    :config
    (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
    (doom-themes-treemacs-config)
- 
+
    ;; (doom-themes-org-config)
    )
+
+(load-theme 'doom-one t)
  #+end_src
-** Change Theme Based On System Appearance
+** COMMENT Change Theme Based On System Appearance
 #+begin_src emacs-lisp
 (if (not (display-graphic-p))
     (load-theme 'doom-one t))
@@ -334,9 +327,12 @@ The package make emacs auto save the files
 ** Smooth Scolling
 #+begin_src emacs-lisp
 (use-package smooth-scrolling
+  :disabled
   :defer t
   :config
   (smooth-scrolling-mode 1))
+
+(pixel-scroll-precision-mode 1)
 #+end_src
 * Buffer Management
 ** Perspective.el
@@ -379,33 +375,33 @@ The package make emacs auto save the files
 ** Edwina
 #+begin_src emacs-lisp
 (use-package edwina
-  :disabled
   :config
   (setq display-buffer-base-action '(display-buffer-below-selected))
+  (edwina-setup-dwm-keys)
   (edwina-mode 1))
 #+end_src
 * File Management
 ** Dired
  #+begin_src emacs-lisp
- (use-package dired
-    :straight nil
-    :commands (dired dired-jump)
-    :bind (("C-x C-j" . dired-jump))
-    )
- 
- (use-package dired-single
-   :commands (dired dired-jump))
- 
- (push '(use-package all-the-icons-dired
-          :hook (dired-mode . all-the-icons-dired-mode)) gui-only-plugins-setting)
- 
- (use-package dired-hide-dotfiles
-    :hook (dired-mode . dired-hide-dotfiles-mode)
-    )
- 
- (use-package diredfl
-    :hook (dired-mode . diredfl-mode)
-    )
+   (use-package dired
+     :ensure nil
+     :commands (dired dired-jump)
+     :bind (("C-x C-j" . dired-jump)))
+
+   (use-package dired-single
+     :commands (dired dired-jump))
+
+   (push '(use-package all-the-icons-dired
+	    :hook (dired-mode . all-the-icons-dired-mode)) gui-only-plugins-setting)
+
+   (use-package dired-hide-dotfiles
+      :hook (dired-mode . dired-hide-dotfiles-mode))
+
+   (use-package diredfl
+      :hook (dired-mode . diredfl-mode))
+
+   (use-package dired-posframe
+    :bind ("C-*" . dired-posframe-show))
  #+end_src
 * Keybinding Management
 ** Keybinding Panel (which-key)
@@ -459,10 +455,12 @@ folder, otherwise delete a word"
 #+end_src
 ** Preserve Minibuffer History with savehist-mode
 #+begin_src emacs-lisp
-(use-package savehist
-  :config
-  (setq history-length 25)
-  (savehist-mode 1))
+  (use-package savehist
+    :ensure nil
+    :straight t
+    :config
+    (setq history-length 25)
+    (savehist-mode 1))
 #+end_src
 ** Improved Candidate Filtering with Orderless
 #+begin_src emacs-lisp
@@ -512,17 +510,6 @@ folder, otherwise delete a word"
   (consult-project-root-function #'dw/get-project-root)
   (completion-in-region-function #'consult-completion-in-region))
 #+end_src
-** Color Rg
-  #+begin_src emacs-lisp
-  (use-package color-rg
-    :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
-    :commands (color-rg-search-input
-               color-rg-search-symbol
-               color-rg-search-input-in-project
-               color-rg-search-input-in-current-file
-               color-rg-search-project-with-typ)
-    )
-  #+end_src
 ** Embark
 #+begin_src emacs-lisp
 (use-package embark
@@ -586,10 +573,7 @@ folder, otherwise delete a word"
  
      ;; 不要自动创建备份文件
      (setq make-backup-files nil)
- 
-     (with-eval-after-load 'org-agenda
-       (require 'init-org-agenda))
- 
+  
      (with-eval-after-load "meow"
        (meow-leader-define-key
         '("a" . org-agenda))
@@ -756,8 +740,8 @@ folder, otherwise delete a word"
   )
 #+end_src
 ** Org Agenda
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/elisp/init-org-agenda.el
-(with-eval-after-load "org"
+#+begin_src emacs-lisp
+(with-eval-after-load "org-angenda"
   
   (setq planner-path "~/Documents/Org/Planner/")
 
@@ -986,7 +970,7 @@ folder, otherwise delete a word"
 * Editing
 ** Meow
 *** Qwerty Layout Setting
-#+begin_src emacs-lisp :tangle ~/.dotfiles/Emacs/emacs-configs/demacs/elisp/init-meow-qwerty.el
+#+begin_src emacs-lisp
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-overwrite-define-key
@@ -1100,18 +1084,17 @@ folder, otherwise delete a word"
   (meow-setup-line-number)
   ;;:bind ("" . meow-insert-exit)
   (add-to-list 'meow-mode-state-list '(inferior-emacs-lisp-mode . normal))
-  (add-to-list 'meow-mode-state-list '(org-agenda-mode . normal))
-  )
+  (add-to-list 'meow-mode-state-list '(org-agenda-mode . normal)))
 
 (meow-leader-define-key
+ '("SPC" . execute-extended-command)
  '("f" . find-file)
  '("b" . switch-to-buffer)
  '("qr" . quickrun)
  '("wo" . ace-window)
  '("wd" . ace-delete-window)
  '("wt" . treemacs-select-window)
- '("dd" . dap-debug)
-)
+ '("dd" . dap-debug))
 
 (require 'open-files)
 
@@ -1204,8 +1187,12 @@ This program can be used *WITHOUT* evil-mode!
  (push '(use-package company-box
           :hook (company-mode . company-box-mode)
           :config
-          (setq company-box-icons-alist 'company-box-icons-all-the-icons)
-          ) gui-only-plugins-setting)
+          (setq company-box-icons-alist 'company-box-icons-all-the-icons)) gui-only-plugins-setting)
+#+end_src
+** Company Quickhelo
+#+begin_src emacs-lisp
+(use-package company-quickhelp
+  :hook (company-mode . company-quickhelp-mode))
 #+end_src
 * Citre
 #+begin_src emacs-lisp
@@ -1351,8 +1338,7 @@ This program can be used *WITHOUT* evil-mode!
   (global-undo-tree-mode 1))
 #+end_src
 ** Lsp
-*** LSP Mode
-**** Main Setting
+*** Main Setting
   #+begin_src emacs-lisp 
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
@@ -1368,11 +1354,12 @@ This program can be used *WITHOUT* evil-mode!
     (lsp-idle-delay 0.500)
     (lsp-completion-provider :capf)
     :config
+    (setq lsp-use-plists t)
     (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
     (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css"))
     )
   #+end_src
-**** Lsp UI
+*** Lsp UI
   #+begin_src emacs-lisp
   (use-package lsp-ui
     :hook (lsp-mode . lsp-ui-mode)
@@ -1397,7 +1384,6 @@ This program can be used *WITHOUT* evil-mode!
 **** Pyright
   #+begin_src emacs-lisp
   (use-package lsp-pyright
-    :defer t
     ;; :after python-mode
     :hook (python-mode . (lambda ()
                             (require 'lsp-pyright)
@@ -1406,8 +1392,7 @@ This program can be used *WITHOUT* evil-mode!
 **** pyenv
   #+begin_src emacs-lisp
     (use-package pyenv-mode
-      :hook (python-mode . pyenv-mode)
-      )
+      :hook (python-mode . pyenv-mode))
     
     ;; auto activates the virtual environment if .python-version exists
     (use-package pyenv-mode-auto
@@ -1518,8 +1503,12 @@ This program can be used *WITHOUT* evil-mode!
 *** C/C++
 #+begin_src emacs-lisp
 (use-package ccls
-  :after (c-mode c++-mode)
-  )
+  :after (c-mode c++-mode))
+
+(use-package modern-cpp-font-lock
+  :hook (c++-mode . modern-c++-font-lock-mode))
+
+(use-package cmake-mode)
 #+end_src
 *** Java
 #+begin_src emacs-lisp
@@ -1536,7 +1525,7 @@ This program can be used *WITHOUT* evil-mode!
   #+end_src
 **** AucTex
 #+begin_src emacs-lisp
-(straight-use-package 'auctex)
+;; (straight-use-package 'auctex)
  #+end_src
 **** CDLaTex
   #+begin_src emacs-lisp
@@ -1547,6 +1536,14 @@ This program can be used *WITHOUT* evil-mode!
     (latex-mode . cdlatex-mode)
     )
   #+end_src
+**** Xenops
+#+begin_src emacs-lisp
+(use-package xenops
+  :hook ((latex-mode LaTeX-mode org-mode) . xenops-mode)
+  :config
+  (setq xenops-math-image-scale-factor 2.0) )
+
+#+end_src
 *** Swift
 #+begin_src emacs-lisp
 (use-package swift-mode
@@ -1571,6 +1568,11 @@ This program can be used *WITHOUT* evil-mode!
 #+begin_src emacs-lisp
 (use-package ess
   :mode "\\.R\\'")
+#+end_src
+*** Nix
+#+begin_src emacs-lisp
+(use-package nix-mode
+  :mode "\\.nix\\'")
 #+end_src
 
 ** Dap Debug Mode
@@ -1661,6 +1663,13 @@ brew install libtool libvterm
  '("tm" . multi-vterm)
  '("tp" . vterm-posframe-toggle)
  )
+#+end_src
+*** eshell
+#+begin_src emacs-lisp
+  (use-package aweshell
+    :ensure nil
+    :straight (aweshell.el :type git :host github :repo "manateelazycat/aweshell")
+    :commands (aweshell-new aweshell-dedicated-toggle)  )
 #+end_src
 ** Tmux
 *** Emamux
@@ -1766,6 +1775,11 @@ Clipetty is a minor mode for terminal (TTY) users that sends text that you kill 
     (use-package emacs-everywhere)
 )
 #+end_src
+** Wucuo
+#+begin_src emacs-lisp
+(use-package wucuo
+  :hook ((prog-mode text-mode) . #'wucuo-start))
+#+end_src
 * Pass
 ** pass-store.el
 #+begin_src emacs-lisp
@@ -1778,6 +1792,12 @@ Clipetty is a minor mode for terminal (TTY) users that sends text that you kill 
   :disabled
   :config
   (auth-source-pass-enable))
+#+end_src
+* Direnv
+#+begin_src emacs-lisp
+(use-package direnv
+  :config
+  (direnv-mode))
 #+end_src
 * Load Plugings Based On Graphic Setting
 #+begin_src emacs-lisp

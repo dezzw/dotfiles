@@ -35,7 +35,7 @@
   environment.systemPackages = with pkgs;[
     zsh 
     gcc 
-    git 
+    git
   ];
   programs.bash.enable = true;
 
@@ -57,6 +57,7 @@
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
+  services.emacs.enable = true;
 
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [
