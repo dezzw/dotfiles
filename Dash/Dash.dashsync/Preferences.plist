@@ -213,6 +213,11 @@
 				<key>date</key>
 				<date>2021-11-14T15:47:15Z</date>
 			</dict>
+			<key>http://kapeli.com/feeds/Lua_5.4.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2022-01-02T00:46:46Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/NodeJS.xml</key>
 			<dict>
 				<key>date</key>

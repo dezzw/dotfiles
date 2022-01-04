@@ -65,19 +65,17 @@
   programs.zsh = {
     enable = true;
     shellAliases = {
-      ls = "exa";
-      la = "exa -la";
+      ls = "exa -la";
       lt = "exa -laT";
-      pip = "pip3";
     };
     zplug = {
       enable = true;
       plugins = [
-        { name = "zsh-users/zsh-autosuggestions"; } # Simple plugin installation
+        { name = "zsh-users/zsh-autosuggestions"; }
 	      { name = "zsh-users/zsh-syntax-highlighting"; }
         # { name = "spwhitt/nix-zsh-completions"; }
 	      { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
-              { name = "marlonrichert/zsh-autocomplete";}
+        { name = "marlonrichert/zsh-autocomplete"; }
       ];
     };
     initExtra = ''

@@ -42,5 +42,7 @@
     universal-ctags
 
     ispell
+
+    nixfmt
   ];
 }

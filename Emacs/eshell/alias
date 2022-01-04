@@ -1,0 +1,3 @@
+alias ls exa -la $1
+alias lt exa -laT $1
+alias d dired

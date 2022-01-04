@@ -34,7 +34,6 @@ Make Emacs/lsp more smooth
 * Package Management
 ** Straight.el
 #+begin_src emacs-lisp
-  (setq comp-deferred-compilation-deny-list ())
   (setq straight-vc-git-default-clone-depth 1)
 
   (setq straight-disable-native-compile
@@ -63,9 +62,6 @@ Make Emacs/lsp more smooth
 
   (if (daemonp)
       (setq use-package-always-demand t))
-
-  ;; Load the helper package for commands like `straight-x-clean-unused-repos'
-  (require 'straight-x)
 
   (setq use-package-always-ensure t)
 
@@ -318,7 +314,7 @@ The package make emacs auto save the files
                   (dw/set-font-faces))
 		(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 		))
-  (add-hook 'ns-system-appearance-change-functions #'dw/apply-theme)
+  ;; (add-hook 'ns-system-appearance-change-functions #'dw/apply-theme)
   (if (display-graphic-p)
       (dw/set-font-faces)
     )
@@ -334,22 +330,20 @@ The package make emacs auto save the files
 
 (pixel-scroll-precision-mode 1)
 #+end_src
-* Buffer Management
+* Workspace
 ** Perspective.el
 #+begin_src emacs-lisp
-(if (not (daemonp))
-    (use-package perspective
-      :demand t
-      :bind (("C-M-k" . persp-switch)
-             ("C-M-n" . persp-next)
-             ("C-x k" . persp-kill-buffer*))
-      :custom
-      (persp-initial-frame-name "Main")
-      :config
-      ;; Running `persp-mode' multiple times resets the perspective list...
-      (unless (equal persp-mode t)
-	(persp-mode)))
-  )
+(use-package perspective
+  :demand t
+  :bind (("C-M-k" . persp-switch)
+         ("C-M-n" . persp-next)
+         ("C-x k" . persp-kill-buffer*))
+  :custom
+  (persp-initial-frame-name "Main")
+  :config
+  ;; Running `persp-mode' multiple times resets the perspective list...
+  (unless (equal persp-mode t)
+    (persp-mode)))
 #+end_src
 * Window Management
 ** Ace Window
@@ -375,6 +369,7 @@ The package make emacs auto save the files
 ** Edwina
 #+begin_src emacs-lisp
 (use-package edwina
+  :disabled
   :config
   (setq display-buffer-base-action '(display-buffer-below-selected))
   (edwina-setup-dwm-keys)
@@ -383,25 +378,25 @@ The package make emacs auto save the files
 * File Management
 ** Dired
  #+begin_src emacs-lisp
-   (use-package dired
-     :ensure nil
-     :commands (dired dired-jump)
-     :bind (("C-x C-j" . dired-jump)))
+ (use-package dired
+   :ensure nil
+   :commands (dired dired-jump)
+   :bind (("C-x C-j" . dired-jump)))
 
-   (use-package dired-single
-     :commands (dired dired-jump))
+ (use-package dired-single
+   :commands (dired dired-jump))
 
-   (push '(use-package all-the-icons-dired
-	    :hook (dired-mode . all-the-icons-dired-mode)) gui-only-plugins-setting)
+ (push '(use-package all-the-icons-dired
+          :hook (dired-mode . all-the-icons-dired-mode)) gui-only-plugins-setting)
 
-   (use-package dired-hide-dotfiles
-      :hook (dired-mode . dired-hide-dotfiles-mode))
+ (use-package dired-hide-dotfiles
+    :hook (dired-mode . dired-hide-dotfiles-mode))
 
-   (use-package diredfl
-      :hook (dired-mode . diredfl-mode))
+ (use-package diredfl
+    :hook (dired-mode . diredfl-mode))
 
-   (use-package dired-posframe
-    :bind ("C-*" . dired-posframe-show))
+ (use-package dired-posframe
+  :bind ("C-*" . dired-posframe-show))
  #+end_src
 * Keybinding Management
 ** Keybinding Panel (which-key)
@@ -470,20 +465,9 @@ folder, otherwise delete a word"
         completion-category-defaults nil
         completion-category-overrides '((file (styles . (partial-completion))))))
 #+end_src
-** Completion Annotations with Marginalia
-#+begin_src emacs-lisp
-(use-package marginalia
-  :after vertico
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init
-  (marginalia-mode))
-#+end_src
 ** Completions in Regions with Corfu
 #+begin_src emacs-lisp
 (use-package corfu
-  :straight '(corfu :host github
-                    :repo "minad/corfu")
   :bind (:map corfu-map
          ("C-j" . corfu-next)
          ("C-k" . corfu-previous)
@@ -509,21 +493,73 @@ folder, otherwise delete a word"
   :custom
   (consult-project-root-function #'dw/get-project-root)
   (completion-in-region-function #'consult-completion-in-region))
+
+(use-package consult-dir
+  :bind (("C-x C-d" . consult-dir)
+         :map vertico-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file))
+  :custom
+  (consult-dir-project-list-function nil))
+
+;; Thanks Karthik!
+(with-eval-after-load 'eshell-mode
+  (defun eshell/z (&optional regexp)
+    "Navigate to a previously visited directory in eshell."
+    (let ((eshell-dirs (delete-dups (mapcar 'abbreviate-file-name
+                                            (ring-elements eshell-last-dir-ring)))))
+      (cond
+       ((and (not regexp) (featurep 'consult-dir))
+        (let* ((consult-dir--source-eshell `(:name "Eshell"
+                                                   :narrow ?e
+                                                   :category file
+                                                   :face consult-file
+                                                   :items ,eshell-dirs))
+               (consult-dir-sources (cons consult-dir--source-eshell consult-dir-sources)))
+          (eshell/cd (substring-no-properties (consult-dir--pick "Switch directory: ")))))
+       (t (eshell/cd (if regexp (eshell-find-previous-directory regexp)
+                       (completing-read "cd: " eshell-dirs))))))))
+#+end_src
+** Completion Annotations with Marginalia
+#+begin_src emacs-lisp
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
 #+end_src
 ** Embark
 #+begin_src emacs-lisp
 (use-package embark
-  :bind (("C-S-a" . embark-act)
-         :map minibuffer-local-map
-         ("C-d" . embark-act))
-  :config
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+  
   ;; Show Embark actions via which-key
   (setq embark-action-indicator
         (lambda (map)
           (which-key--show-keymap "Embark" map nil nil 'no-paging)
           #'which-key--hide-popup-ignore-command)
         embark-become-indicator embark-action-indicator))
+
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 * Helpful function
 ** Helpful Function Description
@@ -741,27 +777,17 @@ folder, otherwise delete a word"
 #+end_src
 ** Org Agenda
 #+begin_src emacs-lisp
-(with-eval-after-load "org-angenda"
-  
+(with-eval-after-load "org"
   (setq planner-path "~/Documents/Org/Planner/")
 
-  (defun dw/update-planner-files ()
 
-    (setq planner-files (directory-files planner-path))
-    (setq planner-files (cdr planner-files))
-    (setq planner-files (cdr planner-files))
-    (setq planner-files (cdr planner-files))
-    
-    (let (value)
-      (while planner-files
-	(setq value (cons (concat planner-path (car planner-files)) value))
-	(setq planner-files (cdr planner-files))
-	)
-      value))
+  (defun dw/update-agenda-files()
+    (dolist (file (directory-files planner-path))
+      (when (string-match-p ".*\.org$" file)
+	(setq org-agenda-files (cons (concat planner-path file) org-agenda-files)))))
 
-  (setq org-agenda-files (dw/update-planner-files))
-
-
+  (dw/update-agenda-files)
+  
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -797,8 +823,8 @@ folder, otherwise delete a word"
 	  org-agenda-include-diary t
 	  org-agenda-time-leading-zero t
 	  org-agenda-span 1)
-  
-    
+
+
     (setq org-agenda-custom-commands
 	  '(("D" "Dashboard"
              ((agenda "" ((org-agenda-span 'day)
@@ -896,7 +922,7 @@ folder, otherwise delete a word"
 	    )
 	  )
     )
-  
+
 
   ;; Refiling
   (setq org-refile-targets
@@ -921,9 +947,6 @@ folder, otherwise delete a word"
   (add-to-list 'org-modules 'org-habit)
   (setq org-habit-graph-column 60)
   )
-
-
-(provide 'init-org-agenda)
 #+end_src
 * Markdown Mode
 ** Mardown Mode
@@ -1173,13 +1196,13 @@ This program can be used *WITHOUT* evil-mode!
    ;; (company-tng-configure-default)
    ;; (require 'company_init)
    )
- 
+
  ;;Completion based on AI 
  (use-package company-tabnine
    :after lsp
    :config
    (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
- 
+
  #+end_src
 ** Company Box
  #+begin_src emacs-lisp
@@ -1189,10 +1212,16 @@ This program can be used *WITHOUT* evil-mode!
           :config
           (setq company-box-icons-alist 'company-box-icons-all-the-icons)) gui-only-plugins-setting)
 #+end_src
-** Company Quickhelo
+** Company Quickhelp
 #+begin_src emacs-lisp
 (use-package company-quickhelp
   :hook (company-mode . company-quickhelp-mode))
+#+end_src
+** Company Statistics
+#+begin_src emacs-lisp
+ (use-package company-statistics
+   :config
+   (company-statistics-mode))
 #+end_src
 * Citre
 #+begin_src emacs-lisp
@@ -1259,19 +1288,17 @@ This program can be used *WITHOUT* evil-mode!
   (use-package indent-guide
     :disabled
     :hook (lsp-mode . indent-guide-mode))
-  
+
   (use-package highlight-indent-guides
     :hook ((prog-mode lsp-mode) . highlight-indent-guides-mode)
     :custom
     (highlight-indent-guides-delay 0)
-    (highlight-indent-guides-method 'character)
-    )
+    (highlight-indent-guides-method 'character))
   #+end_src
 *** aggressive-indent
 #+begin_src emacs-lisp
 (use-package aggressive-indent
-  :hook (prog-mode . aggressive-indent-mode)
-  )
+  :hook (prog-mode . aggressive-indent-mode))
 #+end_src
 *** Format All
   #+begin_src emacs-lisp
@@ -1356,8 +1383,7 @@ This program can be used *WITHOUT* evil-mode!
     :config
     (setq lsp-use-plists t)
     (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
-    (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css"))
-    )
+    (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css")))
   #+end_src
 *** Lsp UI
   #+begin_src emacs-lisp
@@ -1367,14 +1393,13 @@ This program can be used *WITHOUT* evil-mode!
     (lsp-ui-sideline-enable t)
     (lsp-ui-sideline-show-hover t)
     (lsp-ui-doc-position 'bottom)
-    (lsp-ui-imenu-auto-refresh t)
-    )
-  
+    (lsp-ui-imenu-auto-refresh t))
+
   (use-package lsp-ivy
     :disabled
     :after lsp
     :commands lsp-ivy-workspace-symbol)
-  
+
   (use-package lsp-treemacs
     :after lsp
     :commands lsp-treemacs-errors-list)
@@ -1569,12 +1594,6 @@ This program can be used *WITHOUT* evil-mode!
 (use-package ess
   :mode "\\.R\\'")
 #+end_src
-*** Nix
-#+begin_src emacs-lisp
-(use-package nix-mode
-  :mode "\\.nix\\'")
-#+end_src
-
 ** Dap Debug Mode
 #+begin_src emacs-lisp
 ;; dap debug tools
@@ -1600,9 +1619,6 @@ This program can be used *WITHOUT* evil-mode!
 ** Term/Shells
 *** Vterm
 Vitual Termianl
-#+begin_src shell
-brew install libtool libvterm
-#+end_src
 #+begin_src emacs-lisp
 ;; (use-package vterm
 ;;   :commands vterm
@@ -1664,12 +1680,27 @@ brew install libtool libvterm
  '("tp" . vterm-posframe-toggle)
  )
 #+end_src
+*** Aweshell
+#+begin_src emacs-lisp
+(use-package aweshell
+  :ensure nil
+  :straight (aweshell.el :type git :host github :repo "manateelazycat/aweshell")
+  :commands (aweshell-new aweshell-dedicated-toggle)
+  :init
+  (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/"
+        eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias")))
+
+(with-eval-after-load "meow"
+  (meow-leader-define-key
+   '("s" . aweshell-dedicated-toggle)))
+#+end_src
 *** eshell
 #+begin_src emacs-lisp
-  (use-package aweshell
-    :ensure nil
-    :straight (aweshell.el :type git :host github :repo "manateelazycat/aweshell")
-    :commands (aweshell-new aweshell-dedicated-toggle)  )
+(use-package eshell-vterm
+  :after (eshell aweshell)
+  :config
+  (eshell-vterm-mode)
+  (defalias 'eshell/v 'eshell-exec-visual))
 #+end_src
 ** Tmux
 *** Emamux
@@ -1714,21 +1745,38 @@ Highlight diff by using delta
   (leetcode-prefer-language "python3")
   (leetcode-prefer-sql "mysql")
   (leetcode-save-solutions t)
-  (leetcode-directory "~/Documents/leetcode")
-  )
+  (leetcode-directory "~/Documents/leetcode"))
 
 (defun start-leetcode()
     (interactive)
     (global-display-line-numbers-mode -1)
     (display-line-numbers-mode -1)
-    (leetcode)
-    )
+    (leetcode))
 
 (defun quit-leetcode()
   (interactive)
   (leetcode-quit)
-  (global-line-numebrs-mode t)
-  )
+  (global-line-numebrs-mode t))
+#+end_src
+* Nix
+** Nix Mode
+#+begin_src emacs-lisp
+(use-package nix-mode
+  :mode "\\.nix\\'")
+#+end_src
+** Nix Options
+#+begin_src emacs-lisp
+(use-package nixos-options
+  :after nix-mode)
+
+(use-package company-nixos-options
+  :after nix-mode
+  :config
+  (add-to-list 'company-backends 'company-nixos-options))
+#+end_src
+** Nix Sandbox
+#+begin_src emacs-lisp
+(use-package nix-sandbox)
 #+end_src
 * Utilities
 ** Clipboard managers
