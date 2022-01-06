@@ -173,10 +173,10 @@ The package make emacs auto save the files
  (defun dw/set-font-faces ()
    (message "Setting faces!")
    ;; set font
-   (set-face-attribute 'default nil :font "Fira Code" :height 140)
+   (set-face-attribute 'default nil :font "Victor Mono" :height 140)
 
    ;; Set the fixed pitch face
-   (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 140)
+   (set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height 140)
 
    ;; Set the variable pitch face
    (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 150 :weight 'regular))
@@ -1416,12 +1416,14 @@ This program can be used *WITHOUT* evil-mode!
   #+end_src
 **** pyenv
   #+begin_src emacs-lisp
-    (use-package pyenv-mode
-      :hook (python-mode . pyenv-mode))
-    
-    ;; auto activates the virtual environment if .python-version exists
-    (use-package pyenv-mode-auto
-      :after pyenv-mode)
+  (use-package pyenv-mode
+    :disabled
+    :hook (python-mode . pyenv-mode))
+
+  ;; auto activates the virtual environment if .python-version exists
+  (use-package pyenv-mode-auto
+    :disabled
+    :after pyenv-mode)
   #+end_src
 *** Web (HTML/CSS/JS...)
 **** JS/TS

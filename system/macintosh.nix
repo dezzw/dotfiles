@@ -57,7 +57,10 @@
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
-  services.emacs.enable = true;
+  services.emacs = {
+    enable = true;
+    package = pkgs.emacs;
+  };
 
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [
@@ -65,8 +68,11 @@
     roboto
     roboto-mono
     mononoki
-    emacs-all-the-icons-fonts
     font-awesome
     nerdfonts
+    victor-mono
+    fira-code
+    jetbrains-mono
+    emacs-all-the-icons-fonts
   ];
 }

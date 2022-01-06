@@ -25,6 +25,9 @@
     ripgrep
     aria
 
+    # Assembly Language
+    nasm
+    
     # tex
     texlive.combined.scheme-full
 

@@ -11,14 +11,9 @@
   homebrew.taps = [
     "homebrew/core"
     "homebrew/cask"
-    "homebrew/cask-fonts"
   ];
 
   homebrew.casks = [
-    # fonts
-    "font-fira-code"
-    "font-hack-nerd-font"
-    "font-jetbrains-mono"
 
     # Applications
     "alfred"

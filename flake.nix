@@ -3,7 +3,7 @@
 
   inputs = {
     nixos.url = "github:NixOS/nixpkgs/nixos-21.11";
-    nixpkgs.url = "github:Nixos/nixpkgs/master";
+    nixpkgs.url = "github:Nixos/nixpkgs/nixpkgs-unstable";
     darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +33,7 @@
           ./home/home.nix
           ./modules/emacs.nix
           ./modules/nvim.nix
+          ./modules/tmux.nix
         ];
       };
       
