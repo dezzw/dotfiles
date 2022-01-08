@@ -1,23 +1,31 @@
 {pkgs, ...}:
 
 {
-  programs.emacs.enable = true;
-
-  programs.emacs.package =
-    (
+  programs.emacs = {
+    enable = true;
+    package = (
       pkgs.emacsWithPackagesFromUsePackage {
         alwaysEnsure = true;
         alwaysTangle = true;
 
         # Custom overlay derived from 'emacs' flake input
         package = pkgs.emacs;
-        config = ../Emacs/demacs-darwin.org;
+        config = ../Emacs/demacs.org;
 
         extraEmacsPackages = epkgs: with epkgs;[
-
+          use-package
+          doom-themes
+          doom-modeline
+          dashboard
+          page-break-lines
+          exec-path-from-shell
+          auctex
+          posframe
         ];
       }
     );
+  };
+
 
   home.file.".emacs-profiles.el".text = ''
       (("default" . ((user-emacs-directory . "~/.dotfiles/Emacs/emacs-configs/demacs")))
@@ -32,10 +40,15 @@
     # Language Server
     ccls
 
+    nodePackages.pyright
     nodePackages.typescript-language-server
     nodePackages.bash-language-server
     nodePackages.vscode-css-languageserver-bin
     nodePackages.vscode-html-languageserver-bin
+
+
+    python39Packages.pylint
+    nodePackages.eslint
 
     rnix-lsp
     
@@ -43,6 +56,6 @@
 
     ispell
 
-    nixfmt
+    nixpkgs-fmt
   ];
 }

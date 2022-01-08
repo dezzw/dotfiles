@@ -1,0 +1,1359 @@
+#+TITLE: DEmacs Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
+* Some improve in early-init
+#+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
+(setq gc-cons-threshold most-positive-fixnum)
+
+;; Copy from https://github.com/willbush/system/blob/master/emacs/early-init.el
+(defconst IS-MAC     (eq system-type 'darwin))
+(defconst IS-LINUX   (eq system-type 'gnu/linux))
+;; Doom currently uses 16 MiB and Spacemacs is using 100 MB. I'm going to try 64
+;; MiB to see how it goes.
+(defconst GC-CONS-THRESHOLD 67108860)
+
+
+;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+(global-auto-revert-mode 1)
+
+(setq ring-bell-function 'ignore)
+
+;; Set default font
+(set-face-attribute 'default nil
+		    :family "Operator Mono"
+		    :height 160
+		    :weight 'normal
+		    :width 'normal)
+
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil
+		    :family "Operator Mono"
+		    :height 160
+		    :weight 'normal
+		    :width 'normal)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil
+		    :family "Cantarell"
+		    :height 160
+		    :weight 'regular)
+
+
+;; Resizing the Emacs frame can be a terribly expensive part of changing the
+;; font. By inhibiting this, we easily halve startup times with fonts that are
+;; larger than the system default.
+(setq frame-inhibit-implied-resize t)
+
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(setq package-enable-at-startup nil)
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+
+(eval-when-compile
+  (require 'use-package))
+
+;; Set `doom-themes' early to prevent non-stylized UI flash.
+(use-package doom-themes
+  :config
+  ;; Apply `doom-theme'
+  (load-theme 'doom-one t))
+
+;; Set `doom-modeline' early to prevent non-stylized UI flash.
+;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
+(use-package doom-modeline
+  :config
+  (setq doom-modeline-icon nil ;; icons' position does not work properly
+	;; doom-modeline-major-mode-icon nil
+	;; doom-modeline-lsp nil
+	;; doom-modeline-buffer-file-name-style 'truncate-upto-root 
+	doom-modeline-buffer-file-name-style 'relative-from-project
+	doom-modeline-buffer-encoding 'nondefault)
+  (size-indication-mode 1)
+  (column-number-mode 1)
+  (doom-modeline-mode 1))
+
+;; A dependency that dashboard has.
+(use-package page-break-lines)
+
+(use-package dashboard
+  :init
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  :config
+  (setq dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt"
+	dashboard-banner-logo-title nil
+	dashboard-center-content t
+	dashboard-set-heading-icons t
+	dashboard-set-init-info t
+	dashboard-set-file-icons t
+	dashboard-items '((recents  . 5)
+			  (projects . 5)))
+  (dashboard-setup-startup-hook))
+
+(use-package posframe)
+
+(use-package exec-path-from-shell
+  :init
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
+
+(unless (string> emacs-version "29")
+  (pixel-scroll-precision-mode 1))
+
+#+end_src
+
+* Startup Setting 
+#+begin_src emacs-lisp
+  ;; Copy from https://github.com/willbush/system/blob/master/emacs/init.el
+  ;; A big contributor to startup times is garbage collection. We up the gc
+  ;; threshold to temporarily prevent it from running, then reset it later using a
+  ;; hook and controlling after that with `gcmh-mode'.
+  (setq gc-cons-threshold most-positive-fixnum
+	gc-cons-percentage 0.6)
+
+  ;; Keep a ref to the actual file-name-handler
+  (defvar default-file-name-handler-alist file-name-handler-alist)
+
+  ;; Set the file-name-handler to nil (because regexing is cpu intensive)
+  (setq file-name-handler-alist nil)
+
+  ;; Reset file-name-handler-alist after initialization
+  (add-hook 'emacs-startup-hook
+	    (lambda ()
+	      (setq gc-cons-threshold GC-CONS-THRESHOLD
+		    gc-cons-percentage 0.1
+		    file-name-handler-alist default-file-name-handler-alist)))
+
+  (use-package gcmh
+    :hook (after-init . gcmh-mode)
+    :commands gcmh-idle-garbage-collect
+    :config
+    (setq gcmh-idle-delay 5
+	  gcmh-high-cons-threshold GC-CONS-THRESHOLD)
+    (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+#+end_src
+* Auto-Tangle emacs.org File
+Tangle (form a new file) on save
+#+begin_src emacs-lisp
+  ;; Since we don't want to disable org-confirm-babel-evaluate all
+  ;; of the time, do it around the after-save-hook
+  (defun dw/org-babel-tangle-dont-ask ()
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle)))
+
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'dw/org-babel-tangle-dont-ask
+						'run-at-end 'only-in-org-mode)))
+#+end_src
+* Workspace
+** Perspective.el
+#+begin_src emacs-lisp
+  (use-package perspective
+    :demand t
+    :bind (("C-M-k" . persp-switch)
+	   ("C-M-n" . persp-next)
+	   ("C-x k" . persp-kill-buffer*))
+    :custom
+    (persp-initial-frame-name "Main")
+    :config
+    ;; Running `persp-mode' multiple times resets the perspective list...
+    (unless (equal persp-mode t)
+      (persp-mode)))
+#+end_src
+* Window Management
+** Ace Window
+Use =C-x o= to active =ace-window= to swap the windows (less than two windows), or using following arguments (more than two):
+- =x= - delete window
+- =m= - swap windows
+- =M= - move window
+- =c= - copy window
+- =j= - select buffer
+- =n= - select the previous window
+- =u= - select buffer in the other window
+- =c= - split window fairly, either vertically or horizontally
+- =v= - split window vertically
+- =b= - split window horizontally
+- =o= - maximize current window
+- =?= - show these command bindings
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :bind ("C-x o" . ace-window)
+    :custom
+    (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+#+end_src
+** Edwina
+#+begin_src emacs-lisp
+  (use-package edwina
+    :disabled
+    :config
+    (setq display-buffer-base-action '(display-buffer-below-selected))
+    (edwina-setup-dwm-keys)
+    (edwina-mode 1))
+#+end_src
+* File Management
+** Dired
+#+begin_src emacs-lisp
+  (use-package dired
+    :ensure nil
+    :commands (dired dired-jump)
+    :bind (("C-x C-j" . dired-jump)))
+
+  (use-package dired-single
+    :commands (dired dired-jump))
+
+  (use-package all-the-icons-dired
+    :hook (dired-mode . all-the-icons-dired-mode))
+
+  (use-package dired-hide-dotfiles
+    :hook (dired-mode . dired-hide-dotfiles-mode))
+
+  (use-package diredfl
+    :hook (dired-mode . diredfl-mode))
+
+  (use-package dired-posframe
+    :bind ("C-*" . dired-posframe-show))
+#+end_src
+* Keybinding Management
+** Keybinding Panel (which-key)
+#+begin_src emacs-lisp
+  (use-package which-key
+    :diminish which-key-mode
+    :config
+    (which-key-mode)
+    (setq which-key-idle-delay 0.3))
+#+end_src
+* Meow
+*** Qwerty Layout Setting
+#+begin_src emacs-lisp
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . meow-motion-origin-command)
+     '("k" . meow-motion-origin-command)
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("C" . meow-change-save)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("F" . meow-find-expand)
+     '("g" . meow-cancel)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("N" . meow-pop-search)
+     '("o" . meow-block)
+     '("O" . meow-block-expand)
+     '("p" . meow-yank)
+     '("P" . meow-yank-pop)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("T" . meow-till-expand)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("V" . meow-kmacro-matches)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-kmacro-lines)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("Z" . meow-pop-all-selection)
+     '("&" . meow-query-replace)
+     '("%" . meow-query-replace-regexp)
+     '("'" . repeat)
+     '("\\" . quoted-insert)
+     '("<escape>" . meow-last-buffer)))
+
+#+end_src
+*** Main Setting
+#+begin_src emacs-lisp
+  ;; For Qwerty
+
+  (use-package meow
+    :demand t
+    :config
+    (meow-global-mode 1)
+    ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
+    (meow-setup)
+    ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
+    (meow-setup-line-number)
+    ;;:bind ("" . meow-insert-exit)
+    (add-to-list 'meow-mode-state-list '(inferior-emacs-lisp-mode . normal))
+    (add-to-list 'meow-mode-state-list '(org-agenda-mode . normal)))
+
+  (meow-leader-define-key
+   '("SPC" . execute-extended-command)
+   '("f" . find-file)
+   '("b" . switch-to-buffer)
+   '("qr" . quickrun)
+   '("wo" . ace-window)
+   '("wd" . ace-delete-window)
+   '("wt" . treemacs-select-window)
+   '("dd" . dap-debug))
+
+  (meow-motion-overwrite-define-key
+   '("h" . dired-single-up-directory)
+   '("l" . dired-single-buffer))
+#+end_src
+* Org Mode
+** Config Basic Org mode
+#+begin_src emacs-lisp
+(defun dw/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(use-package org
+  :hook (org-mode . dw/org-mode-setup)
+  :config
+  (setq org-html-head-include-default-style nil)
+  (setq org-ellipsis " ▾"
+	org-adapt-indentation t
+	org-hide-emphasis-markers t
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t
+	org-edit-src-content-indentation 0
+	org-hide-block-startup nil
+	org-src-preserve-indentation nil
+	org-startup-folded 'content
+	org-cycle-separator-lines 2)
+
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+
+  (setq org-html-htmlize-output-type nil)
+
+  ;; config for images in org
+  (auto-image-file-mode t)
+  (setq org-image-actual-width nil)
+  ;; default image width
+  (setq org-image-actual-width '(300))
+
+  (setq org-export-with-sub-superscripts nil)
+
+  ;; 不要自动创建备份文件
+  (setq make-backup-files nil)
+
+  (with-eval-after-load "meow"
+    (meow-leader-define-key
+     '("a" . org-agenda))
+    )
+  )
+#+end_src
+** Apperance of Org
+*** Bullets
+#+begin_src emacs-lisp
+  ;; change bullets for headings
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+#+end_src
+*** Fonts
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org
+    ;; Make sure org faces is available
+    (require 'org-faces)
+    ;; Make sure org-indent face is available
+    (require 'org-indent)
+    ;; Set Size and Fonts for Headings
+    (dolist (face '((org-level-1 . 1.2)
+		    (org-level-2 . 1.1)
+		    (org-level-3 . 1.05)
+		    (org-level-4 . 1.0)
+		    (org-level-5 . 1.0)
+		    (org-level-6 . 1.0)
+		    (org-level-7 . 1.0)
+		    (org-level-8 . 1.0)))
+      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+    )
+#+end_src
+*** Set Margins for Modes
+#+begin_src emacs-lisp
+(use-package visual-fill-column
+  :hook (org-mode . visual-fill-column-mode)
+  :custom
+  (visual-fill-column-width 150)
+  (visual-fill-column-center-text t))
+  
+#+end_src
+*** Properly Align Tables
+#+begin_src emacs-lisp
+  (use-package valign
+    :hook (org-mode . valign-mode))
+#+end_src
+*** Auto-show Markup Symbols
+#+begin_src emacs-lisp
+  (use-package org-appear
+    :hook (org-mode . org-appear-mode))
+#+end_src
+** Org Export
+#+begin_src emacs-lisp
+  (with-eval-after-load "org-export-dispatch"
+    ;; Edited from http://emacs.stackexchange.com/a/9838
+    (defun dw/org-html-wrap-blocks-in-code (src backend info)
+      "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
+      (when (org-export-derived-backend-p backend 'html)
+	(replace-regexp-in-string
+	 "\\(</pre>\\)" "</code>\n\\1"
+	 (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
+				   "<pre>\n<code class=\"\\1\">" src))))
+
+    (require 'ox-html)
+
+    (add-to-list 'org-export-filter-src-block-functions
+		 'dw/org-html-wrap-blocks-in-code)
+    )
+#+end_src
+** Org Babel
+*** Load Org Babel
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (with-eval-after-load "ob"
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((emacs-lisp . t)
+	 (java . t)
+	 (C . t)
+	 (js . t)
+	 (python . t)
+	 (R .t))))
+
+    (setq org-confirm-babel-evaluate nil))
+#+end_src
+*** Src Block Templates
+#+begin_src emacs-lisp
+  ;; This is needed as of Org 9.2
+  (with-eval-after-load "org"
+    (require 'org-tempo)
+
+    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("java" . "src java"))
+    (add-to-list 'org-structure-template-alist '("srcc" . "src C"))
+    (add-to-list 'org-structure-template-alist '("cpp" . "src cpp"))
+    (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+    (add-to-list 'org-structure-template-alist '("js" . "src js"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
+    (add-to-list 'org-structure-template-alist '("r" . "src R")))
+#+end_src
+** Org download
+#+begin_src emacs-lisp
+  (use-package org-download
+    :disabled
+    ;;将截屏功能绑定到快捷键：Ctrl + Shift + Y
+    :bind ("C-S-y" . org-download-screenshot)
+    :config
+    (require 'org-download)
+    ;; Drag and drop to Dired
+    (add-hook 'dired-mode-hook 'org-download-enable))
+#+end_src
+** Org Roam
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :init
+    (setq org-roam-v2-ack t)
+    :custom
+    (org-roam-directory "~/Documents/Org/Notes")
+    (org-roam-completion-everywhere t)
+    (org-roam-completion-system 'default)
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+	   ("C-c n f" . org-roam-node-find)
+	   ("C-c n g" . org-roam-graph)
+	   ("C-c n i" . org-roam-node-insert)
+	   ("C-c n c" . org-roam-capture)
+	   ;; Dailies
+	   ("C-c n j" . org-roam-dailies-capture-today)
+	   :map org-mode-map
+	   ("C-M-i" . completion-at-point)
+	   )
+    :config
+    (org-roam-db-autosync-mode)
+    ;; (org-roam-setup)
+    (require 'org-roam-protocol))
+#+end_src
+** Org Agenda
+#+begin_src emacs-lisp
+(with-eval-after-load "org-agenda"
+  (setq planner-path "~/Documents/Org/Planner/")
+
+
+  (defun dw/update-agenda-files()
+    (dolist (file (directory-files planner-path))
+      (when (string-match-p ".*\.org$" file)
+	(setq org-agenda-files (cons (concat planner-path file) org-agenda-files)))))
+
+  (dw/update-agenda-files)
+
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+
+  ;; Custom TODO states and Agendas
+  (setq org-todo-keywords
+	'((sequence "TODO(t)" "NEXT(n)" "TBA(b)" "|" "DONE(d!)")
+	  ))
+
+  (setq org-tag-alist
+	'((:startgroup)
+	  ;; Put mutually exclusive tags here
+	  (:endgroup)
+	  ("review" . ?r)
+	  ("assignment" . ?a)
+	  ("test" . ?t)
+	  ("quiz" . ?q)
+	  ("final" . ?f)
+	  ("pratice" . ?p)
+	  ("emacs" . ?e)
+	  ("note" . ?n)
+	  ("idea" . ?i)))
+
+
+  (use-package org-super-agenda
+    :hook (org-agenda-mode . org-super-agenda-mode)
+    :init
+    (setq org-agenda-skip-scheduled-if-done t
+	  org-agenda-skip-deadline-if-done t
+	  org-agenda-compact-blocks t
+	  org-agenda-start-with-log-mode t
+	  org-agenda-start-day "+0d"
+	  org-agenda-include-diary t
+	  org-agenda-time-leading-zero t
+	  org-agenda-span 1)
+
+
+    (setq org-agenda-custom-commands
+	  '(("D" "Dashboard"
+	     ((agenda "" ((org-agenda-span 'day)
+
+			  (org-super-agenda-groups
+			   '((:name "Today"
+				    :time-grid t
+				    :date today
+				    :scheduled today
+				    :order 1)))))
+	      (alltodo "" ((org-agenda-overriding-header "")
+			   (org-super-agenda-groups
+			    '((:name "Next to do"
+				     :todo "NEXT"
+				     :order 1)
+			      (:name "Important"
+				     :priority "A"
+				     :order 6)
+			      (:name "Due Today"
+				     :deadline today
+				     :order 2)
+			      (:name "Due Soon"
+				     :deadline future
+				     :order 8)
+			      (:name "Overdue"
+				     :deadline past
+				     :order 7)
+			      (:name "Assignments"
+				     :tag "assignment"
+				     :order 10)
+			      (:name "Tests/Quiz"
+				     :tag ("test" "quiz")
+				     :order 10)
+			      (:name "Final Exam"
+				     :tag "final"
+				     :order  9)
+			      (:name "Projects"
+				     :tag "Project"
+				     :order 14)
+			      (:name "Emacs"
+				     :tag "Emacs"
+				     :order 13)
+			      (:name "To read"
+				     :tag "Read"
+				     :order 30)
+			      (:name "trivial"
+				     :priority<= "C"
+				     :tag ("Trivial" "Unimportant")
+				     :todo ("SOMEDAY" )
+				     :order 90)
+			      ))))))
+	    ("A" "Assignments"
+	     ((agenda "" ((org-agenda-span 'day)
+			  (org-super-agenda-groups
+			   '((:name "Today"
+				    :time-grid t
+				    :and (:tag "assignment" :deadline today)
+				    )
+			     (:discard (:anything t))))))
+	      (tags "assignment" ((org-agenda-overriding-header "")
+				  (org-super-agenda-groups
+				   '((:name "Due Today"
+					    :and (:tag "assignment" :deadline today)
+					    )
+				     (:name "Next to do"
+					    :and (:todo "NEXT" :tag "assignment")
+					    :order 2)
+				     (:name "Due Soon"
+					    :and (:tag "assignment" :deadline future)
+					    :order 3)
+				     (:name "Overdue"
+					    :and (:tag "assignment" :deadline past)
+					    :order 99)
+				     (:discard (:anything t))))))))
+	    ("T" "Tests/Quiz"
+	     ((agenda "" ((org-agenda-span 'day)
+			  (org-agenda-include-deadlines nil)
+			  (org-super-agenda-groups
+			   '((:name "Today"
+				    :and (:scheduled today :tag "test")
+				    :time-grid t)
+			     (:discard (:anything t))))))
+	      (tags "\\(?:final\\|quiz\\|test\\)" ((org-agenda-overriding-header "")
+						   (org-super-agenda-groups
+						    '((:name "Tests"
+							     :and (:tag "test" :scheduled future)
+							     )
+						      (:name "Quiz"
+							     :and (:tag "quiz" :scheduled future)
+							     )
+						      (:name "Final Exam"
+							     :and (:tag "final" :scheduled future)
+							     )
+						      (:discard (:anything t))))))))
+	    )
+	  )
+    )
+
+
+  ;; Refiling
+  (setq org-refile-targets
+	'(("~/Documents/Org/Planner/Archive.org" :maxlevel . 1)))
+
+  ;; Save Org buffers after refiling!
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  ;; Capture Templates
+  (defun dw/read-file-as-string (path)
+    (with-temp-buffer
+      (insert-file-contents path)
+      (buffer-string)))
+
+  (setq org-capture-templates
+	`(("t" "Tasks / Projects")
+	  ("tt" "Task" entry (file+olp "~/Documents/Org/Planner/Tasks.org" "Inbox")
+	   "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)))
+
+  ;; Habit Tracking
+  (require 'org-habit)
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-graph-column 60))
+#+end_src
+* Markdown Mode
+** Mardown Mode
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode ("README\\.md\\'" . gfm-mode)
+    :init (setq markdown-command "multimarkdown"))
+#+end_src
+** Edit Code Block
+#+begin_src emacs-lisp
+  (use-package edit-indirect
+    :commands markdown-edit-code-block)
+#+end_src
+
+* Projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :diminish projectile-mode
+    :defer 1
+    :config (projectile-mode)
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    (when (file-directory-p "~/Documents/Projects/Code")
+      (setq projectile-project-search-path '("~/Documents/Projects/Code")))
+    (setq projectile-switch-project-action #'projectile-dired))
+#+end_src
+* Completion System
+** Company
+*** Company Mode
+#+begin_src emacs-lisp
+  (use-package company 
+    :hook ((lsp-mode prog-mode conf-mode) . company-mode)
+    :custom
+    (company-tooltip-align-annotations t)
+    ;; ;; Number the candidates (use M-1, M-2 etc to select completions)
+    (company-show-numbers t)
+    ;; ;; starts with 1 character
+    (company-minimum-prefix-length 1)
+    ;; ;; Trigger completion immediately
+    (company-idle-delay 0.2)
+    ;; ;; Back to top when reach the end
+    (company-selection-wrap-around t)
+    :config
+    ;; Use tab key to cycle through suggestions.
+    ;; ('tng' means 'tab and go')
+    ;; (company-tng-configure-default)
+    ;; (require 'company_init)
+    )
+
+  ;;Completion based on AI 
+  (use-package company-tabnine
+    :after lsp
+    :config
+    (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends))
+
+#+end_src
+*** Company Box
+#+begin_src emacs-lisp
+  ;; Add UI for Company
+  (use-package company-box
+    :hook (company-mode . company-box-mode)
+    :config
+    (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+#+end_src
+*** Company Quickhelp
+#+begin_src emacs-lisp
+  (use-package company-quickhelp
+    :hook (company-mode . company-quickhelp-mode))
+#+end_src
+*** Company Statistics
+#+begin_src emacs-lisp
+  (use-package company-statistics
+    :config
+    (company-statistics-mode))
+#+end_src
+** Vertico
+#+begin_src emacs-lisp
+  (use-package vertico
+    :custom
+    (vertico-cycle t)
+    :config
+    (vertico-mode))
+#+end_src
+** Preserve Minibuffer History with savehist-mode
+#+begin_src emacs-lisp
+  (use-package savehist
+    :ensure nil
+    :straight t
+    :config
+    (setq history-length 25)
+    (savehist-mode 1))
+#+end_src
+** Improved Candidate Filtering with Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :init
+    (setq completion-styles '(orderless)
+	  completion-category-defaults nil
+	  completion-category-overrides '((file (styles . (partial-completion))))))
+#+end_src
+** Completions in Regions with Corfu
+#+begin_src emacs-lisp
+  (use-package corfu
+    :bind (:map corfu-map
+		("C-j" . corfu-next)
+		("C-k" . corfu-previous)
+		("C-f" . corfu-insert))
+    :custom
+    (corfu-cycle t)
+    :config
+    (corfu-global-mode))
+#+end_src
+** Consult Commands
+#+begin_src emacs-lisp
+  (defun dw/get-project-root ()
+    (when (fboundp 'projectile-project-root)
+      (projectile-project-root)))
+
+  (use-package consult
+    :demand t
+    :bind (("C-s" . consult-line)
+	   ("C-M-l" . consult-imenu)
+	   ("C-M-j" . persp-switch-to-buffer*)
+	   :map minibuffer-local-map
+	   ("C-r" . consult-history))
+    :custom
+    (consult-project-root-function #'dw/get-project-root)
+    (completion-in-region-function #'consult-completion-in-region))
+
+  (use-package consult-dir
+    :bind (("C-x C-d" . consult-dir)
+	   :map vertico-map
+	   ("C-x C-d" . consult-dir)
+	   ("C-x C-j" . consult-dir-jump-file))
+    :custom
+    (consult-dir-project-list-function nil))
+#+end_src
+** Completion Annotations with Marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :after vertico
+    :config
+    (marginalia-mode))
+#+end_src
+** Embark
+#+begin_src emacs-lisp
+  (use-package embark
+    :bind
+    (("C-." . embark-act)         ;; pick some comfortable binding
+     ("C-;" . embark-dwim)        ;; good alternative: M-.
+     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+    :init
+    ;; Optionally replace the key help with a completing-read interface
+    (setq prefix-help-command #'embark-prefix-help-command)
+    :config
+    ;; Hide the mode line of the Embark live/completions buffers
+    (add-to-list 'display-buffer-alist
+		 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+		   nil
+		   (window-parameters (mode-line-format . none)))))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :after (embark consult)
+    :demand t ; only necessary if you have the hook below
+    ;; if you want to have consult previews as you move around an
+    ;; auto-updating embark collect buffer
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
+** Citre
+#+begin_src emacs-lisp
+  (defun dw/get-project-root ()
+    (when (fboundp 'projectile-project-root)
+      (projectile-project-root)))
+
+  (use-package citre
+    :commands (citre-jump citre-ace-peek)
+    :init
+    ;; This is needed in `:init' block for lazy load to work.
+    (require 'citre-config)
+    ;; Bind your frequently used commands.
+    :bind (("C-x c j" . 'citre-jump)
+	   ("C-x c J" . 'citre-jump-back)
+	   ("C-x c p" .  'citre-ace-peek))
+    :custom
+    ;; Set this if you use project management plugin like projectile.  It's
+    ;; only used to display paths relatively, and doesn't affect actual use.
+    (citre-project-root-function #'dw/get-project-root)
+    (citre-use-project-root-when-creating-tags t)
+    (citre-prompt-language-for-ctags-command t)
+    (citre-auto-enable-citre-mode-modes '(prog-mode))
+    )
+#+end_src
+
+* Helpful Function Description
+#+begin_src emacs-lisp
+  (use-package helpful
+    :commands (helpful-callable helpful-variable helpful-command helpful-key)
+    :bind
+    ([remap describe-function] . helpful-function)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-variable] . helpful-variable)
+    ([remap describe-key] . helpful-key))
+#+end_src
+ 
+* Languages
+** Python
+#+begin_src emacs-lisp
+  (use-package lsp-pyright
+    :hook (python-mode . (lambda ()
+			   (require 'lsp-pyright)
+			   (lsp-deferred))))
+#+end_src
+** Web (HTML/CSS/JS...)
+*** JS/TS
+#+begin_src emacs-lisp
+  (use-package nvm
+    :after (typescript-mode js2-mode))
+
+  (use-package typescript-mode
+    :mode "\\.ts\\'"
+    :config
+    (setq typescript-indent-level 2))
+
+  (defun dw/set-js-indentation ()
+    (setq js-indent-level 2)
+    (setq-default tab-width 2))
+
+  (use-package js2-mode
+    :mode "\\.m?js\\'"
+    :config
+    ;; Don't use built-in syntax checking
+    (setq js2-mode-show-strict-warnings nil)
+    ;; Set up proper indentation in JavaScript
+    (add-hook 'js2-mode-hook #'dw/set-js-indentation))
+
+  (use-package rjsx-mode
+    :mode "\\.jsx\\'")
+
+#+end_src
+*** CoffeeScript
+#+begin_src emacs-lisp
+  (use-package coffee-mode
+    :mode "\\.coffee\\'"
+    :config
+    ;; automatically clean up bad whitespace
+    (setq whitespace-action '(auto-cleanup))
+    ;; This gives you a tab of 2 spaces
+    (custom-set-variables '(coffee-tab-width 2))
+  
+    (use-package sourcemap)
+    ;; generating sourcemap by '-m' option. And you must set '--no-header' option
+    (setq coffee-args-compile '("-c" "--no-header" "-m"))
+    (add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
+
+    ;; If you want to remove sourcemap file after jumping corresponding point
+    (defun my/coffee-after-compile-hook (props)
+      (sourcemap-goto-corresponding-point props)
+      (delete-file (plist-get props :sourcemap)))
+    (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook)
+    )
+
+  (use-package flymake-coffee
+    :hook (coffee-mode . flymake-coffee))
+#+end_src
+*** HTML
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :mode "\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
+
+  ;; Preview the html file
+  (use-package skewer-mode
+    :after web-mode
+    :config
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode)
+    (add-hook 'web-mode-hook 'skewer-html-mode))
+#+end_src
+*** Emmet
+#+begin_src emacs-lisp
+  (use-package emmet-mode
+    :hook (web-mode . emmet-mode))
+#+end_src
+*** SCSS/SASS
+#+begin_src emacs-lisp
+  (use-package scss-mode
+    :mode "\\.scss\\'"
+    :custom
+    (scss-compile-at-save t)
+    (scss-output-directory "../css")
+    (scss-sass-command "sass --no-source-map"))
+
+#+end_src
+** Json
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :mode "\\.json\\'"
+    :config
+    ;; Set up proper indentation in JSON
+    (add-hook 'json-mode-hook #'dw/set-js-indentation))
+#+end_src
+** C/C++
+#+begin_src emacs-lisp
+  (use-package ccls
+    :after (c-mode c++-mode))
+
+  (use-package modern-cpp-font-lock
+    :hook (c++-mode . modern-c++-font-lock-mode))
+
+  (use-package cmake-mode)
+#+end_src
+** Java
+#+begin_src emacs-lisp
+  (use-package lsp-java
+    :hook (java-mode . lsp-deferred))
+#+end_src
+** Latex
+*** CDLaTex
+#+begin_src emacs-lisp
+  (use-package cdlatex
+    :hook 
+    (org-mode . org-cdlatex-mode)
+    (LaTeX-mode . cdlatex-mode)
+    (latex-mode . cdlatex-mode))
+#+end_src
+*** Xenops
+#+begin_src emacs-lisp
+  (use-package xenops
+    :hook ((latex-mode LaTeX-mode org-mode) . xenops-mode)
+    :config
+    (setq xenops-math-image-scale-factor 2.0))
+
+#+end_src
+** Yaml
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode "\\.yaml\\'")
+#+end_src
+** Shell
+#+begin_src emacs-lisp
+  (setq sh-indentation 4)
+#+end_src
+** R
+#+begin_src emacs-lisp
+  (use-package ess
+    :mode "\\.R\\'")
+#+end_src
+** Nix
+#+begin_src emacs-lisp
+  (use-package nix-mode
+    :mode "\\.nix\\'")
+
+  (use-package nixos-options
+    :after nix-mode)
+
+  (use-package nix-sandbox
+    :commands (nix-shell-command
+	       nix-shell
+	       nix-compile
+	       nix-find-sandbox
+	       nix-current-sandbox
+	       nix-executable-find
+	       nix-find-sandbox))
+
+  (use-package nix-update :commands nix-update-fetch)
+
+  (use-package nixpkgs-fmt
+    :commands nixpkgs-fmt
+    :hook (nix-mode . nixpkgs-fmt-on-save-mode))
+#+end_src
+* Lsp
+** Main Setting
+#+begin_src emacs-lisp
+;; when using nix to install, cannot find lsp-lens--enable ERROR
+;; try to use straight to install to fix
+(use-package lsp-mode
+  :ensure nil
+  :straight t
+  :commands (lsp lsp-deferred)
+  :hook (((c-mode c++-mode python-mode typescript-mode js2-mode nix-mode web-mode) . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :custom
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-signature-auto-activate nil)
+  (lsp-signature-render-documentation nil)
+  (lsp-log-io nil)
+  (lsp-idle-delay 0.500)
+  (lsp-completion-provider :capf)
+  :config
+  ;; No idea how to use
+  ;; (setq lsp-use-plists t)
+  (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
+  (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css")))
+
+#+end_src
+** Lsp UI
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-sideline-enable t)
+    (lsp-ui-sideline-show-hover t)
+    (lsp-ui-doc-position 'bottom)
+    (lsp-ui-imenu-auto-refresh t))
+
+  (use-package lsp-ivy
+    :disabled
+    :after lsp
+    :commands lsp-ivy-workspace-symbol)
+
+  (use-package lsp-treemacs
+    :after lsp
+    :commands lsp-treemacs-errors-list)
+#+end_src
+** Dap Debug Mode
+#+begin_src emacs-lisp
+  ;; dap debug tools
+  (use-package dap-mode
+    :commands dap-debug
+    :custom
+    (dap-auto-configure-features '(sessions locals controls tooltip))
+    :config
+    ;; Set up python debugging
+    (require 'dap-python)
+
+    ;; Set up node debugging
+    (require 'dap-node)
+    (dap-node-setup)
+
+    (require 'dap-java)
+    )
+#+end_src
+* Flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+  :hook (lsp-mode . flycheck-mode))
+#+end_src
+* Yasnippets
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :defer t
+    :hook ((org-mode prog-mode) . yas-minor-mode)
+    :config
+    (setq yas-snippet-dirs
+	  '("~/.dotfiles/Emacs/snippets"))
+    (yas-reload-all))
+
+  ;; Snippets Collection
+  (use-package yasnippet-snippets
+    :after yasnippet)
+
+  ;; auto insert
+  (use-package auto-yasnippet
+    :disabled
+    :after yasnippet)
+#+end_src
+
+* Direnv
+#+begin_src emacs-lisp
+  (use-package direnv
+    :config
+    (direnv-mode))
+#+end_src
+* Term/Shells
+** Vterm
+#+begin_src emacs-lisp
+;; Copy from https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-shell.el
+;; Better term
+;; @see https://github.com/akermu/emacs-libvterm#installation
+(use-package vterm
+  :defer t
+  :init
+  (setq vterm-always-compile-module t)
+
+  (with-no-warnings
+    (when (posframe-workable-p)
+      (defvar vterm-posframe--frame nil)
+      (defun vterm-posframe-toggle ()
+	"Toggle `vterm' child frame."
+	(interactive)
+	(let ((buffer (vterm--internal #'ignore 100))
+	      (width  (max 80 (/ (frame-width) 2)))
+	      (height (/ (frame-height) 2)))
+	  (if (frame-live-p vterm-posframe--frame)
+	      (progn
+		(posframe-delete-frame buffer)
+		(setq vterm-posframe--frame nil))
+	    (setq vterm-posframe--frame
+		  (posframe-show
+		   buffer
+		   :poshandler #'posframe-poshandler-frame-center
+		   :left-fringe 8
+		   :right-fringe 8
+		   :width width
+		   :height height
+		   :min-width width
+		   :min-height height
+		   :internal-border-width 3
+		   :internal-border-color (face-foreground 'font-lock-comment-face nil t)
+		   :background-color (face-background 'tooltip nil t)
+		   :accept-focus t)))))
+      (bind-key "C-`" #'vterm-posframe-toggle)))
+      :custom
+      (vterm-max-scrollback 10000))
+
+
+(use-package multi-vterm
+  :commands multi-vterm)
+
+(use-package vterm-toggle
+  :commands vterm-toggle)
+
+(meow-leader-define-key
+ '("tt" . vterm-toggle)
+ '("tm" . multi-vterm)
+ '("tp" . vterm-posframe-toggle)
+ )
+#+end_src
+** eshell
+#+begin_src emacs-lisp
+(use-package eshell
+  :ensure nil
+  :commands (eshell eshell-command)
+  :bind ("C-c m" . eshell)
+  :init
+  (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/"
+        eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias")))
+
+(use-package eshell-prompt-extras
+  :commands epe-theme-dakrone
+  :init
+  (progn
+    (setq eshell-highlight-prompt nil
+          epe-git-dirty-char " Ϟ"
+          ;; epe-git-dirty-char "*"
+          eshell-prompt-function 'epe-theme-dakrone)))
+
+(use-package eshell-info-banner
+  :after eshell
+  :hook (eshell-banner-load . eshell-info-banner-update-banner))
+
+(use-package eshell-up
+  :after eshell
+  :custom
+  (eshell-up-ignore-case nil))
+
+(use-package eshell-syntax-highlighting
+  :after esh-mode
+  :config
+  (eshell-syntax-highlighting-global-mode +1))
+
+(use-package esh-autosuggest
+  :hook (eshell-mode . esh-autosuggest-mode)
+  :config
+  (setq esh-autosuggest-delay 0.5)
+  (set-face-foreground 'company-preview-common "#4b5668")
+  (set-face-background 'company-preview nil))
+
+(use-package esh-buf-stack
+  :commands eshell-push-command
+  :config
+  (setup-eshell-buf-stack)
+  (define-key eshell-mode-map (kbd "M-q") 'eshell-push-command))
+
+
+(use-package eshell-fringe-status
+  :init
+  (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode))
+
+(use-package eshell-vterm
+  :after (eshell)
+  :config
+  (eshell-vterm-mode)
+  (defalias 'eshell/v 'eshell-exec-visual))
+
+(use-package eshell-toggle
+  :after eshell
+  :bind ("C-M-'" . eshell-toggle)
+  :custom
+  (eshell-toggle-size-fraction 3)
+  (eshell-toggle-use-projectile-root t)
+  (eshell-toggle-run-command nil))
+#+end_src
+* Tmux
+** Emamux
+#+begin_src emacs-lisp
+  (use-package emamux
+    :bind ("C-z" . emamux:keymap))
+#+end_src
+** Tmux-pane
+#+begin_src emacs-lisp
+  (use-package tmux-pane
+    :disabled
+    :config
+    (tmux-pane-mode))
+#+end_src
+* Git
+** Magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :commands (magit magit-status magit-get-current-branch)
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+  ;; Add a super-convenient global binding for magit-status since
+  ;; I use it 8 million times a day
+  (global-set-key (kbd "C-M-;") 'magit-status)
+#+end_src
+** Magit-Delta
+Highlight diff by using delta
+#+begin_src emacs-lisp
+  (use-package magit-delta
+    :hook (magit-mode . magit-delta-mode))
+#+end_src
+
+* Utilities
+** Clipboard managers
+#+begin_src emacs-lisp
+  (use-package cliphist
+    :if IS-LINUX
+    :commands (cliphist-paste-item cliphist-select-item))
+#+end_src

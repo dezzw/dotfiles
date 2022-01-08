@@ -16,3 +16,27 @@ exa -laT home
 e Emacs/eshell/alias 
 lt home
 ls
+ls
+lt elisp
+up
+exit
+find-file Emacs/eshell/alias 
+pk
+pk E
+up E
+f demacs.org 
+f demacs.org 
+f demacs.org
+up e
+f demacs.org 
+cd Emacs
+rm demacs.el 
+ls
+rm -rf emacs-confilisp/
+ls
+mv emacs-configs/doom-emacs/ ./
+ls doom-emacs/
+rm -rf emacs-configs/
+ls
+exit
+exit

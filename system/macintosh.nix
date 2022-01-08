@@ -57,11 +57,6 @@
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
-  services.emacs = {
-    enable = true;
-    package = pkgs.emacs;
-  };
-
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [
     cantarell-fonts
