@@ -6,18 +6,30 @@
 
   home.packages = with pkgs; [
 
+
     nixUnstable
 
     # c/c++
     cmake
+    cdecl
+    astyle
 
     # nodejs
     nodejs
     nodePackages.typescript
 
+    # common lisp
+    sbcl
+
+    # rust
     rustc
+
+    # haskell
     ghc
-    
+
+    # tex
+    texlive.combined.scheme-full
+
     # tools
     jump
     exa
@@ -25,18 +37,12 @@
     ripgrep
     aria
 
-    # Assembly Language
-    nasm
-    
-    # tex
-    texlive.combined.scheme-full
-
-    browserpass
+    sshfs    
   ];
 
   programs.git = {
     enable = true;
-    userName  = "dezzw";
+    userName = "dezzw";
     userEmail = "desmond.pc.w@gmail.com";
     delta = {
       enable = true;
@@ -75,9 +81,9 @@
       enable = true;
       plugins = [
         { name = "zsh-users/zsh-autosuggestions"; }
-	      { name = "zsh-users/zsh-syntax-highlighting"; }
+        { name = "zsh-users/zsh-syntax-highlighting"; }
         # { name = "spwhitt/nix-zsh-completions"; }
-	      { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
+        { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
         { name = "marlonrichert/zsh-autocomplete"; }
       ];
     };
@@ -88,6 +94,20 @@
      . $HOME/.dotfiles/Shells/doom-emacs-cmds.sh
      eval "$(jump shell)"
      eval "$(direnv hook zsh)"
+
+     if [[ "$TERM" == "dumb" ]]
+     then
+         unsetopt zle
+         unsetopt prompt_cr
+         unsetopt prompt_subst
+         if whence -w precmd >/dev/null; then
+             unfunction precmd
+         fi
+         if whence -w preexec >/dev/null; then
+             unfunction preexec
+         fi
+         PS1='$ '
+    fi
     '';
   };
 
@@ -103,6 +123,11 @@
   };
 
   programs.password-store = {
+    enable = true;
+    package = pkgs.pass.withExtensions (exts: [ exts.pass-otp exts.pass-update exts.pass-import ]);
+  };
+
+  programs.browserpass = {
     enable = true;
   };
 }

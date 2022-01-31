@@ -1,4 +1,26 @@
 { config, pkgs, ... }:
+# let 
+#   my-python-packages = python3Packages: with python3Packages; [
+#       # for eaf
+#       pyqt5 sip
+#       pyqtwebengine
+#       epc lxml
+#       # eaf-file-browser
+#       qrcode
+#       # eaf-browser
+#       pysocks
+#       # eaf-pdf-viewer
+#       pymupdf
+#       # eaf-file-manager
+#       pypinyin
+#       # eaf-system-monitor
+#       psutil
+#       # eaf-markdown-previewer
+#       retry
+#       markdown
+#   ]; 
+#   python-with-my-packages = python3.withPackages my-python-packages;
+# in
 {
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = ''
@@ -19,7 +41,7 @@
   ];
 
   nix.trustedBinaryCaches = config.nix.binaryCaches;
-  
+
   # nixpkgs.config.allowBroken = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
@@ -33,11 +55,14 @@
   # $ nix-env -qaP | grep wget
   environment.shells = [ pkgs.zsh ];
   environment.systemPackages = with pkgs;[
-    zsh 
-    gcc 
     git
+    # python-with-my-packages
   ];
   programs.bash.enable = true;
+
+  # environment.variables = {
+  #    QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase.bin.outPath}/lib/qt-${pkgs.qt5.qtbase.version}/plugins";
+  #  };
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh = {
@@ -45,7 +70,7 @@
     enableCompletion = false;
     interactiveShellInit = "autoload -U compinit && compinit";
   };
-  # programs.fish.enable = true;
+  programs.fish.enable = true;
 
   environment.variables.EDITOR = "nvim";
 
@@ -56,7 +81,7 @@
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
-
+  
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [
     cantarell-fonts

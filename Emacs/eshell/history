@@ -1,11 +1,3 @@
-use-theme
-la
-ls
-e
-use-theme
-use-theme simple
-cd .d
-exit
 use-theme 
 use-theme mutiline
 use-theme multiline
@@ -40,3 +32,97 @@ rm -rf emacs-configs/
 ls
 exit
 exit
+cd
+cd .dotfiles/
+./apply
+./apply.sh
+exit
+cd Documents/Org/Planner/ 
+ls
+ls
+f CSC209.org
+python3 test_py.py  
+python3 test_py.py  
+exitt
+exit
+python3 test_py.py
+python3 test_py.py
+python3 test_py.py
+python3 test_py.py
+exit
+python3 test_py.py 
+python3 test_py.py  
+python3 test_py.py  
+python3 test_py.py  
+gcc main.c
+ls
+clang main.c
+exit
+./apply.sh
+clang-format 
+./apply.sh
+python3 test_py.py
+clang -x c  -o /Users/dez/Desktop/Test/C_Test/qr_RgHVUe.out qr_RgHVUe.c && /Users/dez/Desktop/Test/C_Test/qr_RgHVUe.out 
+mv question.md.txt question.md
+f question.md
+clear
+cd
+cdecl
+cd .dotfiles/ 
+ls
+./apply.sh
+cd
+cdecl
+exit
+cd Desktop/UTM/UTM@Course/2022Winter/CSC258H5S/ 
+ls
+mkdir lab01
+mv ~/Downloads/sample.s ./lab01/
+ls
+ls
+mv lab1a.s lab1b.s
+ls
+ls
+f lab1b.s  
+clang -x c  -o /Users/dez/Desktop/Test/C_Test/qr_0950Rm.out qr_0950Rm.c && /Users/dez/Desktop/Test/C_Test/qr_0950Rm.out 
+ssh dez@192.168.31.201
+(setq tramp-verbose 10)
+sh move_items.sh  
+exit
+exit
+exit
+mv Downloads/lab01.pdf 22W/CSC258H5S/ 
+cd 22W/CSC258H5S/ 
+ls
+ls lab01/ 
+mv ~/Downloads/lab02.pdf  ./
+ls
+mkdir lab02 
+mv lab01.pdf lab01
+mv lab02.pdf lab02/ 
+mv project_specification.md ../22W/CSC209H5S/
+cd..
+cd ..
+cd 22W/CSC209H5S/ 
+mkdir project
+mv project_specification.md project/
+mv csc209ProjectStarterCode-1/ project/ 
+ls
+exit
+make run -g -Wall -Werror -fsanitize=address
+make run
+make
+./mysh
+make
+make
+./mysh
+make
+./mysh
+./mysh
+cd ..
+ls
+python3 tests/main_test_runner.py 
+exit
+make
+cd ..
+ python3 tests/main_test_runner.py

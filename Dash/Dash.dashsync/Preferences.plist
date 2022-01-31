@@ -9,7 +9,7 @@
 			<key>Regular_Expressions</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:45:15Z</date>
+				<date>2022-01-13T22:07:24Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -136,132 +136,137 @@
 			<key>http://kapeli.com/feeds/Bash.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:45:22Z</date>
+				<date>2022-01-13T22:07:28Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/C++.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:04Z</date>
+				<date>2022-01-13T22:08:16Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/C.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:20Z</date>
+				<date>2022-01-13T22:08:40Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CMake.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:45:21Z</date>
+				<date>2022-01-13T22:07:29Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CSS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:00Z</date>
+				<date>2022-01-13T22:09:33Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Clojure.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:45:20Z</date>
+				<date>2022-01-13T22:07:28Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CoffeeScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:08Z</date>
+				<date>2022-01-13T22:09:40Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Common_Lisp.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:05Z</date>
+				<date>2022-01-13T22:08:18Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Docker.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:35Z</date>
+				<date>2022-01-13T22:07:56Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Emacs_Lisp.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:02Z</date>
+				<date>2022-01-13T22:07:59Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Emmet.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:06Z</date>
+				<date>2022-01-13T22:09:37Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/HTML.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:09Z</date>
+				<date>2022-01-13T22:08:35Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Haskell.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2022-01-17T15:03:46Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/JavaScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:49Z</date>
+				<date>2022-01-13T22:08:45Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Java_SE16.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:02Z</date>
+				<date>2022-01-13T22:09:52Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Java_SE8.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:18Z</date>
+				<date>2022-01-13T22:09:16Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/LaTeX.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:15Z</date>
+				<date>2022-01-13T22:09:49Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Lua_5.4.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-01-02T00:46:46Z</date>
+				<date>2022-01-13T22:08:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/NodeJS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:43Z</date>
+				<date>2022-01-13T22:09:58Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Python_3.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:27Z</date>
+				<date>2022-01-13T22:09:35Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/React.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:21Z</date>
+				<date>2022-01-13T22:09:18Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Sass.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:34Z</date>
+				<date>2022-01-13T22:10:00Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/TypeScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:30Z</date>
+				<date>2022-01-13T22:09:36Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/VueJS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:46:52Z</date>
+				<date>2022-01-13T22:10:00Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:18Z</date>
+				<date>2022-01-13T22:09:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_Mobile.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:18Z</date>
+				<date>2022-01-13T22:08:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_UI.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-11-14T15:47:34Z</date>
+				<date>2022-01-13T22:09:53Z</date>
 			</dict>
 		</dict>
 		<key>uninstalled</key>

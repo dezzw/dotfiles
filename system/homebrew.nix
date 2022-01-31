@@ -13,6 +13,11 @@
     "homebrew/cask"
   ];
 
+  homebrew.brews = [
+    "python"
+    "minimal-racket"
+  ];
+
   homebrew.casks = [
 
     # Applications
@@ -36,5 +41,7 @@
     "kap"
     "soundflower"
     "ubersicht"
+    "steam"
+    "macfuse"
   ];
 }

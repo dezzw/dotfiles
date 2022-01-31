@@ -301,6 +301,7 @@ The package make emacs auto save the files
 #+begin_src emacs-lisp
 (use-package highlight-numbers
   :hook ((prog-mode  lsp-mode) . highlight-numbers-mode))
+
 #+end_src
 ** UI in Deamon
 #+begin_src emacs-lisp
@@ -1285,10 +1286,6 @@ This program can be used *WITHOUT* evil-mode!
   #+end_src
 *** Indent Guide
   #+begin_src emacs-lisp
-  (use-package indent-guide
-    :disabled
-    :hook (lsp-mode . indent-guide-mode))
-
   (use-package highlight-indent-guides
     :hook ((prog-mode lsp-mode) . highlight-indent-guides-mode)
     :custom

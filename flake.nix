@@ -31,12 +31,12 @@
       homeManagerCommonConfig = {
         imports = [
           ./home/home.nix
-          ./modules/emacs.nix
+          ./modules/emacs-home.nix
           ./modules/nvim.nix
           ./modules/tmux.nix
         ];
       };
-      
+
       commonDarwinConfig = [
         ./system/macintosh.nix
         home.darwinModules.home-manager
@@ -46,7 +46,7 @@
           users.users.dez.home = "/Users/dez";
           home-manager.users.dez = homeManagerCommonConfig;
         }
-	      {
+        {
           nixpkgs.overlays = with inputs; [
             emacs.overlay
             emacs-overlay.overlay
@@ -57,16 +57,16 @@
         }
       ];
     in
-      {
-        darwinConfigurations = {
-          Desmonds-MBP = darwin.lib.darwinSystem {
-            system = "x86_64-darwin";
+    {
+      darwinConfigurations = {
+        Desmonds-MBP = darwin.lib.darwinSystem {
+          system = "x86_64-darwin";
 
-            modules = commonDarwinConfig ++ [
-              ./system/homebrew.nix
-              # ./system/wm.nix
-            ];
-          };
+          modules = commonDarwinConfig ++ [
+            ./system/homebrew.nix
+            # ./system/wm.nix
+          ];
         };
       };
+    };
 }
