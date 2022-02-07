@@ -1,7 +1,5 @@
 { pkgs, ... }:
-let
-  myEmacs = import ./emacs.nix;
-in
+
 {
   programs.emacs = {
     enable = true;
