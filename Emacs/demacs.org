@@ -717,15 +717,17 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Org Agenda
 #+begin_src emacs-lisp
 (with-eval-after-load "org-agenda"
+  ;; (setq planner-path "~/Documents/Org/Planner/")
+
+  ;; (defun dw/update-agenda-files()
+  ;;   (dolist (file (directory-files planner-path))
+  ;;     (when (string-match-p ".*\.org$" file)
+  ;; 	(setq org-agenda-files (cons (concat planner-path file) org-agenda-files)))))
+
+  ;; (dw/update-agenda-files)
+
   (if IS-MAC
-      (setq planner-path "~/Documents/Org/Planner/"))
-
-  (defun dw/update-agenda-files()
-    (dolist (file (directory-files planner-path))
-      (when (string-match-p ".*\.org$" file)
-	(setq org-agenda-files (cons (concat planner-path file) org-agenda-files)))))
-
-  (dw/update-agenda-files)
+      (setq org-agenda-files '("~/Documents/Org/Planner")))
 
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
