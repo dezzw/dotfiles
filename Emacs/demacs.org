@@ -717,8 +717,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Org Agenda
 #+begin_src emacs-lisp
 (with-eval-after-load "org-agenda"
-  (setq planner-path "~/Documents/Org/Planner/")
-
+  (if IS-MAC
+      (setq planner-path "~/Documents/Org/Planner/"))
 
   (defun dw/update-agenda-files()
     (dolist (file (directory-files planner-path))
@@ -1444,4 +1444,24 @@ Highlight diff by using delta
 	   "C-M-`" popper-toggle-type)
   (popper-mode +1)
   (popper-echo-mode +1))
+#+end_src
+* EXWM
+#+begin_src emacs-lisp
+  (if IS-LINUX
+    (setup (:require exwm)
+	   (:also-load exwm-config exwm-randr)
+	   (exwm-config-default)
+	   (setq exwm-randr-workspace-output-plist '(0 "eDP"))
+	   (add-hook 'exwm-randr-screen-change-hook
+		     (lambda ()
+		       (start-process-shell-command
+			"xrandr" nil "xrandr --output eDP --mode 1920x1080 --pos 0x0 --rotate normal")))
+	   (exwm-randr-enable)
+	   (setq display-time-day-and-date t)
+	   (add-hook 'exwm-init-hook
+		     (lambda ()
+		       (dashboard-refresh-buffer)
+		       (display-battery-mode +1)
+		       (display-time-mode +1)))
+	   ))
 #+end_src
