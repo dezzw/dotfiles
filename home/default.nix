@@ -1,6 +1,12 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./emacs.nix
+    ./nvim.nix
+    ./tmux.nix
+  ];
+  
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 

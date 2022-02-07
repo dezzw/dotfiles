@@ -1,27 +1,9 @@
 { config, pkgs, ... }:
-# let 
-#   my-python-packages = python3Packages: with python3Packages; [
-#       # for eaf
-#       pyqt5 sip
-#       pyqtwebengine
-#       epc lxml
-#       # eaf-file-browser
-#       qrcode
-#       # eaf-browser
-#       pysocks
-#       # eaf-pdf-viewer
-#       pymupdf
-#       # eaf-file-manager
-#       pypinyin
-#       # eaf-system-monitor
-#       psutil
-#       # eaf-markdown-previewer
-#       retry
-#       markdown
-#   ]; 
-#   python-with-my-packages = python3.withPackages my-python-packages;
-# in
 {
+  imports = [
+    ./homebrew.nix
+  ];
+  
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
