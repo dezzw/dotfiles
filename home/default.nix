@@ -12,9 +12,6 @@
 
   home.packages = with pkgs; [
 
-
-    nixUnstable
-
     # c/c++
     cmake
     cdecl
@@ -39,11 +36,14 @@
     # tools
     jump
     exa
-    stow
     ripgrep
     aria
 
-    sshfs    
+    sshfs
+
+    comma
+
+    openvpn
   ];
 
   programs.git = {

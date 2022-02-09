@@ -7,8 +7,9 @@
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
-    keep-derivations = true
-    keep-outputs = true
+    # keep-derivations = true
+    # keep-outputs = true
+    auto-optimise-store = true
   '';
 
   nix.binaryCaches = [

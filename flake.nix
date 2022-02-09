@@ -10,9 +10,9 @@
 
     # Environment/system management
     darwin.url = github:LnL7/nix-darwin;
-    darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
+    darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
     home-manager.url = github:nix-community/home-manager;
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     flake-utils.url = github:numtide/flake-utils;
     flake-compat = { url = github:edolstra/flake-compat; flake = false; };
@@ -31,7 +31,7 @@
   outputs = { self, darwin, home-manager, flake-utils, ... }@inputs:
     let
       inherit (darwin.lib) darwinSystem;
-      inherit (inputs.nixpkgs-stable.lib) attrValues makeOverridable optionalAttrs singleton;
+      inherit (inputs.nixpkgs-unstable.lib) attrValues makeOverridable optionalAttrs singleton nixosSystem;
 
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
@@ -45,60 +45,77 @@
         ];
       };
 
-      # Personal configuration shared between `nix-darwin` and plain `home-manager` configs.
-      homeManagerStateVersion = "22.05";
-      homeManagerCommonConfig = {
-        imports = attrValues self.homeManagerModules ++ [
-          ./home
-          { home.stateVersion = homeManagerStateVersion; }
-        ];
-      };
+      # # Personal configuration shared between `nix-darwin` and plain `home-manager` configs.
+      # homeManagerStateVersion = "22.05";
+      # homeManagerCommonConfig = {
+      #   imports = attrValues self.homeManagerModules ++ [
+      #     ./home
+      #     { home.stateVersion = homeManagerStateVersion; }
+      #   ];
+      # };
 
-      # Modules shared by most `nix-darwin` personal configurations.
-      nixDarwinCommonModules = attrValues self.darwinModules ++ [
-        # Main `nix-darwin` config
-        ./system/darwin
-        # `home-manager` module
-        home-manager.darwinModules.home-manager
-        (
-          { config, lib, pkgs, ... }:
-          let
-            inherit (config.users) primaryUser;
-          in
-            {
-              nixpkgs = nixpkgsConfig;
-              # Hack to support legacy worklows that use `<nixpkgs>` etc.
-              nix.nixPath = { nixpkgs = "$HOME/.config/nixpkgs/nixpkgs.nix"; };
-              # `home-manager` config
-              users.users.${primaryUser}.home = "/Users/${primaryUser}";
-              home-manager.useGlobalPkgs = true;
-              home-manager.users.${primaryUser} = homeManagerCommonConfig;
-              # Add a registry entry for this flake
-              nix.registry.my.flake = self;
-            }
-        )
-      ];
+      # # Modules shared by most `nix-darwin` personal configurations.
+      # nixDarwinCommonModules = attrValues self.darwinModules ++ [
+      #   # Main `nix-darwin` config
+      #   ./system/darwin
+      #   # `home-manager` module
+      #   home-manager.darwinModules.home-manager
+      #   (
+      #     { config, lib, pkgs, ... }:
+      #     let
+      #       inherit (config.users) primaryUser;
+      #     in
+      #       {
+      #         nixpkgs = nixpkgsConfig;
+      #         # Hack to support legacy worklows that use `<nixpkgs>` etc.
+      #         nix.nixPath = { nixpkgs = "$HOME/.config/nixpkgs/nixpkgs.nix"; };
+      #         # `home-manager` config
+      #         users.users.${primaryUser}.home = "/Users/${primaryUser}";
+      #         home-manager.useGlobalPkgs = true;
+      #         home-manager.users.${primaryUser} = homeManagerCommonConfig;
+      #         # Add a registry entry for this flake
+      #         nix.registry.my.flake = self;
+      #       }
+      #   )
+      # ];
     in
       {
-        darwinConfigurations = rec {
+        darwinConfigurations = {
           Desmonds-MBP = darwinSystem {
             system = "x86_64-darwin";
-            modules = nixDarwinCommonModules ++ [
+            modules = [
+              ./system/darwin
+              
+              home-manager.darwinModules.home-manager
               {
-                users.primaryUser = "dez";
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                users.users.dez.home = "/Users/dez";
+                home-manager.users.dez = import ./home;
+
+                nixpkgs = nixpkgsConfig;
               }
             ];
           };
         };
 
-        nixos = home-manager.lib.homeManagerConfiguration {
-          system = "x86_64-linux";
-          stateVersion = homeManagerStateVersion;
-          homeDirectory = "/home/dez";
-          username = "dez";
-          configuration = {
-            imports = [ homeManagerCommonConfig ];
-            nixpkgs = nixpkgsConfig;
+        nixosConfigurations = {
+          nixos = nixosSystem {
+            system = "x86_64-linux";
+
+            modules = [
+              ./system/nixos
+              
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                users.users.dez.home = "/home/dez";
+                home-manager.users.dez = import  ./home;
+
+                nixpkgs = nixpkgsConfig;
+              }
+            ];
           };
         };
       };

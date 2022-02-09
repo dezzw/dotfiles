@@ -43,5 +43,6 @@
     "ubersicht"
     "steam"
     "macfuse"
+    "docker"
   ];
 }
