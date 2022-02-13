@@ -1,6 +1,4 @@
 ~/.dotfiles
-~/.dotfiles
-~/.dotfiles
 /Users/dez/.dotfiles/Emacs
 /Users/dez/.dotfiles/Emacs
 ~/.dotfiles
@@ -30,3 +28,6 @@
 /ssh:wangpe90@dh2026pc26.utm.utoronto.ca:/student/wangpe90/209/M1
 /Users/dez/22W/CSC209H5S/project/csc209ProjectStarterCode-1/src
 /Users/dez/22W/CSC209H5S/project/csc209ProjectStarterCode-1
+/ssh:wangpe90@dh2026pc26.utm.utoronto.ca:/student/wangpe90/209/L4/regular_lab
+~
+/Users/dez/Desktop/Test/C_Test

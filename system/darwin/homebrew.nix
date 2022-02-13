@@ -20,6 +20,9 @@
 
   homebrew.casks = [
 
+    #WM
+    "amethyst"
+    
     # Applications
     "alfred"
     "dash"

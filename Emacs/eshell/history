@@ -1,14 +1,3 @@
-use-theme 
-use-theme mutiline
-use-theme multiline
-ls
-lt home
-ls
-exa -laT home
-e Emacs/eshell/alias 
-lt home
-ls
-ls
 lt elisp
 up
 exit
@@ -125,4 +114,15 @@ python3 tests/main_test_runner.py
 exit
 make
 cd ..
- python3 tests/main_test_runner.py
+python3 tests/main_test_runner.py
+ls
+exit
+exit
+exit
+gcc -D MACRO main.c 
+ ls
+./a.out
+gcc -D MACRO=5 main.c 
+./a.out
+f main.c 
+cpp main.c 

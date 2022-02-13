@@ -16,6 +16,12 @@
       set number relativenumber
       set nobackup
       set clipboard=unnamed
+
+      let mapleader=" "
+
+      noremap <silent> p k
+      noremap <silent> n j  
+      noremap <silent> t l
     '';
 
     plugins = with pkgs.vimPlugins; [
