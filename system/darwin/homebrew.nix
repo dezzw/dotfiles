@@ -21,14 +21,13 @@
   homebrew.casks = [
 
     #WM
-    "amethyst"
+    # "amethyst"
     
     # Applications
     "alfred"
     "dash"
     "discord"
     "downie"
-    "flycut"
     "hazeover"
     "gimp"
     "iina"

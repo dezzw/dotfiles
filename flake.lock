@@ -164,21 +164,6 @@
         "type": "github"
       }
     },
-    "flake-utils_4": {
-      "locked": {
-        "lastModified": 1644229661,
-        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -296,11 +281,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1645234023,
-        "narHash": "sha256-fEzuEoZX1l4IzMla6LI+mYLiEZGKQpfgZspDgmKTS5o=",
+        "lastModified": 1645235447,
+        "narHash": "sha256-WObLDJPwN9rJkbrzx+HhzhIP/Va/57UlJo8TSJ9HKuw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e36f9f6ae23b7331b3c3abc5477101db2edeca8c",
+        "rev": "83c4f5fff58c0756aec22e4e73cdbe054c452f2a",
         "type": "github"
       },
       "original": {
@@ -374,22 +359,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1638239011,
-        "narHash": "sha256-AjhmbT4UBlJWqxY0ea8a6GU2C2HdKUREkG43oRr3TZg=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "a7ecde854aee5c4c7cd6177f54a99d2c1ff28a31",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "21.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "darwin": "darwin",
@@ -403,28 +372,7 @@
         "nixos-stable": "nixos-stable",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
-        "nixpkgs-unstable": "nixpkgs-unstable",
-        "spacebar": "spacebar"
-      }
-    },
-    "spacebar": {
-      "inputs": {
-        "flake-utils": "flake-utils_4",
-        "nixpkgs": "nixpkgs_4"
-      },
-      "locked": {
-        "lastModified": 1644858436,
-        "narHash": "sha256-4LiG43kPZtsm7SQ/28RaGMpYsDshCaGvc1mouPG3jFM=",
-        "owner": "cmacrae",
-        "repo": "spacebar",
-        "rev": "79257bae525059be5230e86df96b3b3f1a3ed0a7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cmacrae",
-        "ref": "v1.4.0",
-        "repo": "spacebar",
-        "type": "github"
+        "nixpkgs-unstable": "nixpkgs-unstable"
       }
     }
   },

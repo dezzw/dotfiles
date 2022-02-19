@@ -21,7 +21,7 @@
     emacs.url = "github:cmacrae/emacs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
-    spacebar.url = "github:cmacrae/spacebar/v1.4.0";
+    # spacebar.url = "github:cmacrae/spacebar/v1.4.0";
     nix-direnv.url = "github:nix-community/nix-direnv";
 
     # Follows
@@ -39,7 +39,7 @@
         overlays = with inputs; [
           emacs.overlay
           emacs-overlay.overlay
-          spacebar.overlay
+          # spacebar.overlay
           nix-direnv.overlay
           neovim-nightly-overlay.overlay
         ];
@@ -112,8 +112,6 @@
                 home-manager.useUserPackages = true;
                 users.users.dez.home = "/home/dez";
                 home-manager.users.dez = import  ./home;
-
-                nixpkgs = nixpkgsConfig;
               }
             ];
           };

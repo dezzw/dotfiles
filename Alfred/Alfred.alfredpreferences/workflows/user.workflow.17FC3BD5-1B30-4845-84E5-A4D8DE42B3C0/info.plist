@@ -8,19 +8,6 @@
 	<string>Tools</string>
 	<key>connections</key>
 	<dict>
-		<key>1A07B14C-5719-40BE-877E-49499313C691</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>9273F864-226C-448C-BA45-C404BF368E28</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>3E554F3A-9D95-4D8B-9797-FDE6FDA14DCD</key>
 		<array>
 			<dict>
@@ -52,19 +39,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>9273F864-226C-448C-BA45-C404BF368E28</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>ABA29190-9765-4B15-98C5-CDB8C5B0BC64</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>B2BF3F00-4889-4333-82A6-807A70A33129</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -502,68 +476,6 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>36</integer>
-				<key>hotmod</key>
-				<integer>1048576</integer>
-				<key>hotstring</key>
-				<string>↩</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>1A07B14C-5719-40BE-877E-49499313C691</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>36</integer>
-				<key>hotmod</key>
-				<integer>1179648</integer>
-				<key>hotstring</key>
-				<string>↩</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>ABA29190-9765-4B15-98C5-CDB8C5B0BC64</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
 	</array>
 	<key>readme</key>
 	<string>This workfollow is used to control the eamcs servers (daemon) and their clients.</string>
@@ -582,13 +494,6 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<integer>865</integer>
 			<key>ypos</key>
 			<integer>255</integer>
-		</dict>
-		<key>1A07B14C-5719-40BE-877E-49499313C691</key>
-		<dict>
-			<key>xpos</key>
-			<integer>565</integer>
-			<key>ypos</key>
-			<integer>555</integer>
 		</dict>
 		<key>3E554F3A-9D95-4D8B-9797-FDE6FDA14DCD</key>
 		<dict>
@@ -624,13 +529,6 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<integer>870</integer>
 			<key>ypos</key>
 			<integer>435</integer>
-		</dict>
-		<key>ABA29190-9765-4B15-98C5-CDB8C5B0BC64</key>
-		<dict>
-			<key>xpos</key>
-			<integer>80</integer>
-			<key>ypos</key>
-			<integer>675</integer>
 		</dict>
 		<key>B0F9FCDE-0FAD-4CAA-A551-CBB9E30F3EEF</key>
 		<dict>

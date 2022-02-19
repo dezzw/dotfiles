@@ -22,7 +22,7 @@ in
       window_topmost = "on";
       window_shadow = "float";
       active_window_opacity = "1.0";
-      normal_window_opacity = "0.8";
+      normal_window_opacity = "1.0";
       split_ratio = "0.50";
       auto_balance = "on";
       mouse_modifier = "fn";
@@ -34,7 +34,7 @@ in
       left_padding = 10;
       right_padding = 10;
       window_gap = 10;
-      external_bar = "main:26:0";
+      # external_bar = "main:26:0";
     };
     extraConfig = pkgs.lib.mkDefault ''
       sudo yabai --load-sa
@@ -45,6 +45,7 @@ in
       yabai -m rule --add app='JetBrains Toolbox'  manage=off
       yabai -m rule --add app='WeChat'             manage=off
       yabai -m rule --add app='Discord'            manage=off
+      yabai -m rule --add app='Steam'            manage=off
       yabai -m rule --add app='Emacs'              manage=on
     '';
   };
