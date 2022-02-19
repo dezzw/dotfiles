@@ -5,7 +5,7 @@ let
 in
 {
   services.yabai = {
-    enable = false;
+    enable = true;
     package = pkgs.yabai;
     enableScriptingAddition = true;
     config = {
@@ -22,7 +22,7 @@ in
       window_topmost = "on";
       window_shadow = "float";
       active_window_opacity = "1.0";
-      normal_window_opacity = "1.0";
+      normal_window_opacity = "0.8";
       split_ratio = "0.50";
       auto_balance = "on";
       mouse_modifier = "fn";
@@ -66,74 +66,76 @@ in
         prevOrLast = fstOrSnd { fst = "prev"; snd = "last"; };
       in
       ''
-        #   # windows ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-        #   #select
-        # ${modMask} - j                            : ${prefix} window --focus next || ${prefix} window --focus "$((${prefix} query --spaces --display next || ${prefix} query --spaces --display first) |${pkgs.jq}/bin/jq -re '.[] | select(.visible == 1)."first-window"')" || ${prefix} display --focus next || ${prefix} display --focus first
-        # ${modMask} - k                            : ${prefix} window --focus prev || ${prefix} window --focus "$((yabai -m query --spaces --display prev || ${prefix} query --spaces --display last) | ${pkgs.jq}/bin/jq -re '.[] | select(.visible == 1)."last-window"')" || ${prefix} display --focus prev || ${prefix} display --focus last
-        # # close
-        # ${modMask} - ${keycodes.Delete}           : ${prefix} window --close && yabai -m window --focus prev
-        # # fullscreen
-        # ${modMask} - h                            : ${prefix} window --toggle zoom-fullscreen
-        # # rotate
-        # ${modMask} - r                            : ${prefix} window --focus smallest && yabai -m window --warp largest && yabai -m window --focus largest
-        # # increase region
-        # ${modMask} - ${keycodes.LeftBracket}      : ${prefix} window --resize left:-20:0
-        # ${modMask} - ${keycodes.RightBracket}     : ${prefix} window --resize right:-20:0
+          # windows ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+          #select
+        ${modMask} - j                            : ${prefix} window --focus next || ${prefix} window --focus "$((${prefix} query --spaces --display next || ${prefix} query --spaces --display first) |${pkgs.jq}/bin/jq -re '.[] | select(.visible == 1)."first-window"')" || ${prefix} display --focus next || ${prefix} display --focus first
+        ${modMask} - k                            : ${prefix} window --focus prev || ${prefix} window --focus "$((yabai -m query --spaces --display prev || ${prefix} query --spaces --display last) | ${pkgs.jq}/bin/jq -re '.[] | select(.visible == 1)."last-window"')" || ${prefix} display --focus prev || ${prefix} display --focus last
+        # close
+        ${modMask} - ${keycodes.Delete}           : ${prefix} window --close && yabai -m window --focus prev
+        # fullscreen
+        ${modMask} - h                            : ${prefix} window --toggle zoom-fullscreen
+        # rotate
+        ${modMask} - r                            : ${prefix} window --focus smallest && yabai -m window --warp largest && yabai -m window --focus largest
+        # increase region
+        ${modMask} - ${keycodes.LeftBracket}      : ${prefix} window --resize left:-20:0
+        ${modMask} - ${keycodes.RightBracket}     : ${prefix} window --resize right:-20:0
 
-        # # spaces ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-        # # destroy space
+        # spaces ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        # destroy space
         # ${moveMask} - ${keycodes.Delete} : yabai -m space --destroy
 
-        # # create space
+        # create space
         # ${moveMask} - c : yabai -m space --create
 
-        # # fast focus desktop
-        # ${modMask} - tab : yabai -m space --focus recent
-        # ${modMask} - p : yabai -m space --focus prev
-        # ${modMask} - n : yabai -m space --focus next
-        # ${modMask} - 1 : yabai -m space --focus 1
-        # ${modMask} - 2 : yabai -m space --focus 2
-        # ${modMask} - 3 : yabai -m space --focus 3
-        # ${modMask} - 4 : yabai -m space --focus 4
-        # ${modMask} - 5 : yabai -m space --focus 5
-        # ${modMask} - 6 : yabai -m space --focus 6
-        # ${modMask} - 7 : yabai -m space --focus 7
-        # ${modMask} - 8 : yabai -m space --focus 8
-        # ${modMask} - 9 : yabai -m space --focus 9
-        # ${modMask} - 0 : yabai -m space --focus 10
+        # fast focus desktop
+        ${modMask} - tab : yabai -m space --focus recent
+        ${modMask} - p : yabai -m space --focus prev
+        ${modMask} - n : yabai -m space --focus next
+        ${modMask} - 1 : yabai -m space --focus 1
+        ${modMask} - 2 : yabai -m space --focus 2
+        ${modMask} - 3 : yabai -m space --focus 3
+        ${modMask} - 4 : yabai -m space --focus 4
+        ${modMask} - 5 : yabai -m space --focus 5
+        ${modMask} - 6 : yabai -m space --focus 6
+        ${modMask} - 7 : yabai -m space --focus 7
+        ${modMask} - 8 : yabai -m space --focus 8
+        ${modMask} - 9 : yabai -m space --focus 9
+        ${modMask} - 0 : yabai -m space --focus 10
 
-        # # send window to desktop and follow focus
-        # ${moveMask} - tab : yabai -m window --space recent; yabai -m space --focus recent
-        # ${moveMask} - p : yabai -m window --space prev; yabai -m space --focus prev
-        # ${moveMask} - n : yabai -m window --space next; yabai -m space --focus next
-        # ${moveMask} - 1 : yabai -m window --space  1; yabai -m space --focus 1
-        # ${moveMask} - 2 : yabai -m window --space  2; yabai -m space --focus 2
-        # ${moveMask} - 3 : yabai -m window --space  3; yabai -m space --focus 3
-        # ${moveMask} - 4 : yabai -m window --space  4; yabai -m space --focus 4
-        # ${moveMask} - 5 : yabai -m window --space  5; yabai -m space --focus 5
-        # ${moveMask} - 6 : yabai -m window --space  6; yabai -m space --focus 6
-        # ${moveMask} - 7 : yabai -m window --space  7; yabai -m space --focus 7
-        # ${moveMask} - 8 : yabai -m window --space  8; yabai -m space --focus 8
-        # ${moveMask} - 9 : yabai -m window --space  9; yabai -m space --focus 9
-        # ${moveMask} - 0 : yabai -m window --space 10; yabai -m space --focus 10
-        # # display  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-        # # focus
+        # send window to desktop and follow focus
+        ${moveMask} - tab : yabai -m window --space recent; yabai -m space --focus recent
+        ${moveMask} - p : yabai -m window --space prev; yabai -m space --focus prev
+        ${moveMask} - n : yabai -m window --space next; yabai -m space --focus next
+        ${moveMask} - 1 : yabai -m window --space  1; yabai -m space --focus 1
+        ${moveMask} - 2 : yabai -m window --space  2; yabai -m space --focus 2
+        ${moveMask} - 3 : yabai -m window --space  3; yabai -m space --focus 3
+        ${moveMask} - 4 : yabai -m window --space  4; yabai -m space --focus 4
+        ${moveMask} - 5 : yabai -m window --space  5; yabai -m space --focus 5
+        ${moveMask} - 6 : yabai -m window --space  6; yabai -m space --focus 6
+        ${moveMask} - 7 : yabai -m window --space  7; yabai -m space --focus 7
+        ${moveMask} - 8 : yabai -m window --space  8; yabai -m space --focus 8
+        ${moveMask} - 9 : yabai -m window --space  9; yabai -m space --focus 9
+        ${moveMask} - 0 : yabai -m window --space 10; yabai -m space --focus 10
+        # display  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        # focus
         # ${modMask} - left                         : ${prevOrLast "display"}
         # ${modMask} - right                        : ${nextOrFirst "display"}
-        # # send window
+        # send window
         # ${moveMask} - right                       : ${prefix} window --display prev
         # ${moveMask} - left                        : ${prefix} window --display next
         # apps  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-        ${modMask} - return                       : ${myTerminal}
-        ${modMask} + shift - return               : ${myEditor}
-        ${modMask} - b                            : ${myBrowser}
-        # # reset  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+        ${modMask} + shift - return                       : ${myTerminal}
+        ${modMask} - return                               : ${myEditor}
+        ${modMask} - b                                    : ${myBrowser}
+        # reset  ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
         # ${modMask} + shift - q                            : pkill yabai; pkill skhd; osascript -e 'display notification "wm restarted"'
       '';
-    };
-    services.spacebar.enable = false;
-    services.spacebar.package = pkgs.spacebar;
-    services.spacebar.config = {
+  };
+  
+  services.spacebar = {
+    enable = false;
+    package = pkgs.spacebar;
+    config = {
       debug_output = "on";
       display = "main";
       position = "top";
@@ -170,5 +172,6 @@ in
       right_shell_icon = "";
       right_shell_command = "whoami";
     };
+  };
 
-  }
+}

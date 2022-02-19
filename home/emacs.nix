@@ -7,12 +7,9 @@
     extraPackages = epkgs: with epkgs;[
       setup
       use-package
-      doom-themes
       doom-modeline
       hide-mode-line
       mini-modeline
-      dashboard
-      page-break-lines
       exec-path-from-shell
       auctex
       posframe
@@ -23,7 +20,7 @@
       highlight-numbers
       diff-hl
       beacon
-      perspective
+      persp-mode
       ace-window
       dired-single
       all-the-icons-dired
@@ -45,14 +42,22 @@
       markdown-mode
       edit-indirect
       projectile
+
+      # company
       company
       company-tabnine
       company-box
       company-quickhelp
       company-statistics
+
+      # corfu
+      corfu
+      cape
+      kind-icon
+      
+      # completion system
       vertico
       orderless
-      corfu
       consult
       consult-dir
       marginalia
@@ -122,7 +127,6 @@
 
       popper
       dirvish
-      cape
       
     ];
   };

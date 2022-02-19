@@ -21,7 +21,7 @@
     emacs.url = "github:cmacrae/emacs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
-    spacebar.url = "github:cmacrae/spacebar";
+    spacebar.url = "github:cmacrae/spacebar/v1.4.0";
     nix-direnv.url = "github:nix-community/nix-direnv";
 
     # Follows

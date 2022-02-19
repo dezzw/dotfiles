@@ -2,6 +2,7 @@
 {
   imports = [
     ./homebrew.nix
+    ./wm.nix
   ];
   
   nix.package = pkgs.nixFlakes;
