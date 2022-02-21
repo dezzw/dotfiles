@@ -1,14 +1,3 @@
-lt elisp
-up
-exit
-find-file Emacs/eshell/alias 
-pk
-pk E
-up E
-f demacs.org 
-f demacs.org 
-f demacs.org
-up e
 f demacs.org 
 cd Emacs
 rm demacs.el 
@@ -126,3 +115,14 @@ gcc -D MACRO=5 main.c
 ./a.out
 f main.c 
 cpp main.c 
+gcc main.c 
+ gcc main.c 
+ gcc main.c 
+ gcc main.c 
+./a.out
+gcc main.c 
+./a.out
+./a.out
+gcc main.c 
+./a.out
+exit 

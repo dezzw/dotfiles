@@ -346,12 +346,10 @@
     (meow-leader-define-key
      '("SPC" . execute-extended-command)
      '("f" . find-file)
-     '("b" . persp-switch-to-buffer)
-     '("k" . persp-kill-buffer)
-     '("a" . org-agenda)
-     '("qr" . quickrun)
-     '("qs" . quickrun-shell)
-     '("dd" . dap-debug))
+     '("b" . persp-switch-to-buffer*)
+     '("k" . persp-kill-buffer*)
+     '("i" . persp-ibuffer)
+     '("a" . org-agenda))
     #+end_src
 ** Editing Tools
 *** Hungry Delete
@@ -373,7 +371,7 @@
        '("tl" . avy-goto-line)))
     #+end_src
 * Workspace
-** Persp-mode
+** COMMENT Persp-mode
    #+begin_src emacs-lisp
    (setup (:require persp-mode)
      (:option persp-keymap-prefix (kbd "C-x p")
@@ -381,6 +379,17 @@
 	      persp-set-last-persp-for-new-frames nil
 	      persp-kill-foreign-buffer-behaviour 'kill
 	      persp-auto-resume-time -1)
+     ;; Running `persp-mode' multiple times resets the perspective list...
+     (unless (equal persp-mode t)
+       (persp-mode)))
+   #+end_src
+** Perspective-el
+   #+begin_src emacs-lisp
+   (setup (:straight perspective)
+     (:option persp-initial-frame-name "Main"
+	      persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
+
+     (add-hook 'kill-emacs-hook #'persp-state-save)
      ;; Running `persp-mode' multiple times resets the perspective list...
      (unless (equal persp-mode t)
        (persp-mode)))
@@ -1151,7 +1160,11 @@
 	'((:command . "python3") 
 	  (:exec . "%c %s") 
 	  (:tempfile . nil)) 
-	:default "python"))
+	:default "python")
+      (:when-loaded
+	(meow-leader-define-key
+	 '("qq" . quickrun)
+	 '("qs" . quickrun-shell))))
     #+end_src
 
 *** Minimap
