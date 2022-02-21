@@ -112,6 +112,8 @@
                 home-manager.useUserPackages = true;
                 users.users.dez.home = "/home/dez";
                 home-manager.users.dez = import  ./home;
+
+                nixpkgs = nixpkgsConfig;
               }
             ];
           };
