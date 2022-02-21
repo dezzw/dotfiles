@@ -1538,3 +1538,26 @@
   (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
   (setq tramp-verbose 6)
   #+end_src
+* EXWM
+  #+begin_src emacs-lisp
+  (setup (:require exwm)
+    (require 'exwm-config)
+    (exwm-config-default)
+    (require 'exwm-randr)
+
+    (setq exwm-randr-workspace-output-plist '(0 "eDP"))
+    (add-hook 'exwm-randr-screen-chenge-hook
+	      (lambda ()
+		(start-process-shell-command
+		 "xrandr" nil "xrandr --output eDP --mode 1920x1080 --pos 0x0 --rotate normal")))
+    (exwm-randr-enable)
+    (setq display-time-day-and-date t)
+    (add-hook 'exwm-init-hook
+	      (lambda ()
+		(dashboard-refresh-buffer)
+		(display-battery-mode +1) ;; Display battery info (if available).
+		(display-time-mode +1)))  ;; Display the time in the modeline.
+    )
+  
+  (setpu (:straight dmenu))
+  #+end_src
