@@ -20,8 +20,12 @@
 
   homebrew.casks = [
 
-    #WM
+    # WM
     # "amethyst"
+
+    # Browser
+    "qutebrowser"
+    "google-chrome"
     
     # Applications
     "alfred"
@@ -35,7 +39,6 @@
     "jetbrains-toolbox"
     "visual-studio-code"
     "zoom"
-    "google-chrome"
     "obs"
     "appcleaner"
     "kap"
@@ -44,5 +47,8 @@
     "steam"
     "macfuse"
     "docker"
+
+    # layout 
+    "programmer-dvorak"
   ];
 }

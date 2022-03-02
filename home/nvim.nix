@@ -11,6 +11,7 @@
 
     withNodeJs = true;
     withPython3 = true;
+    withRuby = true;
 
     extraConfig = ''
       set number relativenumber
@@ -18,10 +19,6 @@
       set clipboard=unnamed
 
       let mapleader=" "
-
-      noremap <silent> p k
-      noremap <silent> n j  
-      noremap <silent> t l
     '';
 
     plugins = with pkgs.vimPlugins; [
