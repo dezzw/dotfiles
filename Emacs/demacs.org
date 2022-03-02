@@ -87,7 +87,8 @@
     (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
     (doom-themes-treemacs-config)
 
-    (doom-themes-org-config))
+    ;; (doom-themes-org-config)
+    )
 
   ;; Set `doom-modeline' early to prevent non-stylized UI flash.
   ;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
@@ -613,14 +614,13 @@
 * Org Mode
 ** Config Basic Org mode
    #+begin_src emacs-lisp
-   ;; (defun dw/org-mode-setup ()
-   ;;   (org-indent-mode)
-   ;;   (variable-pitch-mode 1)
-   ;;   (visual-line-mode 1))
+   (defun dw/org-mode-setup ()
+     (org-indent-mode)
+     (visual-line-mode 1))
 
    (setup (:require org)
      (:also-load org-tempo)
-     ;; (:hook dw/org-mode-setup)
+     (:hook dw/org-mode-setup)
      (setq org-html-head-include-default-style nil
 	   ;; org-ellipsis " ▾"
 	   org-adapt-indentation t
@@ -640,9 +640,6 @@
      ;; 	  org-eshell
      ;; 	  org-irc))
 
-     (org-indent-mode)
-     (variable-pitch-mode 1)
-     (visual-line-mode 1)
 
      (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 
@@ -660,7 +657,12 @@
      (setq make-backup-files nil))
 
    #+end_src
-** Apperance of Org
+** Apperance of Org   
+*** COMMENT Org Modern
+    #+begin_src emacs-lisp
+    (setup (:straight org-modern)
+      (:hook-into org-mode))
+    #+end_src
 *** Bullets
     #+begin_src emacs-lisp
     ;; change bullets for headings
@@ -951,42 +953,51 @@
     #+end_src
 ** Corfu
    #+begin_src emacs-lisp
-   (setup (:require corfu)
+   (setup (:straight corfu)
      (:option
       ;; Optional customizations
       corfu-cycle t                ;; Enable cycling for `corfu-next/previous'
       corfu-auto t                 ;; Enable auto completion
       ;; (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
-      corfu-quit-no-match t        ;; Automatically quit if there is no match
+      corfu-quit-no-match 'separator        ;; Automatically quit if there is no match
       corfu-preview-current nil    ;; Disable current candidate preview
       corfu-echo-documentation nil ;; Disable documentation in the echo area
       corfu-auto-prefix 2)
+  
      (:with-map corfu-map
        (:bind [tab] corfu-next
-	      [backtab] corfu-previous
-	      "<escape>" corfu-quit))
+              [backtab] corfu-previous
+              "<escape>" corfu-quit))
      (corfu-global-mode)
      )
    ;; corfu backend
-   (setup (:require cape)
+   (setup (:straight cape)
      (add-to-list 'completion-at-point-functions #'cape-file)
-     ;; (add-to-list 'completion-at-point-functions #'cape-tex)
-     ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-     ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
+     (add-to-list 'completion-at-point-functions #'cape-tex)
+     (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+     (add-to-list 'completion-at-point-functions #'cape-keyword)
+
+     (add-to-list 'completion-at-point-functions #'cape-abbrev)
      )
 
-   ;; Enable Corfu completion UI
-   ;; (straight-use-package '(corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-   (setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-     (:hook-into corfu-mode))
+   ;; Use dabbrev with Corfu!
+   (setup (:straight dabbrev)
+     ;; Swap M-/ and C-M-/
+     (:bind "M-/"  dabbrev-completion
+            "C-M-/" dabbrev-expand))
 
-   ;; (setup (:pkg svg-lib :type built-in)) ;; built-in has little icons
-   (setup (:require kind-icon)
-     (:load-after corfu)
-     (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-     (:when-loaded
-       (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
-       ))
+      ;; Enable Corfu completion UI
+      ;; (straight-use-package '(corfu-doc :type git :host github :repo "galeo/corfu-doc"))
+      (setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
+        (:hook-into corfu-mode))
+
+      ;; (setup (:pkg svg-lib :type built-in)) ;; built-in has little icons
+      (setup (:require kind-icon)
+        (:load-after corfu)
+        (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+        (:when-loaded
+          (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+          ))
    #+end_src
 ** Vertico
    #+begin_src emacs-lisp
@@ -1074,6 +1085,32 @@
 	   embark-become-indicator embark-action-indicator))
 
   #+end_src
+** Tempel
+#+begin_src emacs-lisp
+(setup (:straight tempel)
+  ;; Setup completion at point
+  ;; (defun tempel-setup-capf ()
+  ;;   ;; Add the Tempel Capf to `completion-at-point-functions'. `tempel-expand'
+  ;;   ;; only triggers on exact matches. Alternatively use `tempel-complete' if
+  ;;   ;; you want to see all matches, but then Tempel will probably trigger too
+  ;;   ;; often when you don't expect it.
+  ;;   ;; NOTE: We add `tempel-expand' *before* the main programming mode Capf,
+  ;;   ;; such that it will be tried first.
+  ;;   (setq-local completion-at-point-functions
+  ;;               (cons #'tempel-expand
+  ;;                     completion-at-point-functions)))
+
+  ;; (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  ;; (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  (tempel-global-abbrev-mode)
+  
+  (:global "M-+" tempel-complete
+	   "M-*" tempel-insert))
+#+end_src
 
 ** Citre
    #+begin_src emacs-lisp
@@ -1133,7 +1170,7 @@
 *** Rainbow Mode
     #+begin_src emacs-lisp
     (setup (:require rainbow-mode)
-      (:hook-into org-mode prog-mode lsp-mode))
+      (:hook-into org-mode web-mode js2-mode emacs-lisp-mode))
     #+end_src
 *** Indent Guide
     #+begin_src emacs-lisp
@@ -1366,7 +1403,7 @@
    (setup (:require flycheck)
      (:hook-into lsp-mode))
    #+end_src
-** Yasnippets
+** COMMENT Yasnippets
    #+begin_src emacs-lisp
    (setup (:require yasnippet)
      (:option yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
@@ -1525,10 +1562,15 @@
   (add-to-list 'load-path "~/.dotfiles/Emacs/site-lisp/emacs-application-framework/")
   (if IS-GUI
       (setup (:require eaf)
-	(:also-load eaf-browser)
+	(:also-load eaf-browser eaf-terminal eaf-pdf-viewer eaf-file-manager eaf-org-previewer)
 	(:option eaf-browser-continue-where-left-off t
 		 eaf-browser-enable-adblocker t
 		 browse-url-browser-function 'eaf-open-browser)
+      
+	(add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
+	(add-to-list 'TeX-view-program-list '("eaf" eaf-pdf-synctex-forward-view))
+	(add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))
+      
 	(defalias 'browse-web #'eaf-open-browser)))
   #+end_src
 * Tramp
@@ -1538,7 +1580,7 @@
   (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
   (setq tramp-verbose 6)
   #+end_src
-* EXWM
+* COMMENT EXWM
   #+begin_src emacs-lisp
   (setup (:require exwm)
     (require 'exwm-config)
@@ -1559,5 +1601,5 @@
 		(display-time-mode +1)))  ;; Display the time in the modeline.
     )
   
-  (setpu (:straight dmenu))
+  (setup (:straight dmenu))
   #+end_src
