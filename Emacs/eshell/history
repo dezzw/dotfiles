@@ -1,13 +1,3 @@
-f demacs.org 
-cd Emacs
-rm demacs.el 
-ls
-rm -rf emacs-confilisp/
-ls
-mv emacs-configs/doom-emacs/ ./
-ls doom-emacs/
-rm -rf emacs-configs/
-ls
 exit
 exit
 cd
@@ -116,9 +106,9 @@ gcc -D MACRO=5 main.c
 f main.c 
 cpp main.c 
 gcc main.c 
- gcc main.c 
- gcc main.c 
- gcc main.c 
+gcc main.c 
+gcc main.c 
+gcc main.c 
 ./a.out
 gcc main.c 
 ./a.out
@@ -126,3 +116,13 @@ gcc main.c
 gcc main.c 
 ./a.out
 exit 
+ls 
+exit 
+make
+gcc -Wall -g netcat.c -o netcat
+make
+gcc -Wall -g netcat.c -o netcat
+gcc -Wall -g netcat.c -o netcat
+gcc netcat.c -o netcat
+./netcat 142.1.46.36 50000
+gcc netcat.c -o netcat

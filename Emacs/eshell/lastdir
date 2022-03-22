@@ -1,8 +1,4 @@
 /Users/dez/.dotfiles/Emacs
-~/.dotfiles
-/Users/dez/.dotfiles/Emacs
-/Users/dez/.dotfiles/Emacs/eshell
-/Users/dez/.dotfiles/Emacs
 /Users/dez/.dotfiles/Emacs
 /
 /Users/dez/.dotfiles/Alfred/Alfred.alfredpreferences/workflows/user.workflow.17FC3BD5-1B30-4845-84E5-A4D8DE42B3C0
@@ -31,3 +27,7 @@
 /Users/dez/Desktop/Test/C_Test
 /
 /Users/dez/Desktop/Test/C_Test
+/Users/dez/.dotfiles/Emacs
+~
+/docker:root@ubuntu:/home
+/ssh:wangpe90@dh2026pc26.utm.utoronto.ca:/student/wangpe90
