@@ -1,13 +1,3 @@
-exit
-exit
-cd
-cd .dotfiles/
-./apply
-./apply.sh
-exit
-cd Documents/Org/Planner/ 
-ls
-ls
 f CSC209.org
 python3 test_py.py  
 python3 test_py.py  
@@ -126,3 +116,13 @@ gcc -Wall -g netcat.c -o netcat
 gcc netcat.c -o netcat
 ./netcat 142.1.46.36 50000
 gcc netcat.c -o netcat
+ls 
+lt
+exit 
+make
+make
+ls
+cd
+ls
+exit 
+exit 

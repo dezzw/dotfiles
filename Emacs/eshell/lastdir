@@ -1,7 +1,3 @@
-/Users/dez/.dotfiles/Emacs
-/Users/dez/.dotfiles/Emacs
-/
-/Users/dez/.dotfiles/Alfred/Alfred.alfredpreferences/workflows/user.workflow.17FC3BD5-1B30-4845-84E5-A4D8DE42B3C0
 /Users/dez/Documents/Org/Planner
 /Users/dez/.dotfiles/Emacs
 /Users/dez/Desktop/Test/Python_Test
@@ -31,3 +27,7 @@
 ~
 /docker:root@ubuntu:/home
 /ssh:wangpe90@dh2026pc26.utm.utoronto.ca:/student/wangpe90
+~
+/ssh:wangpe90@dh2026pc20.utm.utoronto.ca:/student/wangpe90/209/L9
+/Users/dez
+~

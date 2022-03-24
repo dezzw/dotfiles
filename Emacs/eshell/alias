@@ -1,5 +1,4 @@
-alias ls exa -la $1
-alias lt exa -laT $1
+alias ls ls -la $1
 alias f find-file $1
 alias d dired
 alias up eshell-up $1

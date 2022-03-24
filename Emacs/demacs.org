@@ -377,18 +377,6 @@ first RECIPE's package."
   (global-undo-tree-mode 1))
 #+end_src
 * Workspace
-** COMMENT Persp-mode
-#+begin_src emacs-lisp
-(setup (:require persp-mode)
-  (:option persp-keymap-prefix (kbd "C-x p")
-	   persp-nil-name "default"
-	   persp-set-last-persp-for-new-frames nil
-	   persp-kill-foreign-buffer-behaviour 'kill
-	   persp-auto-resume-time -1)
-  ;; Running `persp-mode' multiple times resets the perspective list...
-  (unless (equal persp-mode t)
-    (persp-mode)))
-#+end_src
 ** Perspective-el
 #+begin_src emacs-lisp
 (setup (:straight perspective)
@@ -530,15 +518,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      '("ws" . ace-swap-window)
      ))
   #+end_src
-** COMMENT Edwina
-#+begin_src emacs-lisp
-(use-package edwina
-	     :disabled
-	     :config
-	     (setq display-buffer-base-action '(display-buffer-below-selected))
-	     (edwina-setup-dwm-keys)
-	     (edwina-mode 1))
-#+end_src
 ** Window History with winner-mode
 #+begin_src emacs-lisp
 (setup winner
@@ -602,13 +581,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   ;; (dirvish-peek-mode)
   )
 #+end_src
-** Treemacs
-#+begin_src emacs-lisp
-(setup (:require treemacs)
-  (meow-leader-define-key
-   '("wt" . treemacs-select-window)))
-#+end_src
-
 * which-key
 #+begin_src emacs-lisp
 (setup (:require which-key)
@@ -623,7 +595,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (org-indent-mode)
   (visual-line-mode 1))
 
-(setup (:require org)
+(setup (:straight org)
   (:also-load org-tempo)
   (:hook dw/org-mode-setup)
   (setq org-html-head-include-default-style nil
@@ -646,7 +618,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   ;; 	  org-irc))
 
 
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 
   (setq org-html-htmlize-output-type nil)
 
@@ -656,18 +628,9 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   ;; default image width
   (setq org-image-actual-width '(300))
 
-  (setq org-export-with-sub-superscripts nil)
-
-  ;; 不要自动创建备份文件
-  (setq make-backup-files nil))
-
+  (setq org-export-with-sub-superscripts nil))
 #+end_src
 ** Apperance of Org   
-*** COMMENT Org Modern
-#+begin_src emacs-lisp
-(setup (:straight org-modern)
-  (:hook-into org-mode))
-#+end_src
 *** Bullets
 #+begin_src emacs-lisp
 ;; change bullets for headings
@@ -777,50 +740,17 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
   (add-to-list 'org-structure-template-alist '("json" . "src json")))
 #+end_src
-** Org Roam
-#+begin_src emacs-lisp
-(setup (:require org-roam)
-  (setq org-roam-v2-ack t)
-
-  (:option org-roam-directory "~/Documents/Org/Notes"
-	   org-roam-completion-everywhere t
-	   org-roam-completion-system 'default)
-  (:when-loaded
-    (org-roam-db-autosync-mode))
-
-  (:global "C-c o l" org-roam-buffer-toggle
-	   "C-c o f" org-roam-node-find
-	   "C-c o c" org-roam-dailies-capture-today
-	   "C-c o g" org-roam-graph)
-  (:bind "C-c o i" org-roam-node-insert
-	 "C-c o I" org-roam-insert-immediate)
-  )
-#+end_src
 ** Org Agenda
 #+begin_src emacs-lisp
 (with-eval-after-load "org-agenda"
 
-  ;; (setq planner-path "~/Documents/Org/Planner/")
-
-
-  ;; (defun dw/update-agenda-files()
-  ;;   (dolist (file (directory-files planner-path))
-  ;;     (when (string-match-p ".*\.org$" file)
-  ;; 	(setq org-agenda-files (cons (concat planner-path file) org-agenda-files)))))
-
-  ;; (dw/update-agenda-files)
-
   (if IS-MAC
       (setq org-agenda-files '("~/Documents/Org/Planner")))
 
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
 
   ;; Custom TODO states and Agendas
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "TBA(b)" "|" "DONE(d!)")
-	  ))
+	'((sequence "TODO(t)" "NEXT(n)" "TBA(b)" "|" "DONE(d!)")))
 
   (setq org-tag-alist
 	'((:startgroup)
@@ -837,7 +767,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	  ("idea" . ?i)))
 
 
-  (setup (:require org-super-agenda)
+  (setup (:straight org-super-agenda)
     (:hook-into org-agenda-mode)
     (:option org-agenda-skip-scheduled-if-done t
 	     org-agenda-skip-deadline-if-done t
@@ -845,6 +775,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	     org-agenda-include-diary t
 	     org-agenda-block-separator nil
 	     org-agenda-compact-blocks t
+	     org-log-done 'time
+	     org-log-into-drawer t
 	     org-agenda-start-with-log-mode t)
 
     (setq org-agenda-custom-commands
@@ -903,6 +835,30 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	`(("t" "Tasks / Projects")
 	  ("tt" "Task" entry (file+olp "~/Documents/Org/Planner/Tasks.org" "Inbox")
 	   "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1))))
+#+end_src
+** Org Roam
+#+begin_src emacs-lisp
+(setup (:straight org-roam)
+  (setq org-roam-v2-ack t)
+
+  (:option org-roam-directory "~/Documents/Org/Notes"
+	   org-roam-completion-everywhere t
+	   org-roam-completion-system 'default)
+  (:when-loaded
+    (org-roam-db-autosync-mode))
+
+  (:global "C-c o l" org-roam-buffer-toggle
+	   "C-c o f" org-roam-node-find
+	   "C-c o c" org-roam-dailies-capture-today
+	   "C-c o g" org-roam-graph)
+  (:bind "C-c o i" org-roam-node-insert
+	 "C-c o I" org-roam-insert-immediate))
+
+  (setup (:straight org-roam-ui)
+    (:option org-roam-ui-sync-theme t
+             org-roam-ui-follow t
+             org-roam-ui-update-on-save t
+             org-roam-ui-open-on-start t))
 #+end_src
 * Projectile
 #+begin_src emacs-lisp
