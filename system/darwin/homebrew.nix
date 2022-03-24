@@ -11,9 +11,12 @@
   homebrew.taps = [
     "homebrew/core"
     "homebrew/cask"
+    # "homebrew/services"
+    # "koekeishiya/formulae"
   ];
 
   homebrew.brews = [
+    # "yabai"
     "python"
     "minimal-racket"
   ];
@@ -24,7 +27,6 @@
     # "amethyst"
 
     # Browser
-    "qutebrowser"
     "google-chrome"
     
     # Applications

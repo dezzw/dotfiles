@@ -3,7 +3,7 @@
 {
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs;
+    package = pkgs.emacsGcc;
     extraPackages = epkgs: with epkgs;[
       setup
       use-package
@@ -164,5 +164,8 @@
 
     # dirvish
     imagemagick
+    mediainfo
+    python39Packages.pdf2image
+    
   ];
 }
