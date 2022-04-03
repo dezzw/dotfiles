@@ -27,6 +27,7 @@
     # "amethyst"
 
     # Browser
+    "brave-browser"
     "google-chrome"
     
     # Applications
@@ -44,13 +45,8 @@
     "obs"
     "appcleaner"
     "kap"
-    "soundflower"
     "ubersicht"
     "steam"
-    "macfuse"
     "docker"
-
-    # layout 
-    "programmer-dvorak"
   ];
 }

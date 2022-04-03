@@ -27,7 +27,6 @@
       vim-nix
       telescope-nvim
       nvim-lspconfig
-      completion-nvim
       nvim-tree-lua
     ];
   };

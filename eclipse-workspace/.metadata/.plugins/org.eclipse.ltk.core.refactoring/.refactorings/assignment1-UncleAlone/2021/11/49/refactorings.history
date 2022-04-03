@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Move &apos;2021.11.29.14.08.09.txt&apos; to &apos;boards&apos;" description="Move &apos;2021.11.29.14.08.09.txt&apos; to &apos;boards&apos;" destination="boards" element1="/assignment3-unclealone/boards/2021.11.29.14.08.09.txt" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1638212909556" updateReferences="true"/>
-</session>

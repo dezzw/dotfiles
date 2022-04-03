@@ -49,7 +49,7 @@
   programs.git = {
     enable = true;
     userName = "dezzw";
-    userEmail = "desmond.pc.w@gmail.com";
+    userEmail = "dw@dezzw.com";
     delta = {
       enable = true;
       options = {

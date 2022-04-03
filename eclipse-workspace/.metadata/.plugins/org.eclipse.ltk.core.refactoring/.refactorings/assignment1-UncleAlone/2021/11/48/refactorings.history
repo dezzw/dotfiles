@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Move element &apos;BoardBuilder.java&apos; to &apos;assignment3-unclealone/src/assignment1&apos;&#x0A;- Original project: &apos;assignment1-UncleAlone&apos;&#x0A;- Destination element: &apos;assignment3-unclealone/src/assignment1&apos;&#x0A;- Original element: &apos;assignment1.BoardBuilder.java&apos;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="=assignment3-unclealone/src&lt;assignment1" element1="/src&lt;assignment1{BoardBuilder.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1637991624509" units="1" version="1.0"/>
-</session>

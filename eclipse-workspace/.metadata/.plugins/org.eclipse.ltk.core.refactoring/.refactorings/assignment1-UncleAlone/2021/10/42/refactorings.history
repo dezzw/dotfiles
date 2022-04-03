@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;assignment1-UncleAlone/boards/Text&apos; to &apos;Text.txt&apos;" description="Rename resource &apos;Text&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="boards/Text" name="Text.txt" stamp="1634416228677" updateReferences="true"/>
-</session>
