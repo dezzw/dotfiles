@@ -26,8 +26,12 @@
       lightline-vim
       vim-nix
       telescope-nvim
+      nvim-treesitter
       nvim-lspconfig
+      vim-easymotion
+      vim-surround
       nvim-tree-lua
+      ranger-vim
     ];
   };
 }

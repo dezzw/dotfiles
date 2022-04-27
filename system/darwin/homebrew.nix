@@ -29,24 +29,30 @@
     # Browser
     "brave-browser"
     "google-chrome"
-    
-    # Applications
-    "alfred"
-    "dash"
-    "discord"
-    "downie"
-    "hazeover"
+
+    # Graphic Tools
+    "blender"
     "gimp"
-    "iina"
+    "obs"
+    "kap"
+
+    # Developing Tools
+    "dash"
     "iterm2"
     "jetbrains-toolbox"
     "visual-studio-code"
+    "docker"
+    "utm"
+
+    # Applications
+    "alfred"
+    "discord"
+    "downie"
+    "hazeover"
+    "iina"
     "zoom"
-    "obs"
     "appcleaner"
-    "kap"
     "ubersicht"
     "steam"
-    "docker"
   ];
 }

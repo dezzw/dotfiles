@@ -196,183 +196,59 @@
 
 * Startup Setting 
 #+begin_src emacs-lisp
-  (defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
-  (defconst IS-TTY (or (not (display-graphic-p)) (and (daemonp) (string= (daemonp) "tty"))))
+(defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
+(defconst IS-TTY (or (not (display-graphic-p)) (and (daemonp) (string= (daemonp) "tty"))))
 
-  ;; Copy from https://github.com/willbush/system/blob/master/emacs/init.el
-  ;; A big contributor to startup times is garbage collection. We up the gc
-  ;; threshold to temporarily prevent it from running, then reset it later using a
-  ;; hook and controlling after that with `gcmh-mode'.
-  (setq gc-cons-threshold most-positive-fixnum
-	gc-cons-percentage 0.6)
+;; Copy from https://github.com/willbush/system/blob/master/emacs/init.el
+;; A big contributor to startup times is garbage collection. We up the gc
+;; threshold to temporarily prevent it from running, then reset it later using a
+;; hook and controlling after that with `gcmh-mode'.
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
 
-  ;; Silence compiler warnings as they can be pretty disruptive
-  (setq native-comp-async-report-warnings-errors nil)
+;; Silence compiler warnings as they can be pretty disruptive
+(setq native-comp-async-report-warnings-errors nil)
 
-  ;; Set the right directory to store the native comp cache
-  (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+;; Set the right directory to store the native comp cache
+(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
-  ;; Keep a ref to the actual file-name-handler
-  (defvar default-file-name-handler-alist file-name-handler-alist)
+;; Keep a ref to the actual file-name-handler
+(defvar default-file-name-handler-alist file-name-handler-alist)
 
-  ;; Set the file-name-handler to nil (because regexing is cpu intensive)
-  (setq file-name-handler-alist nil)
+;; Set the file-name-handler to nil (because regexing is cpu intensive)
+(setq file-name-handler-alist nil)
 
-  ;; Reset file-name-handler-alist after initialization
-  (add-hook 'emacs-startup-hook
-	    (lambda ()
-	      (setq gc-cons-threshold GC-CONS-THRESHOLD
-		    gc-cons-percentage 0.1
-		    file-name-handler-alist default-file-name-handler-alist)))
+;; Reset file-name-handler-alist after initialization
+(add-hook 'emacs-startup-hook
+	  (lambda ()
+	    (setq gc-cons-threshold GC-CONS-THRESHOLD
+		  gc-cons-percentage 0.1
+		  file-name-handler-alist default-file-name-handler-alist)))
 
-  (setup (:straight gcmh)
-	 (:hook-into after-init-hook)
-	 (:option gcmh-idle-delay 5
-		  gcmh-high-cons-threshold GC-CONS-THRESHOLD)
-	 (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+(setup (:straight gcmh)
+       (:hook-into after-init-hook)
+       (:option gcmh-idle-delay 5
+		gcmh-high-cons-threshold GC-CONS-THRESHOLD)
+       (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
-  (global-auto-revert-mode 1)
-  (recentf-mode 1)
+(global-auto-revert-mode 1)
+(recentf-mode 1)
 
-  (setq make-backup-files nil
-	auto-save-default nil)
+(setq make-backup-files nil
+      auto-save-default nil)
 
-  (delete-selection-mode t)
+(delete-selection-mode t)
 
-  (setup (:straight super-save)
-	 (:option super-save-auto-save-when-idle t)
-	 (super-save-mode +1))
-
+(setup (:straight super-save)
+  (:delay)
+  (:when-loaded
+    (super-save-mode +1)
+    (setq super-save-auto-save-when-idle t)))
 #+end_src
 
 * Editing
-** Meow
-#+begin_src emacs-lisp
-  (straight-use-package 'meow)
-  (require 'meow)
-  (defun meow-setup ()
-    ;;(setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-    (meow-motion-overwrite-define-key
-     '("j" . meow-next)
-     '("k" . meow-prev)
-     '("<escape>" . ignore))
-    (meow-leader-define-key
-     ;; SPC j/k will run the original command in MOTION state.
-     '("j" . "H-j")
-     '("k" . "H-k")
-     ;; Use SPC (0-9) for digit arguments.
-     '("1" . meow-digit-argument)
-     '("2" . meow-digit-argument)
-     '("3" . meow-digit-argument)
-     '("4" . meow-digit-argument)
-     '("5" . meow-digit-argument)
-     '("6" . meow-digit-argument)
-     '("7" . meow-digit-argument)
-     '("8" . meow-digit-argument)
-     '("9" . meow-digit-argument)
-     '("0" . meow-digit-argument)
-     '("/" . meow-keypad-describe-key)
-     '("?" . meow-cheatsheet))
-    (meow-normal-define-key
-     '("0" . meow-expand-0)
-     '("9" . meow-expand-9)
-     '("8" . meow-expand-8)
-     '("7" . meow-expand-7)
-     '("6" . meow-expand-6)
-     '("5" . meow-expand-5)
-     '("4" . meow-expand-4)
-     '("3" . meow-expand-3)
-     '("2" . meow-expand-2)
-     '("1" . meow-expand-1)
-     '("-" . negative-argument)
-     '(";" . meow-reverse)
-     '("," . meow-inner-of-thing)
-     '("." . meow-bounds-of-thing)
-     '("[" . meow-beginning-of-thing)
-     '("]" . meow-end-of-thing)
-     '("a" . meow-append)
-     '("A" . meow-open-below)
-     '("b" . meow-back-word)
-     '("B" . meow-back-symbol)
-     '("c" . meow-change)
-     '("d" . meow-delete)
-     '("D" . meow-backward-delete)
-     '("e" . meow-next-word)
-     '("E" . meow-next-symbol)
-     '("f" . meow-find)
-     '("g" . meow-cancel-selection)
-     '("G" . meow-grab)
-     '("h" . meow-left)
-     '("H" . meow-left-expand)
-     '("i" . meow-insert)
-     '("I" . meow-open-above)
-     '("j" . meow-next)
-     '("J" . meow-next-expand)
-     '("k" . meow-prev)
-     '("K" . meow-prev-expand)
-     '("l" . meow-right)
-     '("L" . meow-right-expand)
-     '("m" . meow-join)
-     '("n" . meow-search)
-     '("o" . meow-block)
-     '("O" . meow-to-block)
-     '("p" . meow-yank)
-     '("q" . meow-quit)
-     '("Q" . meow-goto-line)
-     '("r" . meow-replace)
-     '("R" . meow-swap-grab)
-     '("s" . meow-kill)
-     '("t" . meow-till)
-     '("u" . undo-tree-undo)
-     '("U" . undo-tree-redo)
-     '("v" . meow-visit)
-     '("w" . meow-mark-word)
-     '("W" . meow-mark-symbol)
-     '("x" . meow-line)
-     '("X" . meow-goto-line)
-     '("y" . meow-save)
-     '("Y" . meow-sync-grab)
-     '("z" . meow-pop-selection)
-     '("'" . repeat)
-     '("<escape>" . ignore)))
-
-  (setup meow
-    (meow-setup)
-    (meow-global-mode 1)
-    ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
-    (meow-setup-line-number)
-    ;;:bind ("" . meow-insert-exit)
-    (add-to-list 'meow-mode-state-list '(inferior-emacs-lisp-mode . normal))
-    (add-to-list 'meow-mode-state-list '(org-agenda-mode . normal)))
-
-  (meow-leader-define-key
-   '("SPC" . execute-extended-command)
-   '("f" . find-file)
-   '("b" . persp-switch-to-buffer*)
-   '("k" . persp-kill-buffer*)
-   '("i" . persp-ibuffer)
-   '("a" . org-agenda))
-#+end_src
-** Editing Tools
-*** Hungry Delete
-#+begin_src emacs-lisp
-  (setup (:straight hungry-delete)
-	 (:hook-into prog-mode lsp-mode))
-#+end_src
-*** Evil-nerd-commenter
-#+begin_src emacs-lisp
-  (setup (:straight evil-nerd-commenter)
-	 (:global "M-;" evilnc-comment-or-uncomment-lines))
-#+end_src
-*** Avy
-#+begin_src emacs-lisp
-  (setup (:straight avy)
-	 (meow-leader-define-key
-	  '("tc" . avy-goto-char)
-	  '("tw" . avy-goto-word-0)
-	  '("tl" . avy-goto-line)))
-#+end_src
-*** Undo-Tree
+** Evil
+*** Main Settings
 #+begin_src emacs-lisp
 (setup (:straight undo-tree)
   (global-undo-tree-mode 1)
@@ -382,18 +258,102 @@
       undo-limit 800000
       undo-strong-limit 12000000
       undo-outer-limit 128000000))
+
+(setup (:straight evil)
+  ;; Pre-load configuration
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-respect-visual-line-mode t)
+  (setq evil-undo-system 'undo-tree)
+
+  ;; Activate the Evil
+  (evil-mode 1)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal))
+
+(setup (:straight evil-collection)
+  ;; Is this a bug in evil-collection?
+  (setq evil-collection-company-use-tng nil)
+  (:load-after evil
+    (:option evil-collection-outline-bind-tab-p nil)
+    (evil-collection-init)))
+#+end_src
+*** Evil-nerd-commenter
+#+begin_src emacs-lisp
+  (setup (:straight evil-nerd-commenter)
+	 (:global "M-/" evilnc-comment-or-uncomment-lines))
+#+end_src
+*** Evil-multiedit
+#+begin_src emacs-lisp
+  (setup (:straight evil-multiedit)
+    (require 'evil-multiedit)
+    (evil-multiedit-default-keybinds))
+#+end_src
+*** Evil-surround
+#+begin_src emacs-lisp
+(setup (:straight evil-surround)
+  (global-evil-surround-mode 1))
+#+end_src
+*** Evil-escape
+#+begin_src emacs-lisp
+(setup (:straight evil-escape)
+  (setq-default evil-escape-key-sequence "jk")
+  (evil-escape-mode))
+#+end_src
+*** Simplify Leader Bindings (general.el)
+#+begin_src emacs-lisp
+(setup (:straight general)
+  (general-evil-setup t)
+
+  (general-create-definer dw/leader-key-def
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC"))
+
+(dw/leader-key-def
+   "SPC" 'execute-extended-command
+   "f" 'find-file
+   "b" 'persp-switch-to-buffer*
+   "k" 'persp-kill-buffer*
+   "i" 'persp-ibuffer
+   "a" 'org-agenda)
+#+end_src
+** which-key
+#+begin_src emacs-lisp
+  (setup (:straight which-key)
+	 (:option which-key-idle-delay 0.3)
+	 (which-key-mode))
+
+#+end_src
+** Editing Tools
+*** Hungry Delete
+#+begin_src emacs-lisp
+  (setup (:straight hungry-delete)
+	 (:hook-into prog-mode lsp-mode))
+#+end_src
+*** Avy
+#+begin_src emacs-lisp
+(setup (:straight avy)
+  (dw/leader-key-def
+    "j"   '(:ignore t :which-key "jump")
+    "jj"  '(avy-goto-char :which-key "jump to char")
+    "jw"  '(avy-goto-word-0 :which-key "jump to word")
+    "jl"  '(avy-goto-line :which-key "jump to line")))
 #+end_src
 * Workspace
 ** Perspective-el
 #+begin_src emacs-lisp
-  (setup (:straight perspective)
-	 (:option persp-initial-frame-name "Main"
-		  persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
+(setup (:straight perspective)
+       (:option persp-initial-frame-name "Main"
+		persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
+       (setq persp-mode-prefix-key (kbd "C-c M-p"))
 
-	 (add-hook 'kill-emacs-hook #'persp-state-save)
-	 ;; Running `persp-mode' multiple times resets the perspective list...
-	 (unless (equal persp-mode t)
-	   (persp-mode)))
+       (add-hook 'kill-emacs-hook #'persp-state-save)
+       ;; Running `persp-mode' multiple times resets the perspective list...
+       (unless (equal persp-mode t)
+	 (persp-mode)))
 #+end_src
 * UI Setting
 ** Line Numbers
@@ -448,6 +408,11 @@
 	       nyan-wavy-trail t)))
 #+end_src
 
+** Parrot
+#+begin_src emacs-lisp
+(setup (:straight parrot)
+  (setq parrot-num-rotations nil))
+#+end_src
 ** Highlight TODOs
 #+begin_src emacs-lisp
   (setup (:straight hl-todo)
@@ -481,17 +446,18 @@
 #+end_src
 ** Tree-Sitter
 #+begin_src emacs-lisp
+(straight-use-package 'tree-sitter)
 (straight-use-package 'tree-sitter-langs)
 
-(setup (:straight tree-sitter)
-  (:delay)
-  (:also-load tree-sitter-langs)
-  (global-tree-sitter-mode)
-  (add-hook 'c-mode-hook #'tree-sitter-hl-mode)
-  (add-hook 'python-mode-hook #'tree-sitter-hl-mode)
-  (add-hook 'js2-mode-hook #'tree-sitter-hl-mode)
-  (add-hook 'typescritpt-mode-hook #'tree-sitter-hl-mode))
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
 
+(add-hook 'c-mode-hook #'tree-sitter-hl-mode)
+(add-hook 'python-mode-hook #'tree-sitter-hl-mode)
+(add-hook 'js2-mode-hook #'tree-sitter-hl-mode)
+(add-hook 'typescritpt-mode-hook #'tree-sitter-hl-mode)
+
+(global-tree-sitter-mode)
 #+end_src
 
 * Auto-Tangle Org File
@@ -523,22 +489,21 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 - =o= - maximize current window
 - =?= - show these command bindings
   #+begin_src emacs-lisp
-    (setup (:straight ace-window)
-	   (:global "C-x o" ace-window)
-	   (:option aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-	   (meow-leader-define-key
-	    '("wo" . ace-window)
-	    '("wd" . ace-delete-window)
-	    '("ws" . ace-swap-window)
-	    ))
+  (setup (:straight ace-window)
+         (:global "C-x o" ace-window)
+         (:option aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+         (dw/leader-key-def
+           "w" '(:ignore t :which-key "window")
+          "wo" '(ace-window :which-key "ace-window")
+          "wd" '(ace-delete-window :which-key "ace-delete-window")
+          "ws" '(ace-swap-window :which-key "ace-swap-window")))
   #+end_src
 ** Window History with winner-mode
 #+begin_src emacs-lisp
-  (setup winner
-	 (winner-mode)
-	 (meow-leader-define-key
-	  '("wu" . winner-undo)
-	  '("wU" . winner-redo)))
+(setup winner
+  (winner-mode)
+  (define-key evil-window-map "u" 'winner-undo)
+  (define-key evil-window-map "U" 'winner-redo))
 #+end_src
 ** Popper
 #+begin_src emacs-lisp
@@ -550,7 +515,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 		    "\\*Async Shell Command\\*"
 		    help-mode
 		    compilation-mode
-		    "^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
+		    ;; "^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
 		    "^\\*shell.*\\*$"  shell-mode  ;shell as a popup
 		    "^\\*term.*\\*$"   term-mode   ;term as a popup
 		    "^\\*vterm.*\\*$"  vterm-mode  ;vterm as a popup
@@ -561,45 +526,29 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	 (popper-mode +1)
 	 (popper-echo-mode +1))
 #+end_src
-** Keybinds to Manage Windows
-#+begin_src emacs-lisp
-  (meow-leader-define-key
-   '("wh" . split-window-below)
-   '("wv" . split-window-right)
-   )
-#+end_src
 * File Management
 ** Dired
 #+begin_src emacs-lisp
-  (setup dired
-	 (:global "C-x C-j" dired-jump)
-	 (:option dired-dwim-target t))
+(setup dired
+       (:global "C-x C-j" dired-jump)
+       (:option dired-dwim-target t))
 
-  ;; (setup all-the-icons-dired
-  ;; 	(:hook-into dired-mode))
+;; (setup all-the-icons-dired
+;; 	(:hook-into dired-mode))
 
-  (setup (:straight dired-hide-dotfiles)
-	 (:hook-into dired-mode)
-	 (:with-map dired-mode-map
-		    (:bind "." dired-hide-dotfiles-mode)))
+(setup (:straight dired-hide-dotfiles)
+  (:hook-into dired-mode)
+  (:with-map dired-mode-map
+    (:bind "." dired-hide-dotfiles-mode)))
 
-  (setup (:straight diredfl)
-	 (:hook-into dired-mode))
+(setup (:straight diredfl)
+       (:hook-into dired-mode))
 #+end_src
 ** Dirvish
 #+begin_src emacs-lisp
   (setup (:straight dirvish)
 	 (:also-load dirvish-peek)
-	 (dirvish-override-dired-mode)
-	 ;; (dirvish-peek-mode)
-	 )
-#+end_src
-* which-key
-#+begin_src emacs-lisp
-  (setup (:straight which-key)
-	 (:option which-key-idle-delay 0.3)
-	 (which-key-mode))
-
+	 (dirvish-override-dired-mode))
 #+end_src
 * Org Mode
 ** Config Basic Org mode
@@ -885,91 +834,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 		  "C-c p" projectile-command-map))
 #+end_src
 * Completion System
-** COMMENT Company
-*** Company Mode
-#+begin_src emacs-lisp
-  (setup (:require company)
-	 (:hook-into lsp-mode prog-mode conf-mode)
-	 (:option company-tooltip-align-annotations t
-		  ;; Number the candidates (use M-1, M-2 etc to select completions)
-		  company-show-numbers t
-		  ;; starts with 1 character
-		  company-minimum-prefix-length 1
-		  ;; Trigger completion immediately
-		  company-idle-delay 0.2
-		  ;; Back to top when reach the end
-		  company-selection-wrap-around t))
-
-  ;;Completion based on AI 
-  (setup company-tabnine
-	 (:when-loaded
-	  (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends)))
-
-
-#+end_src
-*** Company Box
-#+begin_src emacs-lisp
-  ;; Add UI for Company
-  (setup (:require company-box)
-	 (:hook-into company-mode)
-	 (:option company-box-icons-alist 'company-box-icons-all-the-icons))
-#+end_src
-*** Company Quickhelp
-#+begin_src emacs-lisp
-  (setup (:require company-quickhelp)
-	 (:hook-into company-mode))
-#+end_src
-*** Company Statistics
-#+begin_src emacs-lisp
-  (setup (:require company-statistics)
-	 (company-statistics-mode))
-#+end_src
-** Corfu
-#+begin_src emacs-lisp
-  (setup (:straight corfu)
-	 (:option
-	  ;; Optional customizations
-	  corfu-cycle t                ;; Enable cycling for `corfu-next/previous'
-	  corfu-auto t                 ;; Enable auto completion
-	  ;; (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
-	  corfu-quit-no-match 'separator        ;; Automatically quit if there is no match
-	  corfu-preview-current nil    ;; Disable current candidate preview
-	  corfu-echo-documentation nil ;; Disable documentation in the echo area
-	  corfu-auto-prefix 2)
-
-	 (:with-map corfu-map
-		    (:bind [tab] corfu-next
-			   [backtab] corfu-previous
-			   "<escape>" corfu-quit))
-	 (corfu-global-mode)
-	 )
-  ;; Use dabbrev with Corfu!
-  (setup (:require dabbrev))
-
-  ;; corfu backend
-  (setup (:straight cape)
-	 (add-to-list 'completion-at-point-functions #'cape-file)
-	 (add-to-list 'completion-at-point-functions #'cape-tex)
-	 (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-	 (add-to-list 'completion-at-point-functions #'cape-keyword)
-
-	 (add-to-list 'completion-at-point-functions #'cape-abbrev)
-	 )
-
-
-  ;; Enable Corfu completion UI
-  ;; (straight-use-package '(corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-  (setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-	 (:hook-into corfu-mode))
-
-  ;; (setup (:pkg svg-lib :type built-in)) ;; built-in has little icons
-  (setup (:require kind-icon)
-	 (:load-after corfu)
-	 (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-	 (:when-loaded
-	  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
-	  ))
-#+end_src
 ** Vertico
 #+begin_src emacs-lisp
   (defun dw/minibuffer-backward-kill (arg)
@@ -1059,11 +923,21 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Tempel
 #+begin_src emacs-lisp
   (setup (:straight tempel)
-	 (tempel-global-abbrev-mode)
+	 (global-tempel-abbrev-mode)
        
 	 (:global "M-+" tempel-complete
 		  "M-*" tempel-insert)
 	 (:option tempel-file "~/.dotfiles/Emacs/templates"))
+#+end_src
+
+** Yasnippets
+#+begin_src emacs-lisp
+(setup (:straight yasnippet)
+  (straight-use-package 'yasnippet-snippets)
+  (require 'yasnippet)
+  (:option yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode))
 #+end_src
 
 ** Citre
@@ -1090,6 +964,112 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 		  citre-auto-enable-citre-mode-modes '(prog-mode)))
 #+end_src
 
+** Corfu
+#+begin_src emacs-lisp
+(setup (:straight corfu)
+  (:option
+   ;; Optional customizations
+   corfu-cycle t                ;; Enable cycling for `corfu-next/previous'
+	corfu-auto t                 ;; Enable auto completion
+	corfu-quit-at-boundary t     ;; Automatically quit at word boundary
+	corfu-quit-no-match 'separator        ;; Automatically quit if there is no match
+	corfu-preview-current nil    ;; Disable current candidate preview
+	corfu-echo-documentation nil ;; Disable documentation in the echo area
+	corfu-auto-prefix 2)
+  
+;;   (defun smarter-tab-to-complete ()
+;;     "Try to `org-cycle', `yas-expand', and `yas-next-field' at current cursor position.
+;; If all failed, try to complete the common part with `corfu-complete'"
+;;     (interactive)
+;;     (when yas-minor-mode
+;;       (let ((old-point (point))
+;;             (old-tick (buffer-chars-modified-tick))
+;;             (func-list
+;;              (if (equal major-mode 'org-mode) '(org-cycle yas-expand yas-next-field)
+;;                '(yas-expand yas-next-field))))
+;;         (catch 'func-suceed
+;;           (dolist (func func-list)
+;;             (ignore-errors (call-interactively func))
+;;             (unless (and (eq old-point (point))
+;;                          (eq old-tick (buffer-chars-modified-tick)))
+;;               (throw 'func-suceed t)))
+;;           (corfu-complete)))))
+
+  (:with-map corfu-map
+    (:bind
+     [tab] corfu-next
+     [backtab] corfu-previous
+     ;; [tab] smarter-tab-to-complete
+     ;; "TAB" smarter-tab-to-complete
+     "<escape>" corfu-quit))
+  (corfu-global-mode)
+  )
+
+;; Use dabbrev with Corfu!
+(setup (:require dabbrev))
+
+;; corfu backend
+(setup (:straight cape)
+       (add-to-list 'completion-at-point-functions #'cape-file)
+       (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+       (add-to-list 'completion-at-point-functions #'cape-keyword)
+
+       (add-to-list 'completion-at-point-functions #'cape-abbrev)
+       )
+
+
+;; Enable Corfu completion UI
+;; (straight-use-package '(corfu-doc :type git :host github :repo "galeo/corfu-doc"))
+(setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
+       (:hook-into corfu-mode))
+
+;; (setup (:pkg svg-lib :type built-in)) ;; built-in has little icons
+(setup (:require kind-icon)
+       (:load-after corfu)
+       (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+       (:when-loaded
+	(add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+	))
+#+end_src
+** COMMENT Company
+*** Company Mode
+#+begin_src emacs-lisp
+  (setup (:require company)
+	 (:hook-into lsp-mode prog-mode conf-mode)
+	 (:option company-tooltip-align-annotations t
+		  ;; Number the candidates (use M-1, M-2 etc to select completions)
+		  company-show-numbers t
+		  ;; starts with 1 character
+		  company-minimum-prefix-length 1
+		  ;; Trigger completion immediately
+		  company-idle-delay 0.2
+		  ;; Back to top when reach the end
+		  company-selection-wrap-around t))
+
+  ;;Completion based on AI 
+  (setup company-tabnine
+	 (:when-loaded
+	  (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends)))
+
+
+#+end_src
+*** Company Box
+#+begin_src emacs-lisp
+  ;; Add UI for Company
+  (setup (:require company-box)
+	 (:hook-into company-mode)
+	 (:option company-box-icons-alist 'company-box-icons-all-the-icons))
+#+end_src
+*** Company Quickhelp
+#+begin_src emacs-lisp
+  (setup (:require company-quickhelp)
+	 (:hook-into company-mode))
+#+end_src
+*** Company Statistics
+#+begin_src emacs-lisp
+  (setup (:require company-statistics)
+	 (company-statistics-mode))
+#+end_src
 * Helpful Function Description
 #+begin_src emacs-lisp
   (setup (:straight helpful)
@@ -1106,20 +1086,20 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Developing Tools
 *** Brackets
 #+begin_src emacs-lisp
-  ;; (electric-pair-mode +1)
+;; (electric-pair-mode +1)
 
-  (setup (:straight smartparens)
-	 (:also-load smartparens-config)
-	 (:hook-into prog-mode lsp-mode org-mode)
-	 (:bind "M-r" sp-rewrap-sexp    
-		"M-s" p-unwrap-sexp
-		"M-[" p-wrap-square
-		"M-{" p-wrap-curly
-		"C-)" p-forward-slur-sexp
-		"C-}" p-forward-barfsexp))
+(setup (:straight smartparens)
+  (:also-load smartparens-config)
+  (:hook-into prog-mode lsp-mode org-mode)
+  (:bind "M-r" sp-rewrap-sexp    
+	 "M-s" sp-unwrap-sexp
+	 "M-[" sp-wrap-square
+	 "M-{" sp-wrap-curly
+	 "C-)" sp-forward-slur-sexp
+	 "C-}" sp-forward-barfsexp))
 
-  (setup (:require rainbow-delimiters)
-	 (:hook-into lsp-mode prog-mode))
+(setup (:require rainbow-delimiters)
+  (:hook-into lsp-mode prog-mode))
 #+end_src
 *** Indent
 #+begin_src emacs-lisp
@@ -1143,17 +1123,18 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 *** quickrun.el
 #+begin_src emacs-lisp
-  (setup (:straight quickrun)
-	 ;; set python3 as default
-	 (quickrun-add-command "python" 
-			       '((:command . "python3") 
-				 (:exec . "%c %s") 
-				 (:tempfile . nil)) 
-			       :default "python")
-	 (:when-loaded
-	  (meow-leader-define-key
-	   '("qq" . quickrun)
-	   '("qs" . quickrun-shell))))
+(setup (:straight quickrun)
+  ;; set python3 as default
+  (quickrun-add-command "python" 
+    '((:command . "python3") 
+      (:exec . "%c %s") 
+      (:tempfile . nil)) 
+    :default "python")
+  (:when-loaded
+    (dw/leader-key-def
+      "q" '(:ignore t :which-key "quickrun")
+      "qq" '(quickrun :which-key "quickrun")
+      "qs" '(quickrun-shell :which-key "quickrun-shell"))))
 #+end_src
 
 *** Minimap
@@ -1249,8 +1230,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	 (:option c-default-style "linux"
 		  c-basic-offset 4))
 
-  (setup (:straight ccls)
-	 (:also-load modern-cpp-font-lock))
+  (setup (:straight ccls))
 
   (setup (:straight modern-cpp-font-lock)
 	 (:hook-into c++-mode))
@@ -1270,12 +1250,14 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 *** Docker
 #+begin_src emacs-lisp
-  (setup (:straight docker))
+(setup (:straight docker)
+  (:delay))
 
-  (setup (:straight dockerfile-mode)
-	 (:file-match "Dockerfile\\'"))
+(setup (:straight dockerfile-mode)
+       (:file-match "Dockerfile\\'"))
 
-  (setup (:straight docker-tramp))
+(setup (:straight docker-tramp)
+  (:delay))
 #+end_src
 *** Common Lisp
 #+begin_src emacs-lisp
@@ -1285,9 +1267,10 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Latex
 **** CDLaTex
 #+begin_src emacs-lisp
-  (setup (:straight cdlatex)
-	 (:hook-into LaTeX-mode latex-mode)
-	 (add-hook 'org-mode-hook #'org-cdlatex-mode))
+(straight-use-package 'auctex)
+(setup (:straight cdlatex)
+       (:hook-into LaTeX-mode latex-mode)
+       (add-hook 'org-mode-hook #'org-cdlatex-mode))
 #+end_src
 **** Xenops
 #+begin_src emacs-lisp
@@ -1360,17 +1343,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (setup (:straight flycheck)
 	 (:hook-into lsp-mode))
 #+end_src
-** COMMENT Yasnippets
-#+begin_src emacs-lisp
-  (setup (:require yasnippet)
-	 (:option yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
-	 (yas-global-mode 1))
-
-  ;; Snippets Collection
-  (setup (:require yasnippet-snippets)
-	 (:load-after yasnippet))
-#+end_src
-
 * Direnv
 #+begin_src emacs-lisp
   (setup (:straight direnv)
@@ -1380,114 +1352,108 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 * Term/Shells
 ** Vterm
 #+begin_src emacs-lisp
-  ;; Copy from https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-shell.el
-  ;; Better term
-  ;; @see https://github.com/akermu/emacs-libvterm#installation
-  (setup (:straight vterm)
-	 (with-no-warnings
-	   (when (posframe-workable-p)
-	     (defvar vterm-posframe--frame nil)
-	     (defun vterm-posframe-toggle ()
-	       "Toggle `vterm' child frame."
-	       (interactive)
-	       (let ((buffer (vterm--internal #'ignore 100))
-		     (width  (max 80 (/ (frame-width) 2)))
-		     (height (/ (frame-height) 2)))
-		 (if (frame-live-p vterm-posframe--frame)
-		     (progn
-		       (posframe-delete-frame buffer)
-		       (setq vterm-posframe--frame nil))
-		   (setq vterm-posframe--frame
-			 (posframe-show
-			  buffer
-			  :poshandler #'posframe-poshandler-frame-center
-			  :left-fringe 8
-			  :right-fringe 8
-			  :width width
-			  :height height
-			  :min-width width
-			  :min-height height
-			  :internal-border-width 3
-			  :internal-border-color (face-foreground 'font-lock-comment-face nil t)
-			  :background-color (face-background 'tooltip nil t)
-			  :accept-focus t)))))
-	     (:global "C-`" vterm-posframe-toggle)
-	   
-	     (meow-leader-define-key
-	      '("tp" . vterm-posframe-toggle))))
+;; Copy from https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-shell.el
+;; Better term
+;; @see https://github.com/akermu/emacs-libvterm#installation
+(setup (:straight vterm)
+       (with-no-warnings
+	 (when (posframe-workable-p)
+	   (defvar vterm-posframe--frame nil)
+	   (defun vterm-posframe-toggle ()
+	     "Toggle `vterm' child frame."
+	     (interactive)
+	     (let ((buffer (vterm--internal #'ignore 100))
+		   (width  (max 80 (/ (frame-width) 2)))
+		   (height (/ (frame-height) 2)))
+	       (if (frame-live-p vterm-posframe--frame)
+		   (progn
+		     (posframe-delete-frame buffer)
+		     (setq vterm-posframe--frame nil))
+		 (setq vterm-posframe--frame
+		       (posframe-show
+			buffer
+			:poshandler #'posframe-poshandler-frame-center
+			:left-fringe 8
+			:right-fringe 8
+			:width width
+			:height height
+			:min-width width
+			:min-height height
+			:internal-border-width 3
+			:internal-border-color (face-foreground 'font-lock-comment-face nil t)
+			:background-color (face-background 'tooltip nil t)
+			:accept-focus t)))))
+	   (:global "C-`" vterm-posframe-toggle)))
 
-	 (:option vterm-max-scrollback 10000))
+       (:option vterm-max-scrollback 10000))
 
 
-  (setup (:require multi-vterm))
+(setup (:straight multi-vterm))
 
-  (meow-leader-define-key
-   '("tt" . vterm)
-   '("tm" . multi-vterm))
+(dw/leader-key-def
+  "t" '(:ignore t :which-key "term")
+ "tt" '(vterm :which-key "vterm")
+ "tm" '(multi-vterm :which-key "multi-vterm"))
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
-  (setup (:straight eshell)
+(setup (:straight eshell)
 
-	 (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/"
-	       eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias"))
+       (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/"
+	     eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias"))
 
-	 (:global "C-c m" eshell))
+       (if (executable-find "exa")
+	   (defalias 'eshell/ls "exa")
+	 (defalias 'eshell/ls "ls"))
 
-  (setup (:straight eshell-prompt-extras)
-	 (progn
-	   (setq eshell-highlight-prompt nil
-		 epe-git-dirty-char " Ϟ"
-		 ;; epe-git-dirty-char "*"
-		 eshell-prompt-function 'epe-theme-dakrone)))
+       (:global "C-c m" eshell))
 
-  (setup (:straight eshell-up)
-	 (:load-after eshell)
-	 (:option eshell-up-ignore-case nil))
+(setup (:straight eshell-prompt-extras)
+  (with-eval-after-load "esh-opt"
+    (autoload 'epe-theme-lambda "eshell-prompt-extras")
+    (setq eshell-highlight-prompt nil
+	  eshell-prompt-function 'epe-theme-lambda)))
 
-  (setup (:straight eshell-syntax-highlighting)
-	 (:load-after esh-mode)
-	 (eshell-syntax-highlighting-global-mode +1))
+(setup (:straight eshell-up)
+       (:load-after eshell)
+       (:option eshell-up-ignore-case nil))
 
-  (setup (:straight esh-autosuggest)
-	 (:hook-into eshell-mode)
-	 (:option esh-autosuggest-delay 0.5))
+(setup (:straight eshell-syntax-highlighting)
+       (:load-after esh-mode)
+       (eshell-syntax-highlighting-global-mode +1))
 
-  (setup (:straight esh-help)
-	 (setup-esh-help-eldoc))
+(setup (:straight esh-autosuggest)
+       (:hook-into eshell-mode)
+       (:option esh-autosuggest-delay 0.5))
 
-  (setup (:straight eshell-vterm)
-	 (:load-after eshell)
-	 (eshell-vterm-mode)
-	 (defalias 'eshell/v 'eshell-exec-visual))
+(setup (:straight esh-help)
+       (setup-esh-help-eldoc))
 
-  (setup (:straight eshell-toggle)
-	 (:global "C-M-'" eshell-toggle)
-	 (:option eshell-toggle-size-fraction 3
-		  eshell-toggle-use-projectile-root t
-		  eshell-toggle-run-command nil))
+(setup (:straight eshell-vterm)
+       (:load-after eshell)
+       (eshell-vterm-mode)
+       (defalias 'eshell/v 'eshell-exec-visual))
+
+(setup (:straight eshell-toggle)
+       (:global "C-M-s" eshell-toggle)
+       (:option eshell-toggle-size-fraction 3
+		eshell-toggle-use-projectile-root t
+		eshell-toggle-run-command nil))
 #+end_src
 * Tmux
 ** Emamux
 #+begin_src emacs-lisp
-  (setup (:straight emamux)
-	 (:only-if IS-TTY)
-	 (global-set-key (kbd "C-z") emamux:keymap))
-#+end_src
-** Tmux-pane
-#+begin_src emacs-lisp
-  (setup (:straight tmux-pane)
-	 (:disabled)
-	 (:only-if IS-TTY)
-	 (tmux-pane-mode))
+(if IS-TTY
+    (setup (:straight emamux)))
 #+end_src
 * Git
 ** Magit
 #+begin_src emacs-lisp
-  (setup (:straight magit)
-	 (:also-load magit-delta)
-	 (:global "C-M-;" magit-status)
-	 (:option magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(setup (:straight magit)
+  (:delay)
+  (:also-load magit-delta)
+  (:global "C-M-;" magit-status)
+  (:option magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 #+end_src
 ** Magit-Delta
 Highlight diff by using delta
@@ -1502,19 +1468,15 @@ Highlight diff by using delta
   (setup (:straight password-store)
 	 (:option password-store-password-length 12))
 #+end_src
-* EAF
+* COMMENT EAF
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "~/.dotfiles/Emacs/site-lisp/emacs-application-framework/")
+  (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
   (if IS-GUI
       (setup (:require eaf)
-	     (:also-load eaf-browser eaf-terminal eaf-pdf-viewer eaf-file-manager eaf-org-previewer)
+	     (:also-load eaf-browser eaf-terminal eaf-git eaf-file-manager eaf-org-previewer)
 	     (:option eaf-browser-continue-where-left-off t
 		      eaf-browser-enable-adblocker t
 		      browse-url-browser-function 'eaf-open-browser)
-
-	     (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
-	     (add-to-list 'TeX-view-program-list '("eaf" eaf-pdf-synctex-forward-view))
-	     (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))
 
 	     (defalias 'browse-web #'eaf-open-browser)))
 #+end_src
@@ -1523,7 +1485,7 @@ Highlight diff by using delta
   (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
   (setq tramp-default-method "ssh"
 	tramp-default-user "wangpe90"
-	tramp-default-host "dh2026pc20.utm.utoronto.ca")
+	tramp-default-host "dh2020pc20.utm.utoronto.ca")
 
   (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
   (setq tramp-verbose 6)

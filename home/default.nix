@@ -5,6 +5,7 @@
     ./emacs.nix
     ./nvim.nix
     ./tmux.nix
+    ./clisp.nix
   ];
   
   # Let Home Manager install and manage itself.
@@ -20,10 +21,7 @@
     # nodejs
     nodejs
     nodePackages.typescript
-
-    # common lisp
-    sbcl
-
+    
     # rust
     rustc
 
@@ -38,8 +36,7 @@
     exa
     ripgrep
     aria
-
-    sshfs
+    ranger
 
     comma
 
@@ -88,9 +85,10 @@
       plugins = [
         { name = "zsh-users/zsh-autosuggestions"; }
         { name = "zsh-users/zsh-syntax-highlighting"; }
+        { name = "jeffreytse/zsh-vi-mode"; }
         # { name = "spwhitt/nix-zsh-completions"; }
         { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
-        { name = "marlonrichert/zsh-autocomplete"; }
+        # { name = "marlonrichert/zsh-autocomplete"; }
       ];
     };
     initExtra = ''

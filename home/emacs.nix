@@ -37,8 +37,13 @@
 
     universal-ctags
 
-    ispell
-
+    # For flyspell (spelling checking)
+    aspell
+    aspellDicts.en
+    aspellDicts.en-computers
+    aspellDicts.en-science
+    
+    # Code Formating
     nixpkgs-fmt
 
     # dirvish

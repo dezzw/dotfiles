@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
-{
+let
+  #demacs = (pkgs.emacsPackagesFor pkgs.emacsPgtkGcc).emacsWithPackages
+  #  (epkgs: [ epkgs.vterm epkgs.pdf-tools ]);
+in {
   imports = [
     ./homebrew.nix
     #./wm.nix

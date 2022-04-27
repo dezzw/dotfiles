@@ -8,6 +8,19 @@
 	<string>Tools</string>
 	<key>connections</key>
 	<dict>
+		<key>16A96AD2-9974-47DC-A2F3-650ECD152AA0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B2BF3F00-4889-4333-82A6-807A70A33129</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>3E554F3A-9D95-4D8B-9797-FDE6FDA14DCD</key>
 		<array>
 			<dict>
@@ -35,6 +48,19 @@
 			</dict>
 		</array>
 		<key>6E12F27D-1B66-42BB-BADC-F90847D9AF47</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9273F864-226C-448C-BA45-C404BF368E28</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>77E4F014-49B9-4791-8C1B-2B8B510E119A</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -415,7 +441,7 @@ fi</string>
 				<key>script</key>
 				<string>EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
 
-$EMACSCLIENT --socket-name=main -nc</string>
+$EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(dirvish))'</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -476,6 +502,68 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>14</integer>
+				<key>hotmod</key>
+				<integer>1048576</integer>
+				<key>hotstring</key>
+				<string>E</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>77E4F014-49B9-4791-8C1B-2B8B510E119A</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>14</integer>
+				<key>hotmod</key>
+				<integer>1179648</integer>
+				<key>hotstring</key>
+				<string>E</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>16A96AD2-9974-47DC-A2F3-650ECD152AA0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>This workfollow is used to control the eamcs servers (daemon) and their clients.</string>
@@ -494,6 +582,13 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<integer>865</integer>
 			<key>ypos</key>
 			<integer>255</integer>
+		</dict>
+		<key>16A96AD2-9974-47DC-A2F3-650ECD152AA0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>105</integer>
+			<key>ypos</key>
+			<integer>670</integer>
 		</dict>
 		<key>3E554F3A-9D95-4D8B-9797-FDE6FDA14DCD</key>
 		<dict>
@@ -523,6 +618,13 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<key>ypos</key>
 			<integer>100</integer>
 		</dict>
+		<key>77E4F014-49B9-4791-8C1B-2B8B510E119A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>565</integer>
+			<key>ypos</key>
+			<integer>565</integer>
+		</dict>
 		<key>9273F864-226C-448C-BA45-C404BF368E28</key>
 		<dict>
 			<key>xpos</key>
@@ -533,7 +635,7 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 		<key>B0F9FCDE-0FAD-4CAA-A551-CBB9E30F3EEF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>75</integer>
+			<integer>95</integer>
 			<key>ypos</key>
 			<integer>420</integer>
 		</dict>
@@ -554,7 +656,7 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 		<key>E686AB1E-CD4D-47CB-A519-8A7B943D2844</key>
 		<dict>
 			<key>xpos</key>
-			<integer>370</integer>
+			<integer>380</integer>
 			<key>ypos</key>
 			<integer>420</integer>
 		</dict>
@@ -568,14 +670,14 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 		<key>F846F785-2FD2-4688-B4FA-77AC867B86C8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>75</integer>
+			<integer>90</integer>
 			<key>ypos</key>
 			<integer>260</integer>
 		</dict>
 		<key>FFB6FFC8-FABF-4A8D-8E3F-F9567A212E97</key>
 		<dict>
 			<key>xpos</key>
-			<integer>80</integer>
+			<integer>100</integer>
 			<key>ypos</key>
 			<integer>545</integer>
 		</dict>
