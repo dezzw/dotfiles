@@ -21,6 +21,7 @@
     # nodejs
     nodejs
     nodePackages.typescript
+    yarn
     
     # rust
     rustc

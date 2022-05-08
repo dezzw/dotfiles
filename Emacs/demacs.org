@@ -282,25 +282,36 @@
 #+end_src
 *** Evil-nerd-commenter
 #+begin_src emacs-lisp
-  (setup (:straight evil-nerd-commenter)
-	 (:global "M-/" evilnc-comment-or-uncomment-lines))
+(setup (:straight evil-nerd-commenter)
+  (:load-after evil)
+  (:global "M-/" evilnc-comment-or-uncomment-lines))
 #+end_src
 *** Evil-multiedit
 #+begin_src emacs-lisp
-  (setup (:straight evil-multiedit)
-    (require 'evil-multiedit)
-    (evil-multiedit-default-keybinds))
+(setup (:straight evil-multiedit)
+  (:load-after evil)
+  (require 'evil-multiedit)
+  (evil-multiedit-default-keybinds))
 #+end_src
 *** Evil-surround
 #+begin_src emacs-lisp
 (setup (:straight evil-surround)
+  (:load-after evil)
   (global-evil-surround-mode 1))
 #+end_src
 *** Evil-escape
 #+begin_src emacs-lisp
 (setup (:straight evil-escape)
+  (:load-after evil)
   (setq-default evil-escape-key-sequence "jk")
   (evil-escape-mode))
+#+end_src
+*** Evil-matchit
+#+begin_src emacs-lisp
+(setup (:straight evil-matchit)
+  (:load-after evil)
+  (global-evil-matchit-mode 1)
+  )
 #+end_src
 *** Simplify Leader Bindings (general.el)
 #+begin_src emacs-lisp
@@ -799,27 +810,27 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 ** Org Roam
 #+begin_src emacs-lisp
-  (setup (:straight org-roam)
-	 (setq org-roam-v2-ack t)
+(setup (:straight org-roam)
 
-	 (:option org-roam-directory "~/Documents/Org/Notes"
-		  org-roam-completion-everywhere t
-		  org-roam-completion-system 'default)
-	 (:when-loaded
-	  (org-roam-db-autosync-mode))
+ (:option org-roam-directory "~/Documents/Org/Notes"
+					org-roam-database-connecter 'splite-builtin
+					org-roam-completion-everywhere t
+					org-roam-completion-system 'default)
+ (:when-loaded
+	(org-roam-db-autosync-mode))
 
-	 (:global "C-c o l" org-roam-buffer-toggle
-		  "C-c o f" org-roam-node-find
-		  "C-c o c" org-roam-dailies-capture-today
-		  "C-c o g" org-roam-graph)
-	 (:bind "C-c o i" org-roam-node-insert
-		"C-c o I" org-roam-insert-immediate))
+ (:global "C-c o l" org-roam-buffer-toggle
+		"C-c o f" org-roam-node-find
+		"C-c o c" org-roam-dailies-capture-today
+		"C-c o g" org-roam-graph)
+ (:bind "C-c o i" org-roam-node-insert
+	"C-c o I" org-roam-insert-immediate))
 
-  (setup (:straight org-roam-ui)
-	 (:option org-roam-ui-sync-theme t
-		  org-roam-ui-follow t
-		  org-roam-ui-update-on-save t
-		  org-roam-ui-open-on-start t))
+(setup (:straight org-roam-ui)
+ (:option org-roam-ui-sync-theme t
+		org-roam-ui-follow t
+		org-roam-ui-update-on-save t
+		org-roam-ui-open-on-start t))
 #+end_src
 * Projectile
 #+begin_src emacs-lisp
@@ -1002,7 +1013,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      ;; [tab] smarter-tab-to-complete
      ;; "TAB" smarter-tab-to-complete
      "<escape>" corfu-quit))
-  (corfu-global-mode)
+  (global-corfu-mode)
   )
 
 ;; Use dabbrev with Corfu!
@@ -1151,31 +1162,36 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Web (HTML/CSS/JS...)
 **** JS/TS
 #+begin_src emacs-lisp
-  (setup (:straight typescript-mode)
-	 (:file-match "\\.ts\\'")
-	 (setq typescript-indent-level 2))
+(setup (:straight typescript-mode)
+       (:file-match "\\.ts\\'")
+       (setq typescript-indent-level 2))
 
-  (defun dw/set-js-indentation ()
-    (setq-default js-indent-level 2)
-    (setq-default tab-width 2))
+(defun dw/set-js-indentation ()
+  (setq-default js-indent-level 2)
+  (setq-default tab-width 2))
 
-  (setup (:straight js2-mode)
-	 (:file-match "\\.jsx?\\'")
+(setup (:straight js2-mode)
+       (:file-match "\\.jsx?\\'")
 
-	 ;; Use js2-mode for Node scripts
-	 (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
+       ;; Use js2-mode for Node scripts
+       (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
 
-	 ;; Don't use built-in syntax checking
-	 (setq js2-mode-show-strict-warnings nil)
+       ;; Don't use built-in syntax checking
+       (setq js2-mode-show-strict-warnings nil)
 
-	 ;; Set up proper indentation in JavaScript and JSON files
-	 (add-hook 'js2-mode-hook #'dw/set-js-indentation)
-	 (add-hook 'json-mode-hook #'dw/set-js-indentation))
+       ;; Set up proper indentation in JavaScript and JSON files
+       (add-hook 'js2-mode-hook #'dw/set-js-indentation)
+       (add-hook 'json-mode-hook #'dw/set-js-indentation))
 
 
-  (setup (:straight rjsx-mode)
-	 (:file-match "\\.jsx\\'"))
+(setup (:straight rjsx-mode)
+       (:file-match "\\.jsx\\'"))
 
+(setup (:straight add-node-modules-path)
+  (eval-after-load 'js2-mode
+  '(add-hook 'js2-mode-hook #'add-node-modules-path))
+  (eval-after-load 'typescript-mode
+  '(add-hook 'typescript-mode-hook #'add-node-modules-path)))
 #+end_src
 **** CoffeeScript
 #+begin_src emacs-lisp

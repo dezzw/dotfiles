@@ -68,8 +68,7 @@ in {
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
-  
-  fonts.enableFontDir = true;
+  fonts.fontDir.enable = true; 
   fonts.fonts = with pkgs; [
     cantarell-fonts
     roboto

@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     sbcl
-    roswell
+    # roswell
     ncurses
   ];
 }

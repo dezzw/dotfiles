@@ -19,6 +19,7 @@
     # "yabai"
     "python"
     "minimal-racket"
+    "roswell"
   ];
 
   homebrew.casks = [
