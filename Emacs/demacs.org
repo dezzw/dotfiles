@@ -105,9 +105,9 @@
 		  doom-modeline-buffer-file-name-style 'relative-from-project
 		  doom-modeline-buffer-encoding 'nondefault))
 
-  (straight-use-package 'hide-mode-line)
-  (setup (:require hide-mode-line)
-	 (:hook-into eaf-mode))
+  ;; (straight-use-package 'hide-mode-line)
+  ;; (setup (:require hide-mode-line)
+  ;; 	 (:hook-into eaf-mode))
 
   ;; A dependency that dashboard has.
   ;; (setup (:require page-break-lines))
@@ -231,6 +231,8 @@
 		gcmh-high-cons-threshold GC-CONS-THRESHOLD)
        (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
 (global-auto-revert-mode 1)
 (recentf-mode 1)
 
@@ -274,8 +276,6 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal))
 
 (setup (:straight evil-collection)
-  ;; Is this a bug in evil-collection?
-  (setq evil-collection-company-use-tng nil)
   (:load-after evil
     (:option evil-collection-outline-bind-tab-p nil)
     (evil-collection-init)))
@@ -944,6 +944,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Yasnippets
 #+begin_src emacs-lisp
 (setup (:straight yasnippet)
+  (:load-after prog-mode)
   (straight-use-package 'yasnippet-snippets)
   (require 'yasnippet)
   (:option yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
@@ -978,33 +979,35 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Corfu
 #+begin_src emacs-lisp
 (setup (:straight corfu)
+  (add-to-list 'load-path (expand-file-name "straight/build/corfu/extensions" user-emacs-directory))
+  (require 'corfu-history)
   (:option
    ;; Optional customizations
    corfu-cycle t                ;; Enable cycling for `corfu-next/previous'
-	corfu-auto t                 ;; Enable auto completion
-	corfu-quit-at-boundary t     ;; Automatically quit at word boundary
-	corfu-quit-no-match 'separator        ;; Automatically quit if there is no match
-	corfu-preview-current nil    ;; Disable current candidate preview
-	corfu-echo-documentation nil ;; Disable documentation in the echo area
-	corfu-auto-prefix 2)
+   corfu-auto t                 ;; Enable auto completion
+   corfu-quit-at-boundary t     ;; Automatically quit at word boundary
+   corfu-quit-no-match 'separator        ;; Automatically quit if there is no match
+   corfu-preview-current nil    ;; Disable current candidate preview
+   corfu-echo-documentation nil ;; Disable documentation in the echo area
+   corfu-auto-prefix 2)
   
-;;   (defun smarter-tab-to-complete ()
-;;     "Try to `org-cycle', `yas-expand', and `yas-next-field' at current cursor position.
-;; If all failed, try to complete the common part with `corfu-complete'"
-;;     (interactive)
-;;     (when yas-minor-mode
-;;       (let ((old-point (point))
-;;             (old-tick (buffer-chars-modified-tick))
-;;             (func-list
-;;              (if (equal major-mode 'org-mode) '(org-cycle yas-expand yas-next-field)
-;;                '(yas-expand yas-next-field))))
-;;         (catch 'func-suceed
-;;           (dolist (func func-list)
-;;             (ignore-errors (call-interactively func))
-;;             (unless (and (eq old-point (point))
-;;                          (eq old-tick (buffer-chars-modified-tick)))
-;;               (throw 'func-suceed t)))
-;;           (corfu-complete)))))
+  ;;   (defun smarter-tab-to-complete ()
+  ;;     "Try to `org-cycle', `yas-expand', and `yas-next-field' at current cursor position.
+  ;; If all failed, try to complete the common part with `corfu-complete'"
+  ;;     (interactive)
+  ;;     (when yas-minor-mode
+  ;;       (let ((old-point (point))
+  ;;             (old-tick (buffer-chars-modified-tick))
+  ;;             (func-list
+  ;;              (if (equal major-mode 'org-mode) '(org-cycle yas-expand yas-next-field)
+  ;;                '(yas-expand yas-next-field))))
+  ;;         (catch 'func-suceed
+  ;;           (dolist (func func-list)
+  ;;             (ignore-errors (call-interactively func))
+  ;;             (unless (and (eq old-point (point))
+  ;;                          (eq old-tick (buffer-chars-modified-tick)))
+  ;;               (throw 'func-suceed t)))
+  ;;           (corfu-complete)))))
 
   (:with-map corfu-map
     (:bind
@@ -1014,6 +1017,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      ;; "TAB" smarter-tab-to-complete
      "<escape>" corfu-quit))
   (global-corfu-mode)
+  (corfu-history-mode)
   )
 
 ;; Use dabbrev with Corfu!
@@ -1021,65 +1025,35 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ;; corfu backend
 (setup (:straight cape)
-       (add-to-list 'completion-at-point-functions #'cape-file)
-       (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-       (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
 
-       (add-to-list 'completion-at-point-functions #'cape-abbrev)
-       )
+  (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  )
 
 
 ;; Enable Corfu completion UI
 ;; (straight-use-package '(corfu-doc :type git :host github :repo "galeo/corfu-doc"))
 (setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-       (:hook-into corfu-mode))
+  (:hook-into corfu-mode))
+
+(if IS-TTY
+    (progn
+      (straight-use-package
+       '(popon :type git :repo "https://codeberg.org/akib/emacs-popon.git"))
+      (straight-use-package
+       '(corfu-popup :type git :repo "https://codeberg.org/akib/emacs-corfu-popup.git"))
+      (require 'corfu-popup)
+      (corfu-popup-mode +1)))
 
 ;; (setup (:pkg svg-lib :type built-in)) ;; built-in has little icons
-(setup (:require kind-icon)
-       (:load-after corfu)
-       (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-       (:when-loaded
-	(add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
-	))
-#+end_src
-** COMMENT Company
-*** Company Mode
-#+begin_src emacs-lisp
-  (setup (:require company)
-	 (:hook-into lsp-mode prog-mode conf-mode)
-	 (:option company-tooltip-align-annotations t
-		  ;; Number the candidates (use M-1, M-2 etc to select completions)
-		  company-show-numbers t
-		  ;; starts with 1 character
-		  company-minimum-prefix-length 1
-		  ;; Trigger completion immediately
-		  company-idle-delay 0.2
-		  ;; Back to top when reach the end
-		  company-selection-wrap-around t))
-
-  ;;Completion based on AI 
-  (setup company-tabnine
-	 (:when-loaded
-	  (push '(company-capf :with company-tabnine :separate company-yasnippet :separete) company-backends)))
-
-
-#+end_src
-*** Company Box
-#+begin_src emacs-lisp
-  ;; Add UI for Company
-  (setup (:require company-box)
-	 (:hook-into company-mode)
-	 (:option company-box-icons-alist 'company-box-icons-all-the-icons))
-#+end_src
-*** Company Quickhelp
-#+begin_src emacs-lisp
-  (setup (:require company-quickhelp)
-	 (:hook-into company-mode))
-#+end_src
-*** Company Statistics
-#+begin_src emacs-lisp
-  (setup (:require company-statistics)
-	 (company-statistics-mode))
+(setup (:straight kind-icon)
+  (:load-after corfu)
+  (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+  (:when-loaded
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+    ))
 #+end_src
 * Helpful Function Description
 #+begin_src emacs-lisp
@@ -1318,33 +1292,59 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	 (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
   (setup (:straight eglot))
 #+end_src
-** Lsp-mode
+** COMMENT Lsp-mode
 *** Main Setting
 #+begin_src emacs-lisp
-  ;; when using nix to install, cannot find lsp-lens--enable ERROR
-  ;; try to use straight to install to fix
-  (setup (:straight lsp-mode)
-	 (setq lsp-keymap-prefix "C-c l")	     
-	 (:hook lsp-enable-which-key-integration)
-	 (:option lsp-headerline-breadcrumb-enable nil
-		  lsp-signature-auto-activate nil
-		  lsp-signature-render-documentation nil
-		  lsp-log-io nil
-		  lsp-idle-delay 0.500
-		  lsp-completion-provider :capf)
-	 (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
-	 (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css")))
+;; (setup (:straight lsp-mode)
+;;        (:option lsp-headerline-breadcrumb-mode nil
+;; 		lsp-signature-auto-activate nil
+;; 		lsp-signature-render-documentation nil
+;; 		lsp-log-io nil
+;; 		lsp-idle-delay 0.500
+;; 		lsp-completion-provider :capf)
+;;        (:hook lsp-enable-which-key-integration)
+;;        (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
+;;        (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css")))
+
+(setup (:straight lsp-mode)
+       (setq lsp-headerline-breadcrumb-mode nil
+		lsp-signature-auto-activate nil
+		lsp-signature-render-documentation nil
+		lsp-log-io nil
+		lsp-idle-delay 0.500)
+
+  (dw/leader-key-def
+    "l" '(:ignore t :which-key "lsp")
+    "ld" 'xref-find-definitions
+    "lr" 'xref-find-references
+    "ln" 'lsp-ui-find-next-reference
+    "lp" 'lsp-ui-find-prev-reference
+    "ls" 'counsel-imenu
+    "le" 'lsp-ui-flycheck-list
+    "lS" 'lsp-ui-sideline-mode
+    "lX" 'lsp-execute-code-action))
+
+;; (straight-use-package 'lsp-mode)
+
+;; (setq lsp-keymap-prefix "C-c l"
+;;       ;; lsp-auto-configure nil	
+;;       lsp-enable-symbol-highlighting nil
+;;       lsp-enable-dap-auto-configure nil
+;;       lsp-lens-enable nil
+;;       lsp-headerline-breadcrumb-enable nil)
 
 #+end_src
 *** Lsp UI
 #+begin_src emacs-lisp
-  (setup (:require lsp-ui)
-	 (:hook-into lsp-mode)
-	 (:also-load lsp-treemacs)
-	 (:option lsp-ui-sideline-enable t
-		  lsp-ui-sideline-show-hover t
-		  lsp-ui-doc-position 'bottom
-		  lsp-ui-imenu-auto-refresh t))
+(setup (:require lsp-ui)
+  (:hook-into lsp-mode)
+  (:also-load lsp-treemacs)
+  (:when-loaded
+    (setq lsp-ui-sideline-enable t
+	  lsp-ui-sideline-show-hover nil
+	  lsp-ui-doc-position 'bottom
+	  lsp-ui-imenu-auto-refresh t)
+    (lsp-ui-doc-show)))
 #+end_src
 *** Dap Debug Mode
 #+begin_src emacs-lisp
@@ -1354,7 +1354,34 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	 (:also-load dap-python dap-node dap-java)
 	 (:option dap-auto-configure-features '(sessions locals controls tooltip)))
 #+end_src
-** Flycheck
+** Lsp-bridge
+#+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "site-lisp/lsp-bridge/" user-emacs-directory))
+
+(require 'lsp-bridge)
+
+;; For python and pyright
+(dolist (hook (list
+               'c-mode-hook
+               'c++-mode-hook
+               'python-mode-hook
+               'ruby-mode-hook
+               'rust-mode-hook
+               'elixir-mode-hook
+               'go-mode-hook
+               'haskell-mode-hook
+               'haskell-literate-mode-hook
+               'dart-mode-hook
+               'scala-mode-hook
+               'typescript-mode-hook
+               'js2-mode-hook
+               'js-mode-hook
+               ))
+  (add-hook hook (lambda ()
+                   (lsp-bridge-enable)
+                   )))
+#+end_src
+** COMMENT Flycheck
 #+begin_src emacs-lisp
   (setup (:straight flycheck)
 	 (:hook-into lsp-mode))
@@ -1415,12 +1442,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (setup (:straight eshell)
 
-       (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/"
-	     eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias"))
+       (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/")
+	     ;; eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias"))
 
        (if (executable-find "exa")
-	   (defalias 'eshell/ls "exa")
-	 (defalias 'eshell/ls "ls"))
+	   (defalias 'eshell/ls 'exa))
 
        (:global "C-c m" eshell))
 
