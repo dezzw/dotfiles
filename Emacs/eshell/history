@@ -1,17 +1,3 @@
-(setq tramp-verbose 10)
-sh move_items.sh  
-exit
-exit
-exit
-mv Downloads/lab01.pdf 22W/CSC258H5S/ 
-cd 22W/CSC258H5S/ 
-ls
-ls lab01/ 
-mv ~/Downloads/lab02.pdf  ./
-ls
-mkdir lab02 
-mv lab01.pdf lab01
-mv lab02.pdf lab02/ 
 mv project_specification.md ../22W/CSC209H5S/
 cd..
 cd ..
@@ -126,3 +112,17 @@ ls -a
 ls -al
 exit 
 cd 
+cd Desktop/Test/
+ls
+ls -al
+ls
+ls
+ls -T
+exa 
+exa 
+exa 
+a
+exit 
+npm install 
+npm run start
+exit

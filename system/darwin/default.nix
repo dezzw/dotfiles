@@ -44,6 +44,11 @@ in {
   environment.systemPackages = with pkgs;[
     git
     # python-with-my-packages
+    # For flyspell (spelling checking)
+    hunspell
+    hunspellDicts.en-us
+    hunspellDicts.en-ca
+
   ];
   programs.bash.enable = true;
 

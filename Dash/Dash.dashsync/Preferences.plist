@@ -218,6 +218,11 @@
 				<key>date</key>
 				<date>2022-04-02T02:47:10Z</date>
 			</dict>
+			<key>http://kapeli.com/feeds/Less.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2022-05-17T13:27:28Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/Lua_5.4.xml</key>
 			<dict>
 				<key>date</key>
@@ -232,6 +237,16 @@
 			<dict>
 				<key>date</key>
 				<date>2022-04-02T02:47:09Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/R.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2022-05-17T13:30:48Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Racket.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2022-05-17T13:32:36Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/React.xml</key>
 			<dict>
@@ -271,10 +286,15 @@
 		</dict>
 		<key>uninstalled</key>
 		<dict>
-			<key>http://kapeli.com/feeds/R.xml</key>
+			<key>http://kapeli.com/feeds/Apple_API_Reference.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2021-03-31T11:11:36Z</date>
+				<date>2022-05-18T22:31:49Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Man_Pages.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2022-05-17T13:28:11Z</date>
 			</dict>
 		</dict>
 	</dict>

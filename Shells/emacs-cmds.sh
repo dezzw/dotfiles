@@ -51,7 +51,6 @@ function es() {
     elif [[ "$1" == "start" ]]; then
         if [[ -z $2 ]]; then
             $EMACS --daemon=main
-	    $EMACS --daemon=tty
         else
             case $2 in
                 m)

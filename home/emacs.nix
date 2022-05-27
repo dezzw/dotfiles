@@ -3,7 +3,8 @@
 {
   programs.emacs = {
     enable = true;
-    package = pkgs.emacsPgtkNativeComp;
+    # package = pkgs.emacsPgtkNativeComp; # emacs 29.0.5 native compiled
+    package = pkgs.emacs28NativeComp; # emacs 28.1 native compiled
     extraPackages = epkgs: with epkgs;[
       vterm
       pdf-tools
@@ -37,11 +38,6 @@
 
     universal-ctags
 
-    # For flyspell (spelling checking)
-    aspell
-    aspellDicts.en
-    aspellDicts.en-computers
-    aspellDicts.en-science
     
     # Code Formating
     nixpkgs-fmt

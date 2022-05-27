@@ -1,147 +1,156 @@
 #+TITLE: DEmacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
-* Some improve in early-init
+** Some improve in early-init
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
-  (setq gc-cons-threshold most-positive-fixnum)
+;; -*- coding: utf-8; lexical-binding: t; -*-
+(setq gc-cons-threshold most-positive-fixnum)
 
-  ;; Copy from https://github.com/willbush/system/blob/master/emacs/early-init.el
-  (defconst IS-MAC     (eq system-type 'darwin))
-  (defconst IS-LINUX   (eq system-type 'gnu/linux))
+;; Copy from https://github.com/willbush/system/blob/master/emacs/early-init.el
+(defconst IS-MAC     (eq system-type 'darwin))
+(defconst IS-LINUX   (eq system-type 'gnu/linux))
 
-  ;; Doom currently uses 16 MiB and Spacemacs is using 100 MB. I'm going to try 64
-  ;; MiB to see how it goes.
-  (defconst GC-CONS-THRESHOLD 67108860)
-
-
-  ;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
-  (push '(menu-bar-lines . 0) default-frame-alist)
-  (push '(tool-bar-lines . 0) default-frame-alist)
-  (push '(vertical-scroll-bars) default-frame-alist)
-
-  (setq ring-bell-function 'ignore)
-
-  ;; Set default font
-  (set-face-attribute 'default nil
-		      :family "Operator Mono"
-		      :height 160
-		      :weight 'normal
-		      :width 'normal)
-
-  ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil
-		      :family "Operator Mono"
-		      :height 160
-		      :weight 'normal
-		      :width 'normal)
-
-  ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil
-		      :family "Cantarell"
-		      :height 160
-		      :weight 'regular)
+;; Doom currently uses 16 MiB and Spacemacs is using 100 MB. I'm going to try 64
+;; MiB to see how it goes.
+(defconst GC-CONS-THRESHOLD 67108860)
 
 
-  ;; Resizing the Emacs frame can be a terribly expensive part of changing the
-  ;; font. By inhibiting this, we easily halve startup times with fonts that are
-  ;; larger than the system default.
-  (setq frame-inhibit-implied-resize t)
+;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
 
-  (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-  (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(setq ring-bell-function 'ignore)
 
-  ;; (set-frame-parameter (selected-frame) 'alpha-backgroud 80)
-  ;; (setq default-frame-alist '((alpha-background . 80)))
+;; Set default font
+(set-face-attribute 'default nil
+		    :family "Operator Mono"
+		    :height 160
+		    :weight 'normal
+		    :width 'normal)
 
-  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil
+		    :family "Operator Mono"
+		    :height 160
+		    :weight 'normal
+		    :width 'normal)
 
-  (setq package-enable-at-startup nil)
+;; Set the variable pitch face
+;; (set-face-attribute 'variable-pitch nil
+;; 		    :family "Cantarell"
+;; 		    :height 160
+;; 		    :weight 'regular)
 
-  (unless (featurep 'straight)
-    ;; Bootstrap straight.el
-    (defvar bootstrap-version)
-    (let ((bootstrap-file
-	   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	  (bootstrap-version 5))
-      (unless (file-exists-p bootstrap-file)
-	(with-current-buffer
-	    (url-retrieve-synchronously
-	     "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	     'silent 'inhibit-cookies)
-	  (goto-char (point-max))
-	  (eval-print-last-sexp)))
-      (load bootstrap-file nil 'nomessage)))
 
-  (straight-use-package 'setup)
-  (eval-when-compile
-    (require 'setup))
+;; Resizing the Emacs frame can be a terribly expensive part of changing the
+;; font. By inhibiting this, we easily halve startup times with fonts that are
+;; larger than the system default.
+(setq frame-inhibit-implied-resize t)
 
-  ;; hide the welcome buffer
-  (setq inhibit-splash-screen t)
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
-  ;; Set `doom-themes' early to prevent non-stylized UI flash.
-  (straight-use-package 'doom-themes)
-  (setup  (:require doom-themes)
-	  (load-theme 'doom-xcode t)
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-	  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-	  (doom-themes-treemacs-config)
+(setq package-enable-at-startup nil)
 
-	  ;; (doom-themes-org-config)
-	  )
+(unless (featurep 'straight)
+  ;; Bootstrap straight.el
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage)))
 
-  ;; Set `doom-modeline' early to prevent non-stylized UI flash.
-  ;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
-  (straight-use-package 'doom-modeline)
-  (setup (:require doom-modeline)
-	 (size-indication-mode 1)
-	 (column-number-mode 1)
+(straight-use-package 'setup)
+(eval-when-compile
+  (require 'setup))
 
-	 (:hook-into after-init-hook)
-	 (:option doom-modeline-icon nil ;; icons' position does not work properly
-		  ;; doom-modeline-major-mode-icon nil
-		  ;; doom-modeline-lsp nil
-		  ;; doom-modeline-buffer-file-name-style 'truncate-upto-root 
-		  doom-modeline-buffer-file-name-style 'relative-from-project
-		  doom-modeline-buffer-encoding 'nondefault))
+;; hide the welcome buffer
+(setq inhibit-splash-screen t)
 
-  ;; (straight-use-package 'hide-mode-line)
-  ;; (setup (:require hide-mode-line)
-  ;; 	 (:hook-into eaf-mode))
+(straight-use-package 'all-the-icons)
 
-  ;; A dependency that dashboard has.
-  ;; (setup (:require page-break-lines))
+;; Set `doom-themes' early to prevent non-stylized UI flash.
+(straight-use-package 'doom-themes)
+(setup  (:require doom-themes)
+	;; (load-theme 'doom-xcode t)
+	(load-theme 'doom-one t)
 
-  ;; (setup (:require dashboard)
-  ;;   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+	(setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+	(doom-themes-treemacs-config)
 
-  ;;   (:option dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt"
-  ;; 	   dashboard-banner-logo-title nil
-  ;; 	   dashboard-center-content t
-  ;; 	   dashboard-set-heading-icons t
-  ;; 	   dashboard-set-init-info t
-  ;; 	   dashboard-set-file-icons t
-  ;; 	   dashboard-items '((recents  . 5)
-  ;; 			     (projects . 5)))
-  ;;   (dashboard-setup-startup-hook))
+	;; (doom-themes-org-config)
+	)
 
-  (straight-use-package 'posframe)
-  (setup (:require posframe))
+;; Set `doom-modeline' early to prevent non-stylized UI flash.
+;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
+(straight-use-package 'doom-modeline)
+(setup (:require doom-modeline)
+       (size-indication-mode 1)
+       (column-number-mode 1)
 
-  (straight-use-package 'exec-path-from-shell)
-  (setup (:require exec-path-from-shell)
-	 (when (memq window-system '(mac ns))
-	   (exec-path-from-shell-initialize)))
+       (:hook-into after-init-hook)
+       (:option doom-modeline-icon nil ;; icons' position does not work properly
+		;; doom-modeline-major-mode-icon nil
+		;; doom-modeline-lsp nil
+		;; doom-modeline-buffer-file-name-style 'truncate-upto-root 
+		doom-modeline-buffer-file-name-style 'relative-from-project
+		doom-modeline-buffer-encoding 'nondefault))
 
-  ;; Add my library path to load-path
-  (push "~/.dotfiles/Emacs/elisp" load-path)
-  (push "~/Documents/Org" load-path)
+;; Using awesome-tray to save more space for modeline
+;; (straight-use-package '(awesome-tray :host github :repo "manateelazycat/awesome-tray"))
+;; (setup (:require awesome-tray)
+;;   (awesome-tray-mode 1))
 
-  (when (string> emacs-version "29")
-    (pixel-scroll-precision-mode 1))
+;; (straight-use-package 'hide-mode-line)
+;; (setup (:require hide-mode-line)
+;; 	 (:hook-into eaf-mode))
+
+;; A dependency that dashboard has.
+;; (setup (:require page-break-lines))
+
+;; (setup (:require dashboard)
+;;   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+
+;;   (:option dashboard-startup-banner "~/.dotfiles/Emacs/dashboard/banner.txt"
+;; 	   dashboard-banner-logo-title nil
+;; 	   dashboard-center-content t
+;; 	   dashboard-set-heading-icons t
+;; 	   dashboard-set-init-info t
+;; 	   dashboard-set-file-icons t
+;; 	   dashboard-items '((recents  . 5)
+;; 			     (projects . 5)))
+;;   (dashboard-setup-startup-hook))
+
+(straight-use-package 'posframe)
+(setup (:require posframe))
+
+(straight-use-package 'exec-path-from-shell)
+(setup (:require exec-path-from-shell)
+       (when (memq window-system '(mac ns))
+	 (exec-path-from-shell-initialize)))
+
+;; Add my library path to load-path
+(push "~/.dotfiles/Emacs/elisp" load-path)
+(push "~/Documents/Org" load-path)
+
+(when (string> emacs-version "29")
+  (pixel-scroll-precision-mode 1))
 
 #+end_src
 * Setup
+#+begin_src emacs-lisp
+;; -*- coding: utf-8; lexical-binding: t; -*-
+#+end_src
 ** :daley
 #+begin_src emacs-lisp
   (setup-define :delay
@@ -193,7 +202,6 @@
 				   (car recipe)
 				 recipe))))
 #+end_src
-
 * Startup Setting 
 #+begin_src emacs-lisp
 (defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
@@ -252,14 +260,19 @@
 ** Evil
 *** Main Settings
 #+begin_src emacs-lisp
-(setup (:straight undo-tree)
-  (global-undo-tree-mode 1)
-  (:option undo-tree-visualizer-diff t
-	   undo-tree-auto-save-history t
-	   undo-tree-enable-undo-in-region t
-      undo-limit 800000
-      undo-strong-limit 12000000
-      undo-outer-limit 128000000))
+;; (setup (:straight undo-tree)
+;;   (global-undo-tree-mode 1)
+;;   (:option undo-tree-visualizer-diff t
+;; 	   undo-tree-auto-save-history t
+;; 	   undo-tree-enable-undo-in-region t
+;;       undo-limit 800000
+;;       undo-strong-limit 12000000
+;;       undo-outer-limit 128000000))
+(setup (:straight undo-fu))
+(setup (:straight undo-fu-session)
+  (global-undo-fu-session-mode))
+
+(setup (:straight vundo))
 
 (setup (:straight evil)
   ;; Pre-load configuration
@@ -268,7 +281,7 @@
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
   (setq evil-respect-visual-line-mode t)
-  (setq evil-undo-system 'undo-tree)
+  (setq evil-undo-system 'undo-fu)
 
   ;; Activate the Evil
   (evil-mode 1)
@@ -326,9 +339,6 @@
 (dw/leader-key-def
    "SPC" 'execute-extended-command
    "f" 'find-file
-   "b" 'persp-switch-to-buffer*
-   "k" 'persp-kill-buffer*
-   "i" 'persp-ibuffer
    "a" 'org-agenda)
 #+end_src
 ** which-key
@@ -342,7 +352,7 @@
 *** Hungry Delete
 #+begin_src emacs-lisp
   (setup (:straight hungry-delete)
-	 (:hook-into prog-mode lsp-mode))
+	 (:hook-into prog-mode))
 #+end_src
 *** Avy
 #+begin_src emacs-lisp
@@ -353,18 +363,63 @@
     "jw"  '(avy-goto-word-0 :which-key "jump to word")
     "jl"  '(avy-goto-line :which-key "jump to line")))
 #+end_src
+*** Spelling Checking
+#+begin_src emacs-lisp
+(setq flyspell-issue-message-flag nil)
+(setq ispell-program-name "hunspell")
+;; reset the hunspell so it STOPS querying locale!
+;; "en_US" is the key to lookup in `ispell-local-dictionary-alist`
+(setq ispell-local-dictionary "en_US")
+;; two dictionaries "en_US" and "zh_CN" are used. Feel free to remove "zh_CN"
+;; If `ispell-local-dictionary-alist' is nil, `ispell-local-dictionary' is passed
+;; to hunpsell cli program as dictionary.
+(setq ispell-local-dictionary-alist
+      '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US" "zh_CN") nil utf-8)))
+;; new variable `ispell-hunspell-dictionary-alist' is defined in Emacs
+;; If it's nil, Emacs tries to automatically set up the dictionaries.
+(when (boundp 'ispell-hunspell-dictionary-alist)
+      (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
+
+(setup (:straight wucuo))
+#+end_src
 * Workspace
-** Perspective-el
+** Perspective
 #+begin_src emacs-lisp
 (setup (:straight perspective)
        (:option persp-initial-frame-name "Main"
 		persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
-       (setq persp-mode-prefix-key (kbd "C-c M-p"))
+       (setq persp-mode-prefix-key (kbd "C-x p"))
 
        (add-hook 'kill-emacs-hook #'persp-state-save)
        ;; Running `persp-mode' multiple times resets the perspective list...
        (unless (equal persp-mode t)
 	 (persp-mode)))
+
+;; Windows/buffers sets shared among frames + save/load.
+;; (setup (:straight persp-mode)
+;;   (setq persp-keymap-prefix (kbd "C-x p")
+;; 	persp-nil-name "default"
+;; 	persp-set-last-persp-for-new-frames nil
+;; 	persp-kill-foreign-buffer-behaviour 'kill)
+;;   (:hook-into after-init)
+
+;;   ;; Eshell integration
+;;   (persp-def-buffer-save/load
+;;    :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
+;;    :save-vars '(major-mode default-directory))
+
+;;   ;; Shell integration
+;;   (persp-def-buffer-save/load
+;;    :mode 'shell-mode :tag-symbol 'def-shell-buffer
+;;    :mode-restore-function (lambda (_) (shell))
+;;    :save-vars '(major-mode default-directory)))
+
+(dw/leader-key-def
+   "SPC" 'execute-extended-command
+   "f" 'find-file
+   "b" 'persp-switch-to-buffer*
+   "k" 'persp-kill-buffer*
+   "a" 'org-agenda)
 #+end_src
 * UI Setting
 ** Line Numbers
@@ -382,9 +437,9 @@
 
 #+end_src
 
-** COMMENT Fonts Ligature
+** Fonts Ligature
 #+begin_src emacs-lisp
-  (setup (:straight ligature :host github :repo "mickeynp/ligature.el")
+  (setup (:straight '(ligature :host github :repo "mickeynp/ligature.el"))
 	 ;; Enable the "www" ligature in every possible major mode
 	 (ligature-set-ligatures 't '("www"))
 	 ;; Enable traditional ligature support in eww-mode, if the
@@ -460,15 +515,17 @@
 (straight-use-package 'tree-sitter)
 (straight-use-package 'tree-sitter-langs)
 
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
+(setup tree-sitter
+  (:delay)
+  (require 'tree-sitter)
+  (require 'tree-sitter-langs)
+  
+  (add-hook 'c-mode-hook #'tree-sitter-hl-mode)
+  (add-hook 'python-mode-hook #'tree-sitter-hl-mode)
+  (add-hook 'js2-mode-hook #'tree-sitter-hl-mode)
+  (add-hook 'typescritpt-mode-hook #'tree-sitter-hl-mode)
 
-(add-hook 'c-mode-hook #'tree-sitter-hl-mode)
-(add-hook 'python-mode-hook #'tree-sitter-hl-mode)
-(add-hook 'js2-mode-hook #'tree-sitter-hl-mode)
-(add-hook 'typescritpt-mode-hook #'tree-sitter-hl-mode)
-
-(global-tree-sitter-mode)
+  (global-tree-sitter-mode))
 #+end_src
 
 * Auto-Tangle Org File
@@ -832,18 +889,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 		org-roam-ui-update-on-save t
 		org-roam-ui-open-on-start t))
 #+end_src
-* Projectile
-#+begin_src emacs-lisp
-  (setup (:straight projectile)
-	 (when (file-directory-p "~/Documents/Projects/Code")
-	   (setq projectile-project-search-path '("~/Documents/Projects/Code")))
-	 (setq projectile-switch-project-action #'projectile-dired)
-
-	 (projectile-mode)
-
-	 (:global "C-M-p" projectile-find-file
-		  "C-c p" projectile-command-map))
-#+end_src
 * Completion System
 ** Vertico
 #+begin_src emacs-lisp
@@ -931,7 +976,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	       embark-become-indicator embark-action-indicator))
 
 #+end_src
-** Tempel
+** COMMENT Tempel
 #+begin_src emacs-lisp
   (setup (:straight tempel)
 	 (global-tempel-abbrev-mode)
@@ -944,12 +989,15 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Yasnippets
 #+begin_src emacs-lisp
 (setup (:straight yasnippet)
-  (:load-after prog-mode)
-  (straight-use-package 'yasnippet-snippets)
+  (:delay)
   (require 'yasnippet)
   (:option yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
   (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode))
+  (add-hook 'prog-mode-hook #'yas-minor-mode)
+  (add-hook 'org-mode-hook #'yas-minor-mode))
+
+(setup (:straight consult-yasnippet)
+  (:load-after yasnippet))
 #+end_src
 
 ** Citre
@@ -982,39 +1030,21 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (add-to-list 'load-path (expand-file-name "straight/build/corfu/extensions" user-emacs-directory))
   (require 'corfu-history)
   (:option
-   ;; Optional customizations
    corfu-cycle t                ;; Enable cycling for `corfu-next/previous'
    corfu-auto t                 ;; Enable auto completion
    corfu-quit-at-boundary t     ;; Automatically quit at word boundary
-   corfu-quit-no-match 'separator        ;; Automatically quit if there is no match
+   corfu-quit-no-match t        ;; Automatically quit if there is no match
    corfu-preview-current nil    ;; Disable current candidate preview
-   corfu-echo-documentation nil ;; Disable documentation in the echo area
-   corfu-auto-prefix 2)
+   ;; corfu-echo-documentation nil ;; Disable documentation in the echo area
+   corfu-echo-documentation 0.25
+   corfu-preselect-first nil
+   corfu-auto-delay 0.2
+   corfu-auto-prefix 1)
   
-  ;;   (defun smarter-tab-to-complete ()
-  ;;     "Try to `org-cycle', `yas-expand', and `yas-next-field' at current cursor position.
-  ;; If all failed, try to complete the common part with `corfu-complete'"
-  ;;     (interactive)
-  ;;     (when yas-minor-mode
-  ;;       (let ((old-point (point))
-  ;;             (old-tick (buffer-chars-modified-tick))
-  ;;             (func-list
-  ;;              (if (equal major-mode 'org-mode) '(org-cycle yas-expand yas-next-field)
-  ;;                '(yas-expand yas-next-field))))
-  ;;         (catch 'func-suceed
-  ;;           (dolist (func func-list)
-  ;;             (ignore-errors (call-interactively func))
-  ;;             (unless (and (eq old-point (point))
-  ;;                          (eq old-tick (buffer-chars-modified-tick)))
-  ;;               (throw 'func-suceed t)))
-  ;;           (corfu-complete)))))
-
   (:with-map corfu-map
     (:bind
      [tab] corfu-next
      [backtab] corfu-previous
-     ;; [tab] smarter-tab-to-complete
-     ;; "TAB" smarter-tab-to-complete
      "<escape>" corfu-quit))
   (global-corfu-mode)
   (corfu-history-mode)
@@ -1025,6 +1055,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ;; corfu backend
 (setup (:straight cape)
+  (setq cape-dabbrev-min-length 3)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
@@ -1035,25 +1066,27 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ;; Enable Corfu completion UI
 ;; (straight-use-package '(corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-(setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-  (:hook-into corfu-mode))
+
+(when (display-graphic-p)
+  (setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
+  (:hook-into corfu-mode)))
 
 (if IS-TTY
     (progn
       (straight-use-package
        '(popon :type git :repo "https://codeberg.org/akib/emacs-popon.git"))
       (straight-use-package
-       '(corfu-popup :type git :repo "https://codeberg.org/akib/emacs-corfu-popup.git"))
-      (require 'corfu-popup)
-      (corfu-popup-mode +1)))
+       '(corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
+      (require 'corfu-terminal)
+      (corfu-terminal-mode +1)))
 
 ;; (setup (:pkg svg-lib :type built-in)) ;; built-in has little icons
-(setup (:straight kind-icon)
-  (:load-after corfu)
-  (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-  (:when-loaded
-    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
-    ))
+(when (display-graphic-p)
+  (setup (:straight kind-icon)
+    (:load-after corfu)
+    (:option kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+    (:when-loaded
+      (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))))
 #+end_src
 * Helpful Function Description
 #+begin_src emacs-lisp
@@ -1075,7 +1108,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (setup (:straight smartparens)
   (:also-load smartparens-config)
-  (:hook-into prog-mode lsp-mode org-mode)
+  (:hook-into prog-mode org-mode)
   (:bind "M-r" sp-rewrap-sexp    
 	 "M-s" sp-unwrap-sexp
 	 "M-[" sp-wrap-square
@@ -1084,12 +1117,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	 "C-}" sp-forward-barfsexp))
 
 (setup (:require rainbow-delimiters)
-  (:hook-into lsp-mode prog-mode))
+  (:hook-into prog-mode))
 #+end_src
 *** Indent
 #+begin_src emacs-lisp
   (setup (:straight highlight-indent-guides)
-	 (:hook-into prog-mode lsp-mode)
+	 (:hook-into prog-mode)
 	 (:option highlight-indent-guides-delay 0
 		  highlight-indent-guides-method 'character))
 
@@ -1103,8 +1136,9 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 *** Format All
 #+begin_src emacs-lisp
-  (setup (:straight format-all)
-	 (:hook-into prog-mode lsp-mode))
+(setup (:straight format-all)
+  (:delay)
+  (:hook-into prog-mode))
 #+end_src
 *** quickrun.el
 #+begin_src emacs-lisp
@@ -1125,13 +1159,21 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Minimap
 #+begin_src emacs-lisp
   (setup (:straight minimap)
-	 ;; (:hook-into prog-mode lsp-mode)
 	 (:option minimap-window-location 'right))
+#+end_src
+
+*** Text Folding
+#+begin_src emacs-lisp
+;; (setup (:straight origami)
+;;   (:load-after prog-mode)
+;;   (:hook-into prog-mode))
+(with-eval-after-load 'prog-mode
+  (add-hook #'prog-mode-hook 'hs-minor-mode))
 #+end_src
 ** Languages
 *** Python
 #+begin_src emacs-lisp
-  (setup (:straight lsp-pyright))
+;; (setup (:straight lsp-pyright))
 #+end_src
 *** Web (HTML/CSS/JS...)
 **** JS/TS
@@ -1192,18 +1234,21 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 **** HTML
 #+begin_src emacs-lisp
-  (setup (:straight web-mode)
-	 (:also-load emmet-mode)
-	 (:file-match "(\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
-	 (setq-default web-mode-code-indent-offset 2)
-	 (setq-default web-mode-markup-indent-offset 2)
-	 (setq-default web-mode-attribute-indent-offset 2))
+(setup (:straight web-mode)
+  (:file-match "(\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
+  (setq-default web-mode-code-indent-offset 2)
+  (setq-default web-mode-markup-indent-offset 2)
+  (setq-default web-mode-attribute-indent-offset 2))
 
+;; 1. Start the server with `httpd-start'
+;; 2. Use `impatient-mode' on any buffer
+(setup (:straight impatient-mode))
+(setup (:straight skewer-mode))
 #+end_src
 **** Emmet
 #+begin_src emacs-lisp
   (setup (:straight emmet-mode)
-	 (:hook-into web-mode))
+	 (:hook-into web-mode css-mode))
 #+end_src
 **** SCSS/SASS
 #+begin_src emacs-lisp
@@ -1217,17 +1262,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** C/C++
 #+begin_src emacs-lisp
   (setup c
-	 (:option c-default-style "linux"
-		  c-basic-offset 4))
-
-  (setup (:straight ccls))
-
-  (setup (:straight modern-cpp-font-lock)
-	 (:hook-into c++-mode))
+	 (:option c-default-style "linux"))
 #+end_src
 *** Java
 #+begin_src emacs-lisp
-  (setup (:straight lsp-java))
+;; (setup (:straight lsp-java))
 #+end_src
 *** Nix
 #+begin_src emacs-lisp
@@ -1251,8 +1290,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 *** Common Lisp
 #+begin_src emacs-lisp
-  (setup (:straight slime)
-	 (:file-match "\\.lisp\\'"))
+;; (setup (:straight slime)
+;;        (:file-match "\\.lisp\\'"))
+
+(setup (:straight sly)
+  (:file-match "\\.lisp\\'"))
 #+end_src
 *** Latex
 **** CDLaTex
@@ -1283,35 +1325,25 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Markdown
 #+begin_src emacs-lisp
   (setup (:straight markdown-mode)
-	 (:also-load edit-indirect)
+	 (straight-use-package 'edit-indirect)
 	 (:option markdown-command "multimarkdown"))
 #+end_src
 ** eglot
 #+begin_src emacs-lisp
-  (setup (:straight eldoc-box)
-	 (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
-  (setup (:straight eglot))
+(setup (:straight eldoc-box)
+       (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+(setup (:straight eglot)
+   (setq eglot-events-buffer-size 0))
 #+end_src
 ** COMMENT Lsp-mode
-*** Main Setting
 #+begin_src emacs-lisp
-;; (setup (:straight lsp-mode)
-;;        (:option lsp-headerline-breadcrumb-mode nil
-;; 		lsp-signature-auto-activate nil
-;; 		lsp-signature-render-documentation nil
-;; 		lsp-log-io nil
-;; 		lsp-idle-delay 0.500
-;; 		lsp-completion-provider :capf)
-;;        (:hook lsp-enable-which-key-integration)
-;;        (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
-;;        (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css")))
-
 (setup (:straight lsp-mode)
-       (setq lsp-headerline-breadcrumb-mode nil
-		lsp-signature-auto-activate nil
-		lsp-signature-render-documentation nil
-		lsp-log-io nil
-		lsp-idle-delay 0.500)
+  (:disabled)
+  (setq lsp-headerline-breadcrumb-mode nil
+	lsp-signature-auto-activate nil
+	lsp-signature-render-documentation nil
+	lsp-log-io nil
+	lsp-idle-delay 0.500)
 
   (dw/leader-key-def
     "l" '(:ignore t :which-key "lsp")
@@ -1322,20 +1354,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     "ls" 'counsel-imenu
     "le" 'lsp-ui-flycheck-list
     "lS" 'lsp-ui-sideline-mode
-    "lX" 'lsp-execute-code-action))
+    "lX" 'lsp-execute-code-action)
 
-;; (straight-use-package 'lsp-mode)
+  (:hook lsp-enable-which-key-integration)
+  (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
+  (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css")))
 
-;; (setq lsp-keymap-prefix "C-c l"
-;;       ;; lsp-auto-configure nil	
-;;       lsp-enable-symbol-highlighting nil
-;;       lsp-enable-dap-auto-configure nil
-;;       lsp-lens-enable nil
-;;       lsp-headerline-breadcrumb-enable nil)
-
-#+end_src
-*** Lsp UI
-#+begin_src emacs-lisp
 (setup (:require lsp-ui)
   (:hook-into lsp-mode)
   (:also-load lsp-treemacs)
@@ -1345,52 +1369,54 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	  lsp-ui-doc-position 'bottom
 	  lsp-ui-imenu-auto-refresh t)
     (lsp-ui-doc-show)))
-#+end_src
-*** Dap Debug Mode
-#+begin_src emacs-lisp
-  ;; dap debug tools
-  (setup (:straight dap-mode)
-	 (:load-after lsp-mode)
-	 (:also-load dap-python dap-node dap-java)
-	 (:option dap-auto-configure-features '(sessions locals controls tooltip)))
+
+;; dap debug tools
+(setup (:straight dap-mode)
+  (:load-after lsp-mode)
+  (:also-load dap-python dap-node dap-java)
+  (:option dap-auto-configure-features '(sessions locals controls tooltip)))
 #+end_src
 ** Lsp-bridge
 #+begin_src emacs-lisp
-(add-to-list 'load-path (expand-file-name "site-lisp/lsp-bridge/" user-emacs-directory))
+(unless (daemonp)
+  (straight-use-package
+   '(tabnine-capf :host github :repo "50ways2sayhard/tabnine-capf" :files ("*.el" "*.sh")))
 
-(require 'lsp-bridge)
+  (straight-use-package
+   '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files ("*")))
 
-;; For python and pyright
-(dolist (hook (list
-               'c-mode-hook
-               'c++-mode-hook
-               'python-mode-hook
-               'ruby-mode-hook
-               'rust-mode-hook
-               'elixir-mode-hook
-               'go-mode-hook
-               'haskell-mode-hook
-               'haskell-literate-mode-hook
-               'dart-mode-hook
-               'scala-mode-hook
-               'typescript-mode-hook
-               'js2-mode-hook
-               'js-mode-hook
-               ))
-  (add-hook hook (lambda ()
-                   (lsp-bridge-enable)
-                   )))
+  (require 'lsp-bridge)             ;; load lsp-bridge
+  ;; (require 'lsp-bridge-jdtls)       ;; provide Java third-party library jump and -data directory support, optional
+  (setq lsp-bridge-completion-provider 'corfu)
+  (require 'corfu-info)
+  (require 'corfu-history)
+  (require 'lsp-bridge-icon)        ;; show icons for completion items, optional
+  (require 'lsp-bridge-orderless)   ;; make lsp-bridge support fuzzy match, optional
+
+  (global-lsp-bridge-mode)
+
+  ;; For Xref support
+  (add-hook 'lsp-bridge-mode-hook
+	    (lambda ()
+	      (add-hook 'xref-backend-functions #'lsp-bridge-xref-backend nil t))))
 #+end_src
-** COMMENT Flycheck
+** Flycheck
 #+begin_src emacs-lisp
   (setup (:straight flycheck)
-	 (:hook-into lsp-mode))
+    (:hook-into lsp-bridge-mode))
 #+end_src
 * Direnv
 #+begin_src emacs-lisp
-  (setup (:straight direnv)
-	 (:when-loaded
-	  (direnv-mode)))
+;; (setup (:straight direnv)
+;;        (:when-loaded
+;; 	(direnv-mode)))
+
+(setup (:straight envrc)
+  (require 'envrc)
+  (envrc-global-mode))
+
+(with-eval-after-load 'envrc
+  (define-key envrc-mode-map (kbd "C-c e") 'envrc-command-map))
 #+end_src
 * Term/Shells
 ** Vterm
@@ -1464,9 +1490,10 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
        (:load-after esh-mode)
        (eshell-syntax-highlighting-global-mode +1))
 
-(setup (:straight esh-autosuggest)
-       (:hook-into eshell-mode)
-       (:option esh-autosuggest-delay 0.5))
+;; bit slowly but mainly to avoid requiring company so far
+;; (setup (:straight esh-autosuggest)
+;;        (:hook-into eshell-mode)
+;;        (:option esh-autosuggest-delay 0.5))
 
 (setup (:straight esh-help)
        (setup-esh-help-eldoc))
@@ -1512,15 +1539,25 @@ Highlight diff by using delta
 #+end_src
 * COMMENT EAF
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
-  (if IS-GUI
+(if IS-GUI
+    (unless (daemonp)
+      (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+      ;; (setup (:straight '(eaf :host github
+      ;;                         :repo "emacs-eaf/emacs-application-framework"
+      ;;                         :files ("*")
+      ;;                         :build (:not compile)))
       (setup (:require eaf)
-	     (:also-load eaf-browser eaf-terminal eaf-git eaf-file-manager eaf-org-previewer)
-	     (:option eaf-browser-continue-where-left-off t
-		      eaf-browser-enable-adblocker t
-		      browse-url-browser-function 'eaf-open-browser)
+	(:delay)
+	(:also-load eaf-browser eaf-terminal eaf-git)
+	(:option eaf-browser-continue-where-left-off t
+		 eaf-browser-enable-adblocker t
+		 browse-url-browser-function 'eaf-open-browser)
 
-	     (defalias 'browse-web #'eaf-open-browser)))
+	(defalias 'browse-web #'eaf-open-browser)
+	(require 'eaf-evil)
+	;; eaf会把C-SPC当成evil的leader-key，在你加载'eaf-evil之后使用eaf时就需要在eaf中键入C-SPC使用evil leader下的键。
+	;; 我们只需要将这个键设置为 SPC或你自己的evil-leader-key即可
+	(setq eaf-evil-leader-key "SPC"))))
 #+end_src
 * Tramp
 #+begin_src emacs-lisp
