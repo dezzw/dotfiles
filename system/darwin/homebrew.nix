@@ -13,6 +13,7 @@
     "homebrew/cask"
     # "homebrew/services"
     # "koekeishiya/formulae"
+    "adur1990/tap"
   ];
 
   homebrew.brews = [
@@ -30,6 +31,9 @@
     # Browser
     "brave-browser"
     "google-chrome"
+
+    # Pass
+    "passformacos"
 
     # Graphic Tools
     "blender"

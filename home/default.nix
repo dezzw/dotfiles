@@ -20,6 +20,7 @@
 
     # nodejs
     nodejs
+    nodePackages.coffee-script
     nodePackages.typescript
     yarn
     
@@ -39,7 +40,7 @@
     aria
     ranger
 
-    comma
+    #comma
 
     openvpn
   ];
@@ -134,5 +135,11 @@
 
   programs.browserpass = {
     enable = true;
+  };
+
+  programs.nix-index = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
   };
 }

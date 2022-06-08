@@ -4,9 +4,9 @@
   inputs = {
     # Package sets
     nixpkgs-master.url = github:NixOS/nixpkgs/master;
-    nixpkgs-stable.url = github:NixOS/nixpkgs/nixpkgs-21.11-darwin;
+    nixpkgs-stable.url = github:NixOS/nixpkgs/nixpkgs-22.05-darwin;
     nixpkgs-unstable.url = github:NixOS/nixpkgs/nixpkgs-unstable;
-    nixos-stable.url = github:NixOS/nixpkgs/nixos-21.11;
+    nixos-stable.url = github:NixOS/nixpkgs/nixos-22.05;
 
     # Environment/system management
     darwin.url = github:LnL7/nix-darwin;

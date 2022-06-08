@@ -1,6 +1,6 @@
-[submodule "Emacs/emacs-configs/doom-core"]
-	path = Emacs/emacs-configs/doom-core
-	url = https://github.com/hlissner/doom-emacs.git
-[submodule "doom-emacs"]
-	path = Emacs/emacs-configs/doom-core
-	url = https://github.com/hlissner/doom-emacs
+[submodule "emacs-application-framework"]
+	path = Emacs/site-lisp/emacs-application-framework/
+	url = https://github.com/emacs-eaf/emacs-application-framework.git
+[submodule "lsp-bridge"]
+	path = Emacs/site-lisp/lsp-bridge/
+	url = https://github.com/manateelazycat/lsp-bridge.git

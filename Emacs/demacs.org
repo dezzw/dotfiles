@@ -352,7 +352,7 @@
 *** Hungry Delete
 #+begin_src emacs-lisp
   (setup (:straight hungry-delete)
-	 (:hook-into prog-mode))
+	 (:hook-into dw/prog-mode))
 #+end_src
 *** Avy
 #+begin_src emacs-lisp
@@ -469,7 +469,7 @@
 (if IS-GUI
     (setup (:straight nyan-mode)
       (:delay)
-      (:option nyan-mode t
+      (:option nyan-mode nil
 	       nyan-animate-nyancat t
 	       nyan-wavy-trail t)))
 #+end_src
@@ -482,7 +482,7 @@
 ** Highlight TODOs
 #+begin_src emacs-lisp
   (setup (:straight hl-todo)
-	 (:hook-into org-mode prog-mode)
+	 (:hook-into org-mode dw/prog-mode)
 	 (:option hl-todo-keyword-faces
 		  '(("TODO"   . "#FF0000")
 		    ("FIXME"  . "#FF0000")
@@ -496,7 +496,7 @@
 ** Highligh numbers
 #+begin_src emacs-lisp
   (setup (:straight highlight-numbers)
-	 (:hook-into prog-mode))
+	 (:hook-into dw/prog-mode))
 #+end_src
 
 ** Highlight the diff
@@ -621,43 +621,43 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 * Org Mode
 ** Config Basic Org mode
 #+begin_src emacs-lisp
-  (defun dw/org-mode-setup ()
-    (org-indent-mode)
-    (visual-line-mode 1))
+(defun dw/org-mode-setup ()
+  (org-indent-mode)
+  (visual-line-mode 1))
 
-  (setup (:straight org)
-	 (:hook dw/org-mode-setup)
-	 (setq org-html-head-include-default-style nil
-	       ;; org-ellipsis " ▾"
-	       org-adapt-indentation t
-	       org-hide-emphasis-markers t
-	       org-src-fontify-natively t
-	       org-src-tab-acts-natively t
-	       org-edit-src-content-indentation 0
-	       org-hide-block-startup nil
-	       org-src-preserve-indentation nil
-	       org-startup-folded 'content
-	       org-cycle-separator-lines 2)
+(setup (:straight org)
+  (:hook dw/org-mode-setup)
+  (setq org-html-head-include-default-style nil
+	;; org-ellipsis " ▾"
+	org-adapt-indentation t
+	org-hide-emphasis-markers t
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t
+	org-edit-src-content-indentation 0
+	org-hide-block-startup nil
+	org-src-preserve-indentation nil
+	org-startup-folded 'content
+	org-cycle-separator-lines 2)
 
-	 ;; (setq org-modules
-	 ;; 	'(org-crypt
-	 ;; 	  org-habit
-	 ;; 	  org-bookmark
-	 ;; 	  org-eshell
-	 ;; 	  org-irc))
+  ;; (setq org-modules
+  ;; 	'(org-crypt
+  ;; 	  org-habit
+  ;; 	  org-bookmark
+  ;; 	  org-eshell
+  ;; 	  org-irc))
 
 
-	 ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 
-	 (setq org-html-htmlize-output-type nil)
+  (setq org-html-htmlize-output-type nil)
 
-	 ;; config for images in org
-	 (auto-image-file-mode t)
-	 (setq org-image-actual-width nil)
-	 ;; default image width
-	 (setq org-image-actual-width '(300))
+  ;; config for images in org
+  (auto-image-file-mode t)
+  (setq org-image-actual-width nil)
+  ;; default image width
+  (setq org-image-actual-width '(300))
 
-	 (setq org-export-with-sub-superscripts nil))
+  (setq org-export-with-sub-superscripts nil))
 #+end_src
 ** Apperance of Org   
 *** Bullets
@@ -976,14 +976,13 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	       embark-become-indicator embark-action-indicator))
 
 #+end_src
-** COMMENT Tempel
+** Tempel
 #+begin_src emacs-lisp
   (setup (:straight tempel)
-	 (global-tempel-abbrev-mode)
-       
 	 (:global "M-+" tempel-complete
 		  "M-*" tempel-insert)
-	 (:option tempel-file "~/.dotfiles/Emacs/templates"))
+	 (setq tempel-path "~/.dotfiles/Emacs/templates")
+	 (global-tempel-abbrev-mode))
 #+end_src
 
 ** Yasnippets
@@ -993,8 +992,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (require 'yasnippet)
   (:option yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
   (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode)
-  (add-hook 'org-mode-hook #'yas-minor-mode))
+  (add-hook 'prog-mode-hook #'yas-minor-mode))
+  ;; (add-hook 'org-mode-hook #'yas-minor-mode))
 
 (setup (:straight consult-yasnippet)
   (:load-after yasnippet))
@@ -1026,6 +1025,44 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ** Corfu
 #+begin_src emacs-lisp
+(setq dw/prog-mode
+  '(c-mode
+    c++-mode
+    java-mode
+    python-mode
+    ruby-mode
+    lua-mode
+    rust-mode
+    rustic-mode
+    elixir-mode
+    go-mode
+    haskell-mode
+    haskell-literate-mode
+    dart-mode
+    scala-mode
+    typescript-mode
+    typescript-tsx-mode
+    js2-mode
+    js-mode
+    rjsx-mode
+    tuareg-mode
+    latex-mode
+    Tex-latex-mode
+    texmode
+    context-mode
+    texinfo-mode
+    bibtex-mode
+    clojure-mode
+    clojurec-mode
+    clojurescript-mode
+    clojurex-mode
+    sh-mode
+    web-mode
+    css-mode
+    elm-mode
+    ielm-mode
+    emacs-lisp-mode))
+
 (setup (:straight corfu)
   (add-to-list 'load-path (expand-file-name "straight/build/corfu/extensions" user-emacs-directory))
   (require 'corfu-history)
@@ -1038,14 +1075,16 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
    ;; corfu-echo-documentation nil ;; Disable documentation in the echo area
    corfu-echo-documentation 0.25
    corfu-preselect-first nil
-   corfu-auto-delay 0.2
-   corfu-auto-prefix 1)
+   ;; corfu-auto-delay 0.2
+   corfu-auto-prefix 1
+   corfu-excluded-modes dw/prog-mode)
   
   (:with-map corfu-map
     (:bind
      [tab] corfu-next
      [backtab] corfu-previous
      "<escape>" corfu-quit))
+  
   (global-corfu-mode)
   (corfu-history-mode)
   )
@@ -1065,7 +1104,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 
 ;; Enable Corfu completion UI
-;; (straight-use-package '(corfu-doc :type git :host github :repo "galeo/corfu-doc"))
 
 (when (display-graphic-p)
   (setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
@@ -1108,7 +1146,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (setup (:straight smartparens)
   (:also-load smartparens-config)
-  (:hook-into prog-mode org-mode)
+  (:hook-into dw/prog-mode)
   (:bind "M-r" sp-rewrap-sexp    
 	 "M-s" sp-unwrap-sexp
 	 "M-[" sp-wrap-square
@@ -1117,12 +1155,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	 "C-}" sp-forward-barfsexp))
 
 (setup (:require rainbow-delimiters)
-  (:hook-into prog-mode))
+  (:hook-into dw/prog-mode))
 #+end_src
 *** Indent
 #+begin_src emacs-lisp
   (setup (:straight highlight-indent-guides)
-	 (:hook-into prog-mode)
+	 (:hook-into dw/prog-mode)
 	 (:option highlight-indent-guides-delay 0
 		  highlight-indent-guides-method 'character))
 
@@ -1132,13 +1170,13 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Rainbow Mode
 #+begin_src emacs-lisp
   (setup (:straight rainbow-mode)
-	 (:hook-into org-mode web-mode js2-mode emacs-lisp-mode))
+	 (:hook-into web-mode js2-mode emacs-lisp-mode))
 #+end_src
 *** Format All
 #+begin_src emacs-lisp
 (setup (:straight format-all)
   (:delay)
-  (:hook-into prog-mode))
+  (:hook-into dw/prog-mode))
 #+end_src
 *** quickrun.el
 #+begin_src emacs-lisp
@@ -1378,27 +1416,44 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 ** Lsp-bridge
 #+begin_src emacs-lisp
-(unless (daemonp)
+(unless (and (daemonp) (not (display-graphic-p)))
   (straight-use-package
    '(tabnine-capf :host github :repo "50ways2sayhard/tabnine-capf" :files ("*.el" "*.sh")))
 
-  (straight-use-package
-   '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files ("*")))
+  ;; (straight-use-package
+  ;;  '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files ("*")))
 
-  (require 'lsp-bridge)             ;; load lsp-bridge
-  ;; (require 'lsp-bridge-jdtls)       ;; provide Java third-party library jump and -data directory support, optional
-  (setq lsp-bridge-completion-provider 'corfu)
-  (require 'corfu-info)
-  (require 'corfu-history)
-  (require 'lsp-bridge-icon)        ;; show icons for completion items, optional
-  (require 'lsp-bridge-orderless)   ;; make lsp-bridge support fuzzy match, optional
-
+  (add-to-list 'load-path "~/.emacs.d/site-lisp/lsp-bridge/")
+  
+  (require 'yasnippet)
+  (require 'lsp-bridge)
+  (require 'lsp-bridge-jdtls)       ;; provide Java third-party library jump and -data directory support, optional
+  
   (global-lsp-bridge-mode)
 
-  ;; For Xref support
-  (add-hook 'lsp-bridge-mode-hook
-	    (lambda ()
-	      (add-hook 'xref-backend-functions #'lsp-bridge-xref-backend nil t))))
+  ;; 融合 `lsp-bridge' `find-function' 以及 `dumb-jump' 的智能跳转
+  (defun lsp-bridge-jump ()
+    (interactive)
+    (cond
+     ((eq major-mode 'emacs-lisp-mode)
+      (let ((symb (function-called-at-point)))
+	(when symb
+          (find-function symb))))
+     (lsp-bridge-mode
+      (lsp-bridge-find-def))
+     (t
+      (require 'dumb-jump)
+      (dumb-jump-go))))
+
+  (defun lsp-bridge-jump-back ()
+    (interactive)
+    (cond
+     (lsp-bridge-mode
+      (lsp-bridge-return-from-def))
+     (t
+      (require 'dumb-jump)
+      (dumb-jump-back)))))
+
 #+end_src
 ** Flycheck
 #+begin_src emacs-lisp
@@ -1569,3 +1624,4 @@ Highlight diff by using delta
   (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
   (setq tramp-verbose 6)
 #+end_src
+

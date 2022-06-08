@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>pass</name>
-  <version>0.3.1</version>
-  <bundle>org.passwordstore.pass</bundle>
-  <updated>1504827856</updated>
-  <file>pass-0.3.1.alfredworkflow</file>
-</workflow>
