@@ -1423,7 +1423,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   ;; (straight-use-package
   ;;  '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files ("*")))
 
-  (add-to-list 'load-path "~/.emacs.d/site-lisp/lsp-bridge/")
+  (add-to-list 'load-path "~/.dotfiles/Emacs/site-lisp/lsp-bridge/")
   
   (require 'yasnippet)
   (require 'lsp-bridge)
