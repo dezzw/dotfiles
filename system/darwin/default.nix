@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
-let
-  #demacs = (pkgs.emacsPackagesFor pkgs.emacsPgtkGcc).emacsWithPackages
-  #  (epkgs: [ epkgs.vterm epkgs.pdf-tools ]);
-in {
+
+{
   imports = [
     ./homebrew.nix
     #./wm.nix
@@ -73,6 +71,7 @@ in {
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
+  
   fonts.fontDir.enable = true; 
   fonts.fonts = with pkgs; [
     cantarell-fonts

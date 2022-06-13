@@ -468,7 +468,7 @@
 #+begin_src emacs-lisp
 (if IS-GUI
     (setup (:straight nyan-mode)
-      (:delay)
+      (:disabled)
       (:option nyan-mode nil
 	       nyan-animate-nyancat t
 	       nyan-wavy-trail t)))

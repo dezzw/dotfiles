@@ -35,7 +35,7 @@
 
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
-        config = { allowUnfree = true; };
+        config = { allowUnfree = true; allowBroken = true; };
         overlays = with inputs; [
           emacs.overlay
           emacs-overlay.overlay
