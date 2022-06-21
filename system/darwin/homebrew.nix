@@ -21,6 +21,8 @@
     "python"
     "minimal-racket"
     "roswell"
+    "jupyterlab"
+
   ];
 
   homebrew.casks = [

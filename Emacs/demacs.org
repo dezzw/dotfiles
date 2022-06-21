@@ -1,6 +1,6 @@
 #+TITLE: DEmacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
-** Some improve in early-init
+* Some improve in early-init
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 (setq gc-cons-threshold most-positive-fixnum)
@@ -12,14 +12,6 @@
 ;; Doom currently uses 16 MiB and Spacemacs is using 100 MB. I'm going to try 64
 ;; MiB to see how it goes.
 (defconst GC-CONS-THRESHOLD 67108860)
-
-
-;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
-(push '(menu-bar-lines . 0) default-frame-alist)
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-
-(setq ring-bell-function 'ignore)
 
 ;; Set default font
 (set-face-attribute 'default nil
@@ -41,17 +33,44 @@
 ;; 		    :height 160
 ;; 		    :weight 'regular)
 
-
+;; Windows And Frames Setting
 ;; Resizing the Emacs frame can be a terribly expensive part of changing the
 ;; font. By inhibiting this, we easily halve startup times with fonts that are
 ;; larger than the system default.
 (setq frame-inhibit-implied-resize t)
 
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
+;; (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
-(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; only for emacs29
+;; (add-to-list 'default-frame-alist '((alpha-background . (90 . 90))))
+;; (set-frame-parameter (selected-frame) 'alpha-background 0.5)
+;; (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(setq make-backup-files       nil
+      auto-save-default       nil
+      inhibit-startup-message t
+      ;; hide the welcome buffer
+      inhibit-splash-screen   t
+      ring-bell-function      'ignore)
+
+(dolist (mode
+         '(tool-bar-mode
+           tooltip-mode
+           scroll-bar-mode
+           blink-cursor-mode))
+  (funcall mode 0))
+
+(setq default-frame-alist '((fullscreen . maximized)
+                            ;; (alpha-background . 80)
+			    ;; (alpha . 90)
+			    (undecorated . t)
+			    (menu-bar-lines . 0)
+			    (tool-bar-lines . 0)
+					(horizontal-scroll-bars . nil)
+			    (vertical-scroll-bars . nil)))
 
 (setq package-enable-at-startup nil)
 
@@ -74,16 +93,13 @@
 (eval-when-compile
   (require 'setup))
 
-;; hide the welcome buffer
-(setq inhibit-splash-screen t)
-
 (straight-use-package 'all-the-icons)
 
 ;; Set `doom-themes' early to prevent non-stylized UI flash.
 (straight-use-package 'doom-themes)
 (setup  (:require doom-themes)
 	;; (load-theme 'doom-xcode t)
-	(load-theme 'doom-one t)
+  (load-theme 'doom-one t)
 
 	(setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
 	(doom-themes-treemacs-config)
@@ -106,11 +122,6 @@
 		doom-modeline-buffer-file-name-style 'relative-from-project
 		doom-modeline-buffer-encoding 'nondefault))
 
-;; Using awesome-tray to save more space for modeline
-;; (straight-use-package '(awesome-tray :host github :repo "manateelazycat/awesome-tray"))
-;; (setup (:require awesome-tray)
-;;   (awesome-tray-mode 1))
-
 ;; (straight-use-package 'hide-mode-line)
 ;; (setup (:require hide-mode-line)
 ;; 	 (:hook-into eaf-mode))
@@ -132,7 +143,6 @@
 ;;   (dashboard-setup-startup-hook))
 
 (straight-use-package 'posframe)
-(setup (:require posframe))
 
 (straight-use-package 'exec-path-from-shell)
 (setup (:require exec-path-from-shell)
@@ -145,6 +155,13 @@
 
 (when (string> emacs-version "29")
   (pixel-scroll-precision-mode 1))
+
+(if IS-MAC
+    (progn
+      (setq frame-resize-pixelwise  t)
+      (menu-bar-mode t)))
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 #+end_src
 * Setup
@@ -243,11 +260,85 @@
 
 (global-auto-revert-mode 1)
 (recentf-mode 1)
-
-(setq make-backup-files nil
-      auto-save-default nil)
-
 (delete-selection-mode t)
+
+(setq dw/prog-mode
+      '(c-mode
+	c++-mode
+	java-mode
+	python-mode
+	ruby-mode
+	lua-mode
+	rust-mode
+	rustic-mode
+	elixir-mode
+	go-mode
+	haskell-mode
+	haskell-literate-mode
+	dart-mode
+	scala-mode
+	typescript-mode
+	typescript-tsx-mode
+	js2-mode
+	js-mode
+	rjsx-mode
+	tuareg-mode
+	latex-mode
+	Tex-latex-mode
+	texmode
+	context-mode
+	texinfo-mode
+	bibtex-mode
+	clojure-mode
+	clojurec-mode
+	clojurescript-mode
+	clojurex-mode
+	sh-mode
+	web-mode
+	css-mode
+	elm-mode
+	ielm-mode
+	emacs-lisp-mode
+	lisp-interaction-mode))
+
+(setq dw/prog-mode-hook
+      '(c-mode-hook
+	c++-mode-hook
+	java-mode-hook
+	python-mode-hook
+	ruby-mode-hook
+	lua-mode-hook
+	rust-mode-hook
+	rustic-mode-hook
+	elixir-mode-hook
+	go-mode-hook
+	haskell-mode-hook
+	haskell-literate--hookmode
+	dart-mode-hook
+	scala-mode-hook
+	typescript-mode-hook
+	typescript-tsx-mode-hook
+	js2-mode-hook
+	js-mode-hook
+	rjsx-mode-hook
+	tuareg-mode-hook
+	latex-mode-hook
+	Tex-latex-mode-hook
+	texmode-hook
+	context-mode-hook
+	texinfo-mode-hook
+	bibtex-mode-hook
+	clojure-mode-hook
+	clojurec-mode-hook
+	clojurescript-mode-hook
+	clojurex-mode-hook
+	sh-mode-hook
+	web-mode-hook
+	css-mode-hook
+	elm-mode-hook
+	ielm-mode-hook
+	emacs-lisp-mode-hook
+	lisp-interaction-mode-hook))
 
 (setup (:straight super-save)
   (:delay)
@@ -351,8 +442,9 @@
 ** Editing Tools
 *** Hungry Delete
 #+begin_src emacs-lisp
-  (setup (:straight hungry-delete)
-	 (:hook-into dw/prog-mode))
+(setup (:straight hungry-delete) 
+  (dolist (hook dw/prog-mode-hook)
+    (add-hook hook 'hungry-delete-mode)))
 #+end_src
 *** Avy
 #+begin_src emacs-lisp
@@ -424,16 +516,18 @@
 * UI Setting
 ** Line Numbers
 #+begin_src emacs-lisp
-  ;; Enable liner number
-  (global-display-line-numbers-mode t)
+;; Enable liner number
+(global-display-line-numbers-mode t)
 
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-		  term-mode-hook
-		  vterm-mode-hook
-		  shell-mode-hook
-		  eshell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+		term-mode-hook
+		vterm-mode-hook
+		shell-mode-hook
+		eshell-mode-hook
+		xwidget-webkit-mode-hook
+		pdf-view-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 #+end_src
 
@@ -481,22 +575,25 @@
 #+end_src
 ** Highlight TODOs
 #+begin_src emacs-lisp
-  (setup (:straight hl-todo)
-	 (:hook-into org-mode dw/prog-mode)
-	 (:option hl-todo-keyword-faces
-		  '(("TODO"   . "#FF0000")
-		    ("FIXME"  . "#FF0000")
-		    ("DEBUG"  . "#A020F0")
-		    ("NEXT" . "#FF4500")
-		    ("TBA" . "#61d290")
-		    ("UNCHECK"   . "#1E90FF"))))
+(setup (:straight hl-todo)
+       (:hook-into org-mode)
+       (:option hl-todo-keyword-faces
+		'(("TODO"   . "#FF0000")
+		  ("FIXME"  . "#FF0000")
+		  ("DEBUG"  . "#A020F0")
+		  ("NEXT" . "#FF4500")
+		  ("TBA" . "#61d290")
+		  ("UNCHECK"   . "#1E90FF")))
+       (dolist (hook dw/prog-mode-hook)
+	 (add-hook hook 'hl-todo-mode)))
 
 #+end_src
 
 ** Highligh numbers
 #+begin_src emacs-lisp
-  (setup (:straight highlight-numbers)
-	 (:hook-into dw/prog-mode))
+(setup (:straight highlight-numbers)
+  (dolist (hook dw/prog-mode-hook)
+    (add-hook hook 'highlight-numbers-mode)))
 #+end_src
 
 ** Highlight the diff
@@ -507,8 +604,9 @@
 
 ** Highlight the current buffer
 #+begin_src emacs-lisp
-  (setup (:straight beacon)
-	 (beacon-mode 1))
+(setup (:straight beacon)
+  (:delay)
+  (beacon-mode 1))
 #+end_src
 ** Tree-Sitter
 #+begin_src emacs-lisp
@@ -1025,44 +1123,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ** Corfu
 #+begin_src emacs-lisp
-(setq dw/prog-mode
-  '(c-mode
-    c++-mode
-    java-mode
-    python-mode
-    ruby-mode
-    lua-mode
-    rust-mode
-    rustic-mode
-    elixir-mode
-    go-mode
-    haskell-mode
-    haskell-literate-mode
-    dart-mode
-    scala-mode
-    typescript-mode
-    typescript-tsx-mode
-    js2-mode
-    js-mode
-    rjsx-mode
-    tuareg-mode
-    latex-mode
-    Tex-latex-mode
-    texmode
-    context-mode
-    texinfo-mode
-    bibtex-mode
-    clojure-mode
-    clojurec-mode
-    clojurescript-mode
-    clojurex-mode
-    sh-mode
-    web-mode
-    css-mode
-    elm-mode
-    ielm-mode
-    emacs-lisp-mode))
-
 (setup (:straight corfu)
   (add-to-list 'load-path (expand-file-name "straight/build/corfu/extensions" user-emacs-directory))
   (require 'corfu-history)
@@ -1085,8 +1145,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      [backtab] corfu-previous
      "<escape>" corfu-quit))
   
-  (global-corfu-mode)
-  (corfu-history-mode)
+  ;; (global-corfu-mode)
+  ;; (corfu-history-mode)
   )
 
 ;; Use dabbrev with Corfu!
@@ -1146,26 +1206,36 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (setup (:straight smartparens)
   (:also-load smartparens-config)
-  (:hook-into dw/prog-mode)
   (:bind "M-r" sp-rewrap-sexp    
 	 "M-s" sp-unwrap-sexp
 	 "M-[" sp-wrap-square
 	 "M-{" sp-wrap-curly
 	 "C-)" sp-forward-slur-sexp
-	 "C-}" sp-forward-barfsexp))
+	 "C-}" sp-forward-barfsexp)
+  (dolist (hook dw/prog-mode-hook)
+    (add-hook hook 'smartparens-mode)))
 
 (setup (:require rainbow-delimiters)
-  (:hook-into dw/prog-mode))
+  (dolist (hook dw/prog-mode-hook)
+    (add-hook hook 'rainbow-delimiters-mode)))
+  
 #+end_src
 *** Indent
 #+begin_src emacs-lisp
-  (setup (:straight highlight-indent-guides)
-	 (:hook-into dw/prog-mode)
-	 (:option highlight-indent-guides-delay 0
-		  highlight-indent-guides-method 'character))
+(setup (:straight highlight-indent-guides)
+  (require 'highlight-indent-guides)
+  (:option highlight-indent-guides-auto-enabled nil
+	   highlight-indent-guides-delay 0
+	   highlight-indent-guides-method 'character)
+  
+  (set-face-background 'highlight-indent-guides-odd-face "darkgray")
+  (set-face-background 'highlight-indent-guides-even-face "dimgray")
+  (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
+  (dolist (hook dw/prog-mode-hook)
+    (add-hook hook 'highlight-indent-guides-mode)))
 
-  (setup (:straight aggressive-indent)
-	 (:hook-into emacs-lisp-mode lisp-mode python-mode))
+(setup (:straight aggressive-indent)
+       (:hook-into emacs-lisp-mode lisp-mode python-mode))
 #+end_src
 *** Rainbow Mode
 #+begin_src emacs-lisp
@@ -1176,7 +1246,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (setup (:straight format-all)
   (:delay)
-  (:hook-into dw/prog-mode))
+  (dolist (hook dw/prog-mode-hook)
+    (add-hook hook 'format-all-mode)))
 #+end_src
 *** quickrun.el
 #+begin_src emacs-lisp
@@ -1212,6 +1283,10 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Python
 #+begin_src emacs-lisp
 ;; (setup (:straight lsp-pyright))
+
+(setup (:straight jupyter))
+
+(setup (:straight ein))
 #+end_src
 *** Web (HTML/CSS/JS...)
 **** JS/TS
@@ -1623,5 +1698,26 @@ Highlight diff by using delta
 
   (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
   (setq tramp-verbose 6)
+#+end_src
+* IRC
+#+begin_src emacs-lisp
+(setq erc-server "irc.libera.chat"
+      erc-nick "dezzw"    ; Change this!
+      erc-user-full-name "Desmond Wang"  ; And this!
+      erc-track-shorten-start 8
+      erc-autojoin-channels-alist '(("irc.libera.chat" "#systemcrafters" "#emacs"))
+      erc-kill-buffer-on-part t
+      erc-auto-query 'bury)
+
+(setup (:straight circe)
+  (setq circe-network-options
+      '(("irc.libera.chat"
+         :tls t
+	 :port 6697
+         :nick "dezzw"
+	 :sasl-username "dezzw"
+	  :sasl-password "Irc0x577063"
+         :channels ("#emacs-circe")
+         ))))
 #+end_src
 

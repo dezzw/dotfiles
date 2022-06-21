@@ -9,6 +9,8 @@
     extraPackages = epkgs: with epkgs;[
       vterm
       pdf-tools
+      zmq
+      exec-path-from-shell
     ];
   };
 
@@ -33,13 +35,13 @@
     nodePackages.vscode-html-languageserver-bin
 
     nodePackages.eslint
+    nodePackages.prettier
 
     python39Packages.pylint 
 
     rnix-lsp
 
     universal-ctags
-
     
     # Code Formating
     nixpkgs-fmt

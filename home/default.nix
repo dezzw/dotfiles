@@ -26,6 +26,8 @@
     nodePackages.typescript
     yarn
     node2nix
+
+    deno
     
     # rust
     rustc
@@ -42,6 +44,7 @@
     ripgrep
     aria
     ranger
+    gnutls
 
     comma
 

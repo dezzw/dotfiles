@@ -81,7 +81,7 @@
     in
       {
         darwinConfigurations = {
-          Desmonds-MBP = darwinSystem {
+          Desmond-MBP = darwinSystem {
             system = "aarch64-darwin";
             modules = [
               ./system/darwin
