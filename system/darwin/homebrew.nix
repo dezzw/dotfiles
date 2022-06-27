@@ -61,5 +61,7 @@
     "appcleaner"
     "ubersicht"
     "steam"
+    "cleanshot"
+    "bartender"
   ];
 }
