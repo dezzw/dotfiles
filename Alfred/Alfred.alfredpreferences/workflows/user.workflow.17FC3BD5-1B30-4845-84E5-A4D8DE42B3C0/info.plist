@@ -34,19 +34,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>61514DC2-A4C4-4CE2-8620-20AF3832FCAC</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>03650A4E-ADBA-483E-98BC-FE995A1F161C</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>6E12F27D-1B66-42BB-BADC-F90847D9AF47</key>
 		<array>
 			<dict>
@@ -112,6 +99,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>FCF09D83-9AEE-4BB5-A45B-DC71A16FC262</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4202667E-500C-463E-873B-62851417D87A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>FFB6FFC8-FABF-4A8D-8E3F-F9567A212E97</key>
 		<array>
 			<dict>
@@ -136,31 +136,6 @@
 	<string>Emacs</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>EMACS="/etc/profiles/per-user/dez/bin/emacs"
-
-$EMACS</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>5</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>03650A4E-ADBA-483E-98BC-FE995A1F161C</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -206,27 +181,6 @@ $EMACSCLIENT -cn -s main -e "(org-agenda)"</string>
 			<string>6FF006C0-93FA-4238-9689-A3EAB042A129</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>emacs</string>
-				<key>subtext</key>
-				<string>Full Emacs</string>
-				<key>text</key>
-				<string>Start Emacs</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>61514DC2-A4C4-4CE2-8620-20AF3832FCAC</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -459,27 +413,6 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(dirvish)
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>eshell</string>
-				<key>subtext</key>
-				<string>EShell Session in Emacs GUI Client</string>
-				<key>text</key>
-				<string>Start EShell with Emacs Client</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>FFB6FFC8-FABF-4A8D-8E3F-F9567A212E97</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -501,6 +434,27 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<string>B2BF3F00-4889-4333-82A6-807A70A33129</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>eshell</string>
+				<key>subtext</key>
+				<string>EShell Session in Emacs GUI Client</string>
+				<key>text</key>
+				<string>Start EShell with Emacs Client</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>FFB6FFC8-FABF-4A8D-8E3F-F9567A212E97</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -545,6 +499,37 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 				<key>focusedappvariablename</key>
 				<string></string>
 				<key>hotkey</key>
+				<integer>36</integer>
+				<key>hotmod</key>
+				<integer>1179648</integer>
+				<key>hotstring</key>
+				<string>↩</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>16A96AD2-9974-47DC-A2F3-650ECD152AA0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
 				<integer>14</integer>
 				<key>hotmod</key>
 				<integer>1179648</integer>
@@ -560,7 +545,30 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<key>type</key>
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
-			<string>16A96AD2-9974-47DC-A2F3-650ECD152AA0</string>
+			<string>FCF09D83-9AEE-4BB5-A45B-DC71A16FC262</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>emacsclient --eval "(emacs-everywhere)"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>4202667E-500C-463E-873B-62851417D87A</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -569,119 +577,121 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 	<string>This workfollow is used to control the eamcs servers (daemon) and their clients.</string>
 	<key>uidata</key>
 	<dict>
-		<key>03650A4E-ADBA-483E-98BC-FE995A1F161C</key>
-		<dict>
-			<key>xpos</key>
-			<integer>380</integer>
-			<key>ypos</key>
-			<integer>100</integer>
-		</dict>
 		<key>1610128E-1A65-481E-A6BB-69BA1B22D667</key>
 		<dict>
 			<key>xpos</key>
-			<integer>865</integer>
+			<real>865</real>
 			<key>ypos</key>
-			<integer>255</integer>
+			<real>255</real>
 		</dict>
 		<key>16A96AD2-9974-47DC-A2F3-650ECD152AA0</key>
 		<dict>
 			<key>xpos</key>
-			<integer>105</integer>
+			<real>105</real>
 			<key>ypos</key>
-			<integer>670</integer>
+			<real>670</real>
 		</dict>
 		<key>3E554F3A-9D95-4D8B-9797-FDE6FDA14DCD</key>
 		<dict>
 			<key>xpos</key>
-			<integer>555</integer>
+			<real>555</real>
 			<key>ypos</key>
-			<integer>255</integer>
+			<real>255</real>
 		</dict>
-		<key>61514DC2-A4C4-4CE2-8620-20AF3832FCAC</key>
+		<key>4202667E-500C-463E-873B-62851417D87A</key>
 		<dict>
 			<key>xpos</key>
-			<integer>85</integer>
+			<real>385</real>
 			<key>ypos</key>
-			<integer>100</integer>
+			<real>820</real>
 		</dict>
 		<key>6E12F27D-1B66-42BB-BADC-F90847D9AF47</key>
 		<dict>
 			<key>xpos</key>
-			<integer>560</integer>
+			<real>560</real>
 			<key>ypos</key>
-			<integer>435</integer>
+			<real>435</real>
 		</dict>
 		<key>6FF006C0-93FA-4238-9689-A3EAB042A129</key>
 		<dict>
 			<key>xpos</key>
-			<integer>865</integer>
+			<real>865</real>
 			<key>ypos</key>
-			<integer>100</integer>
+			<real>100</real>
 		</dict>
 		<key>77E4F014-49B9-4791-8C1B-2B8B510E119A</key>
 		<dict>
 			<key>xpos</key>
-			<integer>565</integer>
+			<real>565</real>
 			<key>ypos</key>
-			<integer>565</integer>
+			<real>565</real>
 		</dict>
 		<key>9273F864-226C-448C-BA45-C404BF368E28</key>
 		<dict>
 			<key>xpos</key>
-			<integer>870</integer>
+			<real>870</real>
 			<key>ypos</key>
-			<integer>435</integer>
+			<real>435</real>
 		</dict>
 		<key>B0F9FCDE-0FAD-4CAA-A551-CBB9E30F3EEF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>95</integer>
+			<real>95</real>
 			<key>ypos</key>
-			<integer>420</integer>
+			<real>420</real>
 		</dict>
 		<key>B2BF3F00-4889-4333-82A6-807A70A33129</key>
 		<dict>
 			<key>xpos</key>
-			<integer>375</integer>
+			<real>375</real>
 			<key>ypos</key>
-			<integer>545</integer>
+			<real>545</real>
 		</dict>
 		<key>CFD369C7-D2A2-4712-B97F-04606B5AD2DA</key>
 		<dict>
 			<key>xpos</key>
-			<integer>375</integer>
+			<real>375</real>
 			<key>ypos</key>
-			<integer>260</integer>
+			<real>260</real>
 		</dict>
 		<key>E686AB1E-CD4D-47CB-A519-8A7B943D2844</key>
 		<dict>
 			<key>xpos</key>
-			<integer>380</integer>
+			<real>380</real>
 			<key>ypos</key>
-			<integer>420</integer>
+			<real>420</real>
 		</dict>
 		<key>F5C68B3D-9017-4AAC-A20A-48FC8FC73CE7</key>
 		<dict>
 			<key>xpos</key>
-			<integer>550</integer>
+			<real>550</real>
 			<key>ypos</key>
-			<integer>100</integer>
+			<real>100</real>
 		</dict>
 		<key>F846F785-2FD2-4688-B4FA-77AC867B86C8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>90</integer>
+			<real>90</real>
 			<key>ypos</key>
-			<integer>260</integer>
+			<real>260</real>
+		</dict>
+		<key>FCF09D83-9AEE-4BB5-A45B-DC71A16FC262</key>
+		<dict>
+			<key>xpos</key>
+			<real>110</real>
+			<key>ypos</key>
+			<real>820</real>
 		</dict>
 		<key>FFB6FFC8-FABF-4A8D-8E3F-F9567A212E97</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<real>100</real>
 			<key>ypos</key>
-			<integer>545</integer>
+			<real>545</real>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>

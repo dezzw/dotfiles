@@ -46,7 +46,7 @@
       };
 
       # # Personal configuration shared between `nix-darwin` and plain `home-manager` configs.
-      # homeManagerStateVersion = "22.05";
+      homeManagerStateVersion = "22.05";
       # homeManagerCommonConfig = {
       #   imports = attrValues self.homeManagerModules ++ [
       #     ./home
@@ -81,9 +81,10 @@
     in
       {
         darwinConfigurations = {
-          Desmond-MBP = darwinSystem {
+          Desmonds-MBP = darwinSystem {
             system = "aarch64-darwin";
             modules = [
+              
               ./system/darwin
               
               home-manager.darwinModules.home-manager

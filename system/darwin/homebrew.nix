@@ -11,6 +11,7 @@
   homebrew.taps = [
     "homebrew/core"
     "homebrew/cask"
+    "homebrew/cask-versions"
     # "homebrew/services"
     # "koekeishiya/formulae"
     "adur1990/tap"
@@ -21,8 +22,9 @@
     "python"
     "minimal-racket"
     "roswell"
+    "jenv"
     "jupyterlab"
-
+    "deno"
   ];
 
   homebrew.casks = [
@@ -33,9 +35,7 @@
     # Browser
     "brave-browser"
     "google-chrome"
-
-    # Pass
-    "passformacos"
+    "firefox-developer-edition"
 
     # Graphic Tools
     "blender"
@@ -55,7 +55,6 @@
     "alfred"
     "discord"
     "downie"
-    "hazeover"
     "iina"
     "zoom"
     "appcleaner"

@@ -9,15 +9,21 @@
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
-    # keep-derivations = true
-    # keep-outputs = true
     auto-optimise-store = true
   '';
+
+  system.stateVersion = 4;
+  nix.maxJobs = "auto";
+  services.nix-daemon.enable = true;
+
+  nix.trustedUsers = [ "root" "dez" ];
 
   nix.binaryCaches = [
     "https://cachix.org/api/v1/cache/nix-community"
 
     "https://cachix.org/api/v1/cache/emacs"
+
+    "https://cachix.org/api/v1/cache/cmacrae"
   ];
 
   nix.binaryCachePublicKeys = [
@@ -27,62 +33,65 @@
 
   nix.trustedBinaryCaches = config.nix.binaryCaches;
 
+  nixpkgs.config.allowUnfree = true;
   # nixpkgs.config.allowBroken = true;
 
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 4;
-
-  nix.trustedUsers = [ "root" "dez" ];
-  users.users.dez.home = "/Users/dez";
-
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
   environment.shells = [ pkgs.zsh ];
   environment.systemPackages = with pkgs;[
+    gcc
     git
-    # python-with-my-packages
-    # For flyspell (spelling checking)
-    hunspell
-    hunspellDicts.en-us
-    hunspellDicts.en-ca
-
+    man-pages
+    man-pages-posix
   ];
-  programs.bash.enable = true;
+  programs.bash.enable = false;
 
-  # environment.variables = {
-  #    QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase.bin.outPath}/lib/qt-${pkgs.qt5.qtbase.version}/plugins";
-  #  };
+  users.users.dez.shell = pkgs.zsh;
+  users.users.dez.home = "/Users/dez";
+  users.nix.configureBuildUsers = true;
 
-  # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh = {
     enable = true;
     enableCompletion = false;
     interactiveShellInit = "autoload -U compinit && compinit";
   };
-  programs.fish.enable = true;
 
-  environment.variables.EDITOR = "nvim";
+  # system.defaults = {
+  #   dock = {
+  #     autohide = true;
+  #     mru-spaces = false;
+  #     minimize-to-application = true;
+  #   };
 
-  # Use a custom configuration.nix location.
-  # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
-  environment.darwinConfig = "$HOME/.dotfiles/system/macintosh.nix";
+  #   # screencapture.location = "/tmp";
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  # nix.package = pkgs.nix;
+  #   finder = {
+  #     AppleShowAllExtensions = true;
+  #     _FXShowPosixPathInTitle = true;
+  #     FXEnableExtensionChangeWarning = false;
+  #   };
+
+  #   trackpad = {
+  #     Clicking = true;
+  #     TrackpadThreeFingerDrag = true;
+  #   };
+  # };
+
+  # system.keyboard = {
+  #   enableKeyMapping = true;
+  #   remapCapsLockToControl = true;
+  # };
   
-  fonts.fontDir.enable = true; 
-  fonts.fonts = with pkgs; [
-    cantarell-fonts
-    roboto
-    roboto-mono
-    mononoki
-    font-awesome
-    nerdfonts
-    victor-mono
-    fira-code
-    jetbrains-mono
-    emacs-all-the-icons-fonts
-  ];
+  fonts = {
+    fontDir.enable = true; 
+    fonts = with pkgs; [
+      # victor-mono
+      # fira-code
+      # jetbrains-mono
+      nerdfonts
+      emacs-all-the-icons-fonts
+    ];
+  };
+
+  # Recreate /run/current-system symlink after boot
+  services.activate-system.enable = true;
 }

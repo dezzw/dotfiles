@@ -1,6 +1,7 @@
 #+TITLE: DEmacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
 * Some improve in early-init
+this is /italic/ and this is *bold*.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 (setq gc-cons-threshold most-positive-fixnum)
@@ -13,46 +14,15 @@
 ;; MiB to see how it goes.
 (defconst GC-CONS-THRESHOLD 67108860)
 
-;; Set default font
-(set-face-attribute 'default nil
-		    :family "Operator Mono"
-		    :height 160
-		    :weight 'normal
-		    :width 'normal)
-
-;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil
-		    :family "Operator Mono"
-		    :height 160
-		    :weight 'normal
-		    :width 'normal)
-
-;; Set the variable pitch face
-;; (set-face-attribute 'variable-pitch nil
-;; 		    :family "Cantarell"
-;; 		    :height 160
-;; 		    :weight 'regular)
-
 ;; Windows And Frames Setting
 ;; Resizing the Emacs frame can be a terribly expensive part of changing the
 ;; font. By inhibiting this, we easily halve startup times with fonts that are
 ;; larger than the system default.
 (setq frame-inhibit-implied-resize t)
 
-;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
-;; (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
-
-;; only for emacs29
-;; (add-to-list 'default-frame-alist '((alpha-background . (90 . 90))))
-;; (set-frame-parameter (selected-frame) 'alpha-background 0.5)
-;; (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 (setq make-backup-files       nil
       auto-save-default       nil
       inhibit-startup-message t
-      ;; hide the welcome buffer
       inhibit-splash-screen   t
       ring-bell-function      'ignore)
 
@@ -69,7 +39,7 @@
 			    (undecorated . t)
 			    (menu-bar-lines . 0)
 			    (tool-bar-lines . 0)
-					(horizontal-scroll-bars . nil)
+			    (horizontal-scroll-bars . nil)
 			    (vertical-scroll-bars . nil)))
 
 (setq package-enable-at-startup nil)
@@ -98,29 +68,52 @@
 ;; Set `doom-themes' early to prevent non-stylized UI flash.
 (straight-use-package 'doom-themes)
 (setup  (:require doom-themes)
-	;; (load-theme 'doom-xcode t)
+  ;; (load-theme 'doom-xcode t)
   (load-theme 'doom-one t)
 
-	(setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-	(doom-themes-treemacs-config)
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
 
-	;; (doom-themes-org-config)
-	)
+  (doom-themes-org-config)
+  )
 
 ;; Set `doom-modeline' early to prevent non-stylized UI flash.
 ;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
 (straight-use-package 'doom-modeline)
 (setup (:require doom-modeline)
-       (size-indication-mode 1)
-       (column-number-mode 1)
+  (:hook size-indication-mode)
+  (:hook column-number-mode)
 
-       (:hook-into after-init-hook)
-       (:option doom-modeline-icon nil ;; icons' position does not work properly
-		;; doom-modeline-major-mode-icon nil
-		;; doom-modeline-lsp nil
-		;; doom-modeline-buffer-file-name-style 'truncate-upto-root 
-		doom-modeline-buffer-file-name-style 'relative-from-project
-		doom-modeline-buffer-encoding 'nondefault))
+  (:hook-into after-init-hook)
+  (unless after-init-time
+    ;; prevent flash of unstyled modeline at startup
+    (setq-default mode-line-format nil))
+  ;; Set these early so they don't trigger variable watchers
+  (setq doom-modeline-bar-width 3
+        doom-modeline-github nil
+        doom-modeline-mu4e nil
+        doom-modeline-persp-name nil
+	doom-modeline-lsp nil
+        doom-modeline-minor-modes nil
+        doom-modeline-major-mode-icon nil
+        doom-modeline-buffer-file-name-style 'relative-from-project
+        ;; Only show file encoding if it's non-UTF-8 and different line endings
+        ;; than the current OSes preference
+        doom-modeline-buffer-encoding 'nondefault
+        doom-modeline-default-eol-type
+        (cond (IS-MAC 2)
+              (0)))
+
+  (when (daemonp)
+    (setq doom-modeline-icon t)))
+;; (straight-use-package
+;;        '(awesome-tray :type git :repo "https://github.com/manateelazycat/awesome-tray.git"))
+;; (setup (:require awesome-tray)
+;;     ;; (unless after-init-time
+;;     ;;   ;; prevent flash of unstyled modeline at startup
+;;     ;;   (setq-default mode-line-format nil))
+;;   (:hook-into after-init-hook))
+
 
 ;; (straight-use-package 'hide-mode-line)
 ;; (setup (:require hide-mode-line)
@@ -144,14 +137,11 @@
 
 (straight-use-package 'posframe)
 
-(straight-use-package 'exec-path-from-shell)
-(setup (:require exec-path-from-shell)
-       (when (memq window-system '(mac ns))
-	 (exec-path-from-shell-initialize)))
-
 ;; Add my library path to load-path
 (push "~/.dotfiles/Emacs/elisp" load-path)
 (push "~/Documents/Org" load-path)
+
+(push "/etc/profiles/per-user/dez/bin" exec-path)
 
 (when (string> emacs-version "29")
   (pixel-scroll-precision-mode 1))
@@ -170,54 +160,54 @@
 #+end_src
 ** :daley
 #+begin_src emacs-lisp
-  (setup-define :delay
-		(lambda (&rest time)
-		  `(run-with-idle-timer ,(or time 1)
-					nil ;; Don't repeat
-					(lambda () (require ',(setup-get 'feature)))))
-		:documentation "Delay loading the feature until a certain amount of idle time has passed.")  
+(setup-define :delay
+  (lambda (&rest time)
+    `(run-with-idle-timer ,(or time 1)
+			  nil ;; Don't repeat
+			  (lambda () (require ',(setup-get 'feature)))))
+  :documentation "Delay loading the feature until a certain amount of idle time has passed.")  
 #+end_src
 
 ** :disabled
 #+begin_src emacs-lisp
-  (setup-define :disabled
-		(lambda ()
-		  `,(setup-quit))
-		:documentation "Always stop evaluating the body.")
+(setup-define :disabled
+  (lambda ()
+    `,(setup-quit))
+  :documentation "Always stop evaluating the body.")
 #+end_src
 
 ** :load-after
 #+begin_src emacs-lisp
-  (setup-define :load-after
-		(lambda (features &rest body)
-		  (let ((body `(progn
-				 (require ',(setup-get 'feature))
-				 ,@body)))
-		    (dolist (feature (if (listp features)
-					 (nreverse features)
-				       (list features)))
-		      (setq body `(with-eval-after-load ',feature ,body)))
-		    body))
-		:documentation "Load the current feature after FEATURES."
-		:indent 1)
+(setup-define :load-after
+  (lambda (features &rest body)
+    (let ((body `(progn
+		   (require ',(setup-get 'feature))
+		   ,@body)))
+      (dolist (feature (if (listp features)
+			   (nreverse features)
+			 (list features)))
+	(setq body `(with-eval-after-load ',feature ,body)))
+      body))
+  :documentation "Load the current feature after FEATURES."
+  :indent 1)
 #+end_src
 
 ** :straight
 #+begin_src emacs-lisp
-  (setup-define :straight
-		(lambda (recipe)
-		  `(unless (straight-use-package ',recipe)
-		     ,(setup-quit)))
-		:documentation
-		"Install RECIPE with `straight-use-package'.
-  This macro can be used as HEAD, and will replace itself with the
-  first RECIPE's package."
-		:repeatable t
-		:shorthand (lambda (sexp)
-			     (let ((recipe (cadr sexp)))
-			       (if (consp recipe)
-				   (car recipe)
-				 recipe))))
+(setup-define :straight
+  (lambda (recipe)
+    `(unless (straight-use-package ',recipe)
+       ,(setup-quit)))
+  :documentation
+  "Install RECIPE with `straight-use-package'.
+This macro can be used as HEAD, and will replace itself with the
+first RECIPE's package."
+  :repeatable t
+  :shorthand (lambda (sexp)
+	       (let ((recipe (cadr sexp)))
+		 (if (consp recipe)
+		     (car recipe)
+		   recipe))))
 #+end_src
 * Startup Setting 
 #+begin_src emacs-lisp
@@ -251,12 +241,16 @@
 		  file-name-handler-alist default-file-name-handler-alist)))
 
 (setup (:straight gcmh)
-       (:hook-into after-init-hook)
-       (:option gcmh-idle-delay 5
-		gcmh-high-cons-threshold GC-CONS-THRESHOLD)
-       (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+  (:hook-into after-init-hook)
+  (:option gcmh-idle-delay 5
+	   gcmh-high-cons-threshold GC-CONS-THRESHOLD)
+  (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+(setup (:straight exec-path-from-shell)
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (global-auto-revert-mode 1)
 (recentf-mode 1)
@@ -342,23 +336,37 @@
 
 (setup (:straight super-save)
   (:delay)
+  (:option super-save-auto-save-when-idle t
+	   super-save-remote-files nil
+	   super-save-exclude '(".gpg"))
   (:when-loaded
-    (super-save-mode +1)
-    (setq super-save-auto-save-when-idle t)))
+    ;; add integration with ace-window
+    (add-to-list 'super-save-triggers 'ace-window)
+    ;; save when back to evil normal state
+    (add-to-list 'super-save-triggers 'evil-normal-state)
+    ;; save on find-file
+    (add-to-list 'super-save-hook-triggers 'find-file-hook)
+    (super-save-mode +1)))
 #+end_src
-
-* Editing
+* FullScreen On MacOS
+#+begin_src emacs-lisp
+(if (featurep 'cocoa)
+    (progn
+      (setq ns-use-native-fullscreen nil)
+      (setq ns-use-fullscreen-animation nil)))
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(run-at-time 1 nil
+             (lambda ()
+               (toggle-frame-fullscreen)))
+#+end_src
+* Keyboard Bindings
+** ESC Cancels All
+#+begin_src emacs-lisp
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+#+end_src
 ** Evil
 *** Main Settings
 #+begin_src emacs-lisp
-;; (setup (:straight undo-tree)
-;;   (global-undo-tree-mode 1)
-;;   (:option undo-tree-visualizer-diff t
-;; 	   undo-tree-auto-save-history t
-;; 	   undo-tree-enable-undo-in-region t
-;;       undo-limit 800000
-;;       undo-strong-limit 12000000
-;;       undo-outer-limit 128000000))
 (setup (:straight undo-fu))
 (setup (:straight undo-fu-session)
   (global-undo-fu-session-mode))
@@ -369,7 +377,6 @@
   ;; Pre-load configuration
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
   (setq evil-respect-visual-line-mode t)
   (setq evil-undo-system 'undo-fu)
@@ -377,11 +384,28 @@
   ;; Activate the Evil
   (evil-mode 1)
 
+  (dolist (mode '(custom-mode
+                  eshell-mode
+                  git-rebase-mode
+                  erc-mode
+                  circe-server-mode
+                  circe-chat-mode
+                  circe-query-mode
+                  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode))
+
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  ;; Clear the binding of C-k so that it doesn't conflict with Corfu
+  (define-key evil-insert-state-map (kbd "C-k") nil)
+  
   (evil-set-initial-state 'messages-buffer-mode 'normal))
 
 (setup (:straight evil-collection)
+  ;; Is this a bug in evil-collection?
+  (setq evil-collection-company-use-tng nil)
   (:load-after evil
-    (:option evil-collection-outline-bind-tab-p nil)
+    (:option evil-collection-outline-bind-tab-p nil
+	     (remove evil-collection-mode-list) 'lispy)
     (evil-collection-init)))
 #+end_src
 *** Evil-nerd-commenter
@@ -428,15 +452,15 @@
     :global-prefix "C-SPC"))
 
 (dw/leader-key-def
-   "SPC" 'execute-extended-command
-   "f" 'find-file
-   "a" 'org-agenda)
+  "SPC" 'execute-extended-command
+  "f" 'find-file
+  "a" 'org-agenda)
 #+end_src
 ** which-key
 #+begin_src emacs-lisp
-  (setup (:straight which-key)
-	 (:option which-key-idle-delay 0.3)
-	 (which-key-mode))
+(setup (:straight which-key)
+  (:option which-key-idle-delay 0.3)
+  (which-key-mode))
 
 #+end_src
 ** Editing Tools
@@ -470,22 +494,21 @@
 ;; new variable `ispell-hunspell-dictionary-alist' is defined in Emacs
 ;; If it's nil, Emacs tries to automatically set up the dictionaries.
 (when (boundp 'ispell-hunspell-dictionary-alist)
-      (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
+  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
 
 (setup (:straight wucuo))
 #+end_src
 * Workspace
-** Perspective
 #+begin_src emacs-lisp
-(setup (:straight perspective)
-       (:option persp-initial-frame-name "Main"
-		persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
-       (setq persp-mode-prefix-key (kbd "C-x p"))
+;; (setup (:straight perspective)
+;;   (:option persp-initial-frame-name "Main"
+;; 	   persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
+;;   (setq persp-mode-prefix-key (kbd "C-x p"))
 
-       (add-hook 'kill-emacs-hook #'persp-state-save)
-       ;; Running `persp-mode' multiple times resets the perspective list...
-       (unless (equal persp-mode t)
-	 (persp-mode)))
+;;   (add-hook 'kill-emacs-hook #'persp-state-save)
+;;   ;; Running `persp-mode' multiple times resets the perspective list...
+;;   (unless (equal persp-mode t)
+;;     (persp-mode)))
 
 ;; Windows/buffers sets shared among frames + save/load.
 ;; (setup (:straight persp-mode)
@@ -506,17 +529,77 @@
 ;;    :mode-restore-function (lambda (_) (shell))
 ;;    :save-vars '(major-mode default-directory)))
 
+(straight-use-package 'workgroups2)
+(require 'workgroups2)
+
+(setq wg-prefix-key (kbd "C-c z"))
+
+(setq wg-session-file "~/.emacs.d/.emacs_workgroups")
+
+(workgroups-mode 1)
+
 (dw/leader-key-def
-   "SPC" 'execute-extended-command
-   "f" 'find-file
-   "b" 'persp-switch-to-buffer*
-   "k" 'persp-kill-buffer*
-   "a" 'org-agenda)
+  "SPC" 'execute-extended-command
+  "f" 'find-file
+  "b" 'persp-switch-to-buffer*
+  "k" 'persp-kill-buffer*
+  "a" 'org-agenda)
 #+end_src
 * UI Setting
+** Fonts
+#+begin_src emacs-lisp
+;; Set default font
+(set-face-attribute 'default nil
+		    :font "VictorMono Nerd Font Mono"
+		    ;; :font "Operator Mono SSm Lig"
+		    :weight 'regular
+		    :height 140)
+
+;; Set the fixed pitch face
+;; (set-face-attribute 'fixed-pitch nil
+;; 		    :font "Operator Mono SSm Lig"
+;; 		    :weight 'light
+;; 		    :height 140)
+
+;; Set the variable pitch face
+;; (set-face-attribute 'variable-pitch nil
+;; 		    :font "Operator Mono SSm Lig"
+;; 		    :height 140
+;; 		    :weight 'light)
+
+
+(setup (:straight '(ligature :host github :repo "mickeynp/ligature.el"))
+  ;; Enable the "www" ligature in every possible major mode
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+				       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+				       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+				       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+				       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+				       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+				       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+				       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+				       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+				       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+				       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+				       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+				       "\\\\" "://"))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+
+(setup (:straight unicode-fonts)
+	(unicode-fonts-setup))
+#+end_src
+
 ** Line Numbers
 #+begin_src emacs-lisp
 ;; Enable liner number
+(setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
 
 ;; Disable line numbers for some modes
@@ -529,33 +612,6 @@
 		pdf-view-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-#+end_src
-
-** Fonts Ligature
-#+begin_src emacs-lisp
-  (setup (:straight '(ligature :host github :repo "mickeynp/ligature.el"))
-	 ;; Enable the "www" ligature in every possible major mode
-	 (ligature-set-ligatures 't '("www"))
-	 ;; Enable traditional ligature support in eww-mode, if the
-	 ;; `variable-pitch' face supports it
-	 (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-	 ;; Enable all Cascadia Code ligatures in programming modes
-	 (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-					      ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-					      "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-					      "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-					      "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-					      "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-					      "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-					      "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-					      ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-					      "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-					      "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-					      "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-					      "\\\\" "://"))
-	 ;; Enables ligature checks globally in all buffers. You can also do it
-	 ;; per mode with `ligature-mode'.
-	 (global-ligature-mode t))
 #+end_src
 
 ** Nyan
@@ -571,21 +627,22 @@
 ** Parrot
 #+begin_src emacs-lisp
 (setup (:straight parrot)
+  (:disabled)
   (setq parrot-num-rotations nil))
 #+end_src
 ** Highlight TODOs
 #+begin_src emacs-lisp
 (setup (:straight hl-todo)
-       (:hook-into org-mode)
-       (:option hl-todo-keyword-faces
-		'(("TODO"   . "#FF0000")
-		  ("FIXME"  . "#FF0000")
-		  ("DEBUG"  . "#A020F0")
-		  ("NEXT" . "#FF4500")
-		  ("TBA" . "#61d290")
-		  ("UNCHECK"   . "#1E90FF")))
-       (dolist (hook dw/prog-mode-hook)
-	 (add-hook hook 'hl-todo-mode)))
+  (:hook-into org-mode)
+  (:option hl-todo-keyword-faces
+	   '(("TODO"   . "#FF0000")
+	     ("FIXME"  . "#FF0000")
+	     ("DEBUG"  . "#A020F0")
+	     ("NEXT" . "#FF4500")
+	     ("TBA" . "#61d290")
+	     ("UNCHECK"   . "#1E90FF")))
+  (dolist (hook dw/prog-mode-hook)
+    (add-hook hook 'hl-todo-mode)))
 
 #+end_src
 
@@ -598,8 +655,8 @@
 
 ** Highlight the diff
 #+begin_src emacs-lisp
-  (setup (:straight diff-hl)
-	 (global-diff-hl-mode))
+(setup (:straight diff-hl)
+  (global-diff-hl-mode))
 #+end_src
 
 ** Highlight the current buffer
@@ -629,15 +686,15 @@
 * Auto-Tangle Org File
 Tangle (form a new file) on save
 #+begin_src emacs-lisp
-  ;; Since we don't want to disable org-confirm-babel-evaluate all
-  ;; of the time, do it around the after-save-hook
-  (defun dw/org-babel-tangle-dont-ask ()
-    ;; Dynamic scoping to the rescue
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle)))
+;; Since we don't want to disable org-confirm-babel-evaluate all
+;; of the time, do it around the after-save-hook
+(defun dw/org-babel-tangle-dont-ask ()
+  ;; Dynamic scoping to the rescue
+  (let ((org-confirm-babel-evaluate nil))
+    (org-babel-tangle)))
 
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'dw/org-babel-tangle-dont-ask
-						'run-at-end 'only-in-org-mode)))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'dw/org-babel-tangle-dont-ask
+					      'run-at-end 'only-in-org-mode)))
 #+end_src
 * Window Management
 ** Ace Window
@@ -656,13 +713,13 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 - =?= - show these command bindings
   #+begin_src emacs-lisp
   (setup (:straight ace-window)
-         (:global "C-x o" ace-window)
-         (:option aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-         (dw/leader-key-def
-           "w" '(:ignore t :which-key "window")
-          "wo" '(ace-window :which-key "ace-window")
-          "wd" '(ace-delete-window :which-key "ace-delete-window")
-          "ws" '(ace-swap-window :which-key "ace-swap-window")))
+    (:global "C-x o" ace-window)
+    (:option aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+    (dw/leader-key-def
+      "w" '(:ignore t :which-key "window")
+      "wo" '(ace-window :which-key "ace-window")
+      "wd" '(ace-delete-window :which-key "ace-delete-window")
+      "ws" '(ace-swap-window :which-key "ace-swap-window")))
   #+end_src
 ** Window History with winner-mode
 #+begin_src emacs-lisp
@@ -673,48 +730,57 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 ** Popper
 #+begin_src emacs-lisp
-  (setup (:straight popper)
-	 (:also-load popper-echo)
-	 (:option popper-reference-buffers
-		  '("\\*Messages\\*"
-		    "Output\\*$"
-		    "\\*Async Shell Command\\*"
-		    help-mode
-		    compilation-mode
-		    ;; "^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
-		    "^\\*shell.*\\*$"  shell-mode  ;shell as a popup
-		    "^\\*term.*\\*$"   term-mode   ;term as a popup
-		    "^\\*vterm.*\\*$"  vterm-mode  ;vterm as a popup
-		    ))
-	 (:global "C-`" popper-toggle-latest
-		  "M-`" popper-cycle
-		  "C-M-`" popper-toggle-type)
-	 (popper-mode +1)
-	 (popper-echo-mode +1))
+(setup (:straight popper)
+  (:also-load popper-echo)
+  (:option popper-reference-buffers
+	   '("\\*Messages\\*"
+	     "Output\\*$"
+	     "\\*Async Shell Command\\*"
+	     help-mode
+	     compilation-mode
+	     ;; "^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
+	     "^\\*shell.*\\*$"  shell-mode  ;shell as a popup
+	     "^\\*term.*\\*$"   term-mode   ;term as a popup
+	     "^\\*vterm.*\\*$"  vterm-mode  ;vterm as a popup
+	     ))
+  (:global "C-`" popper-toggle-latest
+	   "M-`" popper-cycle
+	   "C-M-`" popper-toggle-type)
+  (popper-mode +1)
+  (popper-echo-mode +1))
 #+end_src
 * File Management
 ** Dired
 #+begin_src emacs-lisp
-(setup dired
-       (:global "C-x C-j" dired-jump)
-       (:option dired-dwim-target t))
+(setup (:straight dired-single))
 
+(setup dired
+  (setq dired-listing-switches "-agho --group-directories-first"
+        dired-omit-files "^\\.[^.].*"
+        dired-omit-verbose nil
+        dired-hide-details-hide-symlink-targets nil
+        delete-by-moving-to-trash t)
+  (autoload 'dired-omit-mode "dired-x")
+  (:option dired-dwim-target t))
+
+(setup (:straight dired-collapse)
+  (:hook-into dired-mode))
 ;; (setup all-the-icons-dired
 ;; 	(:hook-into dired-mode))
 
-(setup (:straight dired-hide-dotfiles)
-  (:hook-into dired-mode)
-  (:with-map dired-mode-map
-    (:bind "." dired-hide-dotfiles-mode)))
+;; (setup (:straight dired-hide-dotfiles)
+;;   (:hook-into dired-mode)
+;;   (:with-map dired-mode-map
+;;     (:bind "." dired-hide-dotfiles-mode)))
 
 (setup (:straight diredfl)
-       (:hook-into dired-mode))
+  (:hook-into dired-mode))
 #+end_src
 ** Dirvish
 #+begin_src emacs-lisp
-  (setup (:straight dirvish)
-	 (:also-load dirvish-peek)
-	 (dirvish-override-dired-mode))
+(setup (:straight dirvish)
+  (:also-load dirvish-peek)
+  (dirvish-override-dired-mode))
 #+end_src
 * Org Mode
 ** Config Basic Org mode
@@ -724,7 +790,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (visual-line-mode 1))
 
 (setup (:straight org)
-  (:hook dw/org-mode-setup)
+  (:hook dw/org-mode-setup)		
   (setq org-html-head-include-default-style nil
 	;; org-ellipsis " ▾"
 	org-adapt-indentation t
@@ -737,16 +803,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	org-startup-folded 'content
 	org-cycle-separator-lines 2)
 
-  ;; (setq org-modules
-  ;; 	'(org-crypt
-  ;; 	  org-habit
-  ;; 	  org-bookmark
-  ;; 	  org-eshell
-  ;; 	  org-irc))
-
-
-  ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-
   (setq org-html-htmlize-output-type nil)
 
   ;; config for images in org
@@ -755,332 +811,329 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   ;; default image width
   (setq org-image-actual-width '(300))
 
-  (setq org-export-with-sub-superscripts nil))
+  (setq org-export-with-sub-superscripts nil)
+  )
 #+end_src
 ** Apperance of Org   
-*** Bullets
+*** Fonts and Bullets
 #+begin_src emacs-lisp
-  ;; change bullets for headings
-  (setup (:straight org-superstar)
-	 (:load-after org)
-	 (:hook-into org-mode)
-	 (:option org-superstar-remove-leading-stars t
-		  org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
-#+end_src
-*** COMMENT Fonts
-#+begin_src emacs-lisp
-  (setup org-faces
-	 ;; Make sure org and org-indent face is available
-	 (:also-load org-indent org-faces)
-	 (:when-loaded
+;; change bullets for headings
+(setup (:straight org-superstar)
+  (:load-after org)
+  (:hook-into org-mode)
+  (:option org-superstar-remove-leading-stars t
+	   org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-	  ;; Set Size and Fonts for Headings
-	  (dolist (face '((org-level-1 . 1.2)
-			  (org-level-2 . 1.1)
-			  (org-level-3 . 1.05)
-			  (org-level-4 . 1.0)
-			  (org-level-5 . 1.0)
-			  (org-level-6 . 1.0)
-			  (org-level-7 . 1.0)
-			  (org-level-8 . 1.0)))
-	    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+;; (setup org-faces
+;;   ;; Make sure org-indent face is available
+;;   (:also-load org-indent)
+;;   (:when-loaded
+;;     ;; Increase the size of various headings
+;;     (set-face-attribute 'org-document-title nil :font "SF Pro" :weight 'bold :height 1.3)
 
-	  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-	  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-	  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-	  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-	  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-	  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-	  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-	  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-	  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+;;     (dolist (face '((org-level-1 . 1.15)
+;;                     (org-level-2 . 1.1)
+;;                     (org-level-3 . 1.05)
+;;                     (org-level-4 . 1.0)
+;;                     (org-level-5 . 1.0)
+;;                     (org-level-6 . 1.0)
+;;                     (org-level-7 . 1.0)
+;;                     (org-level-8 . 1.0)))
+;;       (set-face-attribute (car face) nil :font "SF Pro" :weight 'medium :height (cdr face)))
 
+;;     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+;;     (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+;;     (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+;;     (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+;;     (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+;;     (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+;;     (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+;;     (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+;;     (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+;;     (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
-	  ;; Get rid of the background on column views
-	  (set-face-attribute 'org-column nil :background nil)
-	  (set-face-attribute 'org-column-title nil :background nil)))
+;;     ;; Get rid of the background on column views
+;;     (set-face-attribute 'org-column nil :background nil)
+;;     (set-face-attribute 'org-column-title nil :background nil)))
 #+end_src
 *** Set Margins for Modes
 #+begin_src emacs-lisp
-  (setup (:straight visual-fill-column)
-	 (:hook-into org-mode)
-	 (:option visual-fill-column-width 110
-		  visual-fill-column-center-text t))
+(setup (:straight visual-fill-column)
+  (:hook-into org-mode)
+  (:option visual-fill-column-width 120
+	   visual-fill-column-center-text t))
 #+end_src
 *** Properly Align Tables
 #+begin_src emacs-lisp
-  (setup (:straight valign)
-	 (:hook-into org-mode))
+(setup (:straight valign)
+  (:hook-into org-mode))
 #+end_src
 *** Auto-show Markup Symbols
 #+begin_src emacs-lisp
-  (setup (:straight org-appear)
-	 (:hook-into org-mode))
+(setup (:straight org-appear)
+  (:hook-into org-mode))
 #+end_src
 ** Org Export
 #+begin_src emacs-lisp
-  (with-eval-after-load "org-export-dispatch"
-    ;; Edited from http://emacs.stackexchange.com/a/9838
-    (defun dw/org-html-wrap-blocks-in-code (src backend info)
-      "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
-      (when (org-export-derived-backend-p backend 'html)
-	(replace-regexp-in-string
-	 "\\(</pre>\\)" "</code>\n\\1"
-	 (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
-				   "<pre>\n<code class=\"\\1\">" src))))
+(with-eval-after-load "org-export-dispatch"
+  ;; Edited from http://emacs.stackexchange.com/a/9838
+  (defun dw/org-html-wrap-blocks-in-code (src backend info)
+    "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
+    (when (org-export-derived-backend-p backend 'html)
+      (replace-regexp-in-string
+       "\\(</pre>\\)" "</code>\n\\1"
+       (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
+				 "<pre>\n<code class=\"\\1\">" src))))
 
-    (require 'ox-html)
+  (require 'ox-html)
 
-    (add-to-list 'org-export-filter-src-block-functions
-		 'dw/org-html-wrap-blocks-in-code)
-    )
+  (add-to-list 'org-export-filter-src-block-functions
+	       'dw/org-html-wrap-blocks-in-code)
+  )
 #+end_src
 ** Org Babel
 *** Load Org Babel
 #+begin_src emacs-lisp
-  (with-eval-after-load "ob"
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((emacs-lisp . t)
-       (C . t)
-       (shell . t)
-       (python . t)
-       (R .t)))
+(with-eval-after-load "ob"
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (C . t)
+     (shell . t)
+     (python . t)
+     (R .t)))
 
-    (setq org-confirm-babel-evaluate nil))
+  (setq org-confirm-babel-evaluate nil))
 #+end_src
 *** Src Block Templates
 #+begin_src emacs-lisp
-  ;; This is needed as of Org 9.2
-  (setup (:require org-tempo)
-	 (:when-loaded
-	  (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
-	  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-	  (add-to-list 'org-structure-template-alist '("li" . "src lisp"))
-	  (add-to-list 'org-structure-template-alist '("cc" . "src C"))
-	  (add-to-list 'org-structure-template-alist '("cpp" . "src cpp"))
-	  (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
-	  (add-to-list 'org-structure-template-alist '("js" . "src js"))
-	  (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
-	  (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
-	  (add-to-list 'org-structure-template-alist '("r" . "src R")))
-	 (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
-	 (add-to-list 'org-structure-template-alist '("json" . "src json")))
+;; This is needed as of Org 9.2
+(setup (:require org-tempo)
+  (:when-loaded
+    (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+    (add-to-list 'org-structure-template-alist '("cc" . "src C"))
+    (add-to-list 'org-structure-template-alist '("cpp" . "src cpp"))
+    (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+    (add-to-list 'org-structure-template-alist '("js" . "src js"))
+    (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
+    (add-to-list 'org-structure-template-alist '("r" . "src R")))
+  (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+  (add-to-list 'org-structure-template-alist '("json" . "src json")))
 #+end_src
 ** Org Agenda
 #+begin_src emacs-lisp
-  (with-eval-after-load "org-agenda"
+(with-eval-after-load "org-agenda"
 
-    (if IS-MAC
-	(setq org-agenda-files '("~/Documents/Org/Planner")))
-
-
-    ;; Custom TODO states and Agendas
-    (setq org-todo-keywords
-	  '((sequence "TODO(t)" "NEXT(n)" "TBA(b)" "|" "DONE(d!)")))
-
-    (setq org-tag-alist
-	  '((:startgroup)
-	    ;; Put mutually exclusive tags here
-	    (:endgroup)
-	    ("review" . ?r)
-	    ("assignment" . ?a)
-	    ("lab" . ?l)
-	    ("test" . ?t)
-	    ("quiz" . ?q)
-	    ("pratice" . ?p)
-	    ("emacs" . ?e)
-	    ("note" . ?n)
-	    ("idea" . ?i)))
+  (if IS-MAC
+      (setq org-agenda-files '("~/Documents/Org/Planner")))
 
 
-    (setup (:straight org-super-agenda)
-	   (:hook-into org-agenda-mode)
-	   (:option org-agenda-skip-scheduled-if-done t
-		    org-agenda-skip-deadline-if-done t
-		    org-agenda-include-deadlines t
-		    org-agenda-include-diary t
-		    org-agenda-block-separator nil
-		    org-agenda-compact-blocks t
-		    org-log-done 'time
-		    org-log-into-drawer t
-		    org-agenda-start-with-log-mode t)
+  ;; Custom TODO states and Agendas
+  (setq org-todo-keywords
+	'((sequence "TODO(t)" "NEXT(n)" "TBA(b)" "|" "DONE(d!)")))
 
-	   (setq org-agenda-custom-commands
-		 '(("d" "Dashboard"
-		    ((agenda "" ((org-agenda-span 'day)
+  (setq org-tag-alist
+	'((:startgroup)
+	  ;; Put mutually exclusive tags here
+	  (:endgroup)
+	  ("review" . ?r)
+	  ("assignment" . ?a)
+	  ("lab" . ?l)
+	  ("test" . ?t)
+	  ("quiz" . ?q)
+	  ("pratice" . ?p)
+	  ("emacs" . ?e)
+	  ("note" . ?n)
+	  ("idea" . ?i)))
 
-				 (org-super-agenda-groups
-				  '((:name "Today"
-					   :time-grid t
-					   :date today
-					   :scheduled today
-					   :order 1)
-				    (:name "Due Soon"
-					   :deadline future
-					   :order 2)
-				    (:discard (:anything t))))))
-		     (alltodo "" ((org-agenda-overriding-header "")
-				  (org-super-agenda-groups
-				   '((:name "Overdue"
-					    :deadline past
-					    :order 1)
-				     (:name "Assignments"
-					    :tag "assignment"
-					    :order 2)
-				     (:name "Labs"
-					    :tag "lab"
-					    :order 3)
-				     (:name "Quizs"
-					    :tag "quiz"
-					    :order 4)
-				     (:name "Tests/Exam"
-					    :tag "test"
-					    :order  5)
-				     (:name "Projects"
-					    :tag "Project"
-					    :order 14)
-				     (:name "Emacs"
-					    :tag "Emacs"
-					    :order 13)
-				     (:discard (:anything t)))))))))))
 
-    ;; Refiling
-    (setq org-refile-targets
-	  '(("~/Documents/Org/Planner/Archive.org" :maxlevel . 1)))
+  (setup (:straight org-super-agenda)
+    (:hook-into org-agenda-mode)
+    (:option org-agenda-skip-scheduled-if-done t
+	     org-agenda-skip-deadline-if-done t
+	     org-agenda-include-deadlines t
+	     org-agenda-include-diary t
+	     org-agenda-block-separator nil
+	     org-agenda-compact-blocks t
+	     org-log-done 'time
+	     org-log-into-drawer t
+	     org-agenda-start-with-log-mode t)
 
-    ;; Save Org buffers after refiling!
-    (advice-add 'org-refile :after 'org-save-all-org-buffers)
+    (setq org-agenda-custom-commands
+	  '(("d" "Dashboard"
+	     ((agenda "" ((org-agenda-span 'day)
 
-    ;; Capture Templates
-    (defun dw/read-file-as-string (path)
-      (with-temp-buffer
-	(insert-file-contents path)
-	(buffer-string)))
+			  (org-super-agenda-groups
+			   '((:name "Today"
+				    :time-grid t
+				    :date today
+				    :scheduled today
+				    :order 1)
+			     (:name "Due Soon"
+				    :deadline future
+				    :order 2)
+			     (:discard (:anything t))))))
+	      (alltodo "" ((org-agenda-overriding-header "")
+			   (org-super-agenda-groups
+			    '((:name "Overdue"
+				     :deadline past
+				     :order 1)
+			      (:name "Assignments"
+				     :tag "assignment"
+				     :order 2)
+			      (:name "Labs"
+				     :tag "lab"
+				     :order 3)
+			      (:name "Quizs"
+				     :tag "quiz"
+				     :order 4)
+			      (:name "Tests/Exam"
+				     :tag "test"
+				     :order  5)
+			      (:name "Projects"
+				     :tag "Project"
+				     :order 14)
+			      (:name "Emacs"
+				     :tag "Emacs"
+				     :order 13)
+			      (:discard (:anything t)))))))))))
 
-    (setq org-capture-templates
-	  `(("t" "Tasks / Projects")
-	    ("tt" "Task" entry (file+olp "~/Documents/Org/Planner/Tasks.org" "Inbox")
-	     "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1))))
+  ;; Refiling
+  (setq org-refile-targets
+	'(("~/Documents/Org/Planner/Archive.org" :maxlevel . 1)))
+
+  ;; Save Org buffers after refiling!
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  ;; Capture Templates
+  (defun dw/read-file-as-string (path)
+    (with-temp-buffer
+      (insert-file-contents path)
+      (buffer-string)))
+
+  (setq org-capture-templates
+	`(("t" "Tasks / Projects")
+	  ("tt" "Task" entry (file+olp "~/Documents/Org/Planner/Tasks.org" "Inbox")
+	   "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1))))
 #+end_src
 ** Org Roam
 #+begin_src emacs-lisp
 (setup (:straight org-roam)
 
- (:option org-roam-directory "~/Documents/Org/Notes"
-					org-roam-database-connecter 'splite-builtin
-					org-roam-completion-everywhere t
-					org-roam-completion-system 'default)
- (:when-loaded
-	(org-roam-db-autosync-mode))
+  (:option org-roam-directory "~/Documents/Org/Notes"
+	   org-roam-database-connecter 'splite-builtin
+	   org-roam-completion-everywhere t
+	   org-roam-completion-system 'default)
+  (:when-loaded
+    (org-roam-db-autosync-mode))
 
- (:global "C-c o l" org-roam-buffer-toggle
-		"C-c o f" org-roam-node-find
-		"C-c o c" org-roam-dailies-capture-today
-		"C-c o g" org-roam-graph)
- (:bind "C-c o i" org-roam-node-insert
-	"C-c o I" org-roam-insert-immediate))
+  (:global "C-c o l" org-roam-buffer-toggle
+	   "C-c o f" org-roam-node-find
+	   "C-c o c" org-roam-dailies-capture-today
+	   "C-c o g" org-roam-graph)
+  (:bind "C-c o i" org-roam-node-insert
+	 "C-c o I" org-roam-insert-immediate))
 
 (setup (:straight org-roam-ui)
- (:option org-roam-ui-sync-theme t
-		org-roam-ui-follow t
-		org-roam-ui-update-on-save t
-		org-roam-ui-open-on-start t))
+  (:option org-roam-ui-sync-theme t
+	   org-roam-ui-follow t
+	   org-roam-ui-update-on-save t
+	   org-roam-ui-open-on-start t))
 #+end_src
 * Completion System
 ** Vertico
 #+begin_src emacs-lisp
-  (defun dw/minibuffer-backward-kill (arg)
-    "When minibuffer is completing a file name delete up to parent
-  folder, otherwise delete a word"
-    (interactive "p")
-    (if minibuffer-completing-file-name
-	;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
-	(if (string-match-p "/." (minibuffer-contents))
-	    (zap-up-to-char (- arg) ?/)
-	  (delete-minibuffer-contents))
-      (delete-word (- arg))))
+(defun dw/minibuffer-backward-kill (arg)
+  "When minibuffer is completing a file name delete up to parent
+folder, otherwise delete a word"
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+      (if (string-match-p "/." (minibuffer-contents))
+	  (zap-up-to-char (- arg) ?/)
+	(delete-minibuffer-contents))
+    (delete-word (- arg))))
 
-  (setup (:straight vertico)
-	 (vertico-mode)
-	 (:with-map vertico-map
-		    (:bind "C-j" vertico-next
-			   "C-k" vertico-previous
-			   "C-f" vertico-exit))
-	 (:with-map minibuffer-local-map
-		    (:bind "M-h" dw/minibuffer-backward-kill))
-	 (:option vertico-cycle t))
+(setup (:straight vertico)
+  (vertico-mode)
+  (:with-map vertico-map
+    (:bind "C-j" vertico-next
+	   "C-k" vertico-previous
+	   "C-f" vertico-exit))
+  (:with-map minibuffer-local-map
+    (:bind "M-h" dw/minibuffer-backward-kill))
+  (:option vertico-cycle t))
 #+end_src
 ** Preserve Minibuffer History with savehist-mode
 #+begin_src emacs-lisp
-  (setup (:straight savehist)
-	 (savehist-mode 1)
-	 (:option history-length 25))
+(setup (:straight savehist)
+  (savehist-mode 1)
+  (:option history-length 25))
 #+end_src
 ** Improved Candidate Filtering with Orderless
 #+begin_src emacs-lisp
-  (setup (:straight orderless)
-	 (:option completion-styles '(orderless)
-		  completion-category-defaults nil
-		  completion-category-overrides '((file (styles . (partial-completion))))))
+(setup (:straight orderless)
+  (:option completion-styles '(orderless)
+	   completion-category-defaults nil
+	   completion-category-overrides '((file (styles . (partial-completion))))))
 #+end_src
 ** Consult Commands
 #+begin_src emacs-lisp
-  (setup (:straight consult)
-	 (:global "C-s" consult-line
-		  "C-M-l" consult-imenu
-		  "C-M-j" persp-switch-to-buffer*)
+(setup (:straight consult)
+  (:global "C-s" consult-line
+	   "C-M-l" consult-imenu
+	   "C-M-j" persp-switch-to-buffer*)
 
-	 (:with-map minibuffer-local-map
-		    (:bind "C-r" consult-history))
+  (:with-map minibuffer-local-map
+    (:bind "C-r" consult-history))
 
-	 (defun dw/get-project-root ()
-	   (when (fboundp 'projectile-project-root)
-	     (projectile-project-root)))
+  (defun dw/get-project-root ()
+    (when (fboundp 'projectile-project-root)
+      (projectile-project-root)))
 
-	 (:option consult-project-root-function #'dw/get-project-root
-		  completion-in-region-function #'consult-completion-in-region))
+  (:option consult-project-root-function #'dw/get-project-root
+	   completion-in-region-function #'consult-completion-in-region))
 
-  (setup (:straight consult-dir)
-	 (:global "C-x C-d" consult-dir)
-	 (:with-map vertico-map
-		    (:bind "C-x C-d" consult-dir
-			   "C-x C-j" consult-dir-jump-file))
-	 (:option consult-dir-project-list-function nil))
+(setup (:straight consult-dir)
+  (:global "C-x C-d" consult-dir)
+  (:with-map vertico-map
+    (:bind "C-x C-d" consult-dir
+	   "C-x C-j" consult-dir-jump-file))
+  (:option consult-dir-project-list-function nil))
 #+end_src
 ** Completion Annotations with Marginalia
 #+begin_src emacs-lisp
-  (setup (:straight marginalia)
-	 (:option marginalia-annotators '(marginalia-annotators-heavy
-					  marginalia-annotators-light
-					  nil))
-	 (marginalia-mode))
+(setup (:straight marginalia)
+  (:option marginalia-annotators '(marginalia-annotators-heavy
+				   marginalia-annotators-light
+				   nil))
+  (marginalia-mode))
 #+end_src
 ** Embark
 #+begin_src emacs-lisp
-  (setup (:straight embark-consult)
-	 (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode)
-	 )
+(setup (:straight embark)
+  (:also-load embark-consult)
+  (:global "C-M-." embark-act)
+  (:with-map minibuffer-local-map
+    (:bind "C-." embark-act))
 
-  (setup (:straight embark)
-	 (:also-load embark-consult)
-	 (:global "C-." embark-act)
+  ;; Use Embark to show command prefix help
+  (setq prefix-help-command #'embark-prefix-help-command))
 
-	 ;; Show Embark actions via which-key
-	 (setq embark-action-indicator
-	       (lambda (map)
-		 (which-key--show-keymap "Embark" map nil nil 'no-paging)
-		 #'which-key--hide-popup-ignore-command)
-	       embark-become-indicator embark-action-indicator))
-
+(setup (:straight embark-consult)
+  (add-hook #'embark-collect-mode-hook 'consult-preview-at-point-mode))
 #+end_src
 ** Tempel
 #+begin_src emacs-lisp
-  (setup (:straight tempel)
-	 (:global "M-+" tempel-complete
-		  "M-*" tempel-insert)
-	 (setq tempel-path "~/.dotfiles/Emacs/templates")
-	 (global-tempel-abbrev-mode))
+(setup (:straight tempel)
+  (:load-after corfu)
+  (:global "M-+" tempel-complete
+	   "M-*" tempel-insert)
+  (setq tempel-path "~/.dotfiles/Emacs/templates")
+  (global-tempel-abbrev-mode))
 #+end_src
 
 ** Yasnippets
@@ -1091,7 +1144,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (:option yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode))
-  ;; (add-hook 'org-mode-hook #'yas-minor-mode))
+;; (add-hook 'org-mode-hook #'yas-minor-mode))
 
 (setup (:straight consult-yasnippet)
   (:load-after yasnippet))
@@ -1099,26 +1152,26 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ** Citre
 #+begin_src emacs-lisp
-  (setup (:straight citre)
-	 (:also-load citre-config)
-	 (:global "C-x c j" citre-jump
-		  "C-x c J" citre-jump-back
-		  "C-x c p" citre-ace-peek
-		  "C-x c u" citre-update-this-tags-file)
+(setup (:straight citre)
+  (:also-load citre-config)
+  (:global "C-x c j" citre-jump
+	   "C-x c J" citre-jump-back
+	   "C-x c p" citre-ace-peek
+	   "C-x c u" citre-update-this-tags-file)
 
-	 (defun dw/get-project-root ()
-	   (when (fboundp 'projectile-project-root)
-	     (projectile-project-root)))
+  (defun dw/get-project-root ()
+    (when (fboundp 'projectile-project-root)
+      (projectile-project-root)))
 
-	 (:option citre-readtags-program "/etc/profiles/per-user/dez/bin/readtags"
-		  citre-ctags-program "/etc/profiles/per-user/dez/bin/ctags"
-		  citre-project-root-function #'dw/get-project-root
-		  ;; Set this if you want to always use one location to create a tags file.
-		  citre-default-create-tags-file-location 'global-cache
+  (:option citre-readtags-program "/etc/profiles/per-user/dez/bin/readtags"
+	   citre-ctags-program "/etc/profiles/per-user/dez/bin/ctags"
+	   citre-project-root-function #'dw/get-project-root
+	   ;; Set this if you want to always use one location to create a tags file.
+	   citre-default-create-tags-file-location 'global-cache
 
-		  citre-use-project-root-when-creating-tags t
-		  citre-prompt-language-for-ctags-command t
-		  citre-auto-enable-citre-mode-modes '(prog-mode)))
+	   citre-use-project-root-when-creating-tags t
+	   citre-prompt-language-for-ctags-command t
+	   citre-auto-enable-citre-mode-modes '(prog-mode)))
 #+end_src
 
 ** Corfu
@@ -1137,16 +1190,19 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
    corfu-preselect-first nil
    ;; corfu-auto-delay 0.2
    corfu-auto-prefix 1
-   corfu-excluded-modes dw/prog-mode)
+   ;; corfu-excluded-modes dw/prog-mode
+   )
   
   (:with-map corfu-map
     (:bind
      [tab] corfu-next
      [backtab] corfu-previous
      "<escape>" corfu-quit))
-  
-  ;; (global-corfu-mode)
-  ;; (corfu-history-mode)
+
+  (when (and (daemonp) (not (display-graphic-p)))
+    (progn
+      (global-corfu-mode)
+      (corfu-history-mode)))
   )
 
 ;; Use dabbrev with Corfu!
@@ -1154,6 +1210,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ;; corfu backend
 (setup (:straight cape)
+  (:load-after corfu)
   (setq cape-dabbrev-min-length 3)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
@@ -1167,7 +1224,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (when (display-graphic-p)
   (setup (:straight (corfu-doc :type git :host github :repo "galeo/corfu-doc"))
-  (:hook-into corfu-mode)))
+    (:hook-into corfu-mode)))
 
 (if IS-TTY
     (progn
@@ -1176,7 +1233,10 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
       (straight-use-package
        '(corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
       (require 'corfu-terminal)
-      (corfu-terminal-mode +1)))
+      (corfu-terminal-mode +1)
+      (straight-use-package
+       '(corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
+      (corfu-doc-terminal-mode +1)))
 
 ;; (setup (:pkg svg-lib :type built-in)) ;; built-in has little icons
 (when (display-graphic-p)
@@ -1188,14 +1248,14 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 * Helpful Function Description
 #+begin_src emacs-lisp
-  (setup (:straight helpful)
-	 (:option counsel-describe-function-function #'helpful-callable
-		  counsel-describe-variable-function #'helpful-variable)
-	 (:global [remap describe-function] helpful-function
-		  [remap describe-symbol] helpful-symbol
-		  [remap describe-variable] helpful-variable
-		  [remap describe-command] helpful-command
-		  [remap describe-key] helpful-key))
+(setup (:straight helpful)
+  (:option counsel-describe-function-function #'helpful-callable
+	   counsel-describe-variable-function #'helpful-variable)
+  (:global [remap describe-function] helpful-function
+	   [remap describe-symbol] helpful-symbol
+	   [remap describe-variable] helpful-variable
+	   [remap describe-command] helpful-command
+	   [remap describe-key] helpful-key))
 #+end_src
  
 * Developing
@@ -1218,7 +1278,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (setup (:require rainbow-delimiters)
   (dolist (hook dw/prog-mode-hook)
     (add-hook hook 'rainbow-delimiters-mode)))
-  
+
 #+end_src
 *** Indent
 #+begin_src emacs-lisp
@@ -1235,12 +1295,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (add-hook hook 'highlight-indent-guides-mode)))
 
 (setup (:straight aggressive-indent)
-       (:hook-into emacs-lisp-mode lisp-mode python-mode))
+  (:hook-into emacs-lisp-mode lisp-mode python-mode))
 #+end_src
 *** Rainbow Mode
 #+begin_src emacs-lisp
-  (setup (:straight rainbow-mode)
-	 (:hook-into web-mode js2-mode emacs-lisp-mode))
+(setup (:straight rainbow-mode)
+  (:hook-into web-mode js2-mode emacs-lisp-mode))
 #+end_src
 *** Format All
 #+begin_src emacs-lisp
@@ -1267,8 +1327,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 *** Minimap
 #+begin_src emacs-lisp
-  (setup (:straight minimap)
-	 (:option minimap-window-location 'right))
+(setup (:straight minimap)
+  (:option minimap-window-location 'right))
 #+end_src
 
 *** Text Folding
@@ -1279,10 +1339,20 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (with-eval-after-load 'prog-mode
   (add-hook #'prog-mode-hook 'hs-minor-mode))
 #+end_src
+
+*** Flycheck
+#+begin_src emacs-lisp
+(setup (:straight flycheck)
+  (:hook-into lsp-bridge-mode))
+
+(setup (:straight flycheck-inline)
+  (:load-after flycheck)
+  (:hook-into flycheck-mode))
+#+end_src
 ** Languages
 *** Python
 #+begin_src emacs-lisp
-;; (setup (:straight lsp-pyright))
+(setup (:straight lsp-pyright))
 
 (setup (:straight jupyter))
 
@@ -1292,63 +1362,64 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 **** JS/TS
 #+begin_src emacs-lisp
 (setup (:straight typescript-mode)
-       (:file-match "\\.ts\\'")
-       (setq typescript-indent-level 2))
+  (:file-match "\\.ts\\'")
+  (setq typescript-indent-level 2))
 
 (defun dw/set-js-indentation ()
   (setq-default js-indent-level 2)
   (setq-default tab-width 2))
 
 (setup (:straight js2-mode)
-       (:file-match "\\.jsx?\\'")
+  (:file-match "\\.jsx?\\'")
 
-       ;; Use js2-mode for Node scripts
-       (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
+  ;; Use js2-mode for Node scripts
+  (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
 
-       ;; Don't use built-in syntax checking
-       (setq js2-mode-show-strict-warnings nil)
+  ;; Don't use built-in syntax checking
+  (setq js2-mode-show-strict-warnings nil)
 
-       ;; Set up proper indentation in JavaScript and JSON files
-       (add-hook 'js2-mode-hook #'dw/set-js-indentation)
-       (add-hook 'json-mode-hook #'dw/set-js-indentation))
+  ;; Set up proper indentation in JavaScript and JSON files
+  (add-hook 'js2-mode-hook #'dw/set-js-indentation)
+  (add-hook 'json-mode-hook #'dw/set-js-indentation))
 
 
 (setup (:straight rjsx-mode)
-       (:file-match "\\.jsx\\'"))
+  (:file-match "\\.jsx\\'"))
 
 (setup (:straight add-node-modules-path)
   (eval-after-load 'js2-mode
-  '(add-hook 'js2-mode-hook #'add-node-modules-path))
+    '(add-hook 'js2-mode-hook #'add-node-modules-path))
   (eval-after-load 'typescript-mode
-  '(add-hook 'typescript-mode-hook #'add-node-modules-path)))
+    '(add-hook 'typescript-mode-hook #'add-node-modules-path)))
 #+end_src
 **** CoffeeScript
 #+begin_src emacs-lisp
-  (setup (:straight coffee-mode)
-	 (:file-match "\\.coffee\\'")
-	 (:also-load sourcemap flymake-coffee)
-	 ;; automatically clean up bad whitespace
-	 (setq whitespace-action '(auto-cleanup))
-	 ;; This gives you a tab of 2 spaces
-	 (custom-set-variables '(coffee-tab-width 2))
+(setup (:straight coffee-mode)
+  (:file-match "\\.coffee\\'")
+  (:also-load sourcemap flymake-coffee)
+  ;; automatically clean up bad whitespace
+  (setq whitespace-action '(auto-cleanup))
+  ;; This gives you a tab of 2 spaces
+  (custom-set-variables '(coffee-tab-width 2))
 
-	 ;; generating sourcemap by '-m' option. And you must set '--no-header' option
-	 (setq coffee-args-compile '("-c" "--no-header" "-m"))
-	 (add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
+  ;; generating sourcemap by '-m' option. And you must set '--no-header' option
+  (setq coffee-args-compile '("-c" "--no-header" "-m"))
+  (add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
 
-	 ;; If you want to remove sourcemap file after jumping corresponding point
-	 (defun my/coffee-after-compile-hook (props)
-	   (sourcemap-goto-corresponding-point props)
-	   (delete-file (plist-get props :sourcemap)))
-	 (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook))
+  ;; If you want to remove sourcemap file after jumping corresponding point
+  (defun my/coffee-after-compile-hook (props)
+    (sourcemap-goto-corresponding-point props)
+    (delete-file (plist-get props :sourcemap)))
+  (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook))
 
-  (setup (:straight flymake-coffee)
-	 (:hook-into coffee-mode))
+(setup (:straight flymake-coffee)
+  (:hook-into coffee-mode))
 #+end_src
 **** HTML
 #+begin_src emacs-lisp
 (setup (:straight web-mode)
-  (:file-match "(\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'")
+  ;; (:file-match "(\\.\\(html?\\|ejs\\)\\'")
+  (:file-match "\\.html?\\'")
   (setq-default web-mode-code-indent-offset 2)
   (setq-default web-mode-markup-indent-offset 2)
   (setq-default web-mode-attribute-indent-offset 2))
@@ -1360,22 +1431,22 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 **** Emmet
 #+begin_src emacs-lisp
-  (setup (:straight emmet-mode)
-	 (:hook-into web-mode css-mode))
+(setup (:straight emmet-mode)
+  (:hook-into web-mode css-mode))
 #+end_src
 **** SCSS/SASS
 #+begin_src emacs-lisp
-  (setup (:straight scss-mode)
-	 (:file-match "\\.scss\\'")
-	 (:option scss-compile-at-save t
-		  scss-output-directory "../css"
-		  scss-sass-command "sass --no-source-map"))
+(setup (:straight scss-mode)
+  (:file-match "\\.scss\\'")
+  (:option scss-compile-at-save t
+	   scss-output-directory "../css"
+	   scss-sass-command "sass --no-source-map"))
 
 #+end_src
 *** C/C++
 #+begin_src emacs-lisp
-  (setup c
-	 (:option c-default-style "linux"))
+(setup c
+  (:option c-default-style "gnu"))
 #+end_src
 *** Java
 #+begin_src emacs-lisp
@@ -1387,8 +1458,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (straight-use-package 'nix-sandbox)
 (straight-use-package 'nix-update)
 (setup (:straight nix-mode)
-       (:file-match "\\.nix\\'")
-       (:also-load nixos-options nix-sandbox nix-update))
+  (:file-match "\\.nix\\'")
+  (:also-load nixos-options nix-sandbox nix-update))
 #+end_src
 *** Docker
 #+begin_src emacs-lisp
@@ -1396,7 +1467,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (:delay))
 
 (setup (:straight dockerfile-mode)
-       (:file-match "Dockerfile\\'"))
+  (:file-match "Dockerfile\\'"))
 
 (setup (:straight docker-tramp)
   (:delay))
@@ -1414,49 +1485,61 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (straight-use-package 'auctex)
 (setup (:straight cdlatex)
-       (:hook-into LaTeX-mode latex-mode)
-       (add-hook 'org-mode-hook #'org-cdlatex-mode))
+  (:hook-into LaTeX-mode latex-mode)
+  (add-hook 'org-mode-hook #'org-cdlatex-mode))
 #+end_src
 **** Xenops
 #+begin_src emacs-lisp
-  (if IS-GUI
-      (setup (:straight xenops)
-	     (:hook-into latex-mode LaTeX-mode org-mode)
-	     (:option xenops-math-image-scale-factor 2.0)))
+(if IS-GUI
+    (setup (:straight xenops)
+      (:hook-into latex-mode LaTeX-mode org-mode)
+      (:option xenops-math-image-scale-factor 2.0)))
 
 #+end_src
 *** Yaml
 #+begin_src emacs-lisp
-  (setup (:straight yaml-mode)
-	 (:file-match "\\.ya?ml\\'"))
+(setup (:straight yaml-mode)
+  (:file-match "\\.ya?ml\\'"))
 #+end_src
 *** R
 #+begin_src emacs-lisp
-  (setup (:straight ess)
-	 (:file-match "\\.R\\'"))
+(setup (:straight ess)
+  (add-to-list 'auto-mode-alist
+	       (cons "\\.R\\'" 'R-mode)))
 #+end_src
 *** Markdown
 #+begin_src emacs-lisp
-  (setup (:straight markdown-mode)
-	 (straight-use-package 'edit-indirect)
-	 (:option markdown-command "multimarkdown"))
+(setup (:straight markdown-mode)
+  (straight-use-package 'edit-indirect)
+  (:option markdown-command "multimarkdown"))
 #+end_src
 ** eglot
 #+begin_src emacs-lisp
 (setup (:straight eldoc-box)
-       (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+  (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
 (setup (:straight eglot)
-   (setq eglot-events-buffer-size 0))
+  (setq eglot-events-buffer-size 0))
 #+end_src
-** COMMENT Lsp-mode
+** Lsp-mode
 #+begin_src emacs-lisp
 (setup (:straight lsp-mode)
-  (:disabled)
-  (setq lsp-headerline-breadcrumb-mode nil
-	lsp-signature-auto-activate nil
-	lsp-signature-render-documentation nil
-	lsp-log-io nil
-	lsp-idle-delay 0.500)
+
+  (:hook lsp-enable-which-key-integration)
+  
+  (setq lsp-completion-provider :none)
+  (defun corfu-lsp-setup ()
+    (setq-local completion-styles '(orderless)
+		completion-category-defaults nil))
+  (add-hook 'lsp-mode-hook #'corfu-lsp-setup)
+
+  (:when-loaded
+    (:option
+     lsp-headerline-breadcrumb-enable nil
+     lsp-signature-auto-activate nil
+     lsp-signature-render-documentation nil
+     lsp-log-io nil
+     lsp-idle-delay 0.500))
+
 
   (dw/leader-key-def
     "l" '(:ignore t :which-key "lsp")
@@ -1465,13 +1548,9 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     "ln" 'lsp-ui-find-next-reference
     "lp" 'lsp-ui-find-prev-reference
     "ls" 'counsel-imenu
-    "le" 'lsp-ui-flycheck-list
     "lS" 'lsp-ui-sideline-mode
-    "lX" 'lsp-execute-code-action)
+    "lX" 'lsp-execute-code-action))
 
-  (:hook lsp-enable-which-key-integration)
-  (add-to-list 'lsp-language-id-configuration '(scss-mode . "css"))
-  (add-to-list 'lsp-language-id-configuration '(less-css-mode . "css")))
 
 (setup (:require lsp-ui)
   (:hook-into lsp-mode)
@@ -1485,9 +1564,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ;; dap debug tools
 (setup (:straight dap-mode)
+  (require 'dap-mode)
   (:load-after lsp-mode)
-  (:also-load dap-python dap-node dap-java)
-  (:option dap-auto-configure-features '(sessions locals controls tooltip)))
+  (:when-loaded
+    (:option dap-auto-configure-features '(sessions locals controls tooltip))
+    (dap-ui-mode 1)
+    (dap-tooltip-mode 1)))
 #+end_src
 ** Lsp-bridge
 #+begin_src emacs-lisp
@@ -1505,6 +1587,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (require 'lsp-bridge-jdtls)       ;; provide Java third-party library jump and -data directory support, optional
   
   (global-lsp-bridge-mode)
+
+  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-n") #'acm-select-next)
+  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-p") #'acm-select-prev)
+  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-j") #'acm-select-next)
+  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-k") #'acm-select-prev)
 
   ;; 融合 `lsp-bridge' `find-function' 以及 `dumb-jump' 的智能跳转
   (defun lsp-bridge-jump ()
@@ -1530,11 +1617,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
       (dumb-jump-back)))))
 
 #+end_src
-** Flycheck
-#+begin_src emacs-lisp
-  (setup (:straight flycheck)
-    (:hook-into lsp-bridge-mode))
-#+end_src
 * Direnv
 #+begin_src emacs-lisp
 ;; (setup (:straight direnv)
@@ -1555,56 +1637,56 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ;; Better term
 ;; @see https://github.com/akermu/emacs-libvterm#installation
 (setup (:straight vterm)
-       (with-no-warnings
-	 (when (posframe-workable-p)
-	   (defvar vterm-posframe--frame nil)
-	   (defun vterm-posframe-toggle ()
-	     "Toggle `vterm' child frame."
-	     (interactive)
-	     (let ((buffer (vterm--internal #'ignore 100))
-		   (width  (max 80 (/ (frame-width) 2)))
-		   (height (/ (frame-height) 2)))
-	       (if (frame-live-p vterm-posframe--frame)
-		   (progn
-		     (posframe-delete-frame buffer)
-		     (setq vterm-posframe--frame nil))
-		 (setq vterm-posframe--frame
-		       (posframe-show
-			buffer
-			:poshandler #'posframe-poshandler-frame-center
-			:left-fringe 8
-			:right-fringe 8
-			:width width
-			:height height
-			:min-width width
-			:min-height height
-			:internal-border-width 3
-			:internal-border-color (face-foreground 'font-lock-comment-face nil t)
-			:background-color (face-background 'tooltip nil t)
-			:accept-focus t)))))
-	   (:global "C-`" vterm-posframe-toggle)))
+  (with-no-warnings
+    (when (posframe-workable-p)
+      (defvar vterm-posframe--frame nil)
+      (defun vterm-posframe-toggle ()
+	"Toggle `vterm' child frame."
+	(interactive)
+	(let ((buffer (vterm--internal #'ignore 100))
+	      (width  (max 80 (/ (frame-width) 2)))
+	      (height (/ (frame-height) 2)))
+	  (if (frame-live-p vterm-posframe--frame)
+	      (progn
+		(posframe-delete-frame buffer)
+		(setq vterm-posframe--frame nil))
+	    (setq vterm-posframe--frame
+		  (posframe-show
+		   buffer
+		   :poshandler #'posframe-poshandler-frame-center
+		   :left-fringe 8
+		   :right-fringe 8
+		   :width width
+		   :height height
+		   :min-width width
+		   :min-height height
+		   :internal-border-width 3
+		   :internal-border-color (face-foreground 'font-lock-comment-face nil t)
+		   :background-color (face-background 'tooltip nil t)
+		   :accept-focus t)))))
+      (:global "C-`" vterm-posframe-toggle)))
 
-       (:option vterm-max-scrollback 10000))
+  (:option vterm-max-scrollback 10000))
 
 
 (setup (:straight multi-vterm))
 
 (dw/leader-key-def
   "t" '(:ignore t :which-key "term")
- "tt" '(vterm :which-key "vterm")
- "tm" '(multi-vterm :which-key "multi-vterm"))
+  "tt" '(vterm :which-key "vterm")
+  "tm" '(multi-vterm :which-key "multi-vterm"))
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
 (setup (:straight eshell)
 
-       (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/")
-	     ;; eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias"))
+  (setq eshell-directory-name "~/.dotfiles/Emacs/eshell/")
+  ;; eshell-aliases-file (expand-file-name "~/.dotfiles/Emacs/eshell/alias"))
 
-       (if (executable-find "exa")
-	   (defalias 'eshell/ls 'exa))
+  (if (executable-find "exa")
+      (defalias 'eshell/ls 'exa))
 
-       (:global "C-c m" eshell))
+  (:global "C-c m" eshell))
 
 (setup (:straight eshell-prompt-extras)
   (with-eval-after-load "esh-opt"
@@ -1613,12 +1695,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	  eshell-prompt-function 'epe-theme-lambda)))
 
 (setup (:straight eshell-up)
-       (:load-after eshell)
-       (:option eshell-up-ignore-case nil))
+  (:load-after eshell)
+  (:option eshell-up-ignore-case nil))
 
 (setup (:straight eshell-syntax-highlighting)
-       (:load-after esh-mode)
-       (eshell-syntax-highlighting-global-mode +1))
+  (:load-after esh-mode)
+  (eshell-syntax-highlighting-global-mode +1))
 
 ;; bit slowly but mainly to avoid requiring company so far
 ;; (setup (:straight esh-autosuggest)
@@ -1626,24 +1708,18 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ;;        (:option esh-autosuggest-delay 0.5))
 
 (setup (:straight esh-help)
-       (setup-esh-help-eldoc))
+  (setup-esh-help-eldoc))
 
 (setup (:straight eshell-vterm)
-       (:load-after eshell)
-       (eshell-vterm-mode)
-       (defalias 'eshell/v 'eshell-exec-visual))
+  (:load-after eshell)
+  (eshell-vterm-mode)
+  (defalias 'eshell/v 'eshell-exec-visual))
 
 (setup (:straight eshell-toggle)
-       (:global "C-M-s" eshell-toggle)
-       (:option eshell-toggle-size-fraction 3
-		eshell-toggle-use-projectile-root t
-		eshell-toggle-run-command nil))
-#+end_src
-* Tmux
-** Emamux
-#+begin_src emacs-lisp
-(if IS-TTY
-    (setup (:straight emamux)))
+  (:global "C-M-s" eshell-toggle)
+  (:option eshell-toggle-size-fraction 3
+	   eshell-toggle-use-projectile-root t
+	   eshell-toggle-run-command nil))
 #+end_src
 * Git
 ** Magit
@@ -1657,15 +1733,30 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Magit-Delta
 Highlight diff by using delta
 #+begin_src emacs-lisp
-  (setup (:straight magit-delta)
-	 (:hook-into magit-mode))
+(setup (:straight magit-delta)
+  (:hook-into magit-mode))
 #+end_src
 
 * Pass
 ** pass-store.el
 #+begin_src emacs-lisp
-  (setup (:straight password-store)
-	 (:option password-store-password-length 12))
+(setup (:straight password-store)
+  (:option password-store-password-length 12))
+#+end_src
+* Emacs Everywhere
+#+begin_src emacs-lisp
+(when (string= (daemonp) "t")
+  (setup (:straight emacs-everywhere)))
+#+end_src
+* Leetcode
+#+begin_src emacs-lisp
+(setup (:straight leetcode)
+  (setq leetcode-prefer-language "javascript")
+  (setq leetcode-prefer-sql "mysql")
+  (setq leetcode-save-solutions t)
+  (setq leetcode-directory "~/Documents/leetcode")
+  (add-hook 'leetcode-solution-mode-hook
+            (lambda() (flycheck-mode -1))))
 #+end_src
 * COMMENT EAF
 #+begin_src emacs-lisp
@@ -1687,17 +1778,14 @@ Highlight diff by using delta
 	(require 'eaf-evil)
 	;; eaf会把C-SPC当成evil的leader-key，在你加载'eaf-evil之后使用eaf时就需要在eaf中键入C-SPC使用evil leader下的键。
 	;; 我们只需要将这个键设置为 SPC或你自己的evil-leader-key即可
-	(setq eaf-evil-leader-key "SPC"))))
+	(setq eaf-evil-leader-key "SPC")))))
 #+end_src
 * Tramp
 #+begin_src emacs-lisp
-  (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
-  (setq tramp-default-method "ssh"
-	tramp-default-user "wangpe90"
-	tramp-default-host "dh2020pc20.utm.utoronto.ca")
-
-  (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
-  (setq tramp-verbose 6)
+(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
+(setq tramp-default-method "ssh"
+      tramp-default-user "wangpe90"
+      tramp-default-host "dh2020pc20.utm.utoronto.ca")
 #+end_src
 * IRC
 #+begin_src emacs-lisp
@@ -1711,13 +1799,12 @@ Highlight diff by using delta
 
 (setup (:straight circe)
   (setq circe-network-options
-      '(("irc.libera.chat"
-         :tls t
-	 :port 6697
-         :nick "dezzw"
-	 :sasl-username "dezzw"
-	  :sasl-password "Irc0x577063"
-         :channels ("#emacs-circe")
-         ))))
+	'(("irc.libera.chat"
+           :tls t
+	   :port 6697
+           :nick "dezzw"
+	   :sasl-username "dezzw"
+	   :sasl-password "Irc0x577063"
+           :channels ("#emacs-circe")
+           ))))
 #+end_src
-

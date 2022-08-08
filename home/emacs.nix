@@ -44,12 +44,16 @@
     universal-ctags
     
     # Code Formating
-    nixpkgs-fmt
+    nixfmt
 
     # dirvish
     imagemagick
     mediainfo
     python39Packages.pdf2image
-    
+
+    # For flyspell (spelling checking)
+    hunspell
+    hunspellDicts.en-us
+    hunspellDicts.en-ca   
   ];
 }

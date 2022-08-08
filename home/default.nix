@@ -1,18 +1,22 @@
 { config, pkgs, ... }:
 
 {
+  home.stateVersion = "22.05";
+  
   imports = [
     ./emacs.nix
     ./nvim.nix
     ./tmux.nix
     ./clisp.nix
-    # ./alacritty.nix
+    ./alacritty.nix
   ];
   
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+
+    coreutils
 
     # c/c++
     cmake
@@ -24,16 +28,23 @@
     nodePackages.npm
     nodePackages.coffee-script
     nodePackages.typescript
+    nodePackages.live-server
+    flow
     yarn
     node2nix
 
-    deno
-    
+    # deno
+
+    R
+
     # rust
-    rustc
+    rustup
 
     # haskell
     ghc
+
+    # racket
+    # racket-minimal
 
     # tex
     texlive.combined.scheme-full
@@ -44,12 +55,16 @@
     ripgrep
     aria
     ranger
-    gnutls
+    fd
 
     comma
 
     openvpn
   ];
+
+  home.sessionVariables = {
+      EDITOR = "emacsclient";
+  };
 
   programs.git = {
     enable = true;
@@ -138,12 +153,26 @@
           sha256 = "106s7k9n7ssmgybh0kvdb8359f3rz60gfvxjxnxb4fg5gf1fs088";
         };
       }
+      # {
+      #   name = "zsh-autocomplete";
+      #   file = "zsh-autocomplete.plugin.zsh";
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "marlonrichert";
+      #     repo = "zsh-autocomplete";
+      #     rev = "22.01.21";
+      #     sha256 = "sha256-+UziTYsjgpiumSulrLojuqHtDrgvuG91+XNiaMD7wIs=";
+      #   };
+      # }
     ];
 
     initExtra = ''
      . $HOME/.p10k.zsh
      . $HOME/.dotfiles/Shells/emacs-cmds.sh
      eval "$(jump shell)"
+
+     export PATH="$HOME/.jenv/bin:$PATH"
+     eval "$(jenv init -)"
+
 
      if [[ "$TERM" == "dumb" ]]
      then
@@ -173,6 +202,15 @@
         }
     '';
   };
+
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.qutebrowser = {
+    enable = false;
+  };
   
   programs.direnv = {
     enable = true;
@@ -185,9 +223,16 @@
     enable = true;
   };
 
+
   programs.password-store = {
     enable = true;
-    package = pkgs.pass.withExtensions (exts: [ exts.pass-otp exts.pass-update exts.pass-import ]);
+    package = pkgs.pass.withExtensions (exts: with exts; [
+      pass-otp
+      pass-update
+    ]);
+    settings = {
+      PASSWORD_STORE_DIR = "$HOME/.password-store";
+    };
   };
 
   programs.browserpass = {

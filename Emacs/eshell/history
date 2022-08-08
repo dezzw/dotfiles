@@ -1,10 +1,3 @@
-mv project_specification.md ../22W/CSC209H5S/
-cd..
-cd ..
-cd 22W/CSC209H5S/ 
-mkdir project
-mv project_specification.md project/
-mv csc209ProjectStarterCode-1/ project/ 
 ls
 exit
 make run -g -Wall -Werror -fsanitize=address
@@ -126,3 +119,10 @@ exit
 npm install 
 npm run start
 exit
+npm install -D typescript
+ls
+mkdir .git
+ls
+ls -al
+ls -a
+exa -al
