@@ -364,97 +364,100 @@ first RECIPE's package."
 #+begin_src emacs-lisp
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+end_src
-** Evil
-*** Main Settings
+** Meow 
 #+begin_src emacs-lisp
-(setup (:straight undo-fu))
-(setup (:straight undo-fu-session)
-  (global-undo-fu-session-mode))
+ (setup (:straight meow)
+    (require 'meow)
+    (defun meow-setup ()
+      (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . "H-j")
+     '("k" . "H-k")
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
 
-(setup (:straight vundo))
-
-(setup (:straight evil)
-  ;; Pre-load configuration
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-i-jump nil)
-  (setq evil-respect-visual-line-mode t)
-  (setq evil-undo-system 'undo-fu)
-
-  ;; Activate the Evil
-  (evil-mode 1)
-
-  (dolist (mode '(custom-mode
-                  eshell-mode
-                  git-rebase-mode
-                  erc-mode
-                  circe-server-mode
-                  circe-chat-mode
-                  circe-query-mode
-                  term-mode))
-    (add-to-list 'evil-emacs-state-modes mode))
-
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  ;; Clear the binding of C-k so that it doesn't conflict with Corfu
-  (define-key evil-insert-state-map (kbd "C-k") nil)
-  
-  (evil-set-initial-state 'messages-buffer-mode 'normal))
-
-(setup (:straight evil-collection)
-  ;; Is this a bug in evil-collection?
-  (setq evil-collection-company-use-tng nil)
-  (:load-after evil
-    (:option evil-collection-outline-bind-tab-p nil
-	     (remove evil-collection-mode-list) 'lispy)
-    (evil-collection-init)))
-#+end_src
-*** Evil-nerd-commenter
-#+begin_src emacs-lisp
-(setup (:straight evil-nerd-commenter)
-  (:load-after evil)
-  (:global "M-/" evilnc-comment-or-uncomment-lines))
-#+end_src
-*** Evil-multiedit
-#+begin_src emacs-lisp
-(setup (:straight evil-multiedit)
-  (:load-after evil)
-  (require 'evil-multiedit)
-  (evil-multiedit-default-keybinds))
-#+end_src
-*** Evil-surround
-#+begin_src emacs-lisp
-(setup (:straight evil-surround)
-  (:load-after evil)
-  (global-evil-surround-mode 1))
-#+end_src
-*** Evil-escape
-#+begin_src emacs-lisp
-(setup (:straight evil-escape)
-  (:load-after evil)
-  (setq-default evil-escape-key-sequence "jk")
-  (evil-escape-mode))
-#+end_src
-*** Evil-matchit
-#+begin_src emacs-lisp
-(setup (:straight evil-matchit)
-  (:load-after evil)
-  (global-evil-matchit-mode 1)
-  )
-#+end_src
-*** Simplify Leader Bindings (general.el)
-#+begin_src emacs-lisp
-(setup (:straight general)
-  (general-evil-setup t)
-
-  (general-create-definer dw/leader-key-def
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC"))
-
-(dw/leader-key-def
-  "SPC" 'execute-extended-command
-  "f" 'find-file
-  "a" 'org-agenda)
+    (:option meow-use-clipboard t)
+    (meow-setup)
+    (meow-setup-indicator)
+    (meow-global-mode 1))
 #+end_src
 ** which-key
 #+begin_src emacs-lisp
@@ -470,7 +473,15 @@ first RECIPE's package."
   (dolist (hook dw/prog-mode-hook)
     (add-hook hook 'hungry-delete-mode)))
 #+end_src
-*** Avy
+*** Undo
+#+begin_src emacs-lisp
+(setup (:straight undo-fu))
+(setup (:straight undo-fu-session)
+  (global-undo-fu-session-mode))
+
+(setup (:straight vundo))
+#+end_src
+*** COMMENT Avy
 #+begin_src emacs-lisp
 (setup (:straight avy)
   (dw/leader-key-def
@@ -478,6 +489,12 @@ first RECIPE's package."
     "jj"  '(avy-goto-char :which-key "jump to char")
     "jw"  '(avy-goto-word-0 :which-key "jump to word")
     "jl"  '(avy-goto-line :which-key "jump to line")))
+#+end_src
+*** Evil-nerd-commenter
+#+begin_src emacs-lisp
+(setup (:straight evil-nerd-commenter)
+  (:load-after evil)
+  (:global "M-/" evilnc-comment-or-uncomment-lines))
 #+end_src
 *** Spelling Checking
 #+begin_src emacs-lisp
@@ -537,13 +554,6 @@ first RECIPE's package."
 (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
 
 (workgroups-mode 1)
-
-(dw/leader-key-def
-  "SPC" 'execute-extended-command
-  "f" 'find-file
-  "b" 'persp-switch-to-buffer*
-  "k" 'persp-kill-buffer*
-  "a" 'org-agenda)
 #+end_src
 * UI Setting
 ** Fonts
@@ -714,19 +724,14 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   #+begin_src emacs-lisp
   (setup (:straight ace-window)
     (:global "C-x o" ace-window)
-    (:option aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-    (dw/leader-key-def
-      "w" '(:ignore t :which-key "window")
-      "wo" '(ace-window :which-key "ace-window")
-      "wd" '(ace-delete-window :which-key "ace-delete-window")
-      "ws" '(ace-swap-window :which-key "ace-swap-window")))
+    (:option aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
   #+end_src
 ** Window History with winner-mode
 #+begin_src emacs-lisp
-(setup winner
-  (winner-mode)
-  (define-key evil-window-map "u" 'winner-undo)
-  (define-key evil-window-map "U" 'winner-redo))
+  (setup winner
+    (winner-mode))
+    ;; (define-key evil-window-map "u" 'winner-undo)
+    ;; (define-key evil-window-map "U" 'winner-redo))
 #+end_src
 ** Popper
 #+begin_src emacs-lisp
@@ -1316,13 +1321,8 @@ folder, otherwise delete a word"
   (quickrun-add-command "python" 
     '((:command . "python3") 
       (:exec . "%c %s") 
-      (:tempfile . nil)) 
-    :default "python")
-  (:when-loaded
-    (dw/leader-key-def
-      "q" '(:ignore t :which-key "quickrun")
-      "qq" '(quickrun :which-key "quickrun")
-      "qs" '(quickrun-shell :which-key "quickrun-shell"))))
+      (:tempfile . nil))
+    :default "python"))
 #+end_src
 
 *** Minimap
@@ -1538,18 +1538,7 @@ folder, otherwise delete a word"
      lsp-signature-auto-activate nil
      lsp-signature-render-documentation nil
      lsp-log-io nil
-     lsp-idle-delay 0.500))
-
-
-  (dw/leader-key-def
-    "l" '(:ignore t :which-key "lsp")
-    "ld" 'xref-find-definitions
-    "lr" 'xref-find-references
-    "ln" 'lsp-ui-find-next-reference
-    "lp" 'lsp-ui-find-prev-reference
-    "ls" 'counsel-imenu
-    "lS" 'lsp-ui-sideline-mode
-    "lX" 'lsp-execute-code-action))
+     lsp-idle-delay 0.500)))
 
 
 (setup (:require lsp-ui)
@@ -1588,10 +1577,10 @@ folder, otherwise delete a word"
   
   (global-lsp-bridge-mode)
 
-  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-n") #'acm-select-next)
-  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-p") #'acm-select-prev)
-  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-j") #'acm-select-next)
-  (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-k") #'acm-select-prev)
+  ;; (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-n") #'acm-select-next)
+  ;; (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-p") #'acm-select-prev)
+  ;; (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-j") #'acm-select-next)
+  ;; (evil-collection-define-key 'insert 'lsp-bridge-mode-map (kbd "C-k") #'acm-select-prev)
 
   ;; 融合 `lsp-bridge' `find-function' 以及 `dumb-jump' 的智能跳转
   (defun lsp-bridge-jump ()
@@ -1670,11 +1659,6 @@ folder, otherwise delete a word"
 
 
 (setup (:straight multi-vterm))
-
-(dw/leader-key-def
-  "t" '(:ignore t :which-key "term")
-  "tt" '(vterm :which-key "vterm")
-  "tm" '(multi-vterm :which-key "multi-vterm"))
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
