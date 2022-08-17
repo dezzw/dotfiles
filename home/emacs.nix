@@ -11,6 +11,7 @@
       pdf-tools
       zmq
       exec-path-from-shell
+      esup
     ];
   };
 
@@ -40,6 +41,7 @@
     python39Packages.pylint 
 
     rnix-lsp
+    rPackages.languageserver
 
     universal-ctags
     

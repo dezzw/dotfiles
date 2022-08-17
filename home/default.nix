@@ -1,3 +1,4 @@
+
 { config, pkgs, ... }:
 
 {
@@ -36,7 +37,7 @@
     # deno
 
     R
-
+    
     # rust
     rustup
 
