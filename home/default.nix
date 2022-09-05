@@ -1,3 +1,4 @@
+
 { config, pkgs, ... }:
 
 {
@@ -33,10 +34,11 @@
     yarn
     node2nix
 
-    # deno
+    deno
 
+    # R
     R
-
+    
     # rust
     rustup
 
@@ -47,16 +49,15 @@
     # racket-minimal
 
     # tex
-    texlive.combined.scheme-full
+    texlive.combined.scheme-medium
 
     # tools
-    jump
     exa
     ripgrep
     aria
     ranger
     fd
-
+    
     comma
 
     openvpn
@@ -106,17 +107,15 @@
       ls = "exa -la";
       lt = "exa -laT";
     };
+    
     # zplug = {
     #   enable = true;
     #   plugins = [
     #     # { name = "zsh-users/zsh-autosuggestions"; }
-    #     # { name = "zsh-users/zsh-syntax-highlighting"; }
-    #     { name = "z-shell/F-Sy-H"; }
-    #     { name = "jeffreytse/zsh-vi-mode"; }
+    #     { name = "zdharma/fast-syntax-highlighting"; tags = [ defer:2 ]; }
     #     # { name = "spwhitt/nix-zsh-completions"; }
     #     { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
-    #     # { name = "marlonrichert/zsh-autocomplete"; }
-    #     # { name = "hlissner/zsh-autopair"; }
+    #     { name = "hlissner/zsh-autopair"; tags = [ defer:2 ]; }
     #   ];
     # };
 
@@ -153,22 +152,11 @@
           sha256 = "106s7k9n7ssmgybh0kvdb8359f3rz60gfvxjxnxb4fg5gf1fs088";
         };
       }
-      # {
-      #   name = "zsh-autocomplete";
-      #   file = "zsh-autocomplete.plugin.zsh";
-      #   src = pkgs.fetchFromGitHub {
-      #     owner = "marlonrichert";
-      #     repo = "zsh-autocomplete";
-      #     rev = "22.01.21";
-      #     sha256 = "sha256-+UziTYsjgpiumSulrLojuqHtDrgvuG91+XNiaMD7wIs=";
-      #   };
-      # }
     ];
 
     initExtra = ''
      . $HOME/.p10k.zsh
      . $HOME/.dotfiles/Shells/emacs-cmds.sh
-     eval "$(jump shell)"
 
      export PATH="$HOME/.jenv/bin:$PATH"
      eval "$(jenv init -)"
@@ -202,7 +190,7 @@
         }
     '';
   };
-
+  
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;

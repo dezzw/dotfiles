@@ -6,7 +6,7 @@
     #./wm.nix
   ];
   
-  nix.package = pkgs.nixFlakes;
+  nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
     auto-optimise-store = true
@@ -43,7 +43,7 @@
     man-pages
     man-pages-posix
   ];
-  programs.bash.enable = false;
+  programs.bash.enable = true;
 
   users.users.dez.shell = pkgs.zsh;
   users.users.dez.home = "/Users/dez";
@@ -54,6 +54,7 @@
     enableCompletion = false;
     interactiveShellInit = "autoload -U compinit && compinit";
   };
+
 
   # system.defaults = {
   #   dock = {
@@ -84,10 +85,9 @@
   fonts = {
     fontDir.enable = true; 
     fonts = with pkgs; [
-      # victor-mono
-      # fira-code
-      # jetbrains-mono
-      nerdfonts
+      victor-mono
+      fira-code
+      jetbrains-mono
       emacs-all-the-icons-fonts
     ];
   };

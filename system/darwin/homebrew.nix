@@ -12,7 +12,7 @@
     "homebrew/core"
     "homebrew/cask"
     "homebrew/cask-versions"
-    # "homebrew/services"
+    "homebrew/cask-fonts"
     # "koekeishiya/formulae"
     "adur1990/tap"
   ];
@@ -21,10 +21,11 @@
     # "yabai"
     "python"
     "minimal-racket"
-    "roswell"
+    # "roswell"
     "jenv"
     "jupyterlab"
-    "deno"
+    # "deno"
+
   ];
 
   homebrew.casks = [
@@ -46,6 +47,7 @@
     # Developing Tools
     "dash"
     "iterm2"
+    "hyper"
     "jetbrains-toolbox"
     "visual-studio-code"
     "docker"
@@ -62,5 +64,11 @@
     "steam"
     "cleanshot"
     "bartender"
+    
+    # fonts
+    "font-maple"
+    "font-victor-mono-nerd-font"
+    "font-fira-code-nerd-font"
+    "font-jetbrains-mono-nerd-font"
   ];
 }

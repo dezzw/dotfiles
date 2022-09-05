@@ -368,7 +368,7 @@ fi</string>
 			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
-				<integer>2</integer>
+				<integer>1</integer>
 				<key>keyword</key>
 				<string>em</string>
 				<key>subtext</key>
@@ -376,7 +376,7 @@ fi</string>
 				<key>text</key>
 				<string>Start Main Emacs Client</string>
 				<key>withspace</key>
-				<false/>
+				<true/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.keyword</string>
@@ -391,13 +391,13 @@ fi</string>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
-				<integer>102</integer>
+				<integer>103</integer>
 				<key>script</key>
 				<string>EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
 
-$EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(dirvish))'</string>
+$EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "{query}"))(dirvish))'</string>
 				<key>scriptargtype</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>

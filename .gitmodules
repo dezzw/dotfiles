@@ -4,3 +4,7 @@
 [submodule "Emacs/site-lisp/lsp-bridge"]
 	path = Emacs/site-lisp/lsp-bridge
 	url = https://github.com/manateelazycat/lsp-bridge.git
+
+[submodule "Ubersicht/ubersicht-todo-widget"]
+	path = Ubersicht/ubersicht-todo-widget
+	url = git@github.com:dezzw/ubersicht-todo-widget.git
