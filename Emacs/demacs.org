@@ -5,16 +5,13 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 (setq read-process-output-max (* 102400 10240))
 (setq process-adaptive-read-buffering nil)
-(setq gc-cons-threshold most-positive-fixnum)
-(require 'cl-lib)
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
+
 
 ;; Copy from https://github.com/willbush/system/blob/master/emacs/early-init.el
 (defconst IS-MAC     (eq system-type 'darwin))
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
-
-;; Doom currently uses 16 MiB and Spacemacs is using 100 MB. I'm going to try 64
-;; MiB to see how it goes.
-(defconst GC-CONS-THRESHOLD 67108860)
 
 ;; Windows And Frames Setting
 ;; Resizing the Emacs frame can be a terribly expensive part of changing the
@@ -200,45 +197,21 @@ If PATH does not exist, abort the evaluation."
 (defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
 (defconst IS-TTY (or (not (display-graphic-p)) (and (daemonp) (string= (daemonp) "tty"))))
 
-;; Copy from https://github.com/willbush/system/blob/master/emacs/init.el
-;; A big contributor to startup times is garbage collection. We up the gc
-;; threshold to temporarily prevent it from running, then reset it later using a
-;; hook and controlling after that with `gcmh-mode'.
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
-
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
-;; Keep a ref to the actual file-name-handler
-(defvar default-file-name-handler-alist file-name-handler-alist)
-
-;; Set the file-name-handler to nil (because regexing is cpu intensive)
-(setq file-name-handler-alist nil)
-
-;; Reset file-name-handler-alist after initialization
-(add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (setq gc-cons-threshold GC-CONS-THRESHOLD
-		  gc-cons-percentage 0.1
-		  file-name-handler-alist default-file-name-handler-alist)))
-
-(setup (:straight gcmh)
-  (:hook-into after-init-hook)
-  (:option gcmh-idle-delay 5
-	   gcmh-high-cons-threshold GC-CONS-THRESHOLD)
-  (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
 (setup (:straight exec-path-from-shell)
+  (:option exec-path-from-shell-arguments '("-l"))
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
-(global-auto-revert-mode 1)
-(recentf-mode 1)
-(delete-selection-mode t)
+(setup (:straight gcmh)
+  (:delay)
+  (gcmh-mode t))
 
 (setup (:straight super-save)
   (:delay)
@@ -253,6 +226,10 @@ If PATH does not exist, abort the evaluation."
     ;; save on find-file
     (add-to-list 'super-save-hook-triggers 'find-file-hook)
     (super-save-mode +1)))
+
+(global-auto-revert-mode 1)
+(recentf-mode 1)
+(delete-selection-mode t)
 #+end_src
 * COMMENT FullScreen On MacOS
 #+begin_src emacs-lisp
@@ -313,7 +290,7 @@ If PATH does not exist, abort the evaluation."
 *** Symbol pairs (embrace.el)
 #+begin_src emacs-lisp
 (setup (:straight '(embrace :type git :host github :repo "cute-jumper/embrace.el"
-           :fork (:host github :repo "alexluigit/embrace.el")))
+			    :fork (:host github :repo "alexluigit/embrace.el")))
   (:option embrace-default-pairs
 	   '((?r . ("(" . ")"))
              (?R . ("( " . " )"))
@@ -348,6 +325,10 @@ If PATH does not exist, abort the evaluation."
      '("1" . delete-other-windows)
      '("2" . split-window-below)
      '("3" . split-window-right)
+     '("b" . switch-to-buffer)
+     '("f" . find-file)
+     '("h" . embrace-commander)
+     '("q" . quickrun)
      '("?" . describe-keymap)
      '("/" . describe-symbol)
      '(";" . comment-line)
@@ -471,7 +452,7 @@ If PATH does not exist, abort the evaluation."
 #+begin_src emacs-lisp
 ;; Set default font
 (set-face-attribute 'default nil
-		    :font "VictorMono Nerd Font Mono"
+		    :font "Maple Mono"
 		    ;; :font "Operator Mono SSm Lig"
 		    :weight 'regular
 		    :height 140)
@@ -535,7 +516,7 @@ If PATH does not exist, abort the evaluation."
 
 #+end_src
 
-** Nyan
+** COMMENT Nyan
 #+begin_src emacs-lisp
 (if IS-GUI
     (setup (:straight nyan-mode)
@@ -545,7 +526,7 @@ If PATH does not exist, abort the evaluation."
 	       nyan-wavy-trail t)))
 #+end_src
 
-** Parrot
+** COMMENT Parrot
 #+begin_src emacs-lisp
 (setup (:straight parrot)
   (:delay)
@@ -579,7 +560,7 @@ If PATH does not exist, abort the evaluation."
   (global-diff-hl-mode))
 #+end_src
 
-** Highlight the current buffer
+** COMMENT Highlight the current buffer
 #+begin_src emacs-lisp
 (setup (:straight beacon)
   (:delay)
@@ -994,8 +975,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   
   ;; Orderless
   (:option completion-styles  '(orderless basic flex)
-      completion-category-defaults nil
-      completion-category-overrides '((file (styles . (partial-completion)))))
+	   completion-category-defaults nil
+	   completion-category-overrides '((file (styles . (partial-completion)))))
 
   ;; Savehist
   (:option history-length 25)
@@ -1072,7 +1053,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      [backtab] corfu-previous
      "<escape>" corfu-quit))
 
-(when (or (daemonp) (not (display-graphic-p)))
+  (when (or (daemonp) (not (display-graphic-p)))
     (progn
       (global-corfu-mode)
       (corfu-history-mode)
@@ -1359,6 +1340,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Lsp-mode
 #+begin_src emacs-lisp
 (setup (:straight lsp-mode)
+  (:option
+   lsp-headerline-breadcrumb-enable nil)
   (:delay)
   (:hook lsp-enable-which-key-integration)
   
@@ -1370,7 +1353,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
   (:when-loaded
     (:option
-     lsp-headerline-breadcrumb-enable nil
      lsp-signature-auto-activate nil
      lsp-signature-render-documentation nil
      lsp-log-io nil
@@ -1404,14 +1386,15 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (:load-from "~/.dotfiles/Emacs/site-lisp/lsp-bridge/")
     (:delay)
     (require 'lsp-bridge)
-    (require 'lsp-bridge-jdtls)       ;; provide Java third-party library jump and -data directory support, optional
 
-    (:option acm-candidate-match-function 'orderless-flex
-	     acm-enable-search-words nil
-	     acm-enable-icon t
-	     lsp-bridge-complete-manually nil
-	     lsp-bridge-c-lsp-server "clangd"
-	     lsp-bridge--mode-line-format nil)
+    (:option
+     ;; acm-candidate-match-function 'orderless-flex
+     acm-enable-search-words nil
+     acm-enable-icon t
+     acm-enable-tabnine-helper t
+     lsp-bridge-complete-manually nil
+     lsp-bridge-c-lsp-server "clangd"
+     lsp-bridge--mode-line-format nil)
     
     (global-lsp-bridge-mode)
     

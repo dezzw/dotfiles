@@ -1,29 +1,3 @@
-make run -g -Wall -Werror -fsanitize=address
-make run
-make
-./mysh
-make
-make
-./mysh
-make
-./mysh
-./mysh
-cd ..
-ls
-python3 tests/main_test_runner.py 
-exit
-make
-cd ..
-python3 tests/main_test_runner.py
-ls
-exit
-exit
-exit
-gcc -D MACRO main.c 
-ls
-./a.out
-gcc -D MACRO=5 main.c 
-./a.out
 f main.c 
 cpp main.c 
 gcc main.c 
@@ -126,3 +100,29 @@ ls -a
 exa -al
 whoami
 exit
+ls
+cd
+exit
+icalBuddy --help
+icalBuddy en
+icalBuddy eventsToday+14
+icalBuddy -ea eventsToday+14
+icalBuddy -ea -nrd eventsToday+14
+icalBuddy -ea -nrd -nc eventsToday+14
+icalBuddy -ea -nrd -nc -npn eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -nnr ' ' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps '||' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps '| |' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps ' | | ' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps '|||' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps '|\||' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps '|\\||' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps '|-|' eventsToday+14
+icalBuddy -ea -nrd -nc -npn -b '' -iep 'title,datetime' -ps '|-|' -tf '%H:%M' eventsToday+14
+icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '|-|' -tf '%H:%M' -df '' eventsToday+14
+icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '||-|' -tf '%H:%M' -df '' eventsToday+14
+icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '|-|-|' -tf '%H:%M' -df '' eventsToday+14
+icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '|-|' -tf '%H:%M' -df '' eventsToday+14
+icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '|-|' -tf '%H:%M' -df '%b %d, %Y' eventsToday+14
