@@ -6,32 +6,41 @@
     #./wm.nix
   ];
   
-  nix.package = pkgs.nixUnstable;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
-    auto-optimise-store = true
-  '';
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+      auto-optimise-store = true
+    '';
+
+    configureBuildUsers = true;
+    
+    settings = {
+
+      trusted-users = [ "root" "dez" ];
+
+      max-jobs = "auto";
+      
+      substituters = [
+        "https://cachix.org/api/v1/cache/nix-community"
+
+        "https://cachix.org/api/v1/cache/emacs"
+
+        "https://cachix.org/api/v1/cache/cmacrae"
+      ];
+
+      trusted-public-keys = [
+        "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
+    
+  };
 
   system.stateVersion = 4;
-  nix.maxJobs = "auto";
   services.nix-daemon.enable = true;
 
-  nix.trustedUsers = [ "root" "dez" ];
 
-  nix.binaryCaches = [
-    "https://cachix.org/api/v1/cache/nix-community"
-
-    "https://cachix.org/api/v1/cache/emacs"
-
-    "https://cachix.org/api/v1/cache/cmacrae"
-  ];
-
-  nix.binaryCachePublicKeys = [
-    "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY="
-    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-  ];
-
-  nix.trustedBinaryCaches = config.nix.binaryCaches;
 
   nixpkgs.config.allowUnfree = true;
   # nixpkgs.config.allowBroken = true;
@@ -47,7 +56,6 @@
 
   users.users.dez.shell = pkgs.zsh;
   users.users.dez.home = "/Users/dez";
-  users.nix.configureBuildUsers = true;
 
   programs.zsh = {
     enable = true;

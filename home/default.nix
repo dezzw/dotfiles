@@ -41,10 +41,7 @@
     
     # rust
     rustup
-
-    # haskell
-    ghc
-
+    
     # racket
     # racket-minimal
 
@@ -150,6 +147,16 @@
           repo = "fast-syntax-highlighting";
           rev = "v1.28";
           sha256 = "106s7k9n7ssmgybh0kvdb8359f3rz60gfvxjxnxb4fg5gf1fs088";
+        };
+      }
+      {
+        name = "zsh-nix-shell";
+        file = "nix-shell.plugin.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "chisui";
+          repo = "zsh-nix-shell";
+          rev = "v0.5.0";
+          sha256 = "0za4aiwwrlawnia4f29msk822rj9bgcygw6a8a6iikiwzjjz0g91";
         };
       }
     ];

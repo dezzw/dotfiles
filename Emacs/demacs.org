@@ -262,11 +262,10 @@ If PATH does not exist, abort the evaluation."
 (setup (:straight avy)
   (:option  avy-timeout-seconds 0.3))
 #+end_src
-*** COMMENT Evil-nerd-commenter
+*** Evil-nerd-commenter
 #+begin_src emacs-lisp
 (setup (:straight evil-nerd-commenter)
-  (:load-after evil)
-  (:global "M-/" evilnc-comment-or-uncomment-lines))
+  (:global "M-;" evilnc-comment-or-uncomment-lines))
 #+end_src
 *** Spelling Checking
 #+begin_src emacs-lisp
@@ -330,8 +329,8 @@ If PATH does not exist, abort the evaluation."
      '("h" . embrace-commander)
      '("q" . quickrun)
      '("?" . describe-keymap)
-     '("/" . describe-symbol)
-     '(";" . comment-line)
+     '(";" . evilnc-comment-or-uncomment-lines)
+     '("/" . embrace-commander)
      '("," . beginning-of-buffer)
      '("." . end-of-buffer))
     (meow-normal-define-key
@@ -560,12 +559,6 @@ If PATH does not exist, abort the evaluation."
   (global-diff-hl-mode))
 #+end_src
 
-** COMMENT Highlight the current buffer
-#+begin_src emacs-lisp
-(setup (:straight beacon)
-  (:delay)
-  (beacon-mode 1))
-#+end_src
 ** Tree-Sitter
 #+begin_src emacs-lisp
 (straight-use-package 'tree-sitter)
@@ -1166,6 +1159,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (:load-after flycheck)
   (:hook-into flycheck-mode))
 #+end_src
+
+*** Front-end For Interacting With External Debuggers
+#+begin_src emacs-lisp
+(straight-use-package 'realgud)
+#+end_src
 ** Languages
 *** Python
 #+begin_src emacs-lisp
@@ -1297,6 +1295,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (setup (:straight sly)
   (:file-match "\\.lisp\\'"))
 #+end_src
+*** Haskell
+#+begin_src emacs-lisp
+(setup (:straight haskell-mode)
+  (:file-match "\\.hs\\'"))
+#+end_src
 *** Latex
 **** CDLaTex
 #+begin_src emacs-lisp
@@ -1339,24 +1342,37 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 ** Lsp-mode
 #+begin_src emacs-lisp
-(setup (:straight lsp-mode)
-  (:option
-   lsp-headerline-breadcrumb-enable nil)
-  (:delay)
-  (:hook lsp-enable-which-key-integration)
-  
-  (setq lsp-completion-provider :none)
-  (defun corfu-lsp-setup ()
-    (setq-local completion-styles '(orderless)
-		completion-category-defaults nil))
-  (add-hook 'lsp-mode-hook #'corfu-lsp-setup)
+;; (setup (:straight lsp-mode)
+;;   (:option lsp-headerline-breadcrumb-enable nil)
 
-  (:when-loaded
-    (:option
-     lsp-signature-auto-activate nil
-     lsp-signature-render-documentation nil
-     lsp-log-io nil
-     lsp-idle-delay 0.500)))
+;; (setq lsp-completion-provider :none)
+;; (defun corfu-lsp-setup ()
+;;   (setq-local completion-styles '(orderless)
+;; 							completion-category-defaults nil))
+;; (add-hook 'lsp-mode-hook #'corfu-lsp-setup)
+
+;;   (:when-loaded
+;;     (:option
+;;      lsp-signature-auto-activate nil
+;;      lsp-signature-render-documentation nil
+;;      lsp-log-io nil
+;;      lsp-idle-delay 0.500)))
+
+(straight-use-package 'lsp-mode)
+(setq lsp-headerline-breadcrumb-enable nil)
+(require 'lsp-mode)
+
+(setq lsp-completion-provider :none)
+(defun corfu-lsp-setup ()
+  (setq-local completion-styles '(orderless)
+							completion-category-defaults nil))
+(add-hook 'lsp-mode-hook #'corfu-lsp-setup)
+
+(eval-after-load 'lsp-mode
+	(setq lsp-signature-auto-activate nil
+				lsp-signature-render-documentation nil
+				lsp-log-io nil
+				lsp-idle-delay 0.500))
 
 
 (setup (:require lsp-ui)
@@ -1365,9 +1381,9 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (:also-load lsp-treemacs)
   (:when-loaded
     (setq lsp-ui-sideline-enable t
-	  lsp-ui-sideline-show-hover nil
-	  lsp-ui-doc-position 'bottom
-	  lsp-ui-imenu-auto-refresh t)
+					lsp-ui-sideline-show-hover nil
+					lsp-ui-doc-position 'bottom
+					lsp-ui-imenu-auto-refresh t)
     (lsp-ui-doc-show)))
 
 ;; dap debug tools
@@ -1388,10 +1404,9 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (require 'lsp-bridge)
 
     (:option
-     ;; acm-candidate-match-function 'orderless-flex
      acm-enable-search-words nil
      acm-enable-icon t
-     acm-enable-tabnine-helper t
+     ;; acm-enable-tabnine-helper t
      lsp-bridge-complete-manually nil
      lsp-bridge-c-lsp-server "clangd"
      lsp-bridge--mode-line-format nil)

@@ -1,12 +1,19 @@
 {config, pkgs, ...}:
 
 {
-  homebrew.enable = true;
-  homebrew.autoUpdate = true;
-  homebrew.cleanup = "zap";
-  homebrew.global.brewfile = true;
-  homebrew.global.noLock = true;
-
+  homebrew = {
+    
+    enable = true;
+    onActivation = {      
+      autoUpdate = true;
+      cleanup = "zap";
+    };
+    global = {
+      
+      brewfile = true;
+      lockfiles = false;
+    };
+  };
 
   homebrew.taps = [
     "homebrew/core"
@@ -26,6 +33,7 @@
     "jupyterlab"
     # "deno"
 
+    "ical-buddy"
   ];
 
   homebrew.casks = [
