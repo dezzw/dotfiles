@@ -38,8 +38,8 @@
     nodePackages.eslint
     nodePackages.prettier
 
-    python39Packages.pylint 
-
+    python39Packages.pylint
+    
     rnix-lsp
     rPackages.languageserver
 
