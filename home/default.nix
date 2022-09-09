@@ -41,6 +41,12 @@
     
     # rust
     rustup
+
+    # haskell
+    # haskell.compiler.ghc924
+    # cabal-install
+    # haskellPackages.QuickCheck
+    # haskellPackages.ghcup
     
     # racket
     # racket-minimal
