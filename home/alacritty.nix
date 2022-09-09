@@ -15,7 +15,7 @@
 
         font = {
           size = 12;
-          normal.family = "Roboto Mono";
+          normal.family = "FiraCode Nerd Font Mono";
         };
 
         colors = {
