@@ -1440,15 +1440,17 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 * Direnv
 #+begin_src emacs-lisp
 ;; (setup (:straight direnv)
-;;        (:when-loaded
-;; 	(direnv-mode)))
+;; 	(direnv-mode))
 
 (setup (:straight envrc)
-  (require 'envrc)
-  (envrc-global-mode))
+  (defun dw/maybe-enable-envrc-global-mode ()
+    "Enable `envrc-global-mode' if `direnv' is installed."
+    (when (executable-find "direnv")
+      (envrc-global-mode)))
 
-(with-eval-after-load 'envrc
-  (define-key envrc-mode-map (kbd "C-c e") 'envrc-command-map))
+  (with-eval-after-load 'envrc
+    (define-key envrc-mode-map (kbd "C-c e") 'envrc-command-map))
+  (add-hook 'after-init-hook 'dw/maybe-enable-envrc-global-mode))
 #+end_src
 * Term/Shells
 ** Vterm
