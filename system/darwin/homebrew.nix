@@ -50,12 +50,10 @@
     "blender"
     "gimp"
     "obs"
-    "kap"
 
     # Developing Tools
     "dash"
     "iterm2"
-    "hyper"
     "jetbrains-toolbox"
     "visual-studio-code"
     "docker"
