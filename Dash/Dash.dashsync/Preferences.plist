@@ -9,7 +9,7 @@
 			<key>Regular_Expressions</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:09Z</date>
+				<date>2022-09-08T21:20:41Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -136,152 +136,152 @@
 			<key>http://kapeli.com/feeds/Bash.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:12Z</date>
+				<date>2022-09-08T21:20:43Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/C++.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:25Z</date>
+				<date>2022-09-08T21:20:48Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/C.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:20Z</date>
+				<date>2022-09-08T21:20:54Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CMake.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:13Z</date>
+				<date>2022-09-08T21:20:44Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CSS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:23Z</date>
+				<date>2022-09-08T21:20:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Clojure.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:12Z</date>
+				<date>2022-09-08T21:20:44Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CoffeeScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:17Z</date>
+				<date>2022-09-08T21:20:48Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Common_Lisp.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:27Z</date>
+				<date>2022-09-08T21:20:45Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Docker.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:16Z</date>
+				<date>2022-09-08T21:20:51Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Emacs_Lisp.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:19Z</date>
+				<date>2022-09-08T21:20:53Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Emmet.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:18Z</date>
+				<date>2022-09-08T21:20:50Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/HTML.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:26Z</date>
+				<date>2022-09-08T21:20:50Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Haskell.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:32Z</date>
+				<date>2022-09-08T21:20:50Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/JavaScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:50Z</date>
+				<date>2022-09-08T21:20:56Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Java_SE16.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:29Z</date>
+				<date>2022-09-08T21:20:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Java_SE8.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:33Z</date>
+				<date>2022-09-08T21:20:55Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/LaTeX.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:33Z</date>
+				<date>2022-09-08T21:20:59Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Less.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:28Z</date>
+				<date>2022-09-08T21:20:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Lua_5.4.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:01Z</date>
+				<date>2022-09-08T21:20:55Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/NodeJS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:01Z</date>
+				<date>2022-09-08T21:20:56Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Python_3.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:07Z</date>
+				<date>2022-09-08T21:21:00Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/R.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:00Z</date>
+				<date>2022-09-08T21:21:07Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Racket.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:05Z</date>
+				<date>2022-09-08T21:21:02Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/React.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:07Z</date>
+				<date>2022-09-08T21:20:58Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Sass.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:03Z</date>
+				<date>2022-09-08T21:20:58Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/TypeScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:06Z</date>
+				<date>2022-09-08T21:21:02Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/VueJS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:07Z</date>
+				<date>2022-09-08T21:21:03Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:36Z</date>
+				<date>2022-09-08T21:20:52Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_Mobile.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:00:34Z</date>
+				<date>2022-09-08T21:20:52Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_UI.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2022-06-27T23:01:00Z</date>
+				<date>2022-09-08T21:20:59Z</date>
 			</dict>
 		</dict>
 		<key>uninstalled</key>
