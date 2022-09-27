@@ -27,11 +27,9 @@
   homebrew.brews = [
     # "yabai"
     "python"
-    "minimal-racket"
-    # "roswell"
+    # "racket"
     "jenv"
     "jupyterlab"
-    # "deno"
 
     "ical-buddy"
   ];
@@ -52,8 +50,10 @@
     "obs"
 
     # Developing Tools
+    "racket"
     "dash"
     "iterm2"
+    "xquartz"
     "jetbrains-toolbox"
     "visual-studio-code"
     "docker"
@@ -70,6 +70,7 @@
     "steam"
     "cleanshot"
     "bartender"
+    "spotify"
     
     # fonts
     "font-maple"

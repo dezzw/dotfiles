@@ -1,5 +1,6 @@
 #+TITLE: DEmacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
+
 * Some improve in early-init
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
 ;; -*- coding: utf-8; lexical-binding: t; -*-
@@ -101,10 +102,10 @@
         doom-modeline-buffer-encoding 'nondefault
         doom-modeline-default-eol-type
         (cond (IS-MAC 2)
-              (0)))
-
-  (when (daemonp)
-    (setq doom-modeline-icon t)))
+              (0))))
+  ;; handled in UI Setting
+  ;; (when (daemonp)
+  ;;   (setq doom-modeline-icon t)))
 
 (straight-use-package 'posframe)
 
@@ -324,6 +325,7 @@ If PATH does not exist, abort the evaluation."
      '("1" . delete-other-windows)
      '("2" . split-window-below)
      '("3" . split-window-right)
+     '("a" . org-agenda)
      '("b" . switch-to-buffer)
      '("f" . find-file)
      '("h" . embrace-commander)
@@ -420,53 +422,65 @@ If PATH does not exist, abort the evaluation."
 ;;   ;; Running `persp-mode' multiple times resets the perspective list...
 ;;   (unless (equal persp-mode t)
 ;;     (persp-mode)))
-
 ;; Windows/buffers sets shared among frames + save/load.
-;; (setup (:straight persp-mode)
-;;   (setq persp-keymap-prefix (kbd "C-x p")
-;; 	persp-nil-name "default"
-;; 	persp-set-last-persp-for-new-frames nil
-;; 	persp-kill-foreign-buffer-behaviour 'kill)
-;;   (:hook-into after-init)
+(setup (:straight persp-mode)
+  (:option persp-keymap-prefix (kbd "C-x p")
+	   persp-nil-name "Main"
+	   persp-set-last-persp-for-new-frames nil
+	   persp-auto-resume-time -1.0
+	   persp-kill-foreign-buffer-behaviour 'kill
 
-;;   ;; Eshell integration
-;;   (persp-def-buffer-save/load
-;;    :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
-;;    :save-vars '(major-mode default-directory))
+	   persp-autokill-buffer-on-remove 'kill-weak)
+  
+  (add-hook 'window-setup-hook #'(lambda () (persp-mode 1)))
 
-;;   ;; Shell integration
-;;   (persp-def-buffer-save/load
-;;    :mode 'shell-mode :tag-symbol 'def-shell-buffer
-;;    :mode-restore-function (lambda (_) (shell))
-;;    :save-vars '(major-mode default-directory)))
+  ;; Eshell integration
+  (persp-def-buffer-save/load
+   :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
+   :save-vars '(major-mode default-directory))
 
-(setup (:straight workgroups2)
-  (:delay)
-  (:option wg-prefix-key (kbd "C-c z")
-	   wg-session-file "~/.emacs.d/.emacs_workgroups"
-	   workgroups-mode 1))
+  ;; Shell integration
+  (persp-def-buffer-save/load
+   :mode 'shell-mode :tag-symbol 'def-shell-buffer
+   :mode-restore-function (lambda (_) (shell))
+   :save-vars '(major-mode default-directory)))
+
+;; (setup (:straight workgroups2)
+;;   (:delay)
+;;   (:option wg-prefix-key (kbd "C-c z")
+;; 	   wg-session-file "~/.emacs.d/.emacs_workgroups"
+;; 	   workgroups-mode 1))
 #+end_src
+
 * UI Setting
 ** Fonts
 #+begin_src emacs-lisp
 ;; Set default font
-(set-face-attribute 'default nil
-		    :font "Maple Mono"
-		    ;; :font "Operator Mono SSm Lig"
-		    :weight 'regular
-		    :height 140)
+(defun dw/set-fonts()
+  (interactive)
+  (set-face-attribute 'default nil
+		      :font "Maple Mono NF"
+		      ;; :font "Operator Mono SSm Lig"
+		      :weight 'regular
+		      :height 140)
 
-;; Set the fixed pitch face
-;; (set-face-attribute 'fixed-pitch nil
-;; 		    :font "Operator Mono SSm Lig"
-;; 		    :weight 'light
-;; 		    :height 140)
+  ;; Set the fixed pitch face
+  ;; (set-face-attribute 'fixed-pitch nil
+  ;; 		    :font "Operator Mono SSm Lig"
+  ;; 		    :weight 'light
+  ;; 		    :height 140)
+  
+  ;; Set the variable pitch face
+  ;; (set-face-attribute 'variable-pitch nil
+  ;; 		    :font "Operator Mono SSm Lig"
+  ;; 		    :height 140
+  ;; 		    :weight 'light)
+  )
 
-;; Set the variable pitch face
-;; (set-face-attribute 'variable-pitch nil
-;; 		    :font "Operator Mono SSm Lig"
-;; 		    :height 140
-;; 		    :weight 'light)
+
+(dw/set-fonts)
+ (when (daemonp)
+    (dw/set-fonts))
 
 
 (setup (:straight '(ligature :host github :repo "mickeynp/ligature.el"))
@@ -577,6 +591,17 @@ If PATH does not exist, abort the evaluation."
   (global-tree-sitter-mode))
 #+end_src
 
+** UI Setting
+#+begin_src emacs-lisp
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (setq doom-modeline-icon t)
+                (with-selected-frame frame
+                  (dw/set-fonts))))
+  (if (display-graphic-p)
+      (dw/set-fonts)))
+#+end_src
 * Auto-Tangle Org File
 Tangle (form a new file) on save
 #+begin_src emacs-lisp
@@ -775,13 +800,17 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Load Org Babel
 #+begin_src emacs-lisp
 (with-eval-after-load "ob"
+  (straight-use-package '(ob-racket
+			  :type git :host github :repo "hasu/emacs-ob-racket"
+			  :files ("*.el" "*.rkt")))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (C . t)
      (shell . t)
      (python . t)
-     (R .t)))
+     (racket . t)
+     ))
 
   (setq org-confirm-babel-evaluate nil))
 #+end_src
@@ -799,9 +828,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (add-to-list 'org-structure-template-alist '("js" . "src js"))
     (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
     (add-to-list 'org-structure-template-alist '("py" . "src python :results output :exports both"))
-    (add-to-list 'org-structure-template-alist '("r" . "src R")))
-  (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
-  (add-to-list 'org-structure-template-alist '("json" . "src json")))
+    (add-to-list 'org-structure-template-alist '("r" . "src R"))
+    (add-to-list 'org-structure-template-alist '("rkt" . "src racket"))
+    (add-to-list 'org-structure-template-alist '("hs" . "src haskell"))
+    (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+    (add-to-list 'org-structure-template-alist '("json" . "src json"))
+    (add-to-list 'org-structure-template-alist '("sql" . "src sql-mode"))))
 #+end_src
 ** Org Agenda
 #+begin_src emacs-lisp
@@ -1295,10 +1327,28 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (setup (:straight sly)
   (:file-match "\\.lisp\\'"))
 #+end_src
+*** Racket
+#+begin_src emacs-lisp
+(setup (:straight racket-mode)
+  (:file-match "\\.rkt\\'")
+  (add-hook 'racket-mode-hook #'(lambda ()
+				  (setq-local lsp-bridge-mode nil)
+				  (setq-local corfu-mode t)
+				  (setq-local eldoc-mode nil)))
+  (add-hook 'racket-mode-hook #'racket-xp-mode))
+#+end_src
 *** Haskell
 #+begin_src emacs-lisp
 (setup (:straight haskell-mode)
   (:file-match "\\.hs\\'"))
+
+(eval-after-load 'lsp
+  (straight-use-package 'lsp-haskell))
+
+(add-hook 'haskell-mode-hook #'(lambda ()
+				 (setq-local lsp-bridge-mode nil)
+				 (setq-local corfu-mode t)))
+
 #+end_src
 *** Latex
 **** CDLaTex
@@ -1332,6 +1382,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (setup (:straight markdown-mode)
   (straight-use-package 'edit-indirect)
   (:option markdown-command "multimarkdown"))
+#+end_src
+*** SQL
+#+begin_src emacs-lisp
+(eval-after-load 'sql-mode
+	(setup (:straight ob-sql-mode)))
 #+end_src
 ** eglot
 #+begin_src emacs-lisp
@@ -1406,7 +1461,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (:option
      acm-enable-search-words nil
      acm-enable-icon t
-     ;; acm-enable-tabnine-helper t
+     acm-enable-tabnine-helper t
      lsp-bridge-complete-manually nil
      lsp-bridge-c-lsp-server "clangd"
      lsp-bridge--mode-line-format nil)
