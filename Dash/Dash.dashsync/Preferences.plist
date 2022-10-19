@@ -233,6 +233,11 @@
 				<key>date</key>
 				<date>2022-09-08T21:20:56Z</date>
 			</dict>
+			<key>http://kapeli.com/feeds/PHP.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2022-09-29T02:42:01Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/Python_3.xml</key>
 			<dict>
 				<key>date</key>

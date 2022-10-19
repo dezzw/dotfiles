@@ -5,7 +5,7 @@
     
     enable = true;
     onActivation = {      
-      autoUpdate = true;
+      upgrade = true;
       cleanup = "zap";
     };
     global = {
@@ -28,9 +28,8 @@
     # "yabai"
     "python"
     # "racket"
-    "jenv"
-    "jupyterlab"
-
+    # "jupyterlab"
+    "ffmpegthumbnailer"
     "ical-buddy"
   ];
 

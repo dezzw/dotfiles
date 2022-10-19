@@ -4,8 +4,8 @@
   programs.emacs = {
     enable = true;
     # package = pkgs.emacsPgtkNativeComp; # emacs 29.0.5 native compiled
-    # package = pkgs.emacs28NativeComp; # emacs 28.1 native compiled
-    package = pkgs.emacs;
+    package = pkgs.emacsNativeComp; # emacs native compiled
+    # package = pkgs.emacsGitNativeComp;
     extraPackages = epkgs: with epkgs;[
       vterm
       pdf-tools
@@ -51,7 +51,6 @@
     # dirvish
     imagemagick
     mediainfo
-    python39Packages.pdf2image
 
     # For flyspell (spelling checking)
     hunspell

@@ -1,5 +1,3 @@
-
-
 { config, pkgs, ... }:
 
 {
@@ -30,10 +28,8 @@
     nodePackages.npm
     nodePackages.coffee-script
     nodePackages.typescript
-    nodePackages.live-server
     flow
     yarn
-    node2nix
 
     deno
     
@@ -48,6 +44,7 @@
 
     # tools
     exa
+    zoxide
     ripgrep
     aria
     ranger
@@ -58,9 +55,9 @@
     openvpn
   ];
 
-  home.sessionVariables = {
-      EDITOR = "emacsclient";
-  };
+  # home.sessionVariables = {
+  #     EDITOR = "emacsclient";
+  # };
 
   programs.git = {
     enable = true;
@@ -101,6 +98,7 @@
     shellAliases = {
       ls = "exa -la";
       lt = "exa -laT";
+      cd = "z";
     };
     
     # zplug = {
@@ -163,9 +161,7 @@
      . $HOME/.p10k.zsh
      . $HOME/.dotfiles/Shells/emacs-cmds.sh
 
-     export PATH="$HOME/.jenv/bin:$PATH"
-     eval "$(jenv init -)"
-
+     eval "$(zoxide init zsh)"
 
      if [[ "$TERM" == "dumb" ]]
      then
@@ -182,17 +178,16 @@
     fi
 
     vterm_printf(){
-              if [ -n "$TMUX" ]; then
-                  # Tell tmux to pass the escape sequences through
-                  # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
-                  printf "\ePtmux;\e\e]%s\007\e\\" "$1"
-              elif [ "''${TERM%%-*}" = "screen" ]; then
-                  # GNU screen (screen, screen-256color, screen-256color-bce)
-                  printf "\eP\e]%s\007\e\\" "$1"
-              else
-                  printf "\e]%s\e\\" "$1"
-              fi
-        }
+      if [ -n "$TMUX" ] && ([ "''${TERM%%-*}" = "tmux" ] || [ "''${TERM%%-*}" = "screen" ] ); then
+          # Tell tmux to pass the escape sequences through
+          printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+      elif [ "''${TERM%%-*}" = "screen" ]; then
+          # GNU screen (screen, screen-256color, screen-256color-bce)
+          printf "\eP\e]%s\007\e\\" "$1"
+      else
+          printf "\e]%s\e\\" "$1"
+      fi
+    }
     '';
   };
   
@@ -201,9 +196,9 @@
     enableZshIntegration = true;
   };
 
-  programs.qutebrowser = {
-    enable = false;
-  };
+  # programs.qutebrowser = {
+  #   enable = false;
+  # };
   
   programs.direnv = {
     enable = true;

@@ -1,7 +1,5 @@
 gcc main.c 
 gcc main.c 
-gcc main.c 
-gcc main.c 
 ./a.out
 gcc main.c 
 ./a.out
@@ -125,4 +123,6 @@ icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '|-|-|' -tf '%H:%M' -df 
 icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '|-|' -tf '%H:%M' -df '' eventsToday+14
 icalBuddy -ea -nrd -npn -b '' -iep 'title,datetime' -ps '|-|' -tf '%H:%M' -df '%b %d, %Y' eventsToday+14
 mv .evnrc .envrc
+exit
+ls
 exit

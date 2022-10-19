@@ -7,7 +7,7 @@
   ];
   
   nix = {
-    package = pkgs.nixUnstable;
+    package = pkgs.nixVersions.stable;
     extraOptions = ''
       experimental-features = nix-command flakes
       auto-optimise-store = true
@@ -39,8 +39,6 @@
 
   system.stateVersion = 4;
   services.nix-daemon.enable = true;
-
-
 
   nixpkgs.config.allowUnfree = true;
   # nixpkgs.config.allowBroken = true;
@@ -91,15 +89,15 @@
   #   remapCapsLockToControl = true;
   # };
   
-  fonts = {
-    fontDir.enable = true; 
-    fonts = with pkgs; [
-      victor-mono
-      fira-code
-      jetbrains-mono
-      emacs-all-the-icons-fonts
-    ];
-  };
+  # fonts = {
+  #   fontDir.enable = true; 
+  #   fonts = with pkgs; [
+  #     victor-mono
+  #     fira-code
+  #     jetbrains-mono
+  #     emacs-all-the-icons-fonts
+  #   ];
+  # };
 
   # Recreate /run/current-system symlink after boot
   services.activate-system.enable = true;

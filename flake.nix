@@ -1,3 +1,4 @@
+
 {
   description = "systems configuration";
 
@@ -18,7 +19,7 @@
     flake-compat = { url = github:edolstra/flake-compat; flake = false; };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    emacs.url = "github:cmacrae/emacs";
+    # emacs.url = "github:cmacrae/emacs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
     # spacebar.url = "github:cmacrae/spacebar/v1.4.0";
@@ -35,9 +36,9 @@
 
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
-        config = { allowUnfree = true; allowBroken = true; };
+        config = { allowUnfree = true; };
         overlays = with inputs; [
-          emacs.overlay
+          # emacs.overlay
           emacs-overlay.overlay
           # spacebar.overlay
           nix-direnv.overlay

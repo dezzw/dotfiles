@@ -232,17 +232,6 @@ If PATH does not exist, abort the evaluation."
 (recentf-mode 1)
 (delete-selection-mode t)
 #+end_src
-* COMMENT FullScreen On MacOS
-#+begin_src emacs-lisp
-(if (featurep 'cocoa)
-    (progn
-      (setq ns-use-native-fullscreen nil)
-      (setq ns-use-fullscreen-animation nil)))
-(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-(run-at-time 1 nil
-             (lambda ()
-               (toggle-frame-fullscreen)))
-#+end_src
 * Keyboard Bindings
 ** Editing Tools
 *** Hungry Delete
@@ -402,7 +391,38 @@ If PATH does not exist, abort the evaluation."
   (:option meow-use-clipboard t)
   (meow-setup)
   (meow-setup-indicator)
-  (meow-global-mode 1))
+  (meow-global-mode 1)
+
+  ;; Use jk to escape from insert state to normal state
+  (defvar meow-two-char-escape-sequence "jk")
+  (defvar meow-two-char-escape-delay 0.5)
+  (defun meow--two-char-exit-insert-state (s)
+    "Exit meow insert state when pressing consecutive two keys.
+
+S is string of the two-key sequence."
+    (when (meow-insert-mode-p)
+      (let ((modified (buffer-modified-p))
+            (undo-list buffer-undo-list))
+	(insert (elt s 0))
+	(let* ((second-char (elt s 1))
+               (event
+		(if defining-kbd-macro
+                    (read-event nil nil)
+		  (read-event nil nil meow-two-char-escape-delay))))
+          (when event
+            (if (and (characterp event) (= event second-char))
+		(progn
+                  (backward-delete-char 1)
+                  (set-buffer-modified-p modified)
+                  (setq buffer-undo-list undo-list)
+                  (meow-insert-exit))
+              (push event unread-command-events)))))))
+  (defun meow-two-char-exit-insert-state ()
+    "Exit meow insert state when pressing consecutive two keys."
+    (interactive)
+    (meow--two-char-exit-insert-state meow-two-char-escape-sequence))
+  (define-key meow-insert-state-keymap (substring meow-two-char-escape-sequence 0 1)
+    #'meow-two-char-exit-insert-state))
 #+end_src
 ** which-key
 #+begin_src emacs-lisp
@@ -413,37 +433,37 @@ If PATH does not exist, abort the evaluation."
 #+end_src
 * Workspace
 #+begin_src emacs-lisp
-;; (setup (:straight perspective)
-;;   (:option persp-initial-frame-name "Main"
-;; 	   persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
-;;   (setq persp-mode-prefix-key (kbd "C-x p"))
+(setup (:straight perspective)
+  (:option persp-initial-frame-name "Main"
+	   persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
+  (setq persp-mode-prefix-key (kbd "C-x p"))
 
-;;   (add-hook 'kill-emacs-hook #'persp-state-save)
-;;   ;; Running `persp-mode' multiple times resets the perspective list...
-;;   (unless (equal persp-mode t)
-;;     (persp-mode)))
+  (add-hook 'kill-emacs-hook #'persp-state-save)
+  ;; Running `persp-mode' multiple times resets the perspective list...
+  (unless (equal persp-mode t)
+    (persp-mode)))
 ;; Windows/buffers sets shared among frames + save/load.
-(setup (:straight persp-mode)
-  (:option persp-keymap-prefix (kbd "C-x p")
-	   persp-nil-name "Main"
-	   persp-set-last-persp-for-new-frames nil
-	   persp-auto-resume-time -1.0
-	   persp-kill-foreign-buffer-behaviour 'kill
+;; (setup (:straight persp-mode)
+;;   (:option persp-keymap-prefix (kbd "C-x p")
+;; 	   persp-nil-name "Main"
+;; 	   persp-set-last-persp-for-new-frames nil
+;; 	   persp-auto-resume-time -1.0
+;; 	   persp-kill-foreign-buffer-behaviour 'kill
 
-	   persp-autokill-buffer-on-remove 'kill-weak)
+;; 	   persp-autokill-buffer-on-remove 'kill-weak)
   
-  (add-hook 'window-setup-hook #'(lambda () (persp-mode 1)))
+;;   (add-hook 'window-setup-hook #'(lambda () (persp-mode 1)))
 
-  ;; Eshell integration
-  (persp-def-buffer-save/load
-   :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
-   :save-vars '(major-mode default-directory))
+;;   ;; Eshell integration
+;;   (persp-def-buffer-save/load
+;;    :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
+;;    :save-vars '(major-mode default-directory))
 
-  ;; Shell integration
-  (persp-def-buffer-save/load
-   :mode 'shell-mode :tag-symbol 'def-shell-buffer
-   :mode-restore-function (lambda (_) (shell))
-   :save-vars '(major-mode default-directory)))
+;;   ;; Shell integration
+;;   (persp-def-buffer-save/load
+;;    :mode 'shell-mode :tag-symbol 'def-shell-buffer
+;;    :mode-restore-function (lambda (_) (shell))
+;;    :save-vars '(major-mode default-directory)))
 
 ;; (setup (:straight workgroups2)
 ;;   (:delay)
@@ -524,7 +544,7 @@ If PATH does not exist, abort the evaluation."
 		shell-mode-hook
 		eshell-mode-hook
 		xwidget-webkit-mode-hook
-		pdf-view-mode-hook))
+		doc-view-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 #+end_src
@@ -1148,8 +1168,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
   (:hook-into prog-mode))
 
-(setup (:straight aggressive-indent)
-  (:hook-into emacs-lisp-mode lisp-mode python-mode))
+;;(setup (:straight aggressive-indent)
+;;  (:hook-into emacs-lisp-mode lisp-mode python-mode))
 #+end_src
 *** Rainbow Mode
 #+begin_src emacs-lisp
@@ -1615,10 +1635,10 @@ Highlight diff by using delta
 (setup (:straight password-store)
   (:option password-store-password-length 12))
 #+end_src
-* Emacs Everywhere
+* PDF Tools
 #+begin_src emacs-lisp
-(when (string= (daemonp) "t")
-  (setup (:straight emacs-everywhere)))
+(setup (:require pdf-tools)
+  (:delay))
 #+end_src
 * Leetcode
 #+begin_src emacs-lisp
@@ -1630,7 +1650,7 @@ Highlight diff by using delta
   (add-hook 'leetcode-solution-mode-hook
             (lambda() (flycheck-mode -1))))
 #+end_src
-* COMMENT EAF
+* EAF
 #+begin_src emacs-lisp
 (if IS-GUI
     (unless (daemonp)
@@ -1638,9 +1658,11 @@ Highlight diff by using delta
       (setup (:require eaf)
 	(:delay)
 	(:also-load eaf-browser eaf-git)
-	(:option eaf-browser-continue-where-left-off t
-		 eaf-browser-enable-adblocker t
-		 browse-url-browser-function 'eaf-open-browser)
+	(:option
+	 eaf-start-python-process-when-require nil
+	 eaf-browser-continue-where-left-off t
+	 eaf-browser-enable-adblocker t
+	 browse-url-browser-function 'eaf-open-browser)
 
 	(defalias 'browse-web #'eaf-open-browser))))
 #+end_src
@@ -1649,7 +1671,11 @@ Highlight diff by using delta
 (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
 (setq tramp-default-method "ssh"
       tramp-default-user "wangpe90"
-      tramp-default-host "dh2020pc20.utm.utoronto.ca")
+      tramp-default-host "dh2026pc25.utm.utoronto.ca")
+(setq recentf-exclude `(,tramp-file-name-regexp
+                        "COMMIT_EDITMSG")
+      tramp-auto-save-directory temporary-file-directory
+      backup-directory-alist (list (cons tramp-file-name-regexp nil)))
 #+end_src
 * IRC
 #+begin_src emacs-lisp
