@@ -44,7 +44,6 @@
 
     # tools
     exa
-    zoxide
     ripgrep
     aria
     ranger
@@ -195,6 +194,8 @@
     enable = true;
     enableZshIntegration = true;
   };
+
+  programs.zoxide.enable = true;
 
   # programs.qutebrowser = {
   #   enable = false;

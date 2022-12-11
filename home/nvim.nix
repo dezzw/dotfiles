@@ -21,17 +21,51 @@
       let mapleader=" "
     '';
 
-    plugins = with pkgs.vimPlugins; [
-      nord-vim
-      lightline-vim
+    plugins = with pkgs.vimPlugins; [ 
       vim-nix
-      telescope-nvim
-      nvim-treesitter
-      nvim-lspconfig
-      vim-easymotion
-      vim-surround
-      nvim-tree-lua
-      ranger-vim
+      plenary-nvim
+      {
+        plugin = impatient-nvim;
+        config = "lua require('impatient')";
+      }
+      {
+        plugin = lualine-nvim;
+        config = "lua require('lualine').setup()";
+      }
+      {
+        plugin = telescope-nvim;
+        config = "lua require('telescope').setup()";
+      }
+      {
+        plugin = indent-blankline-nvim;
+        config = "lua require('indent_blankline').setup()";
+      }
+      {
+        plugin = nvim-lspconfig;
+        config = ''
+                        lua << EOF
+                        require('lspconfig').rust_analyzer.setup{}
+                        require('lspconfig').sumneko_lua.setup{}
+                        require('lspconfig').rnix.setup{}
+                        require('lspconfig').zk.setup{}
+                        EOF
+                    '';
+      }
+      {
+        plugin = nvim-treesitter;
+        config = ''
+                    lua << EOF
+                    require('nvim-treesitter.configs').setup {
+                        highlight = {
+                            enable = true,
+                            additional_vim_regex_highlighting = false,
+                        },
+                    }
+                    EOF
+                    '';
+      }
     ];
+
   };
+  
 }

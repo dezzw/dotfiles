@@ -1,5 +1,5 @@
-alias ls exa
-alias pk eshell-up-peek $1
-alias up eshell-up $1
-alias d dired
+alias ls /bin/ls
 alias f find-file $1
+alias d dired
+alias up eshell-up $1
+alias pk eshell-up-peek $1

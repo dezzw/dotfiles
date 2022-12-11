@@ -51,7 +51,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>9273F864-226C-448C-BA45-C404BF368E28</string>
+				<string>F736CF13-ACF0-4D04-BF47-EB03D1B9DF4C</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -490,6 +490,31 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>103</integer>
+				<key>script</key>
+				<string>EMACSCLIENT="/etc/profiles/per-user/dez/bin/emacsclient"
+
+$EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory $HOME))(dirvish))'</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>F736CF13-ACF0-4D04-BF47-EB03D1B9DF4C</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -622,9 +647,9 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 		<key>77E4F014-49B9-4791-8C1B-2B8B510E119A</key>
 		<dict>
 			<key>xpos</key>
-			<real>565</real>
+			<real>560</real>
 			<key>ypos</key>
-			<real>565</real>
+			<real>575</real>
 		</dict>
 		<key>9273F864-226C-448C-BA45-C404BF368E28</key>
 		<dict>
@@ -667,6 +692,13 @@ $EMACSCLIENT --socket-name=main -nc -e '(let ((default-directory "~/"))(eshell))
 			<real>550</real>
 			<key>ypos</key>
 			<real>100</real>
+		</dict>
+		<key>F736CF13-ACF0-4D04-BF47-EB03D1B9DF4C</key>
+		<dict>
+			<key>xpos</key>
+			<real>875</real>
+			<key>ypos</key>
+			<real>575</real>
 		</dict>
 		<key>F846F785-2FD2-4688-B4FA-77AC867B86C8</key>
 		<dict>

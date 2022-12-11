@@ -34,7 +34,6 @@
   (funcall mode 0))
 
 (setq default-frame-alist '((fullscreen . maximized)
-                            ;; (alpha-background . 80)
 			    ;; (alpha . 90)
 			    (undecorated . t)
 			    (menu-bar-lines . 0)
@@ -59,9 +58,10 @@
 	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
 
-(straight-use-package 'setup)
 (eval-when-compile
-  (require 'setup))
+  (require 'use-package))
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)                ;; if you use any :bind variant
 
 (straight-use-package 'all-the-icons)
 
@@ -559,12 +559,6 @@ S is string of the two-key sequence."
 	       nyan-wavy-trail t)))
 #+end_src
 
-** COMMENT Parrot
-#+begin_src emacs-lisp
-(setup (:straight parrot)
-  (:delay)
-  (setq parrot-num-rotations nil))
-#+end_src
 ** Highlight TODOs
 #+begin_src emacs-lisp
 (setup (:straight hl-todo)
@@ -595,20 +589,20 @@ S is string of the two-key sequence."
 
 ** Tree-Sitter
 #+begin_src emacs-lisp
-(straight-use-package 'tree-sitter)
-(straight-use-package 'tree-sitter-langs)
+;; (straight-use-package 'tree-sitter)
+;; (straight-use-package 'tree-sitter-langs)
 
-(setup tree-sitter
-  (:delay)
-  (require 'tree-sitter)
-  (require 'tree-sitter-langs)
+;; (setup tree-sitter
+;;   (:delay)
+;;   (require 'tree-sitter)
+;;   (require 'tree-sitter-langs)
   
-  (add-hook 'c-mode-hook #'tree-sitter-hl-mode)
-  (add-hook 'python-mode-hook #'tree-sitter-hl-mode)
-  (add-hook 'js2-mode-hook #'tree-sitter-hl-mode)
-  (add-hook 'typescritpt-mode-hook #'tree-sitter-hl-mode)
+;;   (add-hook 'c-mode-hook #'tree-sitter-hl-mode)
+;;   (add-hook 'python-mode-hook #'tree-sitter-hl-mode)
+;;   (add-hook 'js2-mode-hook #'tree-sitter-hl-mode)
+;;   (add-hook 'typescritpt-mode-hook #'tree-sitter-hl-mode)
 
-  (global-tree-sitter-mode))
+;;   (global-tree-sitter-mode))
 #+end_src
 
 ** UI Setting
@@ -1072,12 +1066,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 ** Corfu
 #+begin_src emacs-lisp
-(setup (:straight corfu corfu-doc cape kind-icon tempel)
+(setup (:straight corfu cape kind-icon tempel)
 
   ;; corfu
   (:also-load dabbrev)
   (:load-from (expand-file-name "straight/build/corfu/extensions" user-emacs-directory))
-  (:require corfu-history corfu-info)
+  (:require corfu-history corfu-info corfu-popupinfo corfu-echo)
   (:option
    corfu-cycle t                ;; Enable cycling for `corfu-next/previous'
    corfu-auto t                 ;; Enable auto completion
@@ -1101,8 +1095,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (when (or (daemonp) (not (display-graphic-p)))
     (progn
       (global-corfu-mode)
-      (corfu-history-mode)
-      (corfu-doc-mode)))
+      (corfu-history-mode)))
 
   ;; cape
   (:option cape-dabbrev-min-length 3)
@@ -1216,6 +1209,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (straight-use-package 'realgud)
 #+end_src
+
+*** Vdiff
+#+begin_src emacs-lisp
+(setup (:straight vdiff))
+#+end_src
 ** Languages
 *** Python
 #+begin_src emacs-lisp
@@ -1328,7 +1326,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (:file-match "\\.nix\\'")
   (:also-load nixos-options nix-sandbox nix-update))
 #+end_src
-*** Docker
+*** COMMENT Docker
 #+begin_src emacs-lisp
 (setup (:straight docker)
   (:delay))
@@ -1408,13 +1406,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (eval-after-load 'sql-mode
 	(setup (:straight ob-sql-mode)))
 #+end_src
-** eglot
-#+begin_src emacs-lisp
-(setup (:straight eldoc-box)
-  (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
-(setup (:straight eglot)
-  (setq eglot-events-buffer-size 0))
-#+end_src
 ** Lsp-mode
 #+begin_src emacs-lisp
 ;; (setup (:straight lsp-mode)
@@ -1476,6 +1467,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (setup lsp-bridge
     (:load-from "~/.dotfiles/Emacs/site-lisp/lsp-bridge/")
     (:delay)
+    (:option lsp-bridge-enable-mode-line nil)
     (require 'lsp-bridge)
 
     (:option
@@ -1483,8 +1475,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      acm-enable-icon t
      acm-enable-tabnine-helper t
      lsp-bridge-complete-manually nil
-     lsp-bridge-c-lsp-server "clangd"
-     lsp-bridge--mode-line-format nil)
+     lsp-bridge-c-lsp-server "clangd")
     
     (global-lsp-bridge-mode)
     
@@ -1510,6 +1501,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
        (t
 	(require 'dumb-jump)
 	(dumb-jump-back))))))
+
+  ;; (unless (display-graphic-p)
+  ;;   (add-to-list 'load-path "~/.dotfiles/Emacs/site-lisp/acm-terminal/")
+  ;;   (with-eval-after-load 'acm
+  ;;     (require 'acm-terminal))))
 
 #+end_src
 * Direnv
@@ -1650,7 +1646,7 @@ Highlight diff by using delta
   (add-hook 'leetcode-solution-mode-hook
             (lambda() (flycheck-mode -1))))
 #+end_src
-* EAF
+* COMMENT EAF
 #+begin_src emacs-lisp
 (if IS-GUI
     (unless (daemonp)

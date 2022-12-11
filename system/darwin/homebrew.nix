@@ -20,13 +20,27 @@
     "homebrew/cask"
     "homebrew/cask-versions"
     "homebrew/cask-fonts"
-    # "koekeishiya/formulae"
+    "koekeishiya/formulae"
+    "FelixKratz/formulae"
     "adur1990/tap"
   ];
 
   homebrew.brews = [
-    # "yabai"
+    {
+      name = "yabai";
+      args = [ "HEAD" ];
+      restart_service = true;
+    }
+    {
+      name = "skhd";
+      restart_service = true;
+    }
+    {
+      name = "sketchybar";
+      restart_service = true;
+    }
     "python"
+    "jq"
     # "racket"
     # "jupyterlab"
     "ffmpegthumbnailer"
@@ -76,5 +90,6 @@
     "font-victor-mono-nerd-font"
     "font-fira-code-nerd-font"
     "font-jetbrains-mono-nerd-font"
+    "font-hack-nerd-font"
   ];
 }
