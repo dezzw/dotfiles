@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 
-{
-  home.stateVersion = "22.05";
-  
+{  
   imports = [
     ./emacs.nix
     ./nvim.nix
@@ -14,51 +12,78 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  home.packages = with pkgs; [
+  home =
+    let NODE_GLOBAL = "${config.home.homeDirectory}/.node-packages";
+    in
+      {
+        # This value determines the Home Manager release that your
+        # configuration is compatible with. This helps avoid breakage
+        # when a new Home Manager release introduces backwards
+        # incompatible changes.
+        #
+        # You can update Home Manager without changing this value. See
+        # the Home Manager release notes for a list of state version
+        # changes in each release.
+        stateVersion = "22.05";
+        sessionVariables = {
+          # GPG_TTY = "/dev/ttys000";
+          EDITOR = "nvim";
+          VISUAL = "nvim";
+          # CLICOLOR = 1;
+          LSCOLORS = "ExFxBxDxCxegedabagacad";
+          JAVA_HOME = "${pkgs.openjdk.home}";
+          NODE_PATH = "${NODE_GLOBAL}/lib";
+          # HOMEBREW_NO_AUTO_UPDATE = 1;
+          ASPELL_CONF = "conf ${config.xdg.configHome}/aspell/config;";
+        };
+        sessionPath = [ "${NODE_GLOBAL}/bin" ];
 
-    coreutils
+        packages = with pkgs; [
 
-    # c/c++
-    cmake
-    cdecl
-    astyle
+          coreutils
 
-    # nodejs
-    nodejs
-    nodePackages.npm
-    nodePackages.coffee-script
-    nodePackages.typescript
-    flow
-    yarn
+          # c/c++
+          cmake
+          cdecl
+          astyle
 
-    deno
-    
-    # rust
-    rustup
-    
-    # racket
-    # racket-minimal
+          # nodejs
+          nodejs
+          nodePackages.npm
+          nodePackages.coffee-script
+          nodePackages.typescript
+          flow
+          yarn
 
-    # tex
-    texlive.combined.scheme-medium
+          jq
 
-    # tools
-    exa
-    zoxide
-    ripgrep
-    aria
-    ranger
-    fd
-    
-    comma
+          deno
 
-    openvpn
-  ];
+          openjdk
+          
+          # rust
+          rustup
+          
+          # racket
+          # racket-minimal
 
-  # home.sessionVariables = {
-  #     EDITOR = "emacsclient";
-  # };
+          # tex
+          texlive.combined.scheme-medium
 
+          # tools
+          exa
+          zoxide
+          ripgrep
+          aria
+          ranger
+          fd
+          
+          comma
+
+          openvpn
+        ];
+      };
+  
   programs.git = {
     enable = true;
     userName = "dezzw";
@@ -126,14 +151,14 @@
         };
       }
       {
-          name = "autopair";
-          file = "autopair.zsh";
-          src = pkgs.fetchFromGitHub {
-            owner = "hlissner";
-            repo = "zsh-autopair";
-            rev = "4039bf142ac6d264decc1eb7937a11b292e65e24";
-            sha256 = "02pf87aiyglwwg7asm8mnbf9b2bcm82pyi1cj50yj74z4kwil6d1";
-          };
+        name = "autopair";
+        file = "autopair.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "hlissner";
+          repo = "zsh-autopair";
+          rev = "4039bf142ac6d264decc1eb7937a11b292e65e24";
+          sha256 = "02pf87aiyglwwg7asm8mnbf9b2bcm82pyi1cj50yj74z4kwil6d1";
+        };
       }
       {
         name = "fast-syntax-highlighting";

@@ -3,15 +3,10 @@
 {
   programs.emacs = {
     enable = true;
-    # package = pkgs.emacsPgtkNativeComp; # emacs 29.0.5 native compiled
-    package = pkgs.emacsNativeComp; # emacs native compiled
-    # package = pkgs.emacsGitNativeComp;
+    package = pkgs.emacsGit;
     extraPackages = epkgs: with epkgs;[
       vterm
       pdf-tools
-      zmq
-      exec-path-from-shell
-      esup
     ];
   };
 
@@ -53,8 +48,6 @@
     mediainfo
 
     # For flyspell (spelling checking)
-    hunspell
-    hunspellDicts.en-us
-    hunspellDicts.en-ca   
+    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
   ];
 }

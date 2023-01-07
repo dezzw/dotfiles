@@ -2,8 +2,6 @@
 
 fundamental-mode ;; Available everywhere
 
-(today (format-time-string "%Y-%m-%d"))
-
 prog-mode
 
 (fixme (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "FIXME ")
@@ -49,16 +47,6 @@ eshell-mode
 
 text-mode
 
-(asciibox "+-" (make-string (length str) ?-) "-+" n
-          "| " (s str)                       " |" n
-          "+-" (make-string (length str) ?-) "-+" n)
-(rot13 (p "plain text" text) n "----" n (rot13 text))
-(calc (p "taylor(sin(x),x=0,3)" formula) n "----" n (format "%s" (calc-eval formula)))
-
-rst-mode
-
-(title (make-string (length title) ?=) n (p "Title: " title) n (make-string (length title) ?=) n)
-
 java-mode
 
 (class "public class " (p (file-name-base (or (buffer-file-name) (buffer-name)))) " {" n> r> n "}")
@@ -79,3 +67,16 @@ org-mode
 ;; (elisp "#+begin_src emacs-lisp" n> r> n "#+end_src"
 ;;        :post (progn (tempel-done) (org-edit-src-code)))
 (mathbb "\\mathbb{" p "}")
+
+sh-mode
+
+(! "#!/usr/bin/env bash" n q)
+
+(if "if [ " p " ]" n "  then " p n "fi" q)
+
+(ife "if [ " p " ]" n "  then " p n "else" p n "fi" q)
+
+(case "case " p " in" n> p " )" n> p n> ";;" n> q n "esac)")
+
+(for "for " p " in " p n "do" n> q n "done")
+

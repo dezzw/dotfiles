@@ -109,7 +109,30 @@
 	<key>DHUserRepo</key>
 	<dict>
 		<key>installed</key>
-		<dict/>
+		<dict>
+			<key>p5js</key>
+			<dict>
+				<key>date</key>
+				<date>2022-12-18T03:21:57Z</date>
+				<key>entry</key>
+				<dict>
+					<key>aliases</key>
+					<array>
+						<string>p5js</string>
+					</array>
+					<key>authorLinkHref</key>
+					<string>https://github.com/Kapeli/Dash-User-Contributions/tree/master/docsets/p5js#readme</string>
+					<key>authorLinkText</key>
+					<string>Sash Zats</string>
+					<key>name</key>
+					<string>p5js</string>
+					<key>platform</key>
+					<string>usercontribp5js</string>
+					<key>uniqueIdentifier</key>
+					<string>p5js</string>
+				</dict>
+			</dict>
+		</dict>
 		<key>uninstalled</key>
 		<dict/>
 	</dict>

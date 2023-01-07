@@ -20,12 +20,27 @@
     "homebrew/cask"
     "homebrew/cask-versions"
     "homebrew/cask-fonts"
-    # "koekeishiya/formulae"
+    "koekeishiya/formulae"
+    "FelixKratz/formulae"
     "adur1990/tap"
+    "homebrew/services"
   ];
 
   homebrew.brews = [
-    # "yabai"
+    {
+      name = "yabai";
+      #args = [ "HEAD" ];
+      restart_service = true;
+    }
+    {
+      name = "skhd";
+      restart_service = true;
+    }
+    {
+      name = "sketchybar";
+      restart_service = true;
+    }
+
     "python"
     # "racket"
     # "jupyterlab"
@@ -39,7 +54,6 @@
     # "amethyst"
 
     # Browser
-    "brave-browser"
     "google-chrome"
     "firefox-developer-edition"
 
