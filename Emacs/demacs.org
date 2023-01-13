@@ -1,19 +1,24 @@
+
 #+TITLE: DEmacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
 
-* Some improve in early-init
+* Early Init
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
 ;; -*- coding: utf-8; lexical-binding: t; -*-
-(setq use-package-verbose t)
 
-(setq read-process-output-max (* 102400 10240))
-(setq process-adaptive-read-buffering nil)
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
+(setq read-process-output-max (* 1024 1024))
+;; Adjust garbage collection thresholds during startup, and thereafter
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+	    (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
+(require 'cl-lib)
 
-;; Copy from https://github.com/willbush/system/blob/master/emacs/early-init.el
-(defconst IS-MAC     (eq system-type 'darwin))
+(defconst IS-MAC (eq system-type 'darwin))
+
+(setq package-enable-at-startup nil)
 
 ;; Windows And Frames Setting
 ;; Resizing the Emacs frame can be a terribly expensive part of changing the
@@ -42,34 +47,30 @@
 			    (horizontal-scroll-bars . nil)
 			    (vertical-scroll-bars . nil)))
 
-(setq package-enable-at-startup nil)
+(unless (version< emacs-version "29")
+  (pixel-scroll-precision-mode 1))
 
-(unless (featurep 'straight)
-  ;; Bootstrap straight.el
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage)))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'diminish)
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)                ;; if you use any :bind variant
-
-(straight-use-package 'all-the-icons)
+(let ((default-directory "~/.dotfiles/Emacs/site-lisp")
+      (gc-cons-threshold most-positive-fixnum))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;; Set `doom-themes' early to prevent non-stylized UI flash.
 (use-package doom-themes
-  :straight t
+  :straight (doom-themes :type git :host github :repo "doomemacs/themes"
+		     :fork (:host github :repo "dezzw/emacs-doom-themes"))
   :init
   (load-theme 'doom-one t)
   (doom-themes-org-config))
@@ -102,11 +103,6 @@
 	(cond (IS-MAC 2)
 	      (0))))
 
-(straight-use-package 'posframe)
-
-(unless (version< emacs-version "29")
-  (pixel-scroll-precision-mode 1))
-
 (if IS-MAC
     (progn
       (setq frame-resize-pixelwise  t)
@@ -117,23 +113,19 @@
 #+end_src
 * Startup Setting 
 #+begin_src emacs-lisp
+;; Copy from https://github.com/willbush/system/blob/master/emacs/early-init.el
+
 (defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
 (defconst IS-TTY (or (not (display-graphic-p)) (and (daemonp) (string= (daemonp) "tty"))))
+
+
+(setq use-package-verbose t)
 
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
-
-
-(use-package exec-path-from-shell
-  :straight t
-  :custom
-  (exec-path-from-shell-arguments '("-l"))
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
 
 (use-package gcmh
   :straight t
@@ -144,9 +136,16 @@
   ;; 16 MB
   (gcmh-high-cons-threshold (* 16 1024 1024)))
 
+(use-package exec-path-from-shell
+  :straight t
+  :custom
+  (exec-path-from-shell-arguments '("-l"))
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
 (use-package super-save
   :straight t
-  :diminish super-save-mode
   :custom
   (super-save-auto-save-when-idle t)
   (super-save-remore-files nil)
@@ -172,20 +171,22 @@
 (global-auto-revert-mode 1)
 (delete-selection-mode t)
 
-(when (treesit-available-p)
-  (setq major-mode-remap-alist
-        '((c-mode          . c-ts-mode)
-          (c++-mode        . c++-ts-mode)
-          (conf-toml-mode  . toml-ts-mode)
-          (csharp-mode     . csharp-ts-mode)
-          (css-mode        . css-ts-mode)
-          (java-mode       . java-ts-mode)
-          (js-mode         . js-ts-mode)
-          (javascript-mode . js-ts-mode)
-          (js-json-mode    . json-ts-mode)
-          (python-mode     . python-ts-mode)
-          (ruby-mode       . ruby-ts-mode)
-          (sh-mode         . bash-ts-mode))))
+(use-package treesit
+  :when (and (fboundp 'treesit-available-p)
+	     (treesit-available-p))
+  :custom (major-mode-remap-alist
+	   '((c-mode          . c-ts-mode)
+	     (c++-mode        . c++-ts-mode)
+	     (cmake-mode      . cmake-ts-mode)
+	     (conf-toml-mode  . toml-ts-mode)
+	     (css-mode        . css-ts-mode)
+	     (js-mode         . js-ts-mode)
+	     (js-json-mode    . json-ts-mode)
+	     (python-mode     . python-ts-mode)
+	     (sh-mode         . bash-ts-mode)
+	     (typescript-mode . typescript-ts-mode))))
+
+(straight-use-package 'posframe)
 #+end_src
 * Keyboard Bindings
 ** Editing Tools
@@ -193,7 +194,11 @@
 #+begin_src emacs-lisp
 (use-package undo-fu
   :straight t
-  :defer 0.5)
+  :defer 0.5
+  :bind
+  ("s-z" . undo-fu-only-undo)
+  ("s-S-z" . undo-fu-only-redo))
+
 (use-package undo-fu-session
   :straight t
   :after undo-fu
@@ -249,25 +254,6 @@
   :straight t
   :commands (wucuo-start))
 #+end_src
-*** COMMENT Symbol pairs (embrace.el)
-#+begin_src emacs-lisp
-(use-package embrace
-  :straight (embrace :type git :host github :repo "cute-jumper/embrace.el"
-		     :fork (:host github :repo "alexluigit/embrace.el"))
-  :custom
-  (embrace-default-pairs
-   '((?r . ("(" . ")"))
-     (?R . ("( " . " )"))
-     (?c . ("{" . "}"))
-     (?C . ("{ " . " }"))
-     (?\[ . ("[" . "]"))
-     (?\] . ("[ " . " ]"))
-     (?a . ("<" . ">"))
-     (?A . ("< " . " >"))
-     (?s . ("\"" . "\""))
-     (?\' . ("\'" . "\'"))
-     (?` . ("`" . "`")))))
-#+end_src
 ** ESC Cancels All
 #+begin_src emacs-lisp
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -294,7 +280,6 @@
      '("b" . switch-to-buffer)
      '("f" . find-file)
      '("h" . embrace-commander)
-     '("q" . quickrun)
      '("?" . describe-keymap)
      '(";" . evilnc-comment-or-uncomment-lines)
      '("/" . embrace-commander)
@@ -351,8 +336,8 @@
      '("s" . meow-kill)
      '("t" . avy-goto-char-timer)
      '("T" . avy-resume)
-     '("u" . meow-undo)
-     '("U" . meow-undo-in-selection)
+     '("u" . undo-fu-only-undo)
+     '("U" . undo-fu-only-redo)
      '("v" . meow-visit)
      '("w" . meow-mark-word)
      '("W" . meow-mark-symbol)
@@ -379,21 +364,21 @@
 S is string of the two-key sequence."
     (when (meow-insert-mode-p)
       (let ((modified (buffer-modified-p))
-            (undo-list buffer-undo-list))
+	    (undo-list buffer-undo-list))
 	(insert (elt s 0))
 	(let* ((second-char (elt s 1))
-               (event
+	       (event
 		(if defining-kbd-macro
-                    (read-event nil nil)
+		    (read-event nil nil)
 		  (read-event nil nil meow-two-char-escape-delay))))
-          (when event
-            (if (and (characterp event) (= event second-char))
+	  (when event
+	    (if (and (characterp event) (= event second-char))
 		(progn
-                  (backward-delete-char 1)
-                  (set-buffer-modified-p modified)
-                  (setq buffer-undo-list undo-list)
-                  (meow-insert-exit))
-              (push event unread-command-events)))))))
+		  (backward-delete-char 1)
+		  (set-buffer-modified-p modified)
+		  (setq buffer-undo-list undo-list)
+		  (meow-insert-exit))
+	      (push event unread-command-events)))))))
   (defun meow-two-char-exit-insert-state ()
     "Exit meow insert state when pressing consecutive two keys."
     (interactive)
@@ -401,45 +386,52 @@ S is string of the two-key sequence."
   (define-key meow-insert-state-keymap (substring meow-two-char-escape-sequence 0 1)
 	      #'meow-two-char-exit-insert-state))
 #+end_src
-* COMMENT Workspace
+* Workspace
 #+begin_src emacs-lisp
-(setup (:straight perspective)
-       (:option persp-initial-frame-name "Main"
-		persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
-       (setq persp-mode-prefix-key (kbd "C-x p"))
+;; (setup (:straight perspective)
+;;        (:option persp-initial-frame-name "Main"
+;; 		persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
+;;        (setq persp-mode-prefix-key (kbd "C-x p"))
 
-       (add-hook 'kill-emacs-hook #'persp-state-save)
-       ;; Running `persp-mode' multiple times resets the perspective list...
-       (unless (equal persp-mode t)
-	 (persp-mode)))
+;;        (add-hook 'kill-emacs-hook #'persp-state-save)
+;;        ;; Running `persp-mode' multiple times resets the perspective list...
+;;        (unless (equal persp-mode t)
+;; 	 (persp-mode)))
+
 ;; Windows/buffers sets shared among frames + save/load.
-;; (setup (:straight persp-mode)
-;;   (:option persp-keymap-prefix (kbd "C-x p")
-;; 	   persp-nil-name "Main"
-;; 	   persp-set-last-persp-for-new-frames nil
-;; 	   persp-auto-resume-time -1.0
-;; 	   persp-kill-foreign-buffer-behaviour 'kill
-
-;; 	   persp-autokill-buffer-on-remove 'kill-weak)
-
+;; (use-package persp-mode
+;;   :straight t
+;;   :custom
+;;   (persp-keymap-prefix (kbd "C-x p"))
+;;   (persp-nil-name "Main")
+;;   (persp-set-last-persp-for-new-frames nil)
+;;   (persp-auto-resume-time -1.0)
+;;   (persp-kill-foreign-buffer-behaviour 'kill)
+;;   (persp-autokill-buffer-on-remove 'kill-weak)
+;;   :config
+  
 ;;   (add-hook 'window-setup-hook #'(lambda () (persp-mode 1)))
 
 ;;   ;; Eshell integration
 ;;   (persp-def-buffer-save/load
 ;;    :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
 ;;    :save-vars '(major-mode default-directory))
-
+  
 ;;   ;; Shell integration
 ;;   (persp-def-buffer-save/load
 ;;    :mode 'shell-mode :tag-symbol 'def-shell-buffer
 ;;    :mode-restore-function (lambda (_) (shell))
 ;;    :save-vars '(major-mode default-directory)))
 
-;; (setup (:straight workgroups2)
-;;   (:delay)
-;;   (:option wg-prefix-key (kbd "C-c z")
-;; 	   wg-session-file "~/.emacs.d/.emacs_workgroups"
-;; 	   workgroups-mode 1))
+(use-package workgroups2
+  :straight t
+  :commands
+  (wg-create-workgroup wg-open-workgroup)
+  :custom
+  (wg-prefix-key (kbd "C-c z"))
+  (wg-session-file "~/.emacs.d/.emacs_workgroups")
+  :config
+  (setq workgroups-mode 1))
 #+end_src
 
 * UI Setting
@@ -520,19 +512,10 @@ S is string of the two-key sequence."
 		shell-mode-hook
 		eshell-mode-hook
 		xwidget-webkit-mode-hook
+		eaf-mode-hook
 		doc-view-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-#+end_src
-
-** COMMENT Nyan
-#+begin_src emacs-lisp
-(if IS-GUI
-    (setup (:straight nyan-mode)
-	   (:delay)
-	   (:option nyan-mode nil
-		    nyan-animate-nyancat t
-		    nyan-wavy-trail t)))
 #+end_src
 
 ** Highlight TODOs
@@ -666,7 +649,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (defun dw/org-mode-setup ()
   (org-indent-mode)
-  (diminish org-indent-mode)
   ;; (variable-pitch-mode 1)
   ;; (auto-fill-mode 0)
   ;; (setq evil-auto-indent nil)
@@ -674,6 +656,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (use-package org
   :config
+  :defer t
   :hook (org-mode . dw/org-mode-setup)
   :config
   (setq org-html-head-include-default-style nil
@@ -935,12 +918,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (use-package org-roam
   :straight t
-  :after org-mode
-  :bind (("C-c o l" . org-roam-buffer-toggle)
-         ("C-c o f" . org-roam-node-find)
-         ("C-c o g" . org-roam-graph)
-         ("C-c o i" . org-roam-node-insert)
-         ("C-c o c" . org-roam-capture))
+  :bind
+  (("C-c o l" . org-roam-buffer-toggle)
+   ("C-c o f" . org-roam-node-find)
+   ("C-c o g" . org-roam-graph)
+   ("C-c o i" . org-roam-node-insert)
+   ("C-c o c" . org-roam-capture))
   :config
   (setq org-roam-directory "~/Documents/Org/Notes"
 	org-roam-database-connecter 'splite-builtin
@@ -1154,41 +1137,37 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
-** COMMENT Corfu
+** Corfu
 #+begin_src emacs-lisp
 ;; completely use lsp-bridge for now
 (use-package corfu
   :straight t
   :bind
   (:map corfu-map
-	([tab] . corfu-next)
-	([backtab] . corfu-previous)
+	("S-<return>" . corfu-insert)
+	("RET"     . nil) ;; leave my enter alone!
 	("<escape>" . corfu-quit))
   :custom
   (corfu-cycle t)                 ; Allows cycling through candidates
   (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
-  (corfu-echo-documentation 0.25) ; Enable documentation for completions
-  (corfu-preview-current 'insert) ; Do not preview current candidate
-  (corfu-preselect 'prompt)      ;; Preselect the prompt
+  (corfu-auto-delay 0.1)
+  (corfu-preselect 'prompt)
   (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
-  
   :init
-  (global-corfu-mode)
   
   (add-to-list 'load-path (expand-file-name "straight/build/corfu/extensions" user-emacs-directory))
   (require 'corfu-history)
-  (corfu-history-mode)
+  (add-hook 'corfu-mode-hook 'corfu-history-mode)
 
   (require 'corfu-popupinfo)
   (setq corfu-popupinfo-delay t)
-  (corfu-popupinfo-mode))
+  (add-hook 'corfu-mode-hook 'corfu-popupinfo-mode))
 
 
 (use-package cape
   :straight t
-  :defer 10
+  :after corfu
   :custom
   (cape-dabbrev-min-length 3)
   :config
@@ -1197,6 +1176,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (use-package kind-icon
   :straight t
+  :after corfu
   :custom
   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
   :config
@@ -1273,9 +1253,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Developing Tools
 *** Brackets 
 #+begin_src emacs-lisp
-;; (electric-indent-mode 1)
-;; (electric-pair-mode 1)
-;; (electric-quote-mode -1)
+
 (use-package elec-pair
   :config (electric-pair-mode))
 
@@ -1317,20 +1295,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :straight t
   :hook prog-mode)
 #+end_src
-*** quickrun.el
-#+begin_src emacs-lisp
-(use-package quickrun
-  :straight t
-  :commands (quickrun)
-  :config
-  ;; set python3 as default
-  (quickrun-add-command "python" 
-    '((:command . "python3") 
-      (:exec . "%c %s") 
-      (:tempfile . nil))
-    :default "python"))
-#+end_src
-
 *** Text Folding
 #+begin_src emacs-lisp
 ;; (setup (:straight origami)
@@ -1433,7 +1397,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :straight t
   :commands (skewer-mode))
 #+end_src
-**** Emmet
+**** COMMENT Emmet
 #+begin_src emacs-lisp
 (use-package emmet-mode
   :straight t
@@ -1550,6 +1514,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (use-package yasnippet
   :straight t
+  :defer t
   :hook
   (prog-mode . yas-minor-mode)
   :custom
@@ -1558,15 +1523,15 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (yas-reload-all))
 
 (use-package lsp-bridge
-  :load-path "~/.dotfiles/Emacs/site-lisp/lsp-bridge/"
+  :after yasnippet
   :custom
   (lsp-bridge-enable-mode-line nil)
   (acm-enable-search-words nil)
   (acm-enable-icon t)
+  (acm-enable-tempel t)
   (acm-enable-tabnine-helper t)
   (lsp-bridge-complete-manually nil)
   (lsp-bridge-c-lsp-server "clangd")
-
   :config
   (global-lsp-bridge-mode)
   
@@ -1592,6 +1557,16 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      (t
       (require 'dumb-jump)
       (dumb-jump-back)))))
+#+end_src
+** Deno Bridge
+#+begin_src emacs-lisp
+(use-package deno-bridge)
+(use-package emmet2-mode
+  :after deno-bridge
+  :hook ((web-mode css-mode) . emmet2-mode)                     ;; Enable emmet2-mode for web-mode and css-mode and other major modes based on them, such as the build-in scss-mode
+  :config                                                       ;; OPTIONAL
+  (unbind-key "C-j" emmet2-mode-map)                            ;; Unbind the default expand key
+  (define-key emmet2-mode-map (kbd "C-c C-.") 'emmet2-expand))  ;; Bind custom expand key
 #+end_src
 * Direnv
 #+begin_src emacs-lisp
@@ -1619,7 +1594,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (use-package vterm
   :straight t
   :commands (vterm vterm-posframe-toggle)
-  :bind ("C-`" . vterm-posframe-toggle)
+  :bind ("C-c `" . vterm-posframe-toggle)
   :custom
   (vterm-max-scrollback 10000)
   :config
@@ -1655,7 +1630,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :straight t
   :after vterm)
 #+end_src
-** COMMENT eshell
+** eshell
 #+begin_src emacs-lisp
 (use-package eshell
   :commands (eshell)
@@ -1734,19 +1709,18 @@ Highlight diff by using delta
 #+end_src
 * COMMENT EAF
 #+begin_src emacs-lisp
-(if IS-GUI
-    (unless (daemonp)
-      (add-to-list 'load-path "/Users/dez/.dotfiles/Emacs/site-lisp/emacs-application-framework/")
-      (setup (:require eaf)
-	     (:delay)
-	     (:also-load eaf-browser eaf-git)
-	     (:option
-	      eaf-start-python-process-when-require nil
-	      eaf-browser-continue-where-left-off t
-	      eaf-browser-enable-adblocker t
-	      browse-url-browser-function 'eaf-open-browser)
-
-	     (defalias 'browse-web #'eaf-open-browser))))
+(use-package eaf
+  :load-path "/Users/dez/.dotfiles/Emacs/site-lisp/emacs-application-framework/"
+  :commands (eaf-search-it eaf-git)
+  :custom
+  (eaf-start-python-process-when-require nil)
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (require 'eaf-browser)
+  (require 'eaf-git)
+  (defalias 'browse-web #'eaf-open-browser))
 #+end_src
 * Tramp
 #+begin_src emacs-lisp
@@ -1780,4 +1754,3 @@ Highlight diff by using delta
 	   :sasl-password "Irc0x577063"
            :channels ("#emacs-circe")))))
 #+end_src
-

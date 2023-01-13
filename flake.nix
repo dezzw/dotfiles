@@ -10,23 +10,29 @@
     nixos-stable.url = github:NixOS/nixpkgs/nixos-22.05;
 
     # Environment/system management
-    darwin.url = github:LnL7/nix-darwin;
-    darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    home-manager.url = github:nix-community/home-manager;
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    darwin = {
+      url = github:LnL7/nix-darwin;
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    home-manager = {
+      url = github:nix-community/home-manager;
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
 
     flake-utils.url = github:numtide/flake-utils;
     flake-compat = { url = github:edolstra/flake-compat; flake = false; };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    # emacs.url = "github:cmacrae/emacs";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    # rnix-lsp.url = "github:nix-community/rnix-lsp";
-    # spacebar.url = "github:cmacrae/spacebar/v1.4.0";
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs-unstable";
+      };
+    };
     nix-direnv.url = "github:nix-community/nix-direnv";
 
-    # Follows
-    # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, darwin, home-manager, flake-utils, ... }@inputs:
@@ -38,7 +44,6 @@
       nixpkgsConfig = {
         config = { allowUnfree = true; };
         overlays = with inputs; [
-          # emacs.overlay
           emacs-overlay.overlay
           # spacebar.overlay
           nix-direnv.overlay
