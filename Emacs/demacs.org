@@ -120,7 +120,8 @@
 
 
 (setq use-package-verbose t)
-
+(when (daemonp)
+  (setq use-package-always-demand t))
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 
@@ -154,7 +155,8 @@
   ;; add integration with ace-window
   (add-to-list 'super-save-triggers 'ace-window)
   ;; save when back to meow normal state
-  (add-to-list 'super-save-triggers 'meow-insert-exit)
+  (add-to-list 'super-save-triggers 'evil-normal-state)
+  (add-to-list 'super-save-triggers 'evil-force-normal-state)
   ;; save on find-file
   (add-to-list 'super-save-hook-triggers 'find-file-hook)
   (super-save-mode +1))
@@ -174,7 +176,8 @@
 (use-package treesit
   :when (and (fboundp 'treesit-available-p)
 	     (treesit-available-p))
-  :custom (major-mode-remap-alist
+  :custom
+  (major-mode-remap-alist
 	   '((c-mode          . c-ts-mode)
 	     (c++-mode        . c++-ts-mode)
 	     (cmake-mode      . cmake-ts-mode)
@@ -184,7 +187,10 @@
 	     (js-json-mode    . json-ts-mode)
 	     (python-mode     . python-ts-mode)
 	     (sh-mode         . bash-ts-mode)
-	     (typescript-mode . typescript-ts-mode))))
+	     (typescript-mode . typescript-ts-mode)))
+	:config
+	(setq-local treesit-font-lock-level 4
+							treesit-font-lock-recompute-features '(command string variable function operator bracket keyword)))
 
 (straight-use-package 'posframe)
 #+end_src
@@ -219,24 +225,16 @@
 #+begin_src emacs-lisp
 (use-package avy
   :straight t
-  :bind ("C-;" . avy-goto-char-timer)
+  :bind ("C-," . avy-goto-char-timer)
   :custom
   (avy-all-windows nil)
   (avy-all-windows-alt t)
   (avy-timeout-seconds 0.3))
 #+end_src
-*** Evil-nerd-commenter
-#+begin_src emacs-lisp
-(use-package evil-nerd-commenter
-  :straight t
-  :commands (evilnc-comment-or-uncomment-lines)
-  :bind
-  ("M-;" . 'evilnc-comment-or-uncomment-lines))
-#+end_src
 *** Spelling Checking
 #+begin_src emacs-lisp
 (setq flyspell-issue-message-flag nil)
-(setq ispell-program-name "hunspell")
+(setq ispell-program-name "aspell")
 ;; reset the hunspell so it STOPS querying locale!
 ;; "en_US" is the key to lookup in `ispell-local-dictionary-alist`
 (setq ispell-local-dictionary "en_US")
@@ -258,133 +256,128 @@
 #+begin_src emacs-lisp
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+end_src
-** Meow 
+** Evil
 #+begin_src emacs-lisp
-(use-package meow
+(defun dw/evil-hook ()
+  (dolist (mode '(custom-mode
+		  eshell-mode
+		  git-rebase-mode
+		  erc-mode
+		  circe-server-mode
+		  circe-chat-mode
+		  circe-query-mode
+		  sauron-mode
+		  term-mode))
+  (add-to-list 'evil-emacs-state-modes mode)))
+
+(use-package evil
+  :straight t
+  :demand t
+  :hook (evil-mode . 'dw/evil-hook)
+  :init
+  ;; Pre-load configuration
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-i-jump nil)
+  (setq evil-respect-visual-line-mode t)
+  (setq evil-undo-system 'undo-fu)
+  :bind
+
+  :config
+  ;; Activate the Evil
+  (evil-mode 1)
+
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  ;; Clear the binding of C-k so that it doesn't conflict with Corfu
+  (define-key evil-insert-state-map (kbd "C-k") nil)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal))
+
+(use-package evil-nerd-commenter
+  :straight t
+  :commands (evilnc-comment-or-uncomment-lines)
+  :bind
+  ("M-;" . 'evilnc-comment-or-uncomment-lines))
+
+(use-package evil-escape
+  :straight t
+  :after evil
+  :custom
+  (evil-escape-key-sequence "jk")
+  :config
+  (evil-escape-mode 1))
+
+(use-package evil-surround
+  :straight t
+  :after evil
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-multiedit
   :straight t
   :config
-  (defun meow-setup ()
-    (meow-motion-overwrite-define-key
-     '("j" . meow-next)
-     '("k" . meow-prev)
-     '("<escape>" . ignore))
-    (meow-leader-define-key
-     ;; SPC j/k will run the original command in MOTION state.
-     '("j" . "H-j")
-     '("k" . "H-k")
-     '("0" . delete-window)
-     '("1" . delete-other-windows)
-     '("2" . split-window-below)
-     '("3" . split-window-right)
-     '("a" . org-agenda)
-     '("b" . switch-to-buffer)
-     '("f" . find-file)
-     '("h" . embrace-commander)
-     '("?" . describe-keymap)
-     '(";" . evilnc-comment-or-uncomment-lines)
-     '("/" . embrace-commander)
-     '("," . beginning-of-buffer)
-     '("." . end-of-buffer))
-    (meow-normal-define-key
-     '("0" . meow-expand-0)
-     '("9" . meow-expand-9)
-     '("8" . meow-expand-8)
-     '("7" . meow-expand-7)
-     '("6" . meow-expand-6)
-     '("5" . meow-expand-5)
-     '("4" . meow-expand-4)
-     '("3" . meow-expand-3)
-     '("2" . meow-expand-2)
-     '("1" . meow-expand-1)
-     '("-" . negative-argument)
-     '(";" . meow-reverse)
-     '("," . meow-inner-of-thing)
-     '("." . meow-bounds-of-thing)
-     '("[" . meow-beginning-of-thing)
-     '("]" . meow-end-of-thing)
-     '("a" . meow-append)
-     '("A" . meow-open-below)
-     '("b" . meow-back-word)
-     '("B" . meow-back-symbol)
-     '("c" . meow-change)
-     '("d" . meow-delete)
-     '("D" . meow-backward-delete)
-     '("e" . meow-next-word)
-     '("E" . meow-next-symbol)
-     '("f" . meow-find)
-     '("g" . meow-cancel-selection)
-     '("G" . meow-grab)
-     '("h" . meow-left)
-     '("H" . meow-left-expand)
-     '("i" . meow-insert)
-     '("I" . meow-open-above)
-     '("j" . meow-next)
-     '("J" . meow-next-expand)
-     '("k" . meow-prev)
-     '("K" . meow-prev-expand)
-     '("l" . meow-right)
-     '("L" . meow-right-expand)
-     '("m" . meow-join)
-     '("n" . meow-search)
-     '("o" . meow-block)
-     '("O" . meow-to-block)
-     '("p" . meow-yank)
-     '("q" . meow-quit)
-     '("Q" . meow-goto-line)
-     '("r" . meow-replace)
-     '("R" . meow-swap-grab)
-     '("s" . meow-kill)
-     '("t" . avy-goto-char-timer)
-     '("T" . avy-resume)
-     '("u" . undo-fu-only-undo)
-     '("U" . undo-fu-only-redo)
-     '("v" . meow-visit)
-     '("w" . meow-mark-word)
-     '("W" . meow-mark-symbol)
-     '("x" . meow-line)
-     '("X" . meow-goto-line)
-     '("y" . meow-save)
-     '("Y" . meow-sync-grab)
-     '("z" . meow-pop-selection)
-     '("'" . repeat)
-     '("<escape>" . ignore)))
+  (evil-multiedit-default-keybinds))
 
+(use-package evil-mc
+  :straight t
+  :commands (evil-mc-make-cursor-here
+	     evil-mc-make-all-cursors
+	     evil-mc-undo-all-cursors
+	     evil-mc-pause-cursors
+	     evil-mc-resume-cursors
+	     evil-mc-make-and-goto-first-cursor
+	     evil-mc-make-and-goto-last-cursor
+	     evil-mc-make-cursor-in-visual-selection-beg
+	     evil-mc-make-cursor-in-visual-selection-end
+	     evil-mc-make-cursor-move-next-line
+	     evil-mc-make-cursor-move-prev-line
+	     evil-mc-make-cursor-at-pos
+	     evil-mc-has-cursors-p
+	     evil-mc-make-and-goto-next-cursor
+	     evil-mc-skip-and-goto-next-cursor
+	     evil-mc-make-and-goto-prev-cursor
+	     evil-mc-skip-and-goto-prev-cursor
+	     evil-mc-make-and-goto-next-match
+	     evil-mc-skip-and-goto-next-match
+	     evil-mc-skip-and-goto-next-match
+	     evil-mc-make-and-goto-prev-match
+	     evil-mc-skip-and-goto-prev-match)
   :config
-  (setq meow-use-clipboard t)
-  (meow-setup)
-  (meow-setup-indicator)
-  (meow-global-mode 1)
+  (global-evil-mc-mode  1))
 
-  ;; Use jk to escape from insert state to normal state
-  (defvar meow-two-char-escape-sequence "jk")
-  (defvar meow-two-char-escape-delay 0.5)
-  (defun meow--two-char-exit-insert-state (s)
-    "Exit meow insert state when pressing consecutive two keys.
+(use-package evil-matchit
+  :straight t
+  :config
+  (global-evil-matchit-mode 1))
 
-S is string of the two-key sequence."
-    (when (meow-insert-mode-p)
-      (let ((modified (buffer-modified-p))
-	    (undo-list buffer-undo-list))
-	(insert (elt s 0))
-	(let* ((second-char (elt s 1))
-	       (event
-		(if defining-kbd-macro
-		    (read-event nil nil)
-		  (read-event nil nil meow-two-char-escape-delay))))
-	  (when event
-	    (if (and (characterp event) (= event second-char))
-		(progn
-		  (backward-delete-char 1)
-		  (set-buffer-modified-p modified)
-		  (setq buffer-undo-list undo-list)
-		  (meow-insert-exit))
-	      (push event unread-command-events)))))))
-  (defun meow-two-char-exit-insert-state ()
-    "Exit meow insert state when pressing consecutive two keys."
-    (interactive)
-    (meow--two-char-exit-insert-state meow-two-char-escape-sequence))
-  (define-key meow-insert-state-keymap (substring meow-two-char-escape-sequence 0 1)
-	      #'meow-two-char-exit-insert-state))
+(use-package evil-collection
+  :straight t
+  :after evil
+  :config
+  (evil-collection-init))
+
+(use-package evil-tex
+  :straight t
+  :hook (LaTeX-mode org-mode))
+
+
+(use-package general
+  :straight t
+  :config
+  (general-evil-setup t)
+
+  (general-create-definer dw/leader-key-def
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (general-create-definer dw/ctrl-c-keys
+    :prefix "C-c"))
+
+(dw/leader-key-def
+  "SPC" 'execute-extended-command
+  "f" 'find-file
+  "a" 'org-agenda)
 #+end_src
 * Workspace
 #+begin_src emacs-lisp
@@ -1098,6 +1091,13 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :config
   (marginalia-mode))
 
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :straight t ; only need to install it, embark loads it after consult if found
+  :after embark
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 
 (use-package embark
   :straight t
@@ -1117,7 +1117,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (embark-indicators '(embark-minimal-indicator
                        embark-highlight-indicator
                        embark-isearch-highlight-indicator))
-  ;; (embark-help-key "?")
   :config
   (setq embark-candidate-collectors
         (cl-substitute 'embark-sorted-minibuffer-candidates
@@ -1129,13 +1128,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (with-current-buffer "*Messages*"
       (goto-char (1- (point-max)))
       (embark-act arg))))
-
-
-;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-  :straight t ; only need to install it, embark loads it after consult if found
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 ** Corfu
 #+begin_src emacs-lisp
@@ -1216,22 +1208,22 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
    ("C-x c J" . citre-jump-back)
    ("C-x c p" . citre-ace-peek)
    ("C-x c u" . citre-update-this-tags-file))
+  :custom
+  (citre-readtags-program "/etc/profiles/per-user/dez/bin/readtags")
+  (citre-ctags-program "/etc/profiles/per-user/dez/bin/ctags")
+  (citre-project-root-function #'dw/get-project-root)
+  ;; Set this if you want to always use one location to create a tags file.
+  (citre-default-create-tags-file-location 'global-cache)
+  (citre-use-project-root-when-creating-tags t)
+  (citre-prompt-language-for-ctags-command t)
+  (citre-auto-enable-citre-mode-modes '(prog-mode))
   :config
   (require 'citre-config)
 
   (defun dw/get-project-root ()
     (when (fboundp 'projectile-project-root)
-      (projectile-project-root)))
+      (projectile-project-root))))
 
-  (:option citre-readtags-program "/etc/profiles/per-user/dez/bin/readtags"
-	   citre-ctags-program "/etc/profiles/per-user/dez/bin/ctags"
-	   citre-project-root-function #'dw/get-project-root
-	   ;; Set this if you want to always use one location to create a tags file.
-	   citre-default-create-tags-file-location 'global-cache
-
-	   citre-use-project-root-when-creating-tags t
-	   citre-prompt-language-for-ctags-command t
-	   citre-auto-enable-citre-mode-modes '(prog-mode)))
 #+end_src
 
 * Helpful Function Description
@@ -1469,7 +1461,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (use-package cdlatex
   :straight t
   :hook
-  ((LaTeX-mode . latex-mode)
+  ((LaTeX-mode .  #'turn-on-cdlatex)
+   (latex-mode .  #'turn-on-cdlatex)
    (org-mode . org-cdlatex-mode)))
 #+end_src
 **** Xenops
@@ -1479,8 +1472,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :if IS-GUI
   :hook
   (latex-mode LaTeX-mode org-mode)
-  :custom
-  (xenops-math-image-scale-factor 2.0))
+  :init
+  (setq xenops-math-image-scale-factor 2.0))
 
 #+end_src
 *** R
@@ -1624,11 +1617,14 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 		   :internal-border-width 3
 		   :internal-border-color (face-foreground 'font-lock-comment-face nil t)
 		   :background-color (face-background 'tooltip nil t)
-		   :accept-focus t))))))))
+		   :accept-focus t)))))))
+
+  (dw/leader-key-def
+  "'" 'vterm-posframe-toggle))
 
 (use-package multi-vterm
   :straight t
-  :after vterm)
+  :commands (multi-vterm))
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
@@ -1679,6 +1675,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 Highlight diff by using delta
 #+begin_src emacs-lisp
 (use-package magit-delta
+  :straight t
   :hook magit-mode)
 #+end_src
 
@@ -1706,21 +1703,6 @@ Highlight diff by using delta
   (leetcode-prefer-sql "mysql")
   (leetcode-save-solutions t)
   (leetcode-directory "~/Documents/leetcode"))
-#+end_src
-* COMMENT EAF
-#+begin_src emacs-lisp
-(use-package eaf
-  :load-path "/Users/dez/.dotfiles/Emacs/site-lisp/emacs-application-framework/"
-  :commands (eaf-search-it eaf-git)
-  :custom
-  (eaf-start-python-process-when-require nil)
-  (eaf-browser-continue-where-left-off t)
-  (eaf-browser-enable-adblocker t)
-  (browse-url-browser-function 'eaf-open-browser)
-  :config
-  (require 'eaf-browser)
-  (require 'eaf-git)
-  (defalias 'browse-web #'eaf-open-browser))
 #+end_src
 * Tramp
 #+begin_src emacs-lisp
