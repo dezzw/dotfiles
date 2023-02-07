@@ -57,20 +57,4 @@
 (setq company-minimum-prefix-length 1)
 (setq company-idle-delay 0)
 
-(setq planner-path "~/Documents/Org/Planner/")
-
-  (defun dw/update-planner-files ()
-
-    (setq planner-files (directory-files planner-path))
-    (setq planner-files (cdr planner-files))
-    (setq planner-files (cdr planner-files))
-    (setq planner-files (cdr planner-files))
-
-    (let (value)
-      (while planner-files
-	(setq value (cons (concat planner-path (car planner-files)) value))
-	(setq planner-files (cdr planner-files))
-	)
-      value))
-
-  (setq org-agenda-files (dw/update-planner-files))
+(setq org-agenda-files "~/Documents/Org/Planner/")

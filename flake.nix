@@ -23,7 +23,12 @@
     flake-utils.url = github:numtide/flake-utils;
     flake-compat = { url = github:edolstra/flake-compat; flake = false; };
 
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      # Pin to a nixpkgs revision that doesn't have NixOS/nixpkgs#208103 yet
+      inputs.nixpkgs.url = "github:nixos/nixpkgs?rev=fad51abd42ca17a60fc1d4cb9382e2d79ae31836";
+    };
+    
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs = {

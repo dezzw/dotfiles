@@ -2,7 +2,7 @@
 
 {  
   imports = [
-    ./emacs.nix
+    ./emacs
     ./nvim.nix
     ./tmux.nix
     ./clisp.nix
@@ -31,7 +31,6 @@
           VISUAL = "nvim";
           # CLICOLOR = 1;
           LSCOLORS = "ExFxBxDxCxegedabagacad";
-          JAVA_HOME = "${pkgs.openjdk.home}";
           NODE_PATH = "${NODE_GLOBAL}/lib";
           # HOMEBREW_NO_AUTO_UPDATE = 1;
           ASPELL_CONF = "conf ${config.xdg.configHome}/aspell/config;";
@@ -58,8 +57,6 @@
           jq
 
           deno
-
-          openjdk
           
           # rust
           rustup
@@ -221,10 +218,6 @@
     enableZshIntegration = true;
   };
 
-  # programs.qutebrowser = {
-  #   enable = false;
-  # };
-  
   programs.direnv = {
     enable = true;
     nix-direnv = {
