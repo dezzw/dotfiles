@@ -3,112 +3,57 @@
 
 * Early Init
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
-  ;; -*- coding: utf-8; lexical-binding: t; -*-
+;; -*- coding: utf-8; lexical-binding: t; -*-
+(require 'cl-lib)
 
-  (setq read-process-output-max (* 1024 1024))
-  ;; Adjust garbage collection thresholds during startup, and thereafter
-  (let ((normal-gc-cons-threshold (* 20 1024 1024))
-	(init-gc-cons-threshold (* 128 1024 1024)))
-    (setq gc-cons-threshold init-gc-cons-threshold)
-    (add-hook 'emacs-startup-hook
-	      (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+(setq read-process-output-max (* 1024 1024))
+;; Adjust garbage collection thresholds during startup, and thereafter
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+	    (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
-  (require 'cl-lib)
+(defconst IS-MAC (eq system-type 'darwin))
 
-  (defconst IS-MAC (eq system-type 'darwin))
+(setq package-enable-at-startup nil)
 
-  (setq package-enable-at-startup nil)
+;; Windows And Frames Setting
+;; Resizing the Emacs frame can be a terribly expensive part of changing the
+;; font. By inhibiting this, we easily halve startup times with fonts that are
+;; larger than the system default.
+(setq frame-inhibit-implied-resize t)
 
-  ;; Windows And Frames Setting
-  ;; Resizing the Emacs frame can be a terribly expensive part of changing the
-  ;; font. By inhibiting this, we easily halve startup times with fonts that are
-  ;; larger than the system default.
-  (setq frame-inhibit-implied-resize t)
+(setq make-backup-files       nil
+      auto-save-default       nil
+      inhibit-startup-message t
+      inhibit-splash-screen   t
+      ring-bell-function      'ignore)
 
-  (setq make-backup-files       nil
-	auto-save-default       nil
-	inhibit-startup-message t
-	inhibit-splash-screen   t
-	ring-bell-function      'ignore)
+(dolist (mode
+	 '(tool-bar-mode
+	   tooltip-mode
+	   scroll-bar-mode
+	   blink-cursor-mode))
+  (funcall mode 0))
 
-  (dolist (mode
-	   '(tool-bar-mode
-	     tooltip-mode
-	     scroll-bar-mode
-	     blink-cursor-mode))
-    (funcall mode 0))
+(setq default-frame-alist '((fullscreen . maximized)
+			    ;; (alpha . 90)
+			    (undecorated . t)
+			    (menu-bar-lines . 0)
+			    (tool-bar-lines . 0)
+			    (horizontal-scroll-bars . nil)
+			    (vertical-scroll-bars . nil)))
 
-  (setq default-frame-alist '((fullscreen . maximized)
-			      ;; (alpha . 90)
-			      (undecorated . t)
-			      (menu-bar-lines . 0)
-			      (tool-bar-lines . 0)
-			      (horizontal-scroll-bars . nil)
-			      (vertical-scroll-bars . nil)))
+(unless (version< emacs-version "29")
+  (pixel-scroll-precision-mode 1))
 
-  (unless (version< emacs-version "29")
-    (pixel-scroll-precision-mode 1))
+(if IS-MAC
+    (progn
+      (setq frame-resize-pixelwise  t)
+      (menu-bar-mode t)))
 
-  (setq native-comp-deferred-compilation-deny-list nil)
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 6))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-
-  (let ((default-directory "~/.dotfiles/Emacs/site-lisp")
-	(gc-cons-threshold most-positive-fixnum))
-    (normal-top-level-add-subdirs-to-load-path))
-
-  ;; Set `doom-themes' early to prevent non-stylized UI flash.
-  (use-package doom-themes
-    :straight (doom-themes :type git :host github :repo "doomemacs/themes"
-		       :fork (:host github :repo "dezzw/emacs-doom-themes"))
-    :init
-    (load-theme 'doom-one t))
-
-  ;; Set `doom-modeline' early to prevent non-stylized UI flash.
-  ;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
-  (use-package doom-modeline
-    :straight t
-    :hook
-    ((after-init . doom-modeline-mode)
-     (doom-modeline-mode . size-indication-mode)
-     (doom-modeline-mode . column-number-mode))
-    :config
-    (unless after-init-time
-      ;; prevent flash of unstyled modeline at startup
-      (setq-default mode-line-format nil))
-    ;; Set these early so they don't trigger variable watchers
-    (setq doom-modeline-bar-width 3
-	  doom-modeline-github nil
-	  doom-modeline-mu4e nil
-	  doom-modeline-persp-name nil
-	  doom-modeline-lsp nil
-	  doom-modeline-minor-modes nil
-	  doom-modeline-major-mode-icon nil
-	  doom-modeline-buffer-file-name-style 'relative-from-project
-	  ;; Only show file encoding if it's non-UTF-8 and different line endings
-	  ;; than the current OSes preference
-	  doom-modeline-buffer-encoding 'nondefault
-	  doom-modeline-default-eol-type
-	  (cond (IS-MAC 2)
-		(0))))
-
-  (if IS-MAC
-      (progn
-	(setq frame-resize-pixelwise  t)
-	(menu-bar-mode t)))
-
-  (fset 'yes-or-no-p 'y-or-n-p)
-
+(fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 * Startup Setting 
 #+begin_src emacs-lisp
@@ -119,13 +64,60 @@
 
 
 (setq use-package-verbose t)
+(setq native-comp-deferred-compilation-deny-list nil)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 (when (daemonp)
   (setq use-package-always-demand t))
+
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+
+(use-package doom-themes
+  :straight (doom-themes :type git :host github :repo "doomemacs/themes"
+			 :fork (:host github :repo "dezzw/emacs-doom-themes"))
+  :init
+  (load-theme 'doom-one t))
+
+(use-package doom-modeline
+  :straight t
+  :hook
+  ((after-init . doom-modeline-mode)
+   (doom-modeline-mode . size-indication-mode)
+   (doom-modeline-mode . column-number-mode))
+  :config
+  (unless after-init-time
+    ;; prevent flash of unstyled modeline at startup
+    (setq-default mode-line-format nil))
+  ;; Set these early so they don't trigger variable watchers
+  (setq doom-modeline-bar-width 3
+	doom-modeline-github nil
+	doom-modeline-mu4e nil
+	doom-modeline-persp-name nil
+	doom-modeline-lsp nil
+	doom-modeline-minor-modes nil
+	doom-modeline-major-mode-icon nil
+	doom-modeline-buffer-file-name-style 'relative-from-project
+	;; Only show file encoding if it's non-UTF-8 and different line endings
+	;; than the current OSes preference
+	doom-modeline-buffer-encoding 'nondefault
+	doom-modeline-default-eol-type
+	(cond (IS-MAC 2)
+	      (0))))
 
 (use-package gcmh
   :straight t
@@ -504,6 +496,9 @@
   (if (display-graphic-p)
       (dw/set-fonts)))
 #+end_src
+** Themes
+emacs-lisp
+
 * Workspace and Window Management
 ** Tabspace
 #+begin_src emacs-lisp
@@ -1148,19 +1143,19 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :defer 10
   :custom
   (tempel-path "~/.dotfiles/Emacs/templates")
-  :hook ((prog-mode text-mode) . tempel-setup-capf)
+  ;; :hook ((prog-mode text-mode) . tempel-setup-capf)
   :bind (("M-+" . tempel-insert) ;; Alternative tempel-expand
          :map tempel-map
          ([remap keyboard-escape-quit] . tempel-done)
          ("TAB" . tempel-next)
-         ("<backtab>" . tempel-previous)
-         :map corfu-map
-         ("C-M-i" . tempel-expand))
-  :init
-  (defun tempel-setup-capf ()
-    (setq-local completion-at-point-functions
-                (cons #'tempel-complete
-                      completion-at-point-functions))))
+         ("<backtab>" . tempel-previous)))
+  ;;        :map corfu-map
+  ;;        ("C-M-i" . tempel-expand))
+  ;; :init
+  ;; (defun tempel-setup-capf ()
+  ;;   (setq-local completion-at-point-functions
+  ;;               (cons #'tempel-complete
+  ;;                     completion-at-point-functions))))
 #+end_src
 ** Citre
 #+begin_src emacs-lisp
@@ -1341,12 +1336,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (use-package prettier
   :straight t
   :commands (prettier-prettify))
-#+end_src
-**** COMMENT Emmet
-#+begin_src emacs-lisp
-(use-package emmet-mode
-  :straight t
-  :hook (web-mode css-mode))
 #+end_src
 **** SCSS/SASS
 #+begin_src emacs-lisp
@@ -1532,7 +1521,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 #+end_src
-** Lsp-bridge
+** Lsp-br idge
 #+begin_src emacs-lisp
 (use-package yasnippet
   :straight t
@@ -1545,6 +1534,10 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (yas-reload-all))
 
 (use-package lsp-bridge
+  :straight (lsp-bridge :host github
+              :repo "manateelazycat/lsp-bridge"
+              :files ("*.el" "*.py" "acm" "core" "langserver"
+                      "multiserver" "resources"))
   :after yasnippet
   :custom
   (lsp-bridge-enable-mode-line nil)
@@ -1580,11 +1573,19 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      (t
       (require 'dumb-jump)
       (dumb-jump-back)))))
+
+(unless (display-graphic-p)
+  (straight-use-package
+   '(popon :host nil :repo "https://codeberg.org/akib/emacs-popon.git"))
+  (straight-use-package
+   '(acm-terminal :host github :repo "twlz0ne/acm-terminal")))
 #+end_src
 ** Deno Bridge
 #+begin_src emacs-lisp
-(use-package deno-bridge)
+(use-package deno-bridge
+  :straight (:type git :host github :repo "manateelazycat/deno-bridge"))
 (use-package emmet2-mode
+  :straight (:type git :host github :repo "P233/emmet2-mode" :files ("*.el" "deno.json" "src" "data"))
   :after deno-bridge
   :hook ((web-mode css-mode rjsx-mode tsx-ts-mode) . emmet2-mode)                     ;; Enable emmet2-mode for web-mode and css-mode and other major modes based on them, such as the build-in scss-mode
   :config                                                       ;; OPTIONAL

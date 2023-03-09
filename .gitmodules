@@ -1,9 +1,6 @@
 [submodule "Emacs/site-lisp/emacs-application-framework"]
 	path = Emacs/site-lisp/emacs-application-framework
 	url = https://github.com/emacs-eaf/emacs-application-framework.git
-[submodule "Emacs/site-lisp/lsp-bridge"]
-	path = Emacs/site-lisp/lsp-bridge
-	url = https://github.com/manateelazycat/lsp-bridge.git
 
 [submodule "Ubersicht/ubersicht-todo-widget"]
 	path = Ubersicht/ubersicht-todo-widget
