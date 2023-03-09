@@ -3,112 +3,111 @@
 
 * Early Init
 #+begin_src emacs-lisp :tangle ~/.emacs.d/early-init.el
-;; -*- coding: utf-8; lexical-binding: t; -*-
+  ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-(setq read-process-output-max (* 1024 1024))
-;; Adjust garbage collection thresholds during startup, and thereafter
-(let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
-  (add-hook 'emacs-startup-hook
-	    (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+  (setq read-process-output-max (* 1024 1024))
+  ;; Adjust garbage collection thresholds during startup, and thereafter
+  (let ((normal-gc-cons-threshold (* 20 1024 1024))
+	(init-gc-cons-threshold (* 128 1024 1024)))
+    (setq gc-cons-threshold init-gc-cons-threshold)
+    (add-hook 'emacs-startup-hook
+	      (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
-(require 'cl-lib)
+  (require 'cl-lib)
 
-(defconst IS-MAC (eq system-type 'darwin))
+  (defconst IS-MAC (eq system-type 'darwin))
 
-(setq package-enable-at-startup nil)
+  (setq package-enable-at-startup nil)
 
-;; Windows And Frames Setting
-;; Resizing the Emacs frame can be a terribly expensive part of changing the
-;; font. By inhibiting this, we easily halve startup times with fonts that are
-;; larger than the system default.
-(setq frame-inhibit-implied-resize t)
+  ;; Windows And Frames Setting
+  ;; Resizing the Emacs frame can be a terribly expensive part of changing the
+  ;; font. By inhibiting this, we easily halve startup times with fonts that are
+  ;; larger than the system default.
+  (setq frame-inhibit-implied-resize t)
 
-(setq make-backup-files       nil
-      auto-save-default       nil
-      inhibit-startup-message t
-      inhibit-splash-screen   t
-      ring-bell-function      'ignore)
+  (setq make-backup-files       nil
+	auto-save-default       nil
+	inhibit-startup-message t
+	inhibit-splash-screen   t
+	ring-bell-function      'ignore)
 
-(dolist (mode
-	 '(tool-bar-mode
-	   tooltip-mode
-	   scroll-bar-mode
-	   blink-cursor-mode))
-  (funcall mode 0))
+  (dolist (mode
+	   '(tool-bar-mode
+	     tooltip-mode
+	     scroll-bar-mode
+	     blink-cursor-mode))
+    (funcall mode 0))
 
-(setq default-frame-alist '((fullscreen . maximized)
-			    ;; (alpha . 90)
-			    (undecorated . t)
-			    (menu-bar-lines . 0)
-			    (tool-bar-lines . 0)
-			    (horizontal-scroll-bars . nil)
-			    (vertical-scroll-bars . nil)))
+  (setq default-frame-alist '((fullscreen . maximized)
+			      ;; (alpha . 90)
+			      (undecorated . t)
+			      (menu-bar-lines . 0)
+			      (tool-bar-lines . 0)
+			      (horizontal-scroll-bars . nil)
+			      (vertical-scroll-bars . nil)))
 
-(unless (version< emacs-version "29")
-  (pixel-scroll-precision-mode 1))
+  (unless (version< emacs-version "29")
+    (pixel-scroll-precision-mode 1))
 
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-	(url-retrieve-synchronously
-	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+  (setq native-comp-deferred-compilation-deny-list nil)
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-(let ((default-directory "~/.dotfiles/Emacs/site-lisp")
-      (gc-cons-threshold most-positive-fixnum))
-  (normal-top-level-add-subdirs-to-load-path))
+  (let ((default-directory "~/.dotfiles/Emacs/site-lisp")
+	(gc-cons-threshold most-positive-fixnum))
+    (normal-top-level-add-subdirs-to-load-path))
 
-;; Set `doom-themes' early to prevent non-stylized UI flash.
-(use-package doom-themes
-  :straight (doom-themes :type git :host github :repo "doomemacs/themes"
-		     :fork (:host github :repo "dezzw/emacs-doom-themes"))
-  :init
-  (load-theme 'doom-one t)
-  ;; (doom-themes-org-config)
-  )
+  ;; Set `doom-themes' early to prevent non-stylized UI flash.
+  (use-package doom-themes
+    :straight (doom-themes :type git :host github :repo "doomemacs/themes"
+		       :fork (:host github :repo "dezzw/emacs-doom-themes"))
+    :init
+    (load-theme 'doom-one t))
 
-;; Set `doom-modeline' early to prevent non-stylized UI flash.
-;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
-(use-package doom-modeline
-  :straight t
-  :hook
-  ((after-init . doom-modeline-mode)
-   (doom-modeline-mode . size-indication-mode)
-   (doom-modeline-mode . column-number-mode))
-  :config
-  (unless after-init-time
-    ;; prevent flash of unstyled modeline at startup
-    (setq-default mode-line-format nil))
-  ;; Set these early so they don't trigger variable watchers
-  (setq doom-modeline-bar-width 3
-	doom-modeline-github nil
-	doom-modeline-mu4e nil
-	doom-modeline-persp-name nil
-	doom-modeline-lsp nil
-	doom-modeline-minor-modes nil
-	doom-modeline-major-mode-icon nil
-	doom-modeline-buffer-file-name-style 'relative-from-project
-	;; Only show file encoding if it's non-UTF-8 and different line endings
-	;; than the current OSes preference
-	doom-modeline-buffer-encoding 'nondefault
-	doom-modeline-default-eol-type
-	(cond (IS-MAC 2)
-	      (0))))
+  ;; Set `doom-modeline' early to prevent non-stylized UI flash.
+  ;; Note: `doom-modeline' requires M-x all-the-icons-install-fonts.
+  (use-package doom-modeline
+    :straight t
+    :hook
+    ((after-init . doom-modeline-mode)
+     (doom-modeline-mode . size-indication-mode)
+     (doom-modeline-mode . column-number-mode))
+    :config
+    (unless after-init-time
+      ;; prevent flash of unstyled modeline at startup
+      (setq-default mode-line-format nil))
+    ;; Set these early so they don't trigger variable watchers
+    (setq doom-modeline-bar-width 3
+	  doom-modeline-github nil
+	  doom-modeline-mu4e nil
+	  doom-modeline-persp-name nil
+	  doom-modeline-lsp nil
+	  doom-modeline-minor-modes nil
+	  doom-modeline-major-mode-icon nil
+	  doom-modeline-buffer-file-name-style 'relative-from-project
+	  ;; Only show file encoding if it's non-UTF-8 and different line endings
+	  ;; than the current OSes preference
+	  doom-modeline-buffer-encoding 'nondefault
+	  doom-modeline-default-eol-type
+	  (cond (IS-MAC 2)
+		(0))))
 
-(if IS-MAC
-    (progn
-      (setq frame-resize-pixelwise  t)
-      (menu-bar-mode t)))
+  (if IS-MAC
+      (progn
+	(setq frame-resize-pixelwise  t)
+	(menu-bar-mode t)))
 
-(fset 'yes-or-no-p 'y-or-n-p)
+  (fset 'yes-or-no-p 'y-or-n-p)
 
 #+end_src
 * Startup Setting 
@@ -178,26 +177,13 @@
 (global-auto-revert-mode 1)
 (delete-selection-mode t)
 
-(use-package treesit
-  :when (and (fboundp 'treesit-available-p)
-	     (treesit-available-p))
-  :custom
-  (major-mode-remap-alist
-	   '((c-mode          . c-ts-mode)
-	     (c++-mode        . c++-ts-mode)
-	     (cmake-mode      . cmake-ts-mode)
-	     (conf-toml-mode  . toml-ts-mode)
-	     (css-mode        . css-ts-mode)
-	     (js-mode         . js-ts-mode)
-	     (js-json-mode    . json-ts-mode)
-	     (python-mode     . python-ts-mode)
-	     (sh-mode         . bash-ts-mode)
-	     (typescript-mode . typescript-ts-mode)))
-	:config
-	(setq-local treesit-font-lock-level 4
-							treesit-font-lock-recompute-features '(command string variable function operator bracket keyword)))
+(use-package treesit-auto
+  :straight t
+  :config
+  (global-treesit-auto-mode))
 
 (straight-use-package 'posframe)
+(straight-use-package 'all-the-icons)
 #+end_src
 * Keyboard Bindings
 ** Editing Tools
@@ -326,7 +312,7 @@
 
 (use-package evil-multiedit
   :straight t
-  :commands (evil-multiedit-next evil-multiedit-prev)
+  :defer 2
   :config
   (evil-multiedit-default-keybinds))
 
@@ -394,54 +380,6 @@
   "d" 'consult-dir
   "a" 'org-agenda)
 #+end_src
-* Workspace
-#+begin_src emacs-lisp
-;; (setup (:straight perspective)
-;;        (:option persp-initial-frame-name "Main"
-;; 		persp-state-default-file (concat user-emacs-directory ".emacs.desktop"))
-;;        (setq persp-mode-prefix-key (kbd "C-x p"))
-
-;;        (add-hook 'kill-emacs-hook #'persp-state-save)
-;;        ;; Running `persp-mode' multiple times resets the perspective list...
-;;        (unless (equal persp-mode t)
-;; 	 (persp-mode)))
-
-;; Windows/buffers sets shared among frames + save/load.
-;; (use-package persp-mode
-;;   :straight t
-;;   :custom
-;;   (persp-keymap-prefix (kbd "C-x p"))
-;;   (persp-nil-name "Main")
-;;   (persp-set-last-persp-for-new-frames nil)
-;;   (persp-auto-resume-time -1.0)
-;;   (persp-kill-foreign-buffer-behaviour 'kill)
-;;   (persp-autokill-buffer-on-remove 'kill-weak)
-;;   :config
-  
-;;   (add-hook 'window-setup-hook #'(lambda () (persp-mode 1)))
-
-;;   ;; Eshell integration
-;;   (persp-def-buffer-save/load
-;;    :mode 'eshell-mode :tag-symbol 'def-eshell-buffer
-;;    :save-vars '(major-mode default-directory))
-  
-;;   ;; Shell integration
-;;   (persp-def-buffer-save/load
-;;    :mode 'shell-mode :tag-symbol 'def-shell-buffer
-;;    :mode-restore-function (lambda (_) (shell))
-;;    :save-vars '(major-mode default-directory)))
-
-(use-package workgroups2
-  :straight t
-  :commands
-  (wg-create-workgroup wg-open-workgroup)
-  :custom
-  (wg-prefix-key (kbd "C-c z"))
-  (wg-session-file "~/.emacs.d/.emacs_workgroups")
-  :config
-  (setq workgroups-mode 1))
-#+end_src
-
 * UI Setting
 ** Fonts
 #+begin_src emacs-lisp
@@ -542,13 +480,6 @@
   (global-hl-todo-mode))
 #+end_src
 
-** COMMENT Highligh numbers
-#+begin_src emacs-lisp
-(setup (:straight highlight-numbers)
-       (dolist (hook dw/prog-mode-hook)
-	 (add-hook hook 'highlight-numbers-mode)))
-#+end_src
-
 ** Highlight the diff
 #+begin_src emacs-lisp
 (use-package diff-hl
@@ -573,7 +504,45 @@
   (if (display-graphic-p)
       (dw/set-fonts)))
 #+end_src
-* Window Management
+* Workspace and Window Management
+** Tabspace
+#+begin_src emacs-lisp
+(use-package tabspaces
+  ;; use this next line only if you also use straight, otherwise ignore it. 
+  :straight (:type git :host github :repo "mclear-tools/tabspaces")
+  :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup. 
+  :commands (tabspaces-switch-or-create-workspace
+             tabspaces-open-or-create-project-and-workspace)
+  :custom
+  (tabspaces-use-filtered-buffers-as-default t)
+  (tabspaces-default-tab "Default")
+  (tabspaces-remove-to-default t)
+  (tabspaces-include-buffers '("*scratch*"))
+  ;; sessions
+  (tabspaces-session t)
+  (tabspaces-session-auto-restore t))
+
+;; Filter Buffers for Consult-Buffer
+
+(with-eval-after-load 'consult
+  ;; hide full buffer list (still available with "b" prefix)
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  ;; set consult-workspace buffer list
+  (defvar consult--source-workspace
+    (list :name     "Workspace Buffers"
+          :narrow   ?w
+          :history  'buffer-name-history
+          :category 'buffer
+          :state    #'consult--buffer-state
+          :default  t
+          :items    (lambda () (consult--buffer-query
+				:predicate #'tabspaces--local-buffer-p
+				:sort 'visibility
+				:as #'buffer-name)))
+
+    "Set workspace buffer list for consult-buffer.")
+  (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+#+end_src
 ** Ace Window
 Use =C-x o= to active =ace-window= to swap the windows (less than two windows), or using following arguments (more than two):
 - =x= - delete window
@@ -763,17 +732,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** Load Org Babel
 #+begin_src emacs-lisp
 (with-eval-after-load "ob"
-  (straight-use-package '(ob-racket
-			  :type git :host github :repo "hasu/emacs-ob-racket"
-			  :files ("*.el" "*.rkt")))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (C . t)
      (shell . t)
-     (python . t)
-     (racket . t)
-     ))
+     (python . t)))
 
   (setq org-confirm-babel-evaluate nil))
 #+end_src
@@ -1124,11 +1088,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
       (goto-char (1- (point-max)))
       (embark-act arg))))
 #+end_src
-** Corfu
+** COMMENT Corfu
 #+begin_src emacs-lisp
 ;; completely use lsp-bridge for now
 (use-package corfu
-  :straight t
+  :straight (corfu :type git :host github :repo "minad/corfu" :files (:defaults "extensions"))
   :bind
   (:map corfu-map
         ([tab] . corfu-next)
@@ -1144,14 +1108,9 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (corfu-preselect 'prompt)
   (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
   :init
-  (add-to-list 'load-path (expand-file-name "straight/build/corfu/extensions" user-emacs-directory))
-  (require 'corfu-history)
-  (add-hook 'corfu-mode-hook 'corfu-history-mode)
-
-  (require 'corfu-popupinfo)
-  (setq corfu-popupinfo-delay t)
-  (add-hook 'corfu-mode-hook 'corfu-popupinfo-mode)
-  (global-corfu-mode))
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode))
 
 
 (use-package cape
@@ -1166,17 +1125,24 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :after cape
   :straight (:host github :repo "50ways2sayhard/tabnine-capf" :files ("*.el" "*.sh"))
   :hook (kill-emacs . tabnine-capf-kill-process)
-  :config
+  :init
   (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point))
 
-(use-package kind-icon
-  :straight t
-  :after corfu
-  :custom
-  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; (use-package kind-icon
+;;   :straight t
+;;   :after corfu
+;;   :custom
+;;   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
+(use-package kind-all-the-icons
+  :straight (:type git :host github :repo "Hirozy/kind-all-the-icons")
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-all-the-icons-margin-formatter))
+#+end_src
+** Tempel
+#+begin_src emacs-lisp
 (use-package tempel
   :straight t
   :defer 10
@@ -1190,17 +1156,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
          ("<backtab>" . tempel-previous)
          :map corfu-map
          ("C-M-i" . tempel-expand))
-  ;; :map tempel-map
-  ;; ("M-]" . tempel-next)
-  ;; ("M-[" . tempel-previous))
   :init
   (defun tempel-setup-capf ()
     (setq-local completion-at-point-functions
                 (cons #'tempel-complete
                       completion-at-point-functions))))
-
-;; (add-hook 'prog-mode-hook 'tempel-setup-capf)
-;; (add-hook 'text-mode-hook 'tempel-setup-capf))
 #+end_src
 ** Citre
 #+begin_src emacs-lisp
@@ -1299,6 +1259,13 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (straight-use-package 'realgud)
 #+end_src
 
+*** APIs Testing
+#+begin_src emacs-lisp
+(use-package restclient
+  :straight t
+  :mode (("\\.http\\'" . restclient-mode)))
+#+end_src
+
 ** Languages
 *** Python
 #+begin_src emacs-lisp
@@ -1311,6 +1278,26 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :commands (ein:run ein:login))
 #+end_src
 *** Web (HTML/CSS/JS...)
+**** HTML
+#+begin_src emacs-lisp
+(use-package web-mode
+  :straight t
+  :mode "\\.html?\\'"
+  :config
+  (setq-default web-mode-code-indent-offset 2)
+  (setq-default web-mode-markup-indent-offset 2)
+  (setq-default web-mode-attribute-indent-offset 2))
+
+;; 1. Start the server with `httpd-start'
+;; 2. Use `impatient-mode' on any buffer
+(use-package impatient-mode
+  :straight t
+  :commands (impatient-mode))
+
+(use-package skewer-mode
+  :straight t
+  :commands (skewer-mode))
+#+end_src
 **** JS/TS
 #+begin_src emacs-lisp
 (defun dw/set-js-indentation ()
@@ -1334,6 +1321,9 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :straight t
   :mode "\\.jsx\\'")
 
+(use-package typescript-ts-mode
+  :mode "\\.ts\\'")
+
 (use-package tsx-ts-mode
   :mode "\\.tsx\\'")
 
@@ -1343,52 +1333,14 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   ((js2-mode . add-node-modules-path)
    (typescript-mode . add-node-modules-path)
    (rjsx-mode . add-node-modules-path)))
-#+end_src
-**** CoffeeScript
-#+begin_src emacs-lisp
-(use-package coffee-mode
-  :straight t
-  :mode "\\.coffee\\'"
-  :config
-  (straight-use-package 'sourcemap)
-  ;; automatically clean up bad whitespace
-  (setq whitespace-action '(auto-cleanup))
-  ;; This gives you a tab of 2 spaces
-  (custom-set-variables '(coffee-tab-width 2))
 
-  ;; generating sourcemap by '-m' option. And you must set '--no-header' option
-  (setq coffee-args-compile '("-c" "--no-header" "-m"))
-  (add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
-
-  ;; If you want to remove sourcemap file after jumping corresponding point
-  (defun my/coffee-after-compile-hook (props)
-    (sourcemap-goto-corresponding-point props)
-    (delete-file (plist-get props :sourcemap)))
-  (add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook))
-
-(use-package flymake-coffee
+(use-package auto-rename-tag
   :straight t
-  :hook coffee-mode)
-#+end_src
-**** HTML
-#+begin_src emacs-lisp
-(use-package web-mode
-  :straight t
-  :mode "\\.html?\\'"
-  :config
-  (setq-default web-mode-code-indent-offset 2)
-  (setq-default web-mode-markup-indent-offset 2)
-  (setq-default web-mode-attribute-indent-offset 2))
+  :hook ((web-mode rjsx-mode tsx-ts-mode) . auto-rename-tag-mode))
 
-;; 1. Start the server with `httpd-start'
-;; 2. Use `impatient-mode' on any buffer
-(use-package impatient-mode
+(use-package prettier
   :straight t
-  :commands (impatient-mode))
-
-(use-package skewer-mode
-  :straight t
-  :commands (skewer-mode))
+  :commands (prettier-prettify))
 #+end_src
 **** COMMENT Emmet
 #+begin_src emacs-lisp
@@ -1437,14 +1389,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :straight t
   :mode "\\.lisp\\'")
 #+end_src
-*** Racket
-#+begin_src emacs-lisp
-(use-package racket-mode
-  :straight t
-  :mode "\\.rkt\\'"
-  :hook
-  (racket-mode . racket-xp-mode))
-#+end_src
 *** Haskell
 #+begin_src emacs-lisp
 (use-package haskell-mode
@@ -1473,15 +1417,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (setq xenops-math-image-scale-factor 2.0))
 
 #+end_src
-*** R
-#+begin_src emacs-lisp
-(add-to-list 'auto-mode-alist
-	     (cons "\\.R\\'" 'R-mode))
-
-(use-package ess
-  :straight t
-  :after R-mode)
-#+end_src
 *** Markdown
 #+begin_src emacs-lisp
 (use-package markdown-mode
@@ -1501,7 +1436,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :after sql-mode)
 #+end_src
 
-** Lsp-mode
+** COMMENT Lsp-mode
 #+begin_src emacs-lisp
 ;;; LSP
 ;; Should boost performance with lsp
@@ -1509,6 +1444,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (setenv "LSP_USE_PLISTS" "1")
 (use-package lsp-mode
   :straight t
+  :hook ((python-mode web-mode js2-mode typescript-ts-mode tsx-ts-mode rjsx-mode) . lsp-deferred)
   :bind ((:map lsp-mode-map
                ("M-<return>" . lsp-execute-code-action)))
   :commands (lsp lsp-deferred)
@@ -1541,7 +1477,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (use-package lsp-tailwindcss
   :straight t
-  :commands (lsp)
+  :commands (lsp lsp-deferred lsp-restart-workspace)
   :init
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-major-modes '(tsx-ts-mode rjsx-mode web-mode css-mode)))
@@ -1552,6 +1488,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (use-package lsp-java
   :straight t
+  :after java-mode
   :hook (java-mode . lsp-deferred)
   :config
   (require 'lsp-java-boot)
@@ -1582,10 +1519,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :bind (:map dap-mode-map
               ("C-x D D" . dap-debug)
               ("C-x D d" . dap-debug-last))
-  :init
-  (defun my/dap-cpp-setup ()
-    (require 'dap-gdb-lldb)
-    (dap-gdb-lldb-setup))
   :config
   (with-eval-after-load 'python-mode
     (require 'dap-python)
@@ -1594,11 +1527,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (setq dap-python-debugger 'debugpy))
 
   (with-eval-after-load 'c++-mode
-    (my/dap-cpp-setup))
+    (require 'dap-gdb-lldb)
+    (dap-gdb-lldb-setup))
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 #+end_src
-** COMMENT Lsp-bridge
+** Lsp-bridge
 #+begin_src emacs-lisp
 (use-package yasnippet
   :straight t
@@ -1620,6 +1554,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (acm-enable-tabnine-helper t)
   (lsp-bridge-complete-manually nil)
   (lsp-bridge-c-lsp-server "clangd")
+  (lsp-bridge-enable-org-babe t)
   :config
   (global-lsp-bridge-mode)
   
@@ -1720,6 +1655,10 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (use-package multi-vterm
   :straight t
   :commands (multi-vterm))
+
+(use-package vterm-toggle
+  :straight t
+  :commands  (vterm-toggle-cd))
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
@@ -1752,7 +1691,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (eshell-syntax-highlighting-global-mode +1))
 
 (use-package esh-help
-  :straight esh-help
+  :straight t
   :after esh-mode
   :config
   (setup-esh-help-eldoc))

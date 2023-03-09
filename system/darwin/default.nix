@@ -3,7 +3,6 @@
 {
   imports = [
     ./homebrew.nix
-    #./wm.nix
   ];
   
   nix = {

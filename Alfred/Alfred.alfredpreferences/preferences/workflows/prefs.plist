@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>defaultBundleId</key>
+	<string>Yabai</string>
+	<key>defaultCreatedBy</key>
+	<string>Desmond Wang</string>
+	<key>defaultWebsite</key>
+	<string>www.dezzw.com</string>
 	<key>showCanvasHints</key>
 	<false/>
 </dict>

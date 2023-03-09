@@ -29,17 +29,12 @@
   homebrew.brews = [
     {
       name = "yabai";
-      #args = [ "HEAD" ];
       restart_service = true;
     }
-    {
-      name = "skhd";
-      restart_service = true;
-    }
-    {
-      name = "sketchybar";
-      restart_service = true;
-    }
+    #{
+    #  name = "sketchybar";
+    #  restart_service = true;
+    #}
 
     "python"
     # "racket"
@@ -63,7 +58,6 @@
     "obs"
 
     # Developing Tools
-    "racket"
     "dash"
     "iterm2"
     "xquartz"
@@ -84,7 +78,6 @@
     "steam"
     "cleanshot"
     "bartender"
-    "spotify"
     
     # fonts
     "font-maple"

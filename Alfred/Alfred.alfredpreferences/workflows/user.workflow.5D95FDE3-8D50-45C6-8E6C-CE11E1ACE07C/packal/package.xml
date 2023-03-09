@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<workflow>
-  <name>Timestamp</name>
-  <version>1.0</version>
-  <bundle>com.jousch.alfred.timestamp</bundle>
-  <updated>1475487829</updated>
-  <file>timestamp.alfredworkflow</file>
-</workflow>

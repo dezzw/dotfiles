@@ -6,7 +6,7 @@
     ./nvim.nix
     ./tmux.nix
     ./clisp.nix
-    ./alacritty.nix
+    # ./alacritty.nix
   ];
   
   # Let Home Manager install and manage itself.
@@ -49,7 +49,6 @@
           # nodejs
           nodejs
           nodePackages.npm
-          nodePackages.coffee-script
           nodePackages.typescript
           flow
           yarn
@@ -57,9 +56,6 @@
           jq
 
           deno
-          
-          # rust
-          rustup
           
           # racket
           # racket-minimal
@@ -72,7 +68,6 @@
           zoxide
           ripgrep
           aria
-          ranger
           fd
           
           comma
@@ -107,9 +102,11 @@
     };
   };
 
-  programs.bat.enable = true;
-  programs.bat.config = {
-    theme = "ansi";
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "ansi";
+    };
   };
 
   programs.zsh = {
@@ -122,19 +119,6 @@
       lt = "exa -laT";
       cd = "z";
     };
-    
-    # zplug = {
-    #   enable = true;
-    #   plugins = [
-    #     # { name = "zsh-users/zsh-autosuggestions"; }
-    #     { name = "zdharma/fast-syntax-highlighting"; tags = [ defer:2 ]; }
-    #     # { name = "spwhitt/nix-zsh-completions"; }
-    #     { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
-    #     { name = "hlissner/zsh-autopair"; tags = [ defer:2 ]; }
-    #   ];
-    # };
-
-    # oh-my-zsh.enable = true;
     
     plugins = [
       {
@@ -185,30 +169,22 @@
 
      eval "$(zoxide init zsh)"
 
-     if [[ "$TERM" == "dumb" ]]
-     then
-         unsetopt zle
-         unsetopt prompt_cr
-         unsetopt prompt_subst
-         if whence -w precmd >/dev/null; then
-             unfunction precmd
-         fi
-         if whence -w preexec >/dev/null; then
-             unfunction preexec
-         fi
-         PS1='$ '
-    fi
+     if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+        && [[ -n ''${EMACS_VTERM_PATH} ]] \
+        && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
+        source ''${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh
+     fi
 
-    vterm_printf(){
-      if [ -n "$TMUX" ] && ([ "''${TERM%%-*}" = "tmux" ] || [ "''${TERM%%-*}" = "screen" ] ); then
-          # Tell tmux to pass the escape sequences through
-          printf "\ePtmux;\e\e]%s\007\e\\" "$1"
-      elif [ "''${TERM%%-*}" = "screen" ]; then
-          # GNU screen (screen, screen-256color, screen-256color-bce)
-          printf "\eP\e]%s\007\e\\" "$1"
-      else
-          printf "\e]%s\e\\" "$1"
-      fi
+     vterm_printf() {
+        if [ -n "$TMUX" ] && ([ "''${TERM%%-*}" = "tmux" ] || [ "''${TERM%%-*}" = "screen" ]); then
+           # Tell tmux to pass the escape sequences through
+           printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+        elif [ "''${TERM%%-*}" = "screen" ]; then
+           # GNU screen (screen, screen-256color, screen-256color-bce)
+           printf "\eP\e]%s\007\e\\" "$1"
+        else
+           printf "\e]%s\e\\" "$1"
+        fi
     }
     '';
   };

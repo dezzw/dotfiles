@@ -227,12 +227,14 @@
 			<dict>
 				<key>browser</key>
 				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
 				<key>spaces</key>
 				<string></string>
 				<key>url</key>
 				<string>https://{var:GITHUB_HOST}/notifications</string>
-				<key>utf8</key>
-				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.openurl</string>
@@ -337,6 +339,8 @@ fi</string>
 				</array>
 				<key>elselabel</key>
 				<string>else</string>
+				<key>hideelse</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.utility.conditional</string>
@@ -350,17 +354,40 @@ fi</string>
 			<dict>
 				<key>browser</key>
 				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
 				<key>spaces</key>
 				<string></string>
 				<key>url</key>
 				<string>https://{var:GITHUB_HOST}/settings/tokens/new?description=Github%20Repos%20Alfred%20workflow&amp;scopes=repo</string>
-				<key>utf8</key>
-				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.openurl</string>
 			<key>uid</key>
 			<string>9374E671-4FB9-48BF-8834-95DDBFDA41CF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>gh-token</string>
+				<key>subtext</key>
+				<string>Once you have your token, run `gh-login &lt;your-token&gt;`</string>
+				<key>text</key>
+				<string>Generate a personal access token</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>F2578320-696B-4844-AE63-6A9B88C77B26</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -420,35 +447,16 @@ fi</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>gh-token</string>
-				<key>subtext</key>
-				<string>Once you have your token, run `gh-login &lt;your-token&gt;`</string>
-				<key>text</key>
-				<string>Generate a personal access token</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>F2578320-696B-4844-AE63-6A9B88C77B26</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>browser</key>
 				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
 				<key>spaces</key>
 				<string></string>
 				<key>url</key>
 				<string>https://{var:GITHUB_HOST}/settings/tokens/new?description=Github%20Repos%20Alfred%20workflow&amp;scopes=repo</string>
-				<key>utf8</key>
-				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.openurl</string>
@@ -462,12 +470,14 @@ fi</string>
 			<dict>
 				<key>browser</key>
 				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
 				<key>spaces</key>
 				<string></string>
 				<key>url</key>
 				<string>{query}</string>
-				<key>utf8</key>
-				<true/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.openurl</string>
@@ -729,130 +739,132 @@ https://github.com/edgarjs/alfred-github-repos/issues</string>
 		<key>094FF699-5788-4782-8466-393E63414D15</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1150</integer>
+			<real>1150</real>
 			<key>ypos</key>
-			<integer>565</integer>
+			<real>565</real>
 		</dict>
 		<key>19349FF9-A6A4-4D6A-ADBA-3F3092F9E727</key>
 		<dict>
 			<key>xpos</key>
-			<integer>45</integer>
+			<real>45</real>
 			<key>ypos</key>
-			<integer>215</integer>
+			<real>215</real>
 		</dict>
 		<key>2BD5A2D8-1263-445C-818F-1149B117043F</key>
 		<dict>
 			<key>xpos</key>
-			<integer>765</integer>
+			<real>765</real>
 			<key>ypos</key>
-			<integer>645</integer>
+			<real>645</real>
 		</dict>
 		<key>381B37AB-78A2-43C6-9D32-878D4A81B5B5</key>
 		<dict>
 			<key>xpos</key>
-			<integer>760</integer>
+			<real>760</real>
 			<key>ypos</key>
-			<integer>35</integer>
+			<real>35</real>
 		</dict>
 		<key>5A5FFC2F-634C-4DD4-A895-CB0E3C61BDD8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>765</integer>
+			<real>765</real>
 			<key>ypos</key>
-			<integer>420</integer>
+			<real>420</real>
 		</dict>
 		<key>72D9F53C-2F43-447A-8012-CA07801C1407</key>
 		<dict>
 			<key>xpos</key>
-			<integer>45</integer>
+			<real>45</real>
 			<key>ypos</key>
-			<integer>380</integer>
+			<real>380</real>
 		</dict>
 		<key>74368575-DA05-42F3-A54D-63168FF72AC8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1145</integer>
+			<real>1145</real>
 			<key>ypos</key>
-			<integer>280</integer>
+			<real>280</real>
 		</dict>
 		<key>7B59839B-A868-4F5C-8A93-5AFD865D55AE</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1145</integer>
+			<real>1145</real>
 			<key>ypos</key>
-			<integer>35</integer>
+			<real>35</real>
 		</dict>
 		<key>8CC99A00-1347-4C19-9C6C-CEC5302B508D</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1145</integer>
+			<real>1145</real>
 			<key>ypos</key>
-			<integer>420</integer>
+			<real>420</real>
 		</dict>
 		<key>8E28AD52-A4BF-4D83-B831-536C53E12B4B</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1145</integer>
+			<real>1145</real>
 			<key>ypos</key>
-			<integer>150</integer>
+			<real>150</real>
 		</dict>
 		<key>9374E671-4FB9-48BF-8834-95DDBFDA41CF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>470</integer>
+			<real>470</real>
 			<key>ypos</key>
-			<integer>190</integer>
+			<real>190</real>
 		</dict>
 		<key>AA6DB3CD-E9B5-42AC-ABC9-919DBB8F713B</key>
 		<dict>
 			<key>xpos</key>
-			<integer>1145</integer>
+			<real>1145</real>
 			<key>ypos</key>
-			<integer>725</integer>
+			<real>725</real>
 		</dict>
 		<key>BBD79FE5-D671-40AB-A1EE-AEBE941E2FCB</key>
 		<dict>
 			<key>xpos</key>
-			<integer>470</integer>
+			<real>470</real>
 			<key>ypos</key>
-			<integer>380</integer>
+			<real>380</real>
 		</dict>
 		<key>C192E47C-82CC-40C9-9B16-9675BB6A0E08</key>
 		<dict>
 			<key>xpos</key>
-			<integer>260</integer>
+			<real>260</real>
 			<key>ypos</key>
-			<integer>160</integer>
+			<real>160</real>
 		</dict>
 		<key>D1A2D55E-BB7C-481A-9058-E0838736E2AF</key>
 		<dict>
 			<key>xpos</key>
-			<integer>955</integer>
+			<real>955</real>
 			<key>ypos</key>
-			<integer>420</integer>
+			<real>420</real>
 		</dict>
 		<key>E1C4E73B-1758-44B6-9432-F9B0865AAAA6</key>
 		<dict>
 			<key>xpos</key>
-			<integer>45</integer>
+			<real>45</real>
 			<key>ypos</key>
-			<integer>70</integer>
+			<real>70</real>
 		</dict>
 		<key>ECD9E1E3-9110-444A-A4FB-246C244D80B2</key>
 		<dict>
 			<key>xpos</key>
-			<integer>470</integer>
+			<real>470</real>
 			<key>ypos</key>
-			<integer>15</integer>
+			<real>15</real>
 		</dict>
 		<key>F2578320-696B-4844-AE63-6A9B88C77B26</key>
 		<dict>
 			<key>xpos</key>
-			<integer>765</integer>
+			<real>765</real>
 			<key>ypos</key>
-			<integer>215</integer>
+			<real>215</real>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
 	<key>variables</key>
 	<dict>
 		<key>CACHE_TTL_SEC_ORG</key>

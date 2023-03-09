@@ -37,10 +37,14 @@
       };
     };
     nix-direnv.url = "github:nix-community/nix-direnv";
-
+    
+    nix-index-database = {
+      url = "github:Mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
 
-  outputs = { self, darwin, home-manager, flake-utils, ... }@inputs:
+  outputs = { self, darwin, home-manager, flake-utils, nix-index-database, ... }@inputs:
     let
       inherit (darwin.lib) darwinSystem;
       inherit (inputs.nixpkgs-unstable.lib) attrValues makeOverridable optionalAttrs singleton nixosSystem;
@@ -107,6 +111,7 @@
 
                 nixpkgs = nixpkgsConfig;
               }
+              # nix-index-database.darwinModules.nix-index
             ];
           };
         };
