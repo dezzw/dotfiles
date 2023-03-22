@@ -62,8 +62,6 @@
 (defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
 (defconst IS-TTY (or (not (display-graphic-p)) (and (daemonp) (string= (daemonp) "tty"))))
 
-
-(setq use-package-verbose t)
 (setq native-comp-deferred-compilation-deny-list nil)
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -78,12 +76,12 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(setq use-package-verbose t)
 (when (daemonp)
   (setq use-package-always-demand t))
 
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
-
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
@@ -705,6 +703,14 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :straight t
   :hook org-mode)
 #+end_src
+*** Src Block Styling
+#+begin_src emacs-lisp
+(use-package org-modern-indent
+  :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
+  :after org
+  :config
+  (add-hook 'org-mode-hook #'org-modern-indent-mode))
+#+end_src
 ** Org Export
 #+begin_src emacs-lisp
 (with-eval-after-load "org-export-dispatch"
@@ -1082,12 +1088,15 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (with-current-buffer "*Messages*"
       (goto-char (1- (point-max)))
       (embark-act arg))))
+
+(use-package consult-applemusic
+  :straight (consult-applemusic :type git :host github :repo "dezzw/consult-applemusic")
+  :commands (consult-applemusic-playlists applemusic-toggle-play))
 #+end_src
-** COMMENT Corfu
+** Corfu
 #+begin_src emacs-lisp
-;; completely use lsp-bridge for now
 (use-package corfu
-  :straight (corfu :type git :host github :repo "minad/corfu" :files (:defaults "extensions"))
+  :straight (corfu :type git :host github :repo "minad/corfu" :files (:defaults "extensions/*.el"))
   :bind
   (:map corfu-map
         ([tab] . corfu-next)
@@ -1100,13 +1109,19 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.1)
+  (corfu-popupinfo-delay '(0.5 . 0.2))
   (corfu-preselect 'prompt)
-  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
+  ;; (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
   :init
   (global-corfu-mode)
   (corfu-history-mode)
-  (corfu-popupinfo-mode))
-
+  (corfu-popupinfo-mode)
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+                              corfu-quit-no-match t
+                              corfu-auto nil)
+              (corfu-mode))))
 
 (use-package cape
   :straight t
@@ -1143,19 +1158,19 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :defer 10
   :custom
   (tempel-path "~/.dotfiles/Emacs/templates")
-  ;; :hook ((prog-mode text-mode) . tempel-setup-capf)
+  :hook ((prog-mode text-mode) . tempel-setup-capf)
   :bind (("M-+" . tempel-insert) ;; Alternative tempel-expand
          :map tempel-map
          ([remap keyboard-escape-quit] . tempel-done)
          ("TAB" . tempel-next)
-         ("<backtab>" . tempel-previous)))
-  ;;        :map corfu-map
-  ;;        ("C-M-i" . tempel-expand))
-  ;; :init
-  ;; (defun tempel-setup-capf ()
-  ;;   (setq-local completion-at-point-functions
-  ;;               (cons #'tempel-complete
-  ;;                     completion-at-point-functions))))
+         ("<backtab>" . tempel-previous)
+         :map corfu-map
+         ("C-M-i" . tempel-expand))
+  :init
+  (defun tempel-setup-capf ()
+    (setq-local completion-at-point-functions
+                (cons #'tempel-complete
+                      completion-at-point-functions))))
 #+end_src
 ** Citre
 #+begin_src emacs-lisp
@@ -1262,7 +1277,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 
 ** Languages
-*** Python
+*** COMMENT Python
 #+begin_src emacs-lisp
 (use-package jupyter
   :straight t
@@ -1319,19 +1334,21 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (use-package typescript-ts-mode
   :mode "\\.ts\\'")
 
-(use-package tsx-ts-mode
-  :mode "\\.tsx\\'")
+(add-to-list 'auto-mode-alist
+	     '("\\.tsx\\'" . tsx-ts-mode))
 
 (use-package add-node-modules-path
   :straight t
   :hook
   ((js2-mode . add-node-modules-path)
-   (typescript-mode . add-node-modules-path)
+   (typescript-ts-mode . add-node-modules-path)
+   (tsx-ts-mode . add-node-modules-path)
    (rjsx-mode . add-node-modules-path)))
 
-(use-package auto-rename-tag
-  :straight t
-  :hook ((web-mode rjsx-mode tsx-ts-mode) . auto-rename-tag-mode))
+;; not good enough for use
+;; (use-package auto-rename-tag
+;;   :straight t
+;;   :hook ((web-mode rjsx-mode tsx-ts-mode) . auto-rename-tag-mode))
 
 (use-package prettier
   :straight t
@@ -1425,7 +1442,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :after sql-mode)
 #+end_src
 
-** COMMENT Lsp-mode
+** Lsp-mode
 #+begin_src emacs-lisp
 ;;; LSP
 ;; Should boost performance with lsp
@@ -1477,7 +1494,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (use-package lsp-java
   :straight t
-  :after java-mode
   :hook (java-mode . lsp-deferred)
   :config
   (require 'lsp-java-boot)
@@ -1488,7 +1504,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
 (use-package lsp-pyright
   :straight t
-  :commands (lsp)
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp-deferred))))
@@ -1521,7 +1536,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 #+end_src
-** Lsp-br idge
+** COMMENT Lsp-bridge
 #+begin_src emacs-lisp
 (use-package yasnippet
   :straight t
@@ -1543,11 +1558,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (lsp-bridge-enable-mode-line nil)
   (acm-enable-search-words nil)
   (acm-enable-icon t)
-  (acm-enable-tempel t)
+  ;; (acm-enable-tempel t)
   (acm-enable-tabnine-helper t)
   (lsp-bridge-complete-manually nil)
   (lsp-bridge-c-lsp-server "clangd")
-  (lsp-bridge-enable-org-babe t)
+  ;; (lsp-bridge-enable-org-babel t)
   :config
   (global-lsp-bridge-mode)
   
@@ -1725,8 +1740,7 @@ Highlight diff by using delta
 #+end_src
 * PDF Tools
 #+begin_src emacs-lisp
-(use-package pdf-tools
-  :defer t)
+(require 'pdf-tools)
 #+end_src
 * Leetcode
 #+begin_src emacs-lisp

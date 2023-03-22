@@ -180,6 +180,11 @@
 	<dict>
 		<key>installed</key>
 		<dict>
+			<key>http://kapeli.com/feeds/AppleScript.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2023-03-13T20:09:29Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/Bash.xml</key>
 			<dict>
 				<key>date</key>
