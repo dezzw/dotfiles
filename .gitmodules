@@ -5,3 +5,6 @@
 [submodule "Ubersicht/ubersicht-todo-widget"]
 	path = Ubersicht/ubersicht-todo-widget
 	url = git@github.com:dezzw/ubersicht-todo-widget.git
+[submodule "Alfred"]
+	path = Alfred
+	url = git@github.com:dezzw/Alfred.git
