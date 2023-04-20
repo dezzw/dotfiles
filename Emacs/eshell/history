@@ -1,12 +1,3 @@
-gcc main.c 
-gcc main.c 
-./a.out
-gcc main.c 
-./a.out
-./a.out
-gcc main.c 
-./a.out
-exit 
 ls 
 exit 
 make
@@ -126,3 +117,12 @@ mv .evnrc .envrc
 exit
 ls
 exit
+z 301
+ls
+cd Desktop/UTM/CSC301H5/a2-w2023-dez/
+cd
+z 301
+magit
+ls
+emacs
+emacs -nw

@@ -56,6 +56,7 @@
     "blender"
     "gimp"
     "obs"
+    "figma"
 
     # Developing Tools
     "dash"
@@ -65,7 +66,8 @@
     "visual-studio-code"
     "docker"
     "utm"
-    "insomnia"
+    "postman"
+    "gitkraken"
 
     # Applications
     "alfred"

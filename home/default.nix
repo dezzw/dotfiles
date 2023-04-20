@@ -185,7 +185,11 @@
         else
            printf "\e]%s\e\\" "$1"
         fi
-    }
+      }
+
+      [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+      source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+
     '';
   };
   
