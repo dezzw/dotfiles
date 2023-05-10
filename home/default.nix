@@ -40,6 +40,7 @@
         packages = with pkgs; [
 
           coreutils
+          python3Full
 
           # c/c++
           cmake

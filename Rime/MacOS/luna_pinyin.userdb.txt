@@ -1,9 +1,0 @@
-# Rime user dictionary
-#@/db_name	luna_pinyin
-#@/db_type	userdb
-#@/rime_version	1.7.3
-#@/tick	3
-#@/user_id	MacOS
-gan xie 	感謝	c=1 d=1 t=2
-shuang pin 	雙拼	c=1 d=1 t=3
-yi jing 	已經	c=1 d=1 t=3

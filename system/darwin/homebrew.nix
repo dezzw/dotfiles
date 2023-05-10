@@ -8,8 +8,7 @@
       upgrade = true;
       cleanup = "zap";
     };
-    global = {
-      
+    global = {     
       brewfile = true;
       lockfiles = false;
     };
@@ -27,19 +26,18 @@
   ];
 
   homebrew.brews = [
-    {
-      name = "yabai";
-      restart_service = true;
-    }
+   # {
+   #   name = "yabai";
+   #   restart_service = true;
+   # }
     #{
     #  name = "sketchybar";
     #  restart_service = true;
     #}
 
-    "python"
+    #"python"
     # "racket"
     # "jupyterlab"
-    "ffmpegthumbnailer"
     "ical-buddy"
   ];
 
@@ -51,6 +49,7 @@
     # Browser
     "google-chrome"
     "firefox-developer-edition"
+    "microsoft-edge-dev"
 
     # Graphic Tools
     "blender"

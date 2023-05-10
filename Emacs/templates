@@ -57,7 +57,7 @@ org-mode
 (js "#+begin_src javascript" n> r> n "#+end_src" :post (org-edit-src-code))
 (mb "\\mathbb{" p "}")
 
-sh-mode
+sh-mode bash-ts-mode
 
 (! "#!/usr/bin/env bash" n q)
 
@@ -69,7 +69,7 @@ sh-mode
 
 (for "for " p " in " p n "do" n> q n "done")
 
-python-mode
+python-mode python-ts-mode
 
 (for "for " (p "needle") " in " (p "heystack") ":"n>
      q)
@@ -84,18 +84,24 @@ html-mode web-mode
 
 (html (html-html5-template))
 
-javascript-mode typescript-mode
+javascript-mode typescript-mode js2-mode typescript-ts-mode tsx-ts-mode rjsx-mode
 
 (log   "console.log(" (r "What to print")")")
 (json  "JSON.stringify(" (r "Your JSON HERE" )")")
 
-typescript-mode
+typescript-ts-mode tsx-ts-mode
 
 (interface "interface " (p "intrefaceName") " {"n>
            (p "item")": " (p "any") ";"n
            "}")
 
-java-mode
+tsx-ts-mode
+(fun "function " (file-name-base (buffer-name)) "(" p ") {" n> >
+		 "return (" r ");" n
+		 "}"n
+		 "export default " (file-name-base (buffer-name)) ";")
+
+java-mode java-ts-mode
 
 (class "public class " (p (file-name-base (or (buffer-file-name) (buffer-name)))) " {" n> r> n "}")
 (print "System.out.println(" (r "What to print" print) ");")

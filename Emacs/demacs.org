@@ -62,6 +62,8 @@
 (defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
 (defconst IS-TTY (or (not (display-graphic-p)) (and (daemonp) (string= (daemonp) "tty"))))
 
+(setenv "NIX_PROFILES" "/nix/var/nix/profiles/default /Users/dez/.nix-profile")
+
 (setq native-comp-deferred-compilation-deny-list nil)
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -128,6 +130,7 @@
 
 (use-package exec-path-from-shell
   :straight t
+  :demand t
   :custom
   (exec-path-from-shell-arguments '("-l"))
   :config
@@ -174,19 +177,6 @@
 ** Editing Tools
 *** Undo
 #+begin_src emacs-lisp
-(use-package undo-fu
-  :straight t
-  :defer 0.5
-  :bind
-  ("s-z" . undo-fu-only-undo)
-  ("s-S-z" . undo-fu-only-redo))
-
-(use-package undo-fu-session
-  :straight t
-  :after undo-fu
-  :config
-  (global-undo-fu-session-mode))
-
 (use-package vundo
   :straight t
   :commands (vundo))
@@ -207,23 +197,14 @@
   (avy-all-windows-alt t)
   (avy-timeout-seconds 0.3))
 #+end_src
+
 *** COMMENT Spelling Checking
 #+begin_src emacs-lisp
-(use-package flyspell
-  :diminish
-  :hook ((prog-mode . flyspell-prog-mode)
-         (flyspell-mode . (lambda ()
-                            (dolist (key '("C-;" "C-."))
-                              (unbind-key key flyspell-mode-map)))))
+(use-package jinx  
+  :straight (:type git :host github :repo "minad/jinx" :files ("*"))
+  :hook (emacs-startup . global-jinx-mode)
   :custom
-  (flyspell-issue-message-flag nil)
-  (ispell-program-name "enchant-2")
-  (ispell-dictionary "english"))
-
-(use-package flyspell-correct
-  :after flyspell
-  :bind (:map flyspell-mode-map
-              ("C-," . flyspell-correct-wrapper)))
+  (jinx-languages '("en_US")))
 #+end_src
 ** ESC Cancels All
 #+begin_src emacs-lisp
@@ -253,7 +234,7 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-C-i-jump nil)
   (setq evil-respect-visual-line-mode t)
-  (setq evil-undo-system 'undo-fu)
+  (setq evil-undo-system 'undo-redo)
   :bind
 
   :config
@@ -302,7 +283,6 @@
   :straight t
   :commands (evil-mc-make-cursor-here
 	     evil-mc-make-all-cursors
-	     evil-mc-undo-all-cursors
 	     evil-mc-pause-cursors
 	     evil-mc-resume-cursors
 	     evil-mc-make-and-goto-first-cursor
@@ -353,8 +333,13 @@
     :global-prefix "C-SPC")
 
   (general-create-definer dw/ctrl-c-keys
-    :prefix "C-c"))
+    :prefix "C-c")
 
+	(general-define-key
+	 :states '(normal)
+	 "r" 'evil-redo
+	 "Q" "@q"
+	 "gJ" 'jester/evil-join-no-whitespace))
 (dw/leader-key-def
   "SPC" 'execute-extended-command
   "f" 'find-file
@@ -369,7 +354,7 @@
 (defun dw/set-fonts()
   (interactive)
   (set-face-attribute 'default nil
-		      :font "Maple Mono NF"
+		      :font "Maple Mono"
 		      ;; :font "Operator Mono SSm Lig"
 		      :weight 'regular
 		      :height 140)
@@ -486,11 +471,8 @@
   (if (display-graphic-p)
       (dw/set-fonts)))
 #+end_src
-** Themes
-emacs-lisp
-
 * Workspace and Window Management
-** Tabspace
+** COMMENT Tabspace
 #+begin_src emacs-lisp
 (use-package tabspaces
 	:when (not (daemonp))
@@ -600,11 +582,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (dired-kill-when-opening-new-dired-buffer t)
   (delete-by-moving-to-trash t)
   :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "h" 'dired-single-up-directory
-    "H" 'dired-omit-mode
-    "l" 'dired-single-buffer
-    "." 'dired-hide-dotfiles-mode))
+  (with-eval-after-load 'evil-collection
+    (evil-collection-define-key 'normal 'dired-mode-map
+				"h" 'dired-single-up-directory
+				"H" 'dired-omit-mode
+				"l" 'dired-single-buffer
+				"." 'dired-hide-dotfiles-mode)))
 #+end_src
 ** Dirvish
 #+begin_src emacs-lisp
@@ -1107,7 +1090,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-auto-prefix 0)
+  (corfu-auto-prefix 2)
   (corfu-auto-delay 0)
   (corfu-preselect 'prompt)
   (corfu-preselect-first nil)
@@ -1128,26 +1111,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :custom
   (cape-dabbrev-min-length 3)
   :config
-  (setq cape-enable-mode-hooks '(prog-mode-hook text-mode-hook conf-mode-hook))
-  (eval-after-load 'tempel
-    (progn
-      (require 'cape-keyword)
-      (dolist (hook cape-enable-mode-hooks)
-	(add-hook hook (lambda ()
-			 (setq-local completion-at-point-functions
-				     (list (cape-super-capf
-					    #'cape-file
-					    #'tempel-complete
-					    #'cape-dabbrev
-					    #'cape-keyword
-					    #'cape-symbol
-					    )))))))))
-;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  ;; (use-package cape-yasnippet
-  ;;   :straight (:type git :host github :repo "elken/cape-yasnippet")
-  ;;   :after yasnippet
-  ;;   :init
-    ;; (add-to-list 'completion-at-point-functions #'cape-yasnippet)))
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file))
 		
 ;; (use-package tabnine-capf
 ;;   :after cape
@@ -1195,15 +1160,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
                       completion-at-point-functions)))
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf))
-#+end_src
-** COMMENT Yasnippet
-#+begin_src emacs-lisp
-(use-package yasnippet
-  :straight t
-  :custom
-  (yas-snippet-dirs '("~/.dotfiles/Emacs/snippets"))
-  :hook
-  (after-init . yas-global-mode))
 #+end_src
 ** Citre
 #+begin_src emacs-lisp
@@ -1295,11 +1251,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ;;   (:hook-into prog-mode))
 (with-eval-after-load 'prog-mode
   (add-hook #'prog-mode-hook 'hs-minor-mode))
-#+end_src
-
-*** Front-end For Interacting With External Debuggers
-#+begin_src emacs-lisp
-(straight-use-package 'realgud)
 #+end_src
 
 *** APIs Testing
@@ -1401,14 +1352,16 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
    (tsx-ts-mode . add-node-modules-path)
    (rjsx-mode . add-node-modules-path)))
 
+(defun dw/format-prettier()
+	(interactive)
+	(shell-command 
+   (format "yarn prettier --write %s" 
+					 (buffer-file-name))))
+
 ;; not good enough for use
 ;; (use-package auto-rename-tag
 ;;   :straight t
 ;;   :hook ((web-mode rjsx-mode tsx-ts-mode) . auto-rename-tag-mode))
-
-(use-package prettier
-  :straight t
-  :commands (prettier-prettify))
 #+end_src
 **** SCSS/SASS
 #+begin_src emacs-lisp
@@ -1423,6 +1376,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 *** C/C++
 #+begin_src emacs-lisp
 ;; (setq c-default-style "gnu")
+#+end_src
+*** Unity
+#+begin_src emacs-lisp
+(straight-use-package
+ '(unity :type git :host github :repo "elizagamedev/unity.el"))
+(add-hook 'after-init-hook #'unity-mode)
 #+end_src
 *** Nix
 #+begin_src emacs-lisp
@@ -1510,7 +1469,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (use-package lsp-mode
   :straight t
-  :hook ((python-mode web-mode js2-mode typescript-ts-mode tsx-ts-mode rjsx-mode) . lsp-deferred)
+  :hook ((python-mode web-mode js2-mode typescript-ts-mode tsx-ts-mode rjsx-mode) . lsp)
   :bind ((:map lsp-mode-map
                ("M-<return>" . lsp-execute-code-action)))
   :commands (lsp lsp-deferred)
@@ -1527,86 +1486,84 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
         lsp-enable-on-type-formatting nil
         lsp-enable-indentation nil
         lsp-diagnostics-provider :flymake
-	lsp-idle-delay 0.500
-	lsp-headerline-breadcrumb-enable nil
+				lsp-idle-delay 0.500
+				lsp-headerline-breadcrumb-enable nil
         lsp-keymap-prefix "C-x L")
   ;; to enable the lenses
   (add-hook 'lsp-mode-hook #'lsp-lens-mode)
   (add-hook 'lsp-completion-mode-hook
             (lambda ()
               (setf (alist-get 'lsp-capf completion-category-defaults)
-                    '((styles . (orderless flex)))))))
+                    '((styles . (orderless flex))))))
+	:config
+	(defun dw/with-lsp-completion()
+		(setq-local completion-at-point-functions
+								(list (cape-super-capf #'lsp-completion-at-point #'tempel-complete #'cape-dabbrev))))
+	(add-hook 'lsp-completion-mode-hook #'dw/with-lsp-completion))
 
 (use-package lsp-tailwindcss
-  :straight t
-  :commands (lsp lsp-deferred lsp-restart-workspace)
-  :init
-  (setq lsp-tailwindcss-add-on-mode t)
-  (setq lsp-tailwindcss-major-modes '(tsx-ts-mode rjsx-mode web-mode css-mode)))
+	:straight t
+	:commands (lsp lsp-deferred lsp-restart-workspace)
+	:init
+	(setq lsp-tailwindcss-add-on-mode t)
+	(setq lsp-tailwindcss-major-modes '(tsx-ts-mode rjsx-mode web-mode css-mode)))
 
 (use-package lsp-haskell
-  :straight t
-  :hook (haskell-mode . lsp-deferred))
+	:straight t
+	:hook (haskell-mode . lsp-deferred))
 
 (use-package lsp-java
-  :straight t
-  :hook (java-mode . lsp-deferred)
-  :config
-  (require 'lsp-java-boot)
-  
-  ;; to enable the lenses
-  (add-hook 'lsp-mode-hook #'lsp-lens-mode)
-  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode))
+	:straight t
+	:hook (java-mode . lsp-deferred)
+	:config
+	(require 'lsp-java-boot)
+	
+	;; to enable the lenses
+	(add-hook 'lsp-mode-hook #'lsp-lens-mode)
+	(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode))
 
 (use-package lsp-pyright
-  :straight t
-  :preface
-  ;; Use yapf to format
-  (defun lsp-pyright-format-buffer ()
-    (interactive)
-    (when (and (executable-find "yapf") buffer-file-name)
-      (call-process "yapf" nil nil nil "-i" buffer-file-name)))
-  :hook (((python-mode python-ts-mode) . (lambda ()
-                                           (require 'lsp-pyright)
-                                           (add-hook 'after-save-hook #'lsp-pyright-format-buffer t t))))
-  :init (when (executable-find "python3")
-          (setq lsp-pyright-python-executable-cmd "python3")))
+	:straight t
+	:hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp-deferred))))  ; or lsp-deferred
 
 (use-package lsp-ui
-  :straight t
-  :after lsp-mode
-  :init
-  (setq lsp-ui-sideline-delay 0.5
-	;; lsp-ui doc
-	lsp-ui-doc-show-with-mouse nil
-	lsp-ui-doc-show-with-cursor t
-	lsp-ui-sideline-show-hover t
-	lsp-ui-sideline-show-code-actions nil
-	lsp-ui-sideline-show-diagnostics t))
+	:straight t
+	:after lsp-mode
+	:init
+	(setq lsp-ui-sideline-delay 0.5
+  			;; lsp-ui doc
+  			;; lsp-ui-doc-show-with-mouse nil
+  			lsp-ui-doc-show-with-cursor t
+  			lsp-ui-sideline-show-hover t
+  			lsp-ui-sideline-show-code-actions nil
+  			lsp-ui-sideline-show-diagnostics t))
 
 ;;; Debugging
-;; (use-package dap-mode
-;; 	:straight t
-;; 	:commands (dap-debug dap-debug-last)
-;; 	:bind (:map dap-mode-map
-;; 							("C-x D D" . dap-debug)
-;; 							("C-x D d" . dap-debug-last))
-;; 	:config
-;; 	(with-eval-after-load 'python-mode
-;; 		(require 'dap-python)
-;; 		;; if you installed debugpy, you need to set this
-;; 		;; https://github.com/emacs-lsp/dap-mode/issues/306
-;; 		(setq dap-python-debugger 'debugpy))
+(use-package dap-mode
+	:straight t
+	:commands (dap-debug dap-debug-last)
+	:bind (:map dap-mode-map
+							("C-x D D" . dap-debug)
+							("C-x D d" . dap-debug-last))
+	:config
+	(with-eval-after-load 'python-mode
+		(require 'dap-python)
+		;; if you installed debugpy, you need to set this
+		;; https://github.com/emacs-lsp/dap-mode/issues/306
+		(setq dap-python-debugger 'debugpy))
 
-;; 	(with-eval-after-load 'c++-mode
-;; 		(require 'dap-gdb-lldb)
-;; 		(dap-gdb-lldb-setup))
-;; 	(setq dap-auto-configure-features '(sessions locals controls tooltip)))
+	(with-eval-after-load 'c++-mode
+		(require 'dap-gdb-lldb)
+		(dap-gdb-lldb-setup))
+	(setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 #+end_src
 ** eglot
 #+begin_src emacs-lisp
 (use-package eglot
+  :commands (eglot)
   :custom
   (eglot-autoreconnect nil)
   (eglot-ignored-server-capabilities nil)
@@ -1666,8 +1623,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 * Direnv
 #+begin_src emacs-lisp
-;; (setup (:straight direnv)
-;; 	(direnv-mode))
 
 (use-package envrc
   :straight t
@@ -1688,7 +1643,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ;; Better term
 ;; @see https://github.com/akermu/emacs-libvterm#installation
 (use-package vterm
-  :straight t
   :commands (vterm vterm-posframe-toggle)
   :bind ("C-c `" . vterm-posframe-toggle)
   :custom
@@ -1794,15 +1748,11 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :commands (magit magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-#+end_src
-** Magit-Delta
-Highlight diff by using delta
-#+begin_src emacs-lisp
+
 (use-package magit-delta
   :straight t
   :hook magit-mode)
 #+end_src
-
 * Pass
 ** pass-store.el
 #+begin_src emacs-lisp
@@ -1812,7 +1762,7 @@ Highlight diff by using delta
   :custom
   (password-store-password-length 12))
 #+end_src
-* COMMENT PDF Tools
+* PDF Tools
 #+begin_src emacs-lisp
 (require 'pdf-tools)
 #+end_src
