@@ -60,8 +60,6 @@
     interactiveShellInit = "autoload -U compinit && compinit";
   };
 
-  services.lorri.enable = true;
-
   # system.defaults = {
   #   dock = {
   #     autohide = true;

@@ -3,7 +3,7 @@
 {  
   imports = [
     ./emacs
-    ./nvim.nix
+    #./nvim.nix
     ./tmux.nix
     ./clisp.nix
     # ./alacritty.nix
@@ -27,12 +27,11 @@
         stateVersion = "22.05";
         sessionVariables = {
           # GPG_TTY = "/dev/ttys000";
-          EDITOR = "nvim";
-          VISUAL = "nvim";
+          EDITOR = "emacsclient -nw";
+          VISUAL = "emacsclient -nw";
           # CLICOLOR = 1;
           LSCOLORS = "ExFxBxDxCxegedabagacad";
           NODE_PATH = "${NODE_GLOBAL}/lib";
-          # HOMEBREW_NO_AUTO_UPDATE = 1;
           ASPELL_CONF = "conf ${config.xdg.configHome}/aspell/config;";
         };
         sessionPath = [ "${NODE_GLOBAL}/bin" ];
@@ -105,9 +104,6 @@
 
   programs.bat = {
     enable = true;
-    config = {
-      theme = "ansi";
-    };
   };
 
   programs.zsh = {

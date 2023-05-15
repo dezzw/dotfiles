@@ -54,6 +54,8 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(setq default-frame-alist '((fullscreen . maximized)))
+
 (setq company-minimum-prefix-length 1)
 (setq company-idle-delay 0)
 

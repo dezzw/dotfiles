@@ -62,8 +62,6 @@
 (defconst IS-GUI (or (display-graphic-p) (and (daemonp) (not (string= (daemonp) "tty")))))
 (defconst IS-TTY (or (not (display-graphic-p)) (and (daemonp) (string= (daemonp) "tty"))))
 
-(setenv "NIX_PROFILES" "/nix/var/nix/profiles/default /Users/dez/.nix-profile")
-
 (setq native-comp-deferred-compilation-deny-list nil)
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -172,6 +170,9 @@
 
 (straight-use-package 'posframe)
 (straight-use-package 'all-the-icons)
+
+(use-package nerd-icons
+  :straight t)
 #+end_src
 * Keyboard Bindings
 ** Editing Tools
@@ -201,10 +202,7 @@
 *** COMMENT Spelling Checking
 #+begin_src emacs-lisp
 (use-package jinx  
-  :straight (:type git :host github :repo "minad/jinx" :files ("*"))
-  :hook (emacs-startup . global-jinx-mode)
-  :custom
-  (jinx-languages '("en_US")))
+  :hook (emacs-startup . global-jinx-mode))
 #+end_src
 ** ESC Cancels All
 #+begin_src emacs-lisp
@@ -920,7 +918,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
@@ -1102,8 +1099,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :config
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
-                              corfu-quit-no-match t
-                              corfu-auto nil)
+				   corfu-quit-no-match t
+				   corfu-auto nil)
               (corfu-mode))))
 
 (use-package cape
@@ -1113,26 +1110,20 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :config
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
-		
+
 ;; (use-package tabnine-capf
 ;;   :after cape
 ;;   :straight (:host github :repo "50ways2sayhard/tabnine-capf" :files ("*.el" "*.sh"))
 ;;   :hook (kill-emacs . tabnine-capf-kill-process)
 ;;   :init
 ;;   (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point))
-
-;; (use-package kind-icon
-;;   :straight t
-;;   :after corfu
-;;   :custom
-;;   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-;;   :config
-;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-
-(use-package kind-all-the-icons
-  :straight (:type git :host github :repo "Hirozy/kind-all-the-icons")
+(use-package kind-icon
+  :straight t
+  :after corfu
+  :custom
+  (kind-icon-default-face 'corfu-default)
   :config
-  (add-to-list 'corfu-margin-formatters #'kind-all-the-icons-margin-formatter))
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+end_src
 ** Tempel
 #+begin_src emacs-lisp
@@ -1456,11 +1447,40 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :straight t
   :after sql-mode)
 #+end_src
-*** Docker
+*** GDScript
+#+begin_src emacs-lisp
+(use-package gdscript-mode
+    :straight (gdscript-mode
+               :type git
+               :host github
+               :repo "godotengine/emacs-gdscript-mode"))
+#+end_src
+** Docker
 #+begin_src emacs-lisp
 (use-package docker
   :straight t
   :bind ("C-c d" . docker))
+#+end_src
+** Flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+  :straight t
+  :hook (lsp-mode . flycheck-mode)
+  :config
+  (setq flycheck-emacs-lisp-load-path 'inherit)
+
+  ;; Rerunning checks on every newline is a mote excessive.
+  (delq 'new-line flycheck-check-syntax-automatically)
+  ;; And don't recheck on idle as often
+  (setq flycheck-idle-change-delay 1.0)
+
+  ;; For the above functionality, check syntax in a buffer that you switched to
+  ;; only briefly. This allows "refreshing" the syntax check state for several
+  ;; buffers quickly after e.g. changing a config file.
+  (setq flycheck-buffer-switch-check-intermediate-buffers t)
+
+  ;; Display errors a little quicker (default is 0.9s)
+  (setq flycheck-display-errors-delay 0.25))
 #+end_src
 ** Lsp-mode
 #+begin_src emacs-lisp
@@ -1480,14 +1500,19 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (setq lsp-clients-clangd-args '("--header-insertion-decorators=0"
                                   "--clang-tidy"
                                   "--enable-config"))
+  ;; Disable features that have great potential to be slow.
+  (setq lsp-enable-folding nil
+        lsp-enable-text-document-color nil)
+  ;; Reduce unexpected modifications to code
+  (setq lsp-enable-on-type-formatting nil)
+  ;; Make breadcrumbs opt-in; they're redundant with the modeline and imenu
+  (setq lsp-headerline-breadcrumb-enable nil)
+
   ;; General lsp-mode settings
   (setq lsp-completion-provider :none
         lsp-enable-snippet nil
-        lsp-enable-on-type-formatting nil
         lsp-enable-indentation nil
-        lsp-diagnostics-provider :flymake
-				lsp-idle-delay 0.500
-				lsp-headerline-breadcrumb-enable nil
+	lsp-idle-delay 0.500
         lsp-keymap-prefix "C-x L")
   ;; to enable the lenses
   (add-hook 'lsp-mode-hook #'lsp-lens-mode)
@@ -1495,69 +1520,76 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
             (lambda ()
               (setf (alist-get 'lsp-capf completion-category-defaults)
                     '((styles . (orderless flex))))))
-	:config
-	(defun dw/with-lsp-completion()
-		(setq-local completion-at-point-functions
-								(list (cape-super-capf #'lsp-completion-at-point #'tempel-complete #'cape-dabbrev))))
-	(add-hook 'lsp-completion-mode-hook #'dw/with-lsp-completion))
+  :config
+  (defun dw/with-lsp-completion()
+    (setq-local completion-at-point-functions
+		(list (cape-capf-buster
+		       (cape-super-capf
+						#'lsp-completion-at-point
+						#'tempel-complete
+						#'cape-dabbrev
+						#'cape-file)))))
+  (add-hook 'lsp-completion-mode-hook #'dw/with-lsp-completion))
 
 (use-package lsp-tailwindcss
-	:straight t
-	:commands (lsp lsp-deferred lsp-restart-workspace)
-	:init
-	(setq lsp-tailwindcss-add-on-mode t)
-	(setq lsp-tailwindcss-major-modes '(tsx-ts-mode rjsx-mode web-mode css-mode)))
+  :straight t
+  :commands (lsp lsp-deferred lsp-restart-workspace)
+  :init
+  (setq lsp-tailwindcss-add-on-mode t)
+  (setq lsp-tailwindcss-major-modes '(tsx-ts-mode rjsx-mode web-mode css-mode)))
 
 (use-package lsp-haskell
-	:straight t
-	:hook (haskell-mode . lsp-deferred))
+  :straight t
+  :hook (haskell-mode . lsp-deferred))
 
 (use-package lsp-java
-	:straight t
-	:hook (java-mode . lsp-deferred)
-	:config
-	(require 'lsp-java-boot)
-	
-	;; to enable the lenses
-	(add-hook 'lsp-mode-hook #'lsp-lens-mode)
-	(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode))
+  :straight t
+  :hook (java-mode . lsp-deferred)
+  :config
+  (require 'lsp-java-boot)
+  
+  ;; to enable the lenses
+  (add-hook 'lsp-mode-hook #'lsp-lens-mode)
+  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode))
 
 (use-package lsp-pyright
-	:straight t
-	:hook (python-mode . (lambda ()
-                         (require 'lsp-pyright)
-                         (lsp-deferred))))  ; or lsp-deferred
+  :straight t
+  :hook (python-ts-mode . (lambda ()
+                            (require 'lsp-pyright)
+                            (lsp-deferred))))  ; or lsp-deferred
 
 (use-package lsp-ui
-	:straight t
-	:after lsp-mode
-	:init
-	(setq lsp-ui-sideline-delay 0.5
-  			;; lsp-ui doc
-  			;; lsp-ui-doc-show-with-mouse nil
-  			lsp-ui-doc-show-with-cursor t
-  			lsp-ui-sideline-show-hover t
-  			lsp-ui-sideline-show-code-actions nil
-  			lsp-ui-sideline-show-diagnostics t))
+  :straight t
+  :after lsp-mode
+  :init
+  (setq lsp-ui-doc-max-height 8
+        lsp-ui-doc-max-width 72         ; 150 (default) is too wide
+        lsp-ui-doc-delay 0.75           ; 0.2 (default) is too naggy
+  	;; lsp-ui doc
+  	lsp-ui-doc-show-with-mouse nil  ; don't disappear on mouseover
+  	lsp-ui-doc-show-with-cursor t
+	;; lsp-ui sideline
+  	lsp-ui-sideline-show-hover nil
+	lsp-ui-sideline-show-code-actions t))
 
 ;;; Debugging
 (use-package dap-mode
-	:straight t
-	:commands (dap-debug dap-debug-last)
-	:bind (:map dap-mode-map
-							("C-x D D" . dap-debug)
-							("C-x D d" . dap-debug-last))
-	:config
-	(with-eval-after-load 'python-mode
-		(require 'dap-python)
-		;; if you installed debugpy, you need to set this
-		;; https://github.com/emacs-lsp/dap-mode/issues/306
-		(setq dap-python-debugger 'debugpy))
+  :straight t
+  :commands (dap-debug dap-debug-last)
+  :bind (:map dap-mode-map
+	      ("C-x D D" . dap-debug)
+	      ("C-x D d" . dap-debug-last))
+  :config
+  (with-eval-after-load 'python-mode
+    (require 'dap-python)
+    ;; if you installed debugpy, you need to set this
+    ;; https://github.com/emacs-lsp/dap-mode/issues/306
+    (setq dap-python-debugger 'debugpy))
 
-	(with-eval-after-load 'c++-mode
-		(require 'dap-gdb-lldb)
-		(dap-gdb-lldb-setup))
-	(setq dap-auto-configure-features '(sessions locals controls tooltip)))
+  (with-eval-after-load 'c++-mode
+    (require 'dap-gdb-lldb)
+    (dap-gdb-lldb-setup))
+  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 #+end_src
 ** eglot
@@ -1565,8 +1597,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (use-package eglot
   :commands (eglot)
   :custom
-  (eglot-autoreconnect nil)
-  (eglot-ignored-server-capabilities nil)
   (eglot-inlay-hints-mode nil)
   (eglot-events-buffer-size 0)
   (eldoc-idle-delay 1)

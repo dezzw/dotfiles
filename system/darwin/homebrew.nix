@@ -67,6 +67,7 @@
     "utm"
     "postman"
     "gitkraken"
+    "godot"
 
     # Applications
     "alfred"
@@ -75,10 +76,10 @@
     "iina"
     "zoom"
     "appcleaner"
-    "ubersicht"
     "steam"
     "cleanshot"
     "bartender"
+    "crossover"
     
     # fonts
     "font-maple"
