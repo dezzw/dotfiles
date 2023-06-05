@@ -9,7 +9,7 @@
 			<key>Regular_Expressions</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:27:11Z</date>
+				<date>2023-06-03T03:15:36Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -113,7 +113,7 @@
 			<key>Tailwind_CSS</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:27:31Z</date>
+				<date>2023-06-03T03:15:37Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -137,7 +137,7 @@
 			<key>p5js</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:27:22Z</date>
+				<date>2023-06-03T03:15:37Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -183,162 +183,162 @@
 			<key>http://kapeli.com/feeds/AppleScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:27:50Z</date>
+				<date>2023-06-03T03:15:44Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Bash.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:27:53Z</date>
+				<date>2023-06-03T03:15:40Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/C++.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:34Z</date>
+				<date>2023-06-03T03:15:45Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/C.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:33Z</date>
+				<date>2023-06-03T03:15:43Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CMake.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:45Z</date>
+				<date>2023-06-03T03:15:52Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CSS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:29Z</date>
+				<date>2023-06-03T03:15:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Clojure.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:27:20Z</date>
+				<date>2023-06-03T03:15:39Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CoffeeScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:34Z</date>
+				<date>2023-06-03T03:15:45Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Common_Lisp.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:27:52Z</date>
+				<date>2023-06-03T03:15:44Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Docker.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:29:09Z</date>
+				<date>2023-06-03T03:15:55Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Emacs_Lisp.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:48Z</date>
+				<date>2023-06-03T03:15:59Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Emmet.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:34Z</date>
+				<date>2023-06-03T03:15:46Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/HTML.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:29:09Z</date>
+				<date>2023-06-03T03:15:51Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Haskell.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:29:35Z</date>
+				<date>2023-06-03T03:15:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/JavaScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:21Z</date>
+				<date>2023-06-03T03:15:56Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Java_SE16.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:27Z</date>
+				<date>2023-06-03T03:16:10Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Java_SE8.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:29:38Z</date>
+				<date>2023-06-03T03:15:59Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/LaTeX.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:35Z</date>
+				<date>2023-06-03T03:16:10Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Less.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:32Z</date>
+				<date>2023-06-03T03:15:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Lua_5.4.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:42Z</date>
+				<date>2023-06-03T03:15:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/NodeJS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:29:14Z</date>
+				<date>2023-06-03T03:15:58Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/PHP.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:43Z</date>
+				<date>2023-06-03T03:16:09Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Python_3.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:52Z</date>
+				<date>2023-06-03T03:16:11Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/R.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:32:44Z</date>
+				<date>2023-06-03T03:16:13Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Racket.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:32:22Z</date>
+				<date>2023-06-03T03:16:06Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/React.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:30Z</date>
+				<date>2023-06-03T03:16:04Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Sass.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:38Z</date>
+				<date>2023-06-03T03:16:11Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/TypeScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:31:10Z</date>
+				<date>2023-06-03T03:16:13Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/VueJS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:59Z</date>
+				<date>2023-06-03T03:16:06Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:18Z</date>
+				<date>2023-06-03T03:15:50Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_Mobile.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:28:38Z</date>
+				<date>2023-06-03T03:15:56Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_UI.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-04-21T03:30:47Z</date>
+				<date>2023-06-03T03:16:03Z</date>
 			</dict>
 		</dict>
 		<key>uninstalled</key>

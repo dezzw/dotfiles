@@ -186,7 +186,9 @@
 #+begin_src emacs-lisp
 (use-package hungry-delete
   :straight t
-  :hook (prog-mode . hungry-delete-mode))
+  :hook (prog-mode . hungry-delete-mode)
+  :custom
+  (hungry-delete-join-reluctantly t))
 #+end_src
 *** Avy
 #+begin_src emacs-lisp
@@ -199,10 +201,21 @@
   (avy-timeout-seconds 0.3))
 #+end_src
 
-*** COMMENT Spelling Checking
+*** Spelling Checking
 #+begin_src emacs-lisp
-(use-package jinx  
-  :hook (emacs-startup . global-jinx-mode))
+;; (use-package jinx  
+;;   :hook (emacs-startup . global-jinx-mode))
+
+(use-package flyspell
+  :diminish
+  :hook ((prog-mode . flyspell-prog-mode)
+         (flyspell-mode . (lambda ()
+                            (dolist (key '("C-;" "C-."))
+                              (unbind-key key flyspell-mode-map)))))
+  :custom
+  (flyspell-issue-message-flag nil)
+  (ispell-program-name "enchant-2")
+  (ispell-dictionary "english"))
 #+end_src
 ** ESC Cancels All
 #+begin_src emacs-lisp
@@ -353,7 +366,7 @@
   (interactive)
   (set-face-attribute 'default nil
 		      :font "Maple Mono"
-		      ;; :font "Operator Mono SSm Lig"
+		      ;; :font "JetBrainsMono Nerd Font"
 		      :weight 'regular
 		      :height 140)
 
@@ -470,10 +483,10 @@
       (dw/set-fonts)))
 #+end_src
 * Workspace and Window Management
-** COMMENT Tabspace
+** Tabspace
 #+begin_src emacs-lisp
 (use-package tabspaces
-	:when (not (daemonp))
+  :when (not (daemonp))
   ;; use this next line only if you also use straight, otherwise ignore it. 
   :straight (:type git :host github :repo "mclear-tools/tabspaces")
   :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup. 
@@ -486,28 +499,62 @@
   (tabspaces-include-buffers '("*scratch*"))
   ;; sessions
   (tabspaces-session t)
-  (tabspaces-session-auto-restore t))
+  (tabspaces-session-auto-restore t)
 
-;; Filter Buffers for Consult-Buffer
+  :config
 
-(with-eval-after-load 'consult
-  ;; hide full buffer list (still available with "b" prefix)
-  (consult-customize consult--source-buffer :hidden t :default nil)
-  ;; set consult-workspace buffer list
-  (defvar consult--source-workspace
-    (list :name     "Workspace Buffers"
-          :narrow   ?w
-          :history  'buffer-name-history
-          :category 'buffer
-          :state    #'consult--buffer-state
-          :default  t
-          :items    (lambda () (consult--buffer-query
-				:predicate #'tabspaces--local-buffer-p
-				:sort 'visibility
-				:as #'buffer-name)))
+  ;; Filter Buffers for Consult-Buffer
+  
+  (with-eval-after-load 'consult
+    ;; hide full buffer list (still available with "b" prefix)
+    (consult-customize consult--source-buffer :hidden t :default nil)
+    ;; set consult-workspace buffer list
+    (defvar consult--source-workspace
+      (list :name     "Workspace Buffers"
+            :narrow   ?w
+            :history  'buffer-name-history
+            :category 'buffer
+            :state    #'consult--buffer-state
+            :default  t
+            :items    (lambda () (consult--buffer-query
+				  :predicate #'tabspaces--local-buffer-p
+				  :sort 'visibility
+				  :as #'buffer-name)))
 
-    "Set workspace buffer list for consult-buffer.")
-  (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+      "Set workspace buffer list for consult-buffer.")
+    (add-to-list 'consult-buffer-sources 'consult--source-workspace)))
+#+end_src
+** Beframe
+#+begin_src emacs-lisp
+(use-package beframe
+  :when (daemonp)
+  :straight t
+  :config
+  (setq beframe-global-buffers '("*scratch*" "*Messages*"))
+  (beframe-mode 1)
+  (defvar consult-buffer-sources)
+  (declare-function consult--buffer-state "consult")
+
+  (with-eval-after-load 'consult
+    (defface beframe-buffer
+      '((t :inherit font-lock-string-face))
+      "Face for `consult' framed buffers.")
+
+    (defvar beframe-consult-source
+      `( :name     "Frame-specific buffers (current frame)"
+	 :narrow   ?F
+	 :category buffer
+	 :face     beframe-buffer
+	 :history  beframe-history
+	 :items    ,#'beframe-buffer-names
+	 :action   ,#'switch-to-buffer
+	 :state    ,#'consult--buffer-state))
+
+    (add-to-list 'consult-buffer-sources 'beframe-consult-source))
+
+  (defun my/beframe-items (&optional frame)
+    (beframe-buffer-names frame :sort #'beframe-buffer-sort-visibility))
+  )
 #+end_src
 ** Ace Window
 Use =C-x o= to active =ace-window= to swap the windows (less than two windows), or using following arguments (more than two):
@@ -1091,6 +1138,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (corfu-auto-delay 0)
   (corfu-preselect 'prompt)
   (corfu-preselect-first nil)
+  (corfu-on-exact-match nil)
   (corfu-popupinfo-delay '(0.5 . 0.2))
   :init
   (global-corfu-mode)
@@ -1123,7 +1171,46 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :custom
   (kind-icon-default-face 'corfu-default)
   :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+  (setq kind-icon-use-icons nil)
+  (setq kind-icon-mapping
+      `(
+        (array ,(nerd-icons-codicon "nf-cod-symbol_array") :face font-lock-type-face)
+        (boolean ,(nerd-icons-codicon "nf-cod-symbol_boolean") :face font-lock-builtin-face)
+        (class ,(nerd-icons-codicon "nf-cod-symbol_class") :face font-lock-type-face)
+        (color ,(nerd-icons-codicon "nf-cod-symbol_color") :face success)
+        (command ,(nerd-icons-codicon "nf-cod-terminal") :face default)
+        (constant ,(nerd-icons-codicon "nf-cod-symbol_constant") :face font-lock-constant-face)
+        (constructor ,(nerd-icons-codicon "nf-cod-triangle_right") :face font-lock-function-name-face)
+        (enummember ,(nerd-icons-codicon "nf-cod-symbol_enum_member") :face font-lock-builtin-face)
+        (enum-member ,(nerd-icons-codicon "nf-cod-symbol_enum_member") :face font-lock-builtin-face)
+        (enum ,(nerd-icons-codicon "nf-cod-symbol_enum") :face font-lock-builtin-face)
+        (event ,(nerd-icons-codicon "nf-cod-symbol_event") :face font-lock-warning-face)
+        (field ,(nerd-icons-codicon "nf-cod-symbol_field") :face font-lock-variable-name-face)
+        (file ,(nerd-icons-codicon "nf-cod-symbol_file") :face font-lock-string-face)
+        (folder ,(nerd-icons-codicon "nf-cod-folder") :face font-lock-doc-face)
+        (interface ,(nerd-icons-codicon "nf-cod-symbol_interface") :face font-lock-type-face)
+        (keyword ,(nerd-icons-codicon "nf-cod-symbol_keyword") :face font-lock-keyword-face)
+        (macro ,(nerd-icons-codicon "nf-cod-symbol_misc") :face font-lock-keyword-face)
+        (magic ,(nerd-icons-codicon "nf-cod-wand") :face font-lock-builtin-face)
+        (method ,(nerd-icons-codicon "nf-cod-symbol_method") :face font-lock-function-name-face)
+        (function ,(nerd-icons-codicon "nf-cod-symbol_method") :face font-lock-function-name-face)
+        (module ,(nerd-icons-codicon "nf-cod-file_submodule") :face font-lock-preprocessor-face)
+        (numeric ,(nerd-icons-codicon "nf-cod-symbol_numeric") :face font-lock-builtin-face)
+        (operator ,(nerd-icons-codicon "nf-cod-symbol_operator") :face font-lock-comment-delimiter-face)
+        (param ,(nerd-icons-codicon "nf-cod-symbol_parameter") :face default)
+        (property ,(nerd-icons-codicon "nf-cod-symbol_property") :face font-lock-variable-name-face)
+        (reference ,(nerd-icons-codicon "nf-cod-references") :face font-lock-variable-name-face)
+        (snippet ,(nerd-icons-codicon "nf-cod-symbol_snippet") :face font-lock-string-face)
+        (string ,(nerd-icons-codicon "nf-cod-symbol_string") :face font-lock-string-face)
+        (struct ,(nerd-icons-codicon "nf-cod-symbol_structure") :face font-lock-variable-name-face)
+        (text ,(nerd-icons-codicon "nf-cod-text_size") :face font-lock-doc-face)
+        (typeparameter ,(nerd-icons-codicon "nf-cod-list_unordered") :face font-lock-type-face)
+        (type-parameter ,(nerd-icons-codicon "nf-cod-list_unordered") :face font-lock-type-face)
+        (unit ,(nerd-icons-codicon "nf-cod-symbol_ruler") :face font-lock-constant-face)
+        (value ,(nerd-icons-codicon "nf-cod-symbol_field") :face font-lock-builtin-face)
+        (variable ,(nerd-icons-codicon "nf-cod-symbol_variable") :face font-lock-variable-name-face)
+        (t ,(nerd-icons-codicon "nf-cod-code") :face font-lock-warning-face))))
 #+end_src
 ** Tempel
 #+begin_src emacs-lisp
@@ -1257,18 +1344,20 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 (use-package treesit
   :when (and (fboundp 'treesit-available-p)
              (treesit-available-p))
-  :custom (major-mode-remap-alist
-           '((c-mode          . c-ts-mode)
-             (c++-mode        . c++-ts-mode)
-             (csharp-mode     . csharp-ts-mode)
-             (conf-toml-mode  . toml-ts-mode)
-             (css-mode        . css-ts-mode)
-             (java-mode       . java-ts-mode)
-             (javascript-mode . js-ts-mode)
-             (js-json-mode    . json-ts-mode)
-             (python-mode     . python-ts-mode)
-             (ruby-mode       . ruby-ts-mode)
-             (sh-mode         . bash-ts-mode)))
+  :custom
+  (major-mode-remap-alist
+   '((c-mode          . c-ts-mode)
+     (c++-mode        . c++-ts-mode)
+     (csharp-mode     . csharp-ts-mode)
+     (conf-toml-mode  . toml-ts-mode)
+     (css-mode        . css-ts-mode)
+     (java-mode       . java-ts-mode)
+     (javascript-mode . js-ts-mode)
+     (js-json-mode    . json-ts-mode)
+     (python-mode     . python-ts-mode)
+     (ruby-mode       . ruby-ts-mode)
+     (sh-mode         . bash-ts-mode)))
+  (treesit-font-lock-level 4)
   :config
   (add-to-list 'auto-mode-alist '("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
@@ -1454,6 +1543,24 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
                :type git
                :host github
                :repo "godotengine/emacs-gdscript-mode"))
+#+end_src
+*** Swift
+#+begin_src emacs-lisp
+(use-package swift-mode
+  :straight t
+  :hook (swift-mode . (lambda () (lsp-deferred))))
+
+(use-package flycheck-swift
+  :straight t
+  :after swift-mode
+  :config
+  (eval-after-load 'flycheck '(flycheck-swift-setup)))
+
+(use-package lsp-sourcekit
+  :straight t
+  :after lsp-mode
+  :config
+  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 #+end_src
 ** Docker
 #+begin_src emacs-lisp
@@ -1642,14 +1749,29 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** Deno Bridge
 #+begin_src emacs-lisp
 (use-package deno-bridge
+  :when (not (daemonp))
   :straight (:type git :host github :repo "manateelazycat/deno-bridge"))
+#+end_src
+** Emmet
+#+begin_src emacs-lisp
+(use-package emmet-mode
+  :when (daemonp)
+  :straight t
+  :hook ((web-mode css-ts-mode css-mode js2-mode rjsx-mode tsx-ts-mode) . emmet-mode)
+  :custom
+  ()
+  :config
+  (add-to-list 'emmet-jsx-major-modes 'tsx-ts-mode))
+
 (use-package emmet2-mode
+  :when (not (daemonp))
   :straight (:type git :host github :repo "P233/emmet2-mode" :files ("*.el" "deno.json" "src" "data"))
   :after deno-bridge
   :hook ((web-mode css-mode rjsx-mode tsx-ts-mode) . emmet2-mode)                     ;; Enable emmet2-mode for web-mode and css-mode and other major modes based on them, such as the build-in scss-mode
   :config                                                       ;; OPTIONAL
   (unbind-key "C-j" emmet2-mode-map)                            ;; Unbind the default expand key
   (define-key emmet2-mode-map (kbd "C-c C-.") 'emmet2-expand))  ;; Bind custom expand key
+
 #+end_src
 * Direnv
 #+begin_src emacs-lisp

@@ -10,7 +10,6 @@
     };
     global = {     
       brewfile = true;
-      lockfiles = false;
     };
   };
 
@@ -22,7 +21,6 @@
     "koekeishiya/formulae"
     "FelixKratz/formulae"
     "adur1990/tap"
-    "homebrew/services"
   ];
 
   homebrew.brews = [
@@ -39,6 +37,8 @@
     # "racket"
     # "jupyterlab"
     "ical-buddy"
+    "blueutil"
+    "enchant"
   ];
 
   homebrew.casks = [
@@ -50,6 +50,7 @@
     "google-chrome"
     "firefox-developer-edition"
     "microsoft-edge-dev"
+    "arc"
 
     # Graphic Tools
     "blender"
@@ -63,11 +64,10 @@
     "xquartz"
     "jetbrains-toolbox"
     "visual-studio-code"
-    "docker"
-    "utm"
     "postman"
     "gitkraken"
     "godot"
+    "orbstack"
 
     # Applications
     "alfred"

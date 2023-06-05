@@ -1,6 +1,0 @@
-(undo-tree-save-format-version . 1)
-"67251a3f172581f0e4c4e8c3eeb07cf19eefb5de"
-[nil nil nil nil (25193 44366 779793 0) 0 nil]
-([nil current ((nil rear-nonsticky nil 380 . 381) (nil fontified nil 374 . 381) (nil fontified t 374 . 381) (nil nix-string-type 34 374 . 381) (nil face font-lock-string-face 374 . 381) (374 . 381) (373 . 375) (#("\"" 0 1 (nix-string-type 34 syntax-table (15) fontified nil)) . -373) (undo-tree-id5 . -1) (undo-tree-id6 . -1) (373 . 374) (368 . 373) (t 25174 56620 253233 918000)) nil (25193 44371 73900 0) 0 nil] [nil nil ((nil rear-nonsticky nil 355 . 356) (nil fontified nil 349 . 356) (nil face highlight-indent-guides-character-face 349 . 356) (nil fontified t 349 . 356) (349 . 356) 348 (t 25174 56620 253233 918000)) ((#("roswell" 0 6 (face highlight-indent-guides-character-face fontified nil) 6 7 (face highlight-indent-guides-character-face rear-nonsticky nil fontified nil)) . 349) (undo-tree-id0 . -6) (undo-tree-id1 . -6) (undo-tree-id2 . -6) (undo-tree-id3 . -6) (undo-tree-id4 . -6) (nil fontified nil 355 . 356) (nil fontified nil 349 . 355) (nil face nil 355 . 356) (nil face nil 349 . 355) (nil rear-nonsticky t 355 . 356)) (25193 44366 779388 0) 0 nil])
-nil
-nil

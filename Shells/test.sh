@@ -1,1 +1,0 @@
-EMACS = `where emacs`
