@@ -80,6 +80,7 @@
     "cleanshot"
     "bartender"
     "crossover"
+    "monitorcontrol"
     
     # fonts
     "font-maple"

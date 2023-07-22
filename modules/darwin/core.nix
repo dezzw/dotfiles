@@ -1,4 +1,5 @@
-{ inputs, config, pkgs, ... }: {
+{ inputs, config, pkgs, ... }:
+{
   nix = {
     nixPath = [ "darwin=/etc/${config.environment.etc.darwin.target}" ];
     extraOptions = ''

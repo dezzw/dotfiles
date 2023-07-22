@@ -209,6 +209,7 @@
 (use-package flyspell
   :diminish
   :hook ((prog-mode . flyspell-prog-mode)
+	 (git-commit-mode . flyspell-mode)
          (flyspell-mode . (lambda ()
                             (dolist (key '("C-;" "C-."))
                               (unbind-key key flyspell-mode-map)))))
@@ -483,7 +484,7 @@
       (dw/set-fonts)))
 #+end_src
 * Workspace and Window Management
-** Tabspace
+** COMMENT Tabspace
 #+begin_src emacs-lisp
 (use-package tabspaces
   :when (not (daemonp))
@@ -653,8 +654,31 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (visual-line-mode 1))
 
 (use-package org
-  :config
-  :defer t
+  :defer
+  :straight `(org
+	      :fork (:host nil
+			   :repo "https://git.tecosaur.net/tec/org-mode.git"
+			   :branch "dev"
+			   :remote "tecosaur")
+	      :files (:defaults "etc")
+	      :build t
+	      :pre-build
+	      (with-temp-file "org-version.el"
+		(require 'lisp-mnt)
+		(let ((version
+		       (with-temp-buffer
+			 (insert-file-contents "lisp/org.el")
+			 (lm-header "version")))
+		      (git-version
+		       (string-trim
+			(with-temp-buffer
+			  (call-process "git" nil t nil "rev-parse" "--short" "HEAD")
+			  (buffer-string)))))
+		  (insert
+		   (format "(defun org-release () \"The release version of Org.\" %S)\n" version)
+		   (format "(defun org-git-version () \"The truncate git commit hash of Org mode.\" %S)\n" git-version)
+		   "(provide 'org-version)\n")))
+	      :pin nil)
   :hook (org-mode . dw/org-mode-setup)
   :config
   (setq org-html-head-include-default-style nil
@@ -751,7 +775,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   )
 #+end_src
 ** Org Babel
-*** Load Org Babel
 #+begin_src emacs-lisp
 (with-eval-after-load "ob"
   (org-babel-do-load-languages
@@ -761,7 +784,25 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
      (shell . t)
      (python . t)))
 
-  (setq org-confirm-babel-evaluate nil))
+  (setq org-confirm-babel-evaluate nil)
+
+  (use-package ob-swift
+    :straight t
+    :config
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 (append org-babel-load-languages
+                                         '((swift . t))))
+
+    (defun ar/org-refresh-inline-images ()
+      (when org-inline-image-overlays
+        (org-redisplay-inline-images)))
+
+    ;; Automatically refresh inline images.
+    (add-hook 'org-babel-after-execute-hook 'ar/org-refresh-inline-images))
+  (use-package ob-swiftui
+    :straight t
+    :config
+    (ob-swiftui-setup)))
 #+end_src
 ** Org Agenda
 #+begin_src emacs-lisp
@@ -887,7 +928,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 	org-roam-ui-update-on-save t
 	org-roam-ui-open-on-start t))
 #+end_src
-** Tools for Better Org
+** COMMENT Tools for Better Org
 *** Org-inline-anim
 #+begin_src emacs-lisp
 (use-package org-inline-anim
@@ -1040,25 +1081,7 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; (kbd "C-+")
-
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-  ;; By default `consult-project-function' uses `project-root' from project.el.
-  ;; Optionally configure a different project root function.
-  ;; There are multiple reasonable alternatives to chose from.
-  ;;;; 1. project.el (the default)
-  ;; (setq consult-project-function #'consult--default-project--function)
-  ;;;; 2. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
-  ;;;; 3. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-  ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-  )
+  (setq consult-narrow-key "<"))
 
 (use-package consult-dir
   :straight t
@@ -1159,12 +1182,13 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
 
-;; (use-package tabnine-capf
-;;   :after cape
-;;   :straight (:host github :repo "50ways2sayhard/tabnine-capf" :files ("*.el" "*.sh"))
-;;   :hook (kill-emacs . tabnine-capf-kill-process)
-;;   :init
-;;   (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point))
+(use-package tabnine
+  :hook (prog-mode . tabnine-mode)
+  :straight (:host github :repo "shuxiao9058/tabnine")
+  :hook (kill-emacs . tabnine-kill-process)
+  :config
+  (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point))
+
 (use-package kind-icon
   :straight t
   :after corfu
@@ -1210,7 +1234,8 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
         (unit ,(nerd-icons-codicon "nf-cod-symbol_ruler") :face font-lock-constant-face)
         (value ,(nerd-icons-codicon "nf-cod-symbol_field") :face font-lock-builtin-face)
         (variable ,(nerd-icons-codicon "nf-cod-symbol_variable") :face font-lock-variable-name-face)
-        (t ,(nerd-icons-codicon "nf-cod-code") :face font-lock-warning-face))))
+        (t ,(nerd-icons-codicon "nf-cod-code") :face font-lock-warning-face)
+        (tabnine ,(nerd-icons-codicon "nf-cod-hubot") :face font-lock-warning-face))))
 #+end_src
 ** Tempel
 #+begin_src emacs-lisp
@@ -1293,22 +1318,22 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+end_src
 *** Indent
 #+begin_src emacs-lisp
-(use-package highlight-indent-guides
-  :straight t
-  :defer 0.5
-  :hook prog-mode
-  :custom
-  (highlight-indent-guides-auto-enabled nil)
-  (highlight-indent-guides-delay 0)
-  (highlight-indent-guides-method 'character)
-  :config
-  (set-face-background 'highlight-indent-guides-odd-face "darkgray")
-  (set-face-background 'highlight-indent-guides-even-face "dimgray")
-  (set-face-foreground 'highlight-indent-guides-character-face "dimgray"))
-
-;; (use-package aggressive-indent
+;; (use-package highlight-indent-guides
 ;;   :straight t
-;;   :hook (emacs-lisp-mode lisp-mode python-mode))
+;;   :defer 0.5
+;;   :hook prog-mode
+;;   :custom
+;;   (highlight-indent-guides-auto-enabled nil)
+;;   (highlight-indent-guides-delay 0)
+;;   (highlight-indent-guides-method 'character)
+;;   :config
+;;   (set-face-background 'highlight-indent-guides-odd-face "darkgray")
+;;   (set-face-background 'highlight-indent-guides-even-face "dimgray")
+;;   (set-face-foreground 'highlight-indent-guides-character-face "dimgray"))
+
+(use-package aggressive-indent
+  :straight t
+  :hook (emacs-lisp-mode lisp-mode python-ts-mode))
 #+end_src
 *** Rainbow Mode
 #+begin_src emacs-lisp
@@ -1507,17 +1532,6 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
    (latex-mode .  #'turn-on-cdlatex)
    (org-mode . org-cdlatex-mode)))
 #+end_src
-**** Xenops
-#+begin_src emacs-lisp
-(use-package xenops
-  :straight t
-  :if IS-GUI
-  :hook
-  (latex-mode LaTeX-mode org-mode)
-  :init
-  (setq xenops-math-image-scale-factor 2.0))
-
-#+end_src
 *** Markdown
 #+begin_src emacs-lisp
 (use-package markdown-mode
@@ -1548,19 +1562,30 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 #+begin_src emacs-lisp
 (use-package swift-mode
   :straight t
-  :hook (swift-mode . (lambda () (lsp-deferred))))
+  :hook (swift-mode . (lambda () (lsp-deferred)))
+  :config
+  (defun xcode-build()
+    (interactive)
+    (shell-command-to-string
+     "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'build targetProject' -e 'end tell'"))
+  (defun xcode-run()
+    (interactive)
+    (shell-command-to-string
+     "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'run targetProject' -e 'end tell'"))
+  (defun xcode-test()
+    (interactive)
+    (shell-command-to-string
+     "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'test targetProject' -e 'end tell'"))
+  (defun xcode-open-current-file()
+    (interactive)
+    (shell-command-to-string
+     (concat "open -a \"/Applications/Xcode.app\" " (buffer-file-name)))))
 
 (use-package flycheck-swift
   :straight t
   :after swift-mode
   :config
   (eval-after-load 'flycheck '(flycheck-swift-setup)))
-
-(use-package lsp-sourcekit
-  :straight t
-  :after lsp-mode
-  :config
-  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 #+end_src
 ** Docker
 #+begin_src emacs-lisp
@@ -1632,10 +1657,10 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
     (setq-local completion-at-point-functions
 		(list (cape-capf-buster
 		       (cape-super-capf
-						#'lsp-completion-at-point
-						#'tempel-complete
-						#'cape-dabbrev
-						#'cape-file)))))
+			#'lsp-completion-at-point
+			#'tempel-complete
+			#'cape-dabbrev
+			#'tabnine-completion-at-point)))))
   (add-hook 'lsp-completion-mode-hook #'dw/with-lsp-completion))
 
 (use-package lsp-tailwindcss
@@ -1644,6 +1669,12 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
   :init
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-major-modes '(tsx-ts-mode rjsx-mode web-mode css-mode)))
+
+(use-package lsp-sourcekit
+  :straight t
+  :after lsp-mode
+  :config
+  (setq lsp-sourcekit-executable "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp"))
 
 (use-package lsp-haskell
   :straight t
@@ -1702,22 +1733,17 @@ Use =C-x o= to active =ace-window= to swap the windows (less than two windows), 
 ** eglot
 #+begin_src emacs-lisp
 (use-package eglot
-  :commands (eglot)
+  :commands (eglot eglot-ensure)
   :custom
   (eglot-inlay-hints-mode nil)
   (eglot-events-buffer-size 0)
-  (eldoc-idle-delay 1)
-  :config
-  ;; capf
-  (setq-local completion-at-point-functions
-	      (list (cape-super-capf
-		     #'eglot-completion-at-point
-		     #'tempel-complete
-		     #'cape-dabbrev
-		     #'cape-dict))))
+  (eldoc-idle-delay 1))
 #+end_src
 ** COMMENT Lsp-bridge
 #+begin_src emacs-lisp
+(use-package yasnippet
+  :straight t)
+
 (use-package lsp-bridge
   :straight (lsp-bridge :host github
 			:repo "manateelazycat/lsp-bridge"

@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  emacs = (pkgs.emacsGit.override { nativeComp = true; withXwidgets = true; withGTK3 = true; withSQLite3 = true; withWebP = true; }).overrideAttrs (old: {
+  emacs = (pkgs.emacs-git.override { withNativeCompilation = true; withGTK3 = true; withSQLite3 = true; withWebP = true; }).overrideAttrs (old: {
     # https://github.com/cmacrae/emacs/blob/03b4223e56e10a6d88faa151c5804d30b8680cca/flake.nix#L75
     buildInputs = old.buildInputs ++ [ pkgs.darwin.apple_sdk.frameworks.WebKit ];
    patches =
