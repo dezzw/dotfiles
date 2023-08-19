@@ -4,3 +4,7 @@
 [submodule "alfred"]
 	path = alfred
 	url = git@github.com:dezzw/Alfred.git
+[submodule "demacs"]
+	path = demacs
+	url = git@github.com:dezzw/demacs.git
+
