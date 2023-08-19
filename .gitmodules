@@ -1,10 +1,6 @@
-[submodule "Emacs/site-lisp/emacs-application-framework"]
-	path = Emacs/site-lisp/emacs-application-framework
-	url = https://github.com/emacs-eaf/emacs-application-framework.git
-
 [submodule "Ubersicht/ubersicht-todo-widget"]
 	path = Ubersicht/ubersicht-todo-widget
 	url = git@github.com:dezzw/ubersicht-todo-widget.git
-[submodule "Alfred"]
-	path = Alfred
+[submodule "alfred"]
+	path = alfred
 	url = git@github.com:dezzw/Alfred.git
