@@ -57,6 +57,7 @@
     "gimp"
     "obs"
     "figma"
+    "kdenlive"
 
     # Developing Tools
     "dash"
@@ -81,6 +82,9 @@
     "bartender"
     "crossover"
     "monitorcontrol"
+
+    #vpn
+    "clashx"
     
     # fonts
     "font-maple"

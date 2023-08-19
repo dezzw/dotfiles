@@ -28,10 +28,10 @@
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
-      inputs = {
-        nixpkgs.follows = "nixpkgs-unstable";
-      };
+      inputs = { nixpkgs.follows = "nixpkgs-unstable"; };
     };
+
+    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
 
     nix-direnv.url = "github:nix-community/nix-direnv";
 
@@ -41,7 +41,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, nixpkgs-unstable, darwin
-    , home-manager, emacs-darwin, ... }:
+    , home-manager, emacs-darwin, nix-doom-emacs, ... }:
     let
       inherit (home-manager.lib) homeManagerConfiguration;
 
@@ -50,12 +50,11 @@
           inherit system;
           overlays = with inputs; [
             emacs-overlay.overlay
-            emacs-darwin.overlay
             nix-direnv.overlay
             neovim-nightly-overlay.overlay
-	    (final: prev: {
-      		inherit (inputs.mkalias.packages.${final.system}) mkalias;
-		})
+            (final: prev: {
+              inherit (inputs.mkalias.packages.${final.system}) mkalias;
+            })
           ];
           config = import ./config.nix;
         };
@@ -75,8 +74,8 @@
         Desmonds-MBP = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           pkgs = mkPkgs "aarch64-darwin";
-	  specialArgs = {
-            inherit inputs nixpkgs-stable nixpkgs-unstable username;
+          specialArgs = {
+            inherit inputs nixpkgs-stable nixpkgs-unstable username nix-doom-emacs;
           };
           modules = [
             ./modules/darwin

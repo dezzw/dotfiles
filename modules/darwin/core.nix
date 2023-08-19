@@ -26,7 +26,7 @@
     systemPath = [ "/opt/homebrew/bin" ];
     etc = { darwin.source = "${inputs.darwin}"; };
 
-    systemPackages = with pkgs; [ git curl coreutils ];
+    systemPackages = with pkgs; [ git curl coreutils];
 
     # Fix "Too many open files" problems. Based on this:
     # https://medium.com/mindful-technology/too-many-open-files-limit-ulimit-on-mac-os-x-add0f1bfddde

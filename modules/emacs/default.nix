@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  emacs = (pkgs.emacs-git.override { withNativeCompilation = true; withGTK3 = true; withSQLite3 = true; withWebP = true; }).overrideAttrs (old: {
+  demacs = (pkgs.emacs-unstable.override { withNativeCompilation = true; withGTK3 = true; withSQLite3 = true; withWebP = true; }).overrideAttrs (old: {
     # https://github.com/cmacrae/emacs/blob/03b4223e56e10a6d88faa151c5804d30b8680cca/flake.nix#L75
     buildInputs = old.buildInputs ++ [ pkgs.darwin.apple_sdk.frameworks.WebKit ];
    patches =
@@ -16,7 +16,7 @@ in
 {
   programs.emacs = {
     enable = true;
-    package = emacs;
+    package = demacs;
     extraPackages = epkgs: with epkgs;[
       vterm
       pdf-tools
@@ -58,5 +58,8 @@ in
 
     # Spelling checking
     # enchant
+
+    material-design-icons
+    emacs-all-the-icons-fonts
   ];
 }
