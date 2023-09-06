@@ -1,6 +1,6 @@
 {
   allowUnsupportedSystem = true;
-  allowBroken = false;
+  allowBroken = true;
   allowUnfree = true;
   experimental-features = "nix-command flakes";
   keep-derivations = true;
