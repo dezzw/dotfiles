@@ -17,13 +17,18 @@
     nodePackages.bash-language-server
     nodePackages.vscode-css-languageserver-bin
     nodePackages.vscode-html-languageserver-bin
+    nodePackages.svelte-language-server
 
     nodePackages.eslint
 
     python39Packages.pylint
     
-    # rnix-lsp
+    rnix-lsp
     nil
+
+    texlab
+
+    zls
     
     universal-ctags
     

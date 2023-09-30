@@ -80,6 +80,23 @@
             ])
           ];
         };
+
+        Desmonds-Mac-Mini = darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          pkgs = mkPkgs "aarch64-darwin";
+          specialArgs = {
+            inherit inputs nixpkgs-stable nixpkgs-unstable username;
+          };
+          modules = [
+            ./modules/darwin
+            home-manager.darwinModules.home-manager
+            (mkHome username [
+              ./modules/home-manager
+              ./modules/home-manager/home-darwin.nix
+              # ./modules/home-manager/home-security.nix
+            ])
+          ];
+        };
       };
 
       nixosConfigurations = {

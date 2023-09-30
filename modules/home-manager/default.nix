@@ -25,14 +25,15 @@ let
     # nodejs
     nodejs
     yarn
+    nodePackages.pnpm
     deno
 
-    (python3.withPackages (p: with p; [ epc sexpdata six paramiko ]))
+    (python3.withPackages (p: with p; [ ipykernel ]))
 
     php
 
     # tex
-    texlive.combined.scheme-medium
+    texlive.combined.scheme-full
 
     aria # cli downloader
 
@@ -231,13 +232,14 @@ in {
       }
     ];
     shellAliases = {
-      ls = "exa -la";
-      lt = "exa -laT";
-
     };
   };
 
-  programs.exa.enable = true;
+  programs.eza = {
+    enable = true;
+    enableAliases = true;
+    git =true;
+  };
 
   programs.git = {
     enable = true;

@@ -14,13 +14,8 @@
   };
 
   homebrew.taps = [
-    "homebrew/core"
-    "homebrew/cask"
     "homebrew/cask-versions"
     "homebrew/cask-fonts"
-    "koekeishiya/formulae"
-    "FelixKratz/formulae"
-    "adur1990/tap"
   ];
 
   homebrew.brews = [
@@ -35,7 +30,7 @@
 
     #"python"
     # "racket"
-    # "jupyterlab"
+    "jupyterlab"
     "ical-buddy"
     "blueutil"
     "enchant"
@@ -49,7 +44,7 @@
     # Browser
     "google-chrome"
     "firefox-developer-edition"
-    "microsoft-edge-dev"
+    "microsoft-edge"
     "arc"
 
     # Graphic Tools
@@ -83,9 +78,6 @@
     "crossover"
     "monitorcontrol"
 
-    #vpn
-    "clashx"
-    
     # fonts
     "font-maple"
     "font-victor-mono-nerd-font"
