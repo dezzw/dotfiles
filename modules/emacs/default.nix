@@ -46,9 +46,6 @@
     # Spelling checking
     # enchant
 
-    material-design-icons
     emacs-all-the-icons-fonts
-
-    maple-mono-NF
   ];
 }

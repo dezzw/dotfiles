@@ -3,19 +3,19 @@
 
   inputs = {
     # Package sets
-    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-22.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    master.url = "github:NixOS/nixpkgs/master";
+    stable.url = "github:NixOS/nixpkgs/nixos-22.11";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Environment/system management
     darwin = {
       url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "unstable";
     };
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "unstable";
     };
 
     neovim-nightly-overlay = {
@@ -30,7 +30,7 @@
 
     # Tool to make mac aliases without needing Finder scripting permissions for home-manager app linking
     mkalias.url = "github:reckenrode/mkalias";
-    mkalias.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    mkalias.inputs.nixpkgs.follows = "unstable";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, nixpkgs-unstable, darwin
@@ -71,6 +71,9 @@
             inherit inputs nixpkgs-stable nixpkgs-unstable username;
           };
           modules = [
+            {
+              nix = import ./nix-settings.nix { inherit inputs system nixpkgs; };
+            }
             ./modules/darwin
             home-manager.darwinModules.home-manager
             (mkHome username [
