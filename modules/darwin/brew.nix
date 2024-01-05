@@ -19,15 +19,6 @@
   ];
 
   homebrew.brews = [
-   # {
-   #   name = "yabai";
-   #   restart_service = true;
-   # }
-    #{
-    #  name = "sketchybar";
-    #  restart_service = true;
-    #}
-
     #"python"
     # "racket"
     "jupyterlab"
@@ -37,7 +28,6 @@
   ];
 
   homebrew.casks = [
-
     # WM
     # "amethyst"
 
@@ -51,17 +41,12 @@
     "blender"
     "gimp"
     "obs"
-    "figma"
-    "kdenlive"
 
     # Developing Tools
     "dash"
     "iterm2"
-    "xquartz"
     "jetbrains-toolbox"
     "visual-studio-code"
-    "postman"
-    "gitkraken"
     "godot"
     "orbstack"
 

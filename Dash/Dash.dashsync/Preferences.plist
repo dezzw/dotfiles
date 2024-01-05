@@ -113,7 +113,7 @@
 			<key>Tailwind_CSS</key>
 			<dict>
 				<key>date</key>
-				<date>2023-10-21T02:16:18Z</date>
+				<date>2023-12-22T01:31:44Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -260,25 +260,10 @@
 				<key>date</key>
 				<date>2023-06-03T03:15:56Z</date>
 			</dict>
-			<key>http://kapeli.com/feeds/Java_SE16.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-06-03T03:16:10Z</date>
-			</dict>
-			<key>http://kapeli.com/feeds/Java_SE8.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-06-03T03:15:59Z</date>
-			</dict>
 			<key>http://kapeli.com/feeds/LaTeX.xml</key>
 			<dict>
 				<key>date</key>
 				<date>2023-06-03T03:16:10Z</date>
-			</dict>
-			<key>http://kapeli.com/feeds/Less.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-06-03T03:15:57Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Lua_5.4.xml</key>
 			<dict>
@@ -290,20 +275,10 @@
 				<key>date</key>
 				<date>2023-06-03T03:15:58Z</date>
 			</dict>
-			<key>http://kapeli.com/feeds/PHP.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-06-03T03:16:09Z</date>
-			</dict>
 			<key>http://kapeli.com/feeds/Python_3.xml</key>
 			<dict>
 				<key>date</key>
 				<date>2023-06-03T03:16:11Z</date>
-			</dict>
-			<key>http://kapeli.com/feeds/R.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-06-03T03:16:13Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Racket.xml</key>
 			<dict>
@@ -314,6 +289,11 @@
 			<dict>
 				<key>date</key>
 				<date>2023-06-03T03:16:04Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Rust.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2023-11-08T02:46:22Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Sass.xml</key>
 			<dict>
@@ -335,23 +315,38 @@
 				<key>date</key>
 				<date>2023-06-03T03:15:50Z</date>
 			</dict>
-			<key>http://kapeli.com/feeds/jQuery_Mobile.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-06-03T03:15:56Z</date>
-			</dict>
-			<key>http://kapeli.com/feeds/jQuery_UI.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-06-03T03:16:03Z</date>
-			</dict>
 		</dict>
 		<key>uninstalled</key>
 		<dict>
+			<key>http://kapeli.com/feeds/Less.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2023-11-08T02:45:17Z</date>
+			</dict>
 			<key>http://kapeli.com/feeds/Man_Pages.xml</key>
 			<dict>
 				<key>date</key>
 				<date>2022-05-17T13:28:11Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/PHP.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2023-11-08T02:45:08Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/R.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2023-11-08T02:44:55Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/jQuery_Mobile.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2023-11-08T02:45:23Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/jQuery_UI.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2023-11-08T02:45:24Z</date>
 			</dict>
 		</dict>
 	</dict>

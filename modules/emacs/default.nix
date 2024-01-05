@@ -11,6 +11,7 @@
     # Language Server
     ccls
 
+    ruff-lsp
     nodePackages.pyright
     nodePackages.typescript-language-server
     nodePackages.vscode-langservers-extracted
@@ -20,8 +21,10 @@
     nodePackages.svelte-language-server
 
     nodePackages.eslint
-
-    python39Packages.pylint
+    
+    # clojure-lsp
+    neil
+    clj-kondo
     
     rnix-lsp
     nil

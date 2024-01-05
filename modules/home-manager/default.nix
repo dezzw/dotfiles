@@ -19,7 +19,6 @@ let
 
     # c/c++
     cmake
-    cdecl
     astyle
 
     # nodejs
@@ -28,9 +27,14 @@ let
     nodePackages.pnpm
     deno
 
-    (python3.withPackages (p: with p; [ ipykernel ]))
-
     php
+
+    # java
+    zulu
+
+    # clj
+    clojure
+    leiningen
 
     # tex
     texlive.combined.scheme-full
@@ -64,11 +68,12 @@ in {
 
   imports = [
     ../emacs
+    ../neovim
   ];
 
   home.sessionVariables = {
-    NIX_PATH =
-      "nixpkgs=${inputs.nixpkgs-unstable}:stable=${inputs.nixpkgs-stable}\${NIX_PATH:+:}$NIX_PATH";
+    # NIX_PATH =
+    #  "nixpkgs=${inputs.nixpkgs-unstable}:stable=${inputs.nixpkgs-stable}\${NIX_PATH:+:}$NIX_PATH";
     #TERM = "xterm-256color";
     KEYTIMEOUT = 1;
     EDITOR = "nvim";
@@ -233,6 +238,8 @@ in {
       }
     ];
     shellAliases = {
+      cd = "z";
+      cat = "bat";
     };
   };
 

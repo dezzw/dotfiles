@@ -1,15 +1,5 @@
 { inputs, config, pkgs, ... }:
 {
-  nix = {
-    nixPath = [ "darwin=/etc/${config.environment.etc.darwin.target}" ];
-    extraOptions = ''
-      extra-platforms = x86_64-darwin aarch64-darwin
-    '';
-
-    # auto manage nixbld users with nix darwin
-    configureBuildUsers = true;
-  };
-
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
@@ -26,7 +16,7 @@
     systemPath = [ "/opt/homebrew/bin" ];
     etc = { darwin.source = "${inputs.darwin}"; };
 
-    systemPackages = with pkgs; [ git curl coreutils];
+    systemPackages = with pkgs; [ git curl coreutils ];
 
     # Fix "Too many open files" problems. Based on this:
     # https://medium.com/mindful-technology/too-many-open-files-limit-ulimit-on-mac-os-x-add0f1bfddde
@@ -60,6 +50,18 @@
       '';
     };
   };
+
+  # launchd.user.agents.emacs.path = [ config.environment.systemPath ];
+  # launchd.user.agents.emacs.serviceConfig = {
+  #   KeepAlive = true;
+  #   ProgramArguments = [
+  #     "/bin/sh"
+  #     "-c"
+  #     "/bin/wait4path ${pkgs.demacs}/bin/emacs && exec ${pkgs.demacs}/bin/emacs --fg-daemon"
+  #   ];
+  #   StandardErrorPath = "/tmp/emacs.err.log";
+  #   StandardOutPath = "/tmp/emacs.out.log";
+  # };
 
   documentation.enable = true;
 

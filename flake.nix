@@ -4,7 +4,7 @@
   inputs = {
     # Package sets
     master.url = "github:NixOS/nixpkgs/master";
-    stable.url = "github:NixOS/nixpkgs/nixos-22.11";
+    stable.url = "github:NixOS/nixpkgs/nixos-23.05";
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Environment/system management
@@ -20,20 +20,21 @@
 
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
-      # Pin to a nixpkgs revision that doesn't have NixOS/nixpkgs#208103 yet
-      # inputs.nixpkgs.url = "github:nixos/nixpkgs?rev=fad51abd42ca17a60fc1d4cb9382e2d79ae31836";
     };
 
-    demacs.url = "github:dezzw/demacs";
-
-    nix-direnv.url = "github:nix-community/nix-direnv";
+    demacs = {
+      url = "github:dezzw/demacs";
+      inputs.nixpkgs.follows = "unstable";
+    };
 
     # Tool to make mac aliases without needing Finder scripting permissions for home-manager app linking
-    mkalias.url = "github:reckenrode/mkalias";
-    mkalias.inputs.nixpkgs.follows = "unstable";
+    mkalias = {
+     url = "github:reckenrode/mkalias";
+     inputs.nixpkgs.follows = "unstable";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-stable, nixpkgs-unstable, darwin
+  outputs = inputs@{ self, nixpkgs, stable, unstable, master, darwin
     , home-manager, ... }:
     let
       inherit (home-manager.lib) homeManagerConfiguration;
@@ -42,7 +43,6 @@
         import nixpkgs {
           inherit system;
           overlays = with inputs; [
-            nix-direnv.overlay
             neovim-nightly-overlay.overlay
             (final: prev: {
               inherit (inputs.mkalias.packages.${final.system}) mkalias;
@@ -64,15 +64,15 @@
     in {
       darwinConfigurations = let username = "dez";
       in {
-        Desmonds-MBP = darwin.lib.darwinSystem {
+        Desmonds-MBP = darwin.lib.darwinSystem rec{
           system = "aarch64-darwin";
           pkgs = mkPkgs "aarch64-darwin";
           specialArgs = {
-            inherit inputs nixpkgs-stable nixpkgs-unstable username;
+            inherit inputs nixpkgs username;
           };
           modules = [
             {
-              nix = import ./nix-settings.nix { inherit inputs system nixpkgs; };
+              nix = import ./nix-settings.nix { inherit inputs system nixpkgs username; };
             }
             ./modules/darwin
             home-manager.darwinModules.home-manager
@@ -88,7 +88,7 @@
           system = "aarch64-darwin";
           pkgs = mkPkgs "aarch64-darwin";
           specialArgs = {
-            inherit inputs nixpkgs-stable nixpkgs-unstable username;
+            inherit inputs nixpkgs username;
           };
           modules = [
             ./modules/darwin
@@ -103,7 +103,7 @@
       };
 
       nixosConfigurations = {
-        nixos = nixpkgs-unstable.lib.nixosSystem {
+        nixos = unstable.lib.nixosSystem {
           system = "x86_64-linux";
 
           modules = [
