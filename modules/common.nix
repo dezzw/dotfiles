@@ -11,7 +11,6 @@
     etc = {
       home-manager.source = "${inputs.home-manager}";
       unstable.source = "${inputs.unstable}";
-      stable.source = "${inputs.stable}";
     };
     # list of acceptable shells in /etc/shells
     shells = with pkgs; [ bash zsh ];

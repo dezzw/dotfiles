@@ -19,12 +19,6 @@
   ];
 
   homebrew.brews = [
-    #"python"
-    # "racket"
-    "jupyterlab"
-    "ical-buddy"
-    "blueutil"
-    "enchant"
   ];
 
   homebrew.casks = [

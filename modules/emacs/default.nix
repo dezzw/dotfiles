@@ -8,6 +8,9 @@
   };
   
   home.packages = with pkgs; [
+
+    emacs-lsp-booster 
+
     # Language Server
     ccls
 

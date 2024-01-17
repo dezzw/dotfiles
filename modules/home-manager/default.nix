@@ -46,7 +46,9 @@ let
     # misc
     neofetch # display key software/version info in term
   ] ++ lib.optionals pkgs.stdenv.isDarwin
-    [yabai];
+    [
+      yabai
+    ];
 
   guiPkgs = with pkgs;
     [ ] ++ lib.optionals pkgs.stdenv.isDarwin
@@ -134,7 +136,7 @@ in {
     enable = true;
     compression = true;
     controlMaster = "auto";
-    includes = [ "*.conf" ];
+    includes = [ "*.conf" "~/.orbstack/ssh/config" ];
     extraConfig = ''
       AddKeysToAgent yes
     '';
@@ -153,8 +155,6 @@ in {
     enableCompletion = true;
     enableAutosuggestions = true;
     syntaxHighlighting.enable = true;
-    # let's the terminal track current working dir but only builds on linux
-    enableVteIntegration = if pkgs.stdenvNoCC.isDarwin then false else true;
 
     history = {
       expireDuplicatesFirst = true;
@@ -199,6 +199,24 @@ in {
         else
            printf "\e]%s\e\\" "$1"
         fi
+      }
+
+      if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+        alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
+      fi
+
+      vterm_cmd() {
+        local vterm_elisp
+        vterm_elisp=""
+        while [ $# -gt 0 ]; do
+          vterm_elisp="$vterm_elisp""$(printf '"%s" ' "$(printf "%s" "$1" | sed -e 's|\\|\\\\|g' -e 's|"|\\"|g')")"
+          shift
+        done
+        vterm_printf "51;E$vterm_elisp"
+      }
+      
+      find_file() {
+        vterm_cmd find-file "$(realpath "''${@:-.}")"
       }
 
       [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \

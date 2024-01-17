@@ -4,18 +4,18 @@
   inputs = {
     # Package sets
     master.url = "github:NixOS/nixpkgs/master";
-    stable.url = "github:NixOS/nixpkgs/nixos-23.05";
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Environment/system management
     darwin = {
       url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     neovim-nightly-overlay = {
@@ -24,17 +24,22 @@
 
     demacs = {
       url = "github:dezzw/demacs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    emacs-lsp-booster = {
+      url = "github:slotThe/emacs-lsp-booster-flake";
       inputs.nixpkgs.follows = "unstable";
     };
 
     # Tool to make mac aliases without needing Finder scripting permissions for home-manager app linking
     mkalias = {
      url = "github:reckenrode/mkalias";
-     inputs.nixpkgs.follows = "unstable";
+     inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, stable, unstable, master, darwin
+  outputs = inputs@{ self, nixpkgs, darwin
     , home-manager, ... }:
     let
       inherit (home-manager.lib) homeManagerConfiguration;
@@ -44,6 +49,7 @@
           inherit system;
           overlays = with inputs; [
             neovim-nightly-overlay.overlay
+            emacs-lsp-booster.overlays.default
             (final: prev: {
               inherit (inputs.mkalias.packages.${final.system}) mkalias;
               inherit (inputs.demacs.packages.${final.system}) demacs;
@@ -103,7 +109,7 @@
       };
 
       nixosConfigurations = {
-        nixos = unstable.lib.nixosSystem {
+        nixos = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
 
           modules = [
