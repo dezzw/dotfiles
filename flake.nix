@@ -90,7 +90,7 @@
           ];
         };
 
-        Desmonds-Mac-Mini = darwin.lib.darwinSystem {
+        Desmonds-Mac-mini = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           pkgs = mkPkgs "aarch64-darwin";
           specialArgs = {

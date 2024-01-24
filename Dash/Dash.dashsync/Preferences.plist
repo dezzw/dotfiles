@@ -293,7 +293,7 @@
 			<key>http://kapeli.com/feeds/Rust.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-11-08T02:46:22Z</date>
+				<date>2024-01-24T19:03:50Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Sass.xml</key>
 			<dict>
@@ -321,7 +321,7 @@
 			<key>http://kapeli.com/feeds/Less.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-11-08T02:45:17Z</date>
+				<date>2024-01-24T19:03:46Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Man_Pages.xml</key>
 			<dict>
@@ -331,22 +331,22 @@
 			<key>http://kapeli.com/feeds/PHP.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-11-08T02:45:08Z</date>
+				<date>2024-01-24T19:03:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/R.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-11-08T02:44:55Z</date>
+				<date>2024-01-24T19:03:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_Mobile.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-11-08T02:45:23Z</date>
+				<date>2024-01-24T19:03:46Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery_UI.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-11-08T02:45:24Z</date>
+				<date>2024-01-24T19:03:46Z</date>
 			</dict>
 		</dict>
 	</dict>
