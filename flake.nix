@@ -27,11 +27,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    emacs-lsp-booster = {
-      url = "github:slotThe/emacs-lsp-booster-flake";
-      inputs.nixpkgs.follows = "unstable";
-    };
-
     # Tool to make mac aliases without needing Finder scripting permissions for home-manager app linking
     mkalias = {
      url = "github:reckenrode/mkalias";
@@ -49,7 +44,6 @@
           inherit system;
           overlays = with inputs; [
             neovim-nightly-overlay.overlay
-            emacs-lsp-booster.overlays.default
             (final: prev: {
               inherit (inputs.mkalias.packages.${final.system}) mkalias;
               inherit (inputs.demacs.packages.${final.system}) demacs;

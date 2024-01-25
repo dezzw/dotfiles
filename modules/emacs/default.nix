@@ -51,6 +51,7 @@
 
     # Spelling checking
     # enchant
+    (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
 
     emacs-all-the-icons-fonts
   ];

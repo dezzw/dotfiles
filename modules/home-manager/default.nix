@@ -1,58 +1,56 @@
 { inputs, config, pkgs, username, lib, ... }:
 let
-  defaultPkgs = with pkgs; [
-    # filesystem
-    fd
-    ripgrep
-    curl
-    duf # df alternative showing free disk space
-    tree
-
-    # compression
-    atool
-    unzip
-    gzip
-    xz
-    zip
-
-    jq
-
-    # c/c++
-    cmake
-    astyle
-
-    # nodejs
-    nodejs
-    yarn
-    nodePackages.pnpm
-    deno
-
-    php
-
-    # java
-    zulu
-
-    # clj
-    clojure
-    leiningen
-
-    # tex
-    texlive.combined.scheme-full
-
-    aria # cli downloader
-
-    comma
-
-    # misc
-    neofetch # display key software/version info in term
-  ] ++ lib.optionals pkgs.stdenv.isDarwin
+  defaultPkgs = with pkgs;
     [
-      yabai
-    ];
+      # filesystem
+      fd
+      ripgrep
+      curl
+      duf # df alternative showing free disk space
+      tree
+
+      # compression
+      atool
+      unzip
+      gzip
+      xz
+      zip
+
+      jq
+
+      # c/c++
+      cmake
+      astyle
+
+      # nodejs
+      nodejs
+      yarn
+      nodePackages.pnpm
+      deno
+
+      php
+
+      # java
+      zulu
+
+      # clj
+      clojure
+      leiningen
+
+      # tex
+      texlive.combined.scheme-full
+
+      aria # cli downloader
+
+      comma
+
+      # misc
+      neofetch # display key software/version info in term
+    ] ++ lib.optionals pkgs.stdenv.isDarwin [ yabai ];
 
   guiPkgs = with pkgs;
     [ ] ++ lib.optionals pkgs.stdenv.isDarwin
-      [ utm ]; # utm is a qemu wrapper for mac only
+    [ utm ]; # utm is a qemu wrapper for mac only
 in {
   programs.home-manager.enable = true;
   home.enableNixpkgsReleaseCheck = false;
@@ -68,10 +66,7 @@ in {
   home.stateVersion = "23.05";
   home.packages = defaultPkgs ++ guiPkgs;
 
-  imports = [
-    ../emacs
-    ../neovim
-  ];
+  imports = [ ../emacs ../neovim ];
 
   home.sessionVariables = {
     # NIX_PATH =
@@ -104,11 +99,8 @@ in {
     enable = true;
     #extraPackages = with pkgs.bat-extras; [ batman batgrep ];
     config = {
-      theme =
-        "Dracula"; # I like the TwoDark colors better, but want bold/italic in markdown docs
       italic-text = "always";
-      style =
-        "plain"; # no line numbers, git status, etc... more like cat with colors
+      style = "plain"; # no line numbers, git status, etc... more like cat with colors
     };
   };
 
@@ -214,7 +206,7 @@ in {
         done
         vterm_printf "51;E$vterm_elisp"
       }
-      
+
       find_file() {
         vterm_cmd find-file "$(realpath "''${@:-.}")"
       }
@@ -264,7 +256,7 @@ in {
   programs.eza = {
     enable = true;
     enableAliases = true;
-    git =true;
+    git = true;
   };
 
   programs.git = {
