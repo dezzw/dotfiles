@@ -40,7 +40,6 @@
       "obs"
 
       # Developing Tools
-      "dash"
       "iterm2"
       "jetbrains-toolbox"
       "visual-studio-code"
