@@ -87,15 +87,22 @@
           ];
         };
 
-        Desmonds-Mac-mini = darwin.lib.darwinSystem {
+       
+        Desmonds-Mac-mini = darwin.lib.darwinSystem rec {
           system = "aarch64-darwin";
           pkgs = mkPkgs "aarch64-darwin";
           specialArgs = { inherit inputs nixpkgs username; };
           modules = [
+            {
+              nix = import ./nix-settings.nix {
+                inherit inputs system nixpkgs username;
+              };
+            }
             ./modules/darwin
             home-manager.darwinModules.home-manager
-            inputs.nixvim.homeManagerModules.nixvim
             (mkHome username [
+              inputs.nixvim.homeManagerModules.nixvim
+              
               ./modules/home-manager
               ./modules/home-manager/home-darwin.nix
               # ./modules/home-manager/home-security.nix
