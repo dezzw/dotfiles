@@ -7,7 +7,7 @@
 
   # environment setup
   environment = {
-    systemPackages = [ pkgs.cachix ];
+    systemPackages = [ ];
     etc = {
       home-manager.source = "${inputs.home-manager}";
       unstable.source = "${inputs.unstable}";

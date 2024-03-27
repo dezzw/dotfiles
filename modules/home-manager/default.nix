@@ -8,7 +8,6 @@ let
       curl
       duf # df alternative showing free disk space
       tree
-
       # compression
       atool
       unzip
@@ -27,8 +26,11 @@ let
       yarn
       nodePackages.pnpm
       deno
+      typescript
 
-      php
+      lua
+
+      # php
 
       # java
       zulu
@@ -63,36 +65,29 @@ in {
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "23.05";
+  home.stateVersion = "23.11";
   home.packages = defaultPkgs ++ guiPkgs;
 
   imports = [ ../emacs ../neovim ];
 
   home.sessionVariables = {
-    # NIX_PATH =
-    #  "nixpkgs=${inputs.nixpkgs-unstable}:stable=${inputs.nixpkgs-stable}\${NIX_PATH:+:}$NIX_PATH";
     #TERM = "xterm-256color";
-    KEYTIMEOUT = 1;
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-    GIT_EDITOR = "nvim";
-    LS_COLORS =
-      "no=00:fi=00:di=01;34:ln=35;40:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:";
-    LSCOLORS = "ExfxcxdxCxegedabagacad";
-    CLICOLOR = 1;
-    CLICOLOR_FORCE = "yes";
+    
+    # EDITOR = "nvim";
+    # VISUAL = "nvim";
+    # GIT_EDITOR = "nvim";
     # Add colors to man pages
     MANPAGER = "less -R --use-color -Dd+r -Du+b +Gg -M -s";
     SYSTEMD_COLORS = "true";
     COLORTERM = "truecolor";
     FZF_CTRL_R_OPTS = "--sort --exact";
-    HOMEBREW_NO_AUTO_UPDATE = 1;
     ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
   };
 
   home.file.".direnvrc".text = ''
     source ~/.config/direnv/direnvrc
   '';
+  
   home.file.".p10k.zsh".source = ./dotfiles/p10k.zsh;
 
   programs.bat = {
@@ -144,8 +139,7 @@ in {
 
   programs.zsh = {
     enable = true;
-    enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
     history = {
@@ -255,7 +249,6 @@ in {
 
   programs.eza = {
     enable = true;
-    enableAliases = true;
     git = true;
   };
 
@@ -324,40 +317,39 @@ in {
     ];
   };
 
+  programs.zellij = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      # simplified_ui = true;
+      pane_frames = true; # pane 之间的边框
+      theme = "nord";
+    };
+  };
+    
   programs.alacritty = {
     enable = true;
     package =
       pkgs.alacritty; # switching to unstable so i get 0.11 with undercurl support
     settings = {
-      window.decorations = "full";
-      window.dynamic_title = true;
-      #background_opacity = 0.9;
-      window.opacity = 0.9;
+      window = {
+        decorations = "Buttonless";
+        dynamic_title = true;
+        opacity = 0.7;
+        blur = true;
+      };
       scrolling.history = 3000;
-      scrolling.smooth = true;
       font.normal.family = "FiraCode Nerd Font Mono";
       font.normal.style = "Regular";
       font.bold.style = "Bold";
       font.italic.style = "Italic";
       font.bold_italic.style = "Bold Italic";
-      font.size = if pkgs.stdenvNoCC.isDarwin then 16 else 9;
+      font.size = if pkgs.stdenvNoCC.isDarwin then 14 else 9;
       shell.program = "${pkgs.zsh}/bin/zsh";
       live_config_reload = true;
       cursor.vi_mode_style = "Underline";
-      draw_bold_text_with_bright_colors = true;
-      key_bindings = [
-        # cmd-{ and cmd-} and cmd-] and cmd-[ will switch tmux windows
-        {
-          key = "LBracket";
-          mods = "Command";
-          # \x02 is ctrl-b so sequence below is ctrl-b, h
-          chars = "\\x02h";
-        }
-        {
-          key = "RBracket";
-          mods = "Command";
-          chars = "\\x02l";
-        }
+      colors.draw_bold_text_with_bright_colors = true;
+      keyboard.bindings = [
       ];
     };
   };

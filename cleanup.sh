@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "using python to delete home-manager-links except most recent two"
+python3 cleanup.py
+
 echo "Deleting previous generations before the last 7:"
 echo "running: sudo nix-env --delete-generations +7 --profile /nix/var/nix/profiles/system"
 sudo nix-env --delete-generations +7 --profile /nix/var/nix/profiles/system

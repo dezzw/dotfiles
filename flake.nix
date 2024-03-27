@@ -22,20 +22,21 @@
       url = "github:nix-community/neovim-nightly-overlay";
     };
 
-    demacs = {
-      url = "github:dezzw/demacs";
+    nixvim = {
+      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    demacs.url = "github:dezzw/demacs";
+
     # Tool to make mac aliases without needing Finder scripting permissions for home-manager app linking
     mkalias = {
-     url = "github:reckenrode/mkalias";
-     inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:reckenrode/mkalias";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, darwin
-    , home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
     let
       inherit (home-manager.lib) homeManagerConfiguration;
 
@@ -64,19 +65,21 @@
     in {
       darwinConfigurations = let username = "dez";
       in {
-        Desmonds-MBP = darwin.lib.darwinSystem rec{
+        Desmonds-MBP = darwin.lib.darwinSystem rec {
           system = "aarch64-darwin";
           pkgs = mkPkgs "aarch64-darwin";
-          specialArgs = {
-            inherit inputs nixpkgs username;
-          };
+          specialArgs = { inherit inputs nixpkgs username; };
           modules = [
             {
-              nix = import ./nix-settings.nix { inherit inputs system nixpkgs username; };
+              nix = import ./nix-settings.nix {
+                inherit inputs system nixpkgs username;
+              };
             }
             ./modules/darwin
             home-manager.darwinModules.home-manager
             (mkHome username [
+              inputs.nixvim.homeManagerModules.nixvim
+              
               ./modules/home-manager
               ./modules/home-manager/home-darwin.nix
               # ./modules/home-manager/home-security.nix
@@ -87,12 +90,11 @@
         Desmonds-Mac-mini = darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           pkgs = mkPkgs "aarch64-darwin";
-          specialArgs = {
-            inherit inputs nixpkgs username;
-          };
+          specialArgs = { inherit inputs nixpkgs username; };
           modules = [
             ./modules/darwin
             home-manager.darwinModules.home-manager
+            inputs.nixvim.homeManagerModules.nixvim
             (mkHome username [
               ./modules/home-manager
               ./modules/home-manager/home-darwin.nix

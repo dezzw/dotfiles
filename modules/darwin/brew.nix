@@ -13,9 +13,15 @@
       cleanup = "zap";
     };
 
-    taps = [ "homebrew/cask-versions" "homebrew/cask-fonts" ];
+    taps = [ 
+      "homebrew/cask-versions"
+      "homebrew/cask-fonts"
+      "clojure-lsp/brew"
+    ];
 
-    brews = [ ];
+    brews = [
+    "clojure-lsp-native" 
+    ];
 
     casks = [
       # WM
@@ -26,6 +32,7 @@
       "firefox-developer-edition"
       "microsoft-edge"
       "arc"
+      "tor-browser"
 
       # Graphic Tools
       "blender"
@@ -38,6 +45,7 @@
       "jetbrains-toolbox"
       "visual-studio-code"
       "godot"
+      "zed"
       "orbstack"
 
       # Applications

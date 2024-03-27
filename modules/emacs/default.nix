@@ -29,8 +29,8 @@
     neil
     clj-kondo
     
-    rnix-lsp
     nil
+    nixd
 
     texlab
 
