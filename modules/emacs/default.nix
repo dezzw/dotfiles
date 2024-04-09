@@ -39,7 +39,7 @@
     universal-ctags
     
     # Code Formating
-    nixfmt
+    nixfmt-rfc-style
 
     # dirvish
     imagemagick

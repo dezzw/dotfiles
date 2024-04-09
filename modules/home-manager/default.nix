@@ -319,7 +319,7 @@ in {
 
   programs.zellij = {
     enable = true;
-    enableZshIntegration = true;
+    enableZshIntegration = false;
     settings = {
       # simplified_ui = true;
       pane_frames = true; # pane 之间的边框

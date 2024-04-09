@@ -6,7 +6,7 @@
 
     globals.mapleader = " ";
 
-    options = {
+    opts = {
       number = true; # Show line numbers
       relativenumber = true; # Show relative line numbers
 
@@ -15,66 +15,39 @@
 
     colorschemes.onedark.enable = true;
 
-    # plugins = {
-    #   airline.enable = true;
+    plugins = {
+      airline.enable = true;
 
-    #   nvim-cmp = {
-    #     enable = true;
-    #     autoEnableSources = true;
-    #     sources = [
-    #       # { name = "nvim_lsp"; }
-    #       { name = "path"; }
-    #       { name = "buffer"; }
-    #       # { name = "luasnip"; }
-    #     ];
+      cmp.enable = true;
+      cmp-buffer.enable = true;
+      cmp-dictionary.enable = true;
+      cmp-nvim-lsp.enable = true;
+      cmp-path.enable = true;
+      cmp-tabnine.enable = true;
 
-    #     mapping = {
-    #       "<CR>" = "cmp.mapping.confirm({ select = true })";
-    #       "<Tab>" = {
-    #         action = ''
-    #           function(fallback)
-    #             if cmp.visible() then
-    #               cmp.select_next_item()
-    #             elseif luasnip.expandable() then
-    #               luasnip.expand()
-    #             elseif luasnip.expand_or_jumpable() then
-    #               luasnip.expand_or_jump()
-    #             elseif check_backspace() then
-    #               fallback()
-    #             else
-    #               fallback()
-    #             end
-    #           end
-    #         '';
-    #         modes = [ "i" "s" ];
-    #       };
-    #     };
-    #   };
+      lsp = {
+        enable = true;
 
-      # lsp = {
-      #   enable = true;
+        servers = {
+          clangd.enable = true;
 
-      #   servers = {
-      #     clangd.enable = true;
+          nixd.enable = true;
 
-      #     nixd.enable = true;
+          pyright.enable = true;
 
-      #     pyright.enable = true;
+          tsserver.enable = true;
 
-      #     tsserver.enable = true;
+          lua-ls = {
+            enable = true;
+            settings.telemetry.enable = false;
+          };
+        };
+      };
 
-      #     lua-ls = {
-      #       enable = true;
-      #       settings.telemetry.enable = false;
-      #     };
-      #   };
-      # };
+      comment.enable = true;
 
-    # };
+    };
 
-    extraPlugins = with pkgs.vimPlugins; [{
-      plugin = comment-nvim;
-      config = ''lua require("Comment").setup()'';
-    }];
+    extraPlugins = with pkgs.vimPlugins; [];
   };
 }
