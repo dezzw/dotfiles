@@ -1,0 +1,4 @@
+exit
+nix flake init -t github:dezzw/nix-dev#python
+ll
+exit

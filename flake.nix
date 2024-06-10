@@ -18,10 +18,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
-    };
-
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,7 +40,6 @@
         import nixpkgs {
           inherit system;
           overlays = with inputs; [
-            neovim-nightly-overlay.overlay
             (final: prev: {
               inherit (inputs.mkalias.packages.${final.system}) mkalias;
               inherit (inputs.demacs.packages.${final.system}) demacs;

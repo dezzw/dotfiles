@@ -15,7 +15,7 @@
     ccls
 
     ruff-lsp
-    nodePackages.pyright
+    pyright
     nodePackages.typescript-language-server
     nodePackages.vscode-langservers-extracted
     nodePackages.bash-language-server
@@ -33,8 +33,6 @@
     nixd
 
     texlab
-
-    zls
     
     universal-ctags
     

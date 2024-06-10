@@ -6,10 +6,9 @@ let
       fd
       ripgrep
       curl
-      duf # df alternative showing free disk space
       tree
+      
       # compression
-      atool
       unzip
       gzip
       xz
@@ -23,8 +22,6 @@ let
 
       # nodejs
       nodejs
-      yarn
-      nodePackages.pnpm
       deno
       typescript
 
@@ -68,7 +65,10 @@ in {
   home.stateVersion = "23.11";
   home.packages = defaultPkgs ++ guiPkgs;
 
-  imports = [ ../emacs ../neovim ];
+  imports = [ ../emacs
+              ../neovim
+              ../helix
+            ];
 
   home.sessionVariables = {
     #TERM = "xterm-256color";
@@ -127,14 +127,6 @@ in {
     extraConfig = ''
       AddKeysToAgent yes
     '';
-  };
-
-  programs.gh = {
-    enable = true;
-    # stable is currently failing as of 2022-02-17
-    # error: Could not find a version that satisfies the requirement tomlkit<0.8,>=0.7 (from remarshal)
-    package = pkgs.gh;
-    settings = { git_protocol = "ssh"; };
   };
 
   programs.zsh = {
@@ -337,14 +329,19 @@ in {
         dynamic_title = true;
         opacity = 0.7;
         blur = true;
+	option_as_alt = "Both";
       };
       scrolling.history = 3000;
-      font.normal.family = "FiraCode Nerd Font Mono";
-      font.normal.style = "Regular";
-      font.bold.style = "Bold";
-      font.italic.style = "Italic";
-      font.bold_italic.style = "Bold Italic";
-      font.size = if pkgs.stdenvNoCC.isDarwin then 14 else 9;
+      font = {
+	normal = {
+	  family = "FiraCode Nerd Font Mono";
+	  style = "Regular";
+	};
+	bold.style = "Bold";
+	italic.style = "Italic";
+	bold_italic.style = "Bold Italic";
+	size = if pkgs.stdenvNoCC.isDarwin then 14 else 9;
+      };
       shell.program = "${pkgs.zsh}/bin/zsh";
       live_config_reload = true;
       cursor.vi_mode_style = "Underline";
