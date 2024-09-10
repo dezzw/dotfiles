@@ -15,15 +15,11 @@
     ccls
 
     ruff-lsp
+    basedpyright
     pyright
-    nodePackages.typescript-language-server
-    nodePackages.vscode-langservers-extracted
-    nodePackages.bash-language-server
-    nodePackages.vscode-css-languageserver-bin
-    nodePackages.vscode-html-languageserver-bin
-    nodePackages.svelte-language-server
-
-    nodePackages.eslint
+    vscode-langservers-extracted
+    typescript-language-server
+    bash-language-server
     
     # clojure-lsp
     neil

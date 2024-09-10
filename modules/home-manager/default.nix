@@ -25,7 +25,9 @@ let
       deno
       typescript
 
-      lua
+      # lua
+      lua5_4_compat
+      lua54Packages.fennel
 
       # php
 
@@ -65,7 +67,8 @@ in {
   home.stateVersion = "23.11";
   home.packages = defaultPkgs ++ guiPkgs;
 
-  imports = [ ../emacs
+  imports = [ 
+              ../emacs
               ../neovim
               ../helix
             ];
@@ -83,10 +86,6 @@ in {
     FZF_CTRL_R_OPTS = "--sort --exact";
     ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
   };
-
-  home.file.".direnvrc".text = ''
-    source ~/.config/direnv/direnvrc
-  '';
   
   home.file.".p10k.zsh".source = ./dotfiles/p10k.zsh;
 

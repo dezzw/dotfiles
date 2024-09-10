@@ -29,10 +29,12 @@
     casks = [
       # WM
       # "amethyst"
-      "loop"
+      # "loop"
+      "hammerspoon"
 
       # Browser
       "firefox@developer-edition"
+      "google-chrome"
       "arc"
 
       # Graphic Tools
@@ -41,12 +43,12 @@
       "obs"
 
       # Developing Tools
-      "iterm2"
       "jetbrains-toolbox"
       "visual-studio-code"
       "godot"
       "zed"
       "orbstack"
+      "wezterm"
 
       # Applications
       "alfred"

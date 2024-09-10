@@ -69,4 +69,6 @@
     enableKeyMapping = true;
     remapCapsLockToControl = true;
   };
+
+  security.pam.enableSudoTouchIdAuth = true;
 }
