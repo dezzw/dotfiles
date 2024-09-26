@@ -35,7 +35,7 @@
 
           pyright.enable = true;
 
-          tsserver.enable = true;
+          ts-ls.enable = true;
 
           lua-ls = {
             enable = true;

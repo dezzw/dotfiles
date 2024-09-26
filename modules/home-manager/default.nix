@@ -91,6 +91,7 @@ in {
   };
   
   home.file.".p10k.zsh".source = ./dotfiles/p10k.zsh;
+  home.file.".config/wezterm/".source = ./dotfiles/wezterm;
 
   programs.bat = {
     enable = true;
