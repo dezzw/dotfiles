@@ -35,9 +35,9 @@
 
           pyright.enable = true;
 
-          ts-ls.enable = true;
+          ts_ls.enable = true;
 
-          lua-ls = {
+          lua_ls = {
             enable = true;
             settings.telemetry.enable = false;
           };

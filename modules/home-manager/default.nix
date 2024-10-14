@@ -79,9 +79,9 @@ in {
   home.sessionVariables = {
     #TERM = "xterm-256color";
     
-    # EDITOR = "nvim";
-    # VISUAL = "nvim";
-    # GIT_EDITOR = "nvim";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+    GIT_EDITOR = "nvim";
     # Add colors to man pages
     MANPAGER = "less -R --use-color -Dd+r -Du+b +Gg -M -s";
     SYSTEMD_COLORS = "true";

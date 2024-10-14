@@ -23,6 +23,8 @@
     brews = [
     "clojure-lsp-native"
     "enchant"
+    "php"
+    "node"
     # "loop"
     ];
 
@@ -62,7 +64,6 @@
       "bartender"
       "crossover"
       "monitorcontrol"
-      "dropbox"
 
       "wechat"
 
@@ -80,7 +81,6 @@
       "The Unarchiver" = 425424353;
       "Color Picker" = 1545870783;
       "Interactful" = 1528095640;
-      "OneDrive" = 823766827;
       "Microsoft Word" = 462054704;
       "Microsoft Excel" = 462058435;
     };

@@ -25,14 +25,10 @@
 
     demacs.url = "github:dezzw/demacs";
 
-    # Tool to make mac aliases without needing Finder scripting permissions for home-manager app linking
-    mkalias = {
-      url = "github:reckenrode/mkalias";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    mac-app-util.url = "github:hraban/mac-app-util";
   };
 
-  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, darwin, home-manager, mac-app-util,... }:
     let
       inherit (home-manager.lib) homeManagerConfiguration;
 
@@ -41,7 +37,6 @@
           inherit system;
           overlays = with inputs; [
             (final: prev: {
-              inherit (inputs.mkalias.packages.${final.system}) mkalias;
               inherit (inputs.demacs.packages.${final.system}) demacs;
             })
           ];
@@ -70,14 +65,16 @@
                 inherit inputs system nixpkgs username;
               };
             }
+
+            mac-app-util.darwinModules.default
+            
             ./modules/darwin
             home-manager.darwinModules.home-manager
             (mkHome username [
+              mac-app-util.homeManagerModules.default
               inputs.nixvim.homeManagerModules.nixvim
               
               ./modules/home-manager
-              ./modules/home-manager/home-darwin.nix
-              # ./modules/home-manager/home-security.nix
             ])
           ];
         };
