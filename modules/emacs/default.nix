@@ -25,7 +25,6 @@
     neil
     clj-kondo
     
-    nil
     nixd
 
     texlab
