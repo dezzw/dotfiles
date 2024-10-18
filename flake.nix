@@ -90,9 +90,13 @@
                 inherit inputs system nixpkgs username;
               };
             }
+
+            mac-app-util.darwinModules.default
+
             ./modules/darwin
             home-manager.darwinModules.home-manager
             (mkHome username [
+              mac-app-util.homeManagerModules.default
               inputs.nixvim.homeManagerModules.nixvim
               
               ./modules/home-manager
