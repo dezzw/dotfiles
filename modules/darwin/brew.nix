@@ -37,7 +37,7 @@
       # Browser
       "firefox@developer-edition"
       "google-chrome"
-      "arc"
+      # "arc"
 
       # Graphic Tools
       "blender"
@@ -45,12 +45,13 @@
       "obs"
 
       # Developing Tools
-      "jetbrains-toolbox"
+      # "jetbrains-toolbox"
       "visual-studio-code"
       "godot"
       "zed"
       "orbstack"
       "wezterm"
+      "ollama"
 
       # Applications
       "alfred"

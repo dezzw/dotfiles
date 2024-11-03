@@ -43,6 +43,9 @@ let
 
       aria # cli downloader
 
+      # AI client
+      aider-chat
+
       comma
 
       cachix
