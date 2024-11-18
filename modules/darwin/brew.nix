@@ -41,6 +41,7 @@
 
       # Graphic Tools
       "blender"
+      "magicavoxel"
       "gimp"
       "obs"
 
@@ -52,6 +53,8 @@
       "orbstack"
       "wezterm"
       "ollama"
+      "copilot-for-xcode"
+      "chatgpt"
 
       # Applications
       "alfred"

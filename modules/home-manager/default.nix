@@ -39,7 +39,7 @@ let
       leiningen
 
       # tex
-      texlive.combined.scheme-full
+      texliveFull
 
       aria # cli downloader
 
@@ -80,7 +80,7 @@ in {
             ];
 
   home.sessionVariables = {
-    #TERM = "xterm-256color";
+    TERM = "xterm-256color";
     
     EDITOR = "nvim";
     VISUAL = "nvim";
@@ -98,7 +98,6 @@ in {
 
   programs.bat = {
     enable = true;
-    #extraPackages = with pkgs.bat-extras; [ batman batgrep ];
     config = {
       italic-text = "always";
       style = "plain"; # no line numbers, git status, etc... more like cat with colors
@@ -276,14 +275,15 @@ in {
 
   programs.gpg = { enable = true; };
 
-  programs.password-store = {
-    enable = true;
-    package =
-      pkgs.pass.withExtensions (exts: with exts; [ pass-otp pass-update ]);
-    settings = { PASSWORD_STORE_DIR = "$HOME/.password-store"; };
-  };
+  # using Apple Password instead
+  # programs.password-store = {
+  #   enable = true;
+  #   package =
+  #     pkgs.pass.withExtensions (exts: with exts; [ pass-otp pass-update ]);
+  #   settings = { PASSWORD_STORE_DIR = "$HOME/.password-store"; };
+  # };
 
-  programs.browserpass = { enable = true; };
+  # programs.browserpass = { enable = true; };
 
   programs.tmux = {
     enable = true;

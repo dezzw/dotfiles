@@ -14,6 +14,8 @@
     home-manager.flake = inputs.home-manager;
   };
 
+  # optimise.automatic = true;
+
   settings = {
     accept-flake-config = true;
 
@@ -28,18 +30,23 @@
 
     # home-manager will attempt to rebuild the world otherwise...
     trusted-substituters = [
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-        "https://dezzw.cachix.org"
-      ];
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+      "https://dezzw.cachix.org"
+    ];
 
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "dezzw.cachix.org-1:5YXdWpaFXkULUAJ30oEaGHCZlC2Tt7SZMW8r9kmR83E="
-      ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "dezzw.cachix.org-1:5YXdWpaFXkULUAJ30oEaGHCZlC2Tt7SZMW8r9kmR83E="
+    ];
 
     trusted-users = [ "${username}" "root" "@admin" "@wheel" ];
+
+    # sandbox = false;
+    # extra-sandbox-paths = [
+    #   "/Applications/Xcode.app/Contents/Developer/usr/bin/"
+    # ];
   };
 
   extraOptions = ''

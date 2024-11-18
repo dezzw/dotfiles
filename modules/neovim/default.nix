@@ -37,10 +37,10 @@
 
           ts_ls.enable = true;
 
-          lua_ls = {
-            enable = true;
-            settings.telemetry.enable = false;
-          };
+          # lua_ls = {
+          #   enable = true;
+          #   settings.telemetry.enable = false;
+          # };
         };
       };
 
