@@ -34,6 +34,7 @@
       # "loop"
       "hammerspoon"
 
+      "jordanbaird-ice"
       # Browser
       "firefox@developer-edition"
       "google-chrome"
@@ -65,7 +66,6 @@
       "appcleaner"
       "steam"
       "cleanshot"
-      "bartender"
       "crossover"
       "monitorcontrol"
 

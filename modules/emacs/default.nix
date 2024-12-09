@@ -1,15 +1,31 @@
 { pkgs, ... }:
-
+let
+  python = pkgs.python3.withPackages (
+    p: with p; [
+      epc
+      orjson
+      paramiko
+      rapidfuzz
+      setuptools
+      sexpdata
+      six
+      watchdog
+    ]
+  );
+  pythonForLspBridge = pkgs.runCommand "python-for-lsp-bridge" { } ''
+    mkdir -p $out/bin
+    ln -s ${python}/bin/python $out/bin/python-for-lsp-bridge
+  '';
+in
 {
+  # programs.emacs = {
+  #   enable = true;
+  #   package = pkgs.demacs;
+  # };
 
-  programs.emacs = {
-    enable = true;
-    package = pkgs.demacs;
-  };
-  
   home.packages = with pkgs; [
 
-    emacs-lsp-booster 
+    emacs-lsp-booster
 
     # Language Server
     ccls
@@ -20,17 +36,17 @@
     vscode-langservers-extracted
     typescript-language-server
     bash-language-server
-    
+
     # clojure-lsp
     neil
     clj-kondo
-    
+
     nixd
 
     texlab
-    
+
     universal-ctags
-    
+
     # Code Formating
     nixfmt-rfc-style
 
@@ -44,8 +60,20 @@
 
     # Spelling checking
     # enchant
-    (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
+    (aspellWithDicts (
+      dicts: with dicts; [
+        en
+        en-computers
+        en-science
+      ]
+    ))
 
     emacs-all-the-icons-fonts
+
+    pythonForLspBridge
   ];
+
+  home.sessionVariables = {
+    PATH = "/Applications/Emacs.app/Contents/MacOS/bin:$PATH";
+  };
 }

@@ -14,7 +14,7 @@
     home-manager.flake = inputs.home-manager;
   };
 
-  # optimise.automatic = true;
+  optimise.automatic = true;
 
   settings = {
     accept-flake-config = true;
