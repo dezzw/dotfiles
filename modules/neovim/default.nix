@@ -23,7 +23,6 @@
       cmp-dictionary.enable = true;
       cmp-nvim-lsp.enable = true;
       cmp-path.enable = true;
-      cmp-tabnine.enable = true;
 
       lsp = {
         enable = true;

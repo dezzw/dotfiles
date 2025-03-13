@@ -10,6 +10,7 @@ let
       sexpdata
       six
       watchdog
+      packaging
     ]
   );
   pythonForLspBridge = pkgs.runCommand "python-for-lsp-bridge" { } ''
@@ -32,7 +33,7 @@ in
 
     ruff-lsp
     basedpyright
-    pyright
+    # pyright
     vscode-langservers-extracted
     typescript-language-server
     bash-language-server
@@ -40,11 +41,14 @@ in
     # clojure-lsp
     neil
     clj-kondo
-
+    
     nixd
 
     texlab
 
+    lua-language-server
+    fennel-ls
+    
     universal-ctags
 
     # Code Formating
@@ -54,6 +58,20 @@ in
     imagemagick
     ffmpegthumbnailer
     mediainfo
+
+    (rustPlatform.buildRustPackage rec {
+      pname = "devicon-lookup";
+      version = "0.10.2";
+
+      src = fetchFromGitHub {
+	owner = "coreyja";
+	repo = "devicon-lookup";
+	rev = "v${version}";
+	hash = "sha256-mDjRbBX3B1pfGX9SkrQLFXpgpq3Kay+crFXT1Bmfadk=";
+      };
+
+      useFetchCargoVendor = true;
+      cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";})
 
     # org-download
     pngpaste
@@ -67,6 +85,8 @@ in
         en-science
       ]
     ))
+
+    leetcode-cli
 
     emacs-all-the-icons-fonts
 

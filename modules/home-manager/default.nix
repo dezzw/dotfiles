@@ -1,13 +1,21 @@
-{ inputs, config, pkgs, username, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  username,
+  lib,
+  ...
+}:
 let
-  defaultPkgs = with pkgs;
+  defaultPkgs =
+    with pkgs;
     [
       # filesystem
       fd
       ripgrep
       curl
       tree
-      
+
       # compression
       unzip
       gzip
@@ -31,12 +39,16 @@ let
 
       # php
 
+      # jupyter
+      jupyter-all
+
       # java
       zulu
 
       # clj
       clojure
       leiningen
+      babashka
 
       # tex
       texliveFull
@@ -46,18 +58,20 @@ let
       # AI client
       aider-chat
 
+      pandoc_3_6
+
       comma
 
       cachix
 
       # misc
       neofetch # display key software/version info in term
-    ] ++ lib.optionals pkgs.stdenv.isDarwin [  ];
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [ ];
 
-  guiPkgs = with pkgs;
-    [ ] ++ lib.optionals pkgs.stdenv.isDarwin
-    [ utm ]; # utm is a qemu wrapper for mac only
-in {
+  guiPkgs = with pkgs; [ ] ++ lib.optionals pkgs.stdenv.isDarwin [ utm ]; # utm is a qemu wrapper for mac only
+in
+{
   programs.home-manager.enable = true;
   home.enableNixpkgsReleaseCheck = false;
 
@@ -72,16 +86,16 @@ in {
   home.stateVersion = "23.11";
   home.packages = defaultPkgs ++ guiPkgs;
 
-  imports = [ 
-              ../emacs
-              ../neovim
-              ../helix
-              # ../alacritty
-            ];
+  imports = [
+    ../emacs
+    ../neovim
+    ../helix
+    # ../alacritty
+  ];
 
   home.sessionVariables = {
     TERM = "xterm-256color";
-    
+
     EDITOR = "nvim";
     VISUAL = "nvim";
     GIT_EDITOR = "nvim";
@@ -92,9 +106,14 @@ in {
     FZF_CTRL_R_OPTS = "--sort --exact";
     ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
   };
-  
-  home.file.".p10k.zsh".source = ./dotfiles/p10k.zsh;
-  home.file.".config/wezterm/".source = ./dotfiles/wezterm;
+
+  home.file = {
+    ".p10k.zsh".source = ./dotfiles/p10k.zsh;
+    ".config/wezterm/" = {
+      source = ./dotfiles/wezterm;
+      recursive = true;
+    };
+  };
 
   programs.bat = {
     enable = true;
@@ -128,7 +147,10 @@ in {
     enable = true;
     compression = true;
     controlMaster = "auto";
-    includes = [ "*.conf" "~/.orbstack/ssh/config" ];
+    includes = [
+      "*.conf"
+      "~/.orbstack/ssh/config"
+    ];
     extraConfig = ''
       AddKeysToAgent yes
     '';
@@ -258,7 +280,9 @@ in {
       options = {
         features = "decorations";
 
-        interactive = { keep-plus-minus-markers = false; };
+        interactive = {
+          keep-plus-minus-markers = false;
+        };
 
         decorations = {
           commit-decoration-style = "blue ol";
@@ -273,7 +297,9 @@ in {
     };
   };
 
-  programs.gpg = { enable = true; };
+  programs.gpg = {
+    enable = true;
+  };
 
   # using Apple Password instead
   # programs.password-store = {
@@ -321,10 +347,10 @@ in {
     enableBashIntegration = true;
     settings = {
       manager = {
-	show_hidden = true;
-	sort_by = "modified";
-	sort_dir_first = true;
-	# sort_reverse = true;
+        show_hidden = true;
+        sort_by = "modified";
+        sort_dir_first = true;
+        # sort_reverse = true;
       };
     };
   };

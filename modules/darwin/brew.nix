@@ -64,19 +64,24 @@
       "iina"
       "zoom"
       "appcleaner"
-      "steam"
       "cleanshot"
       "crossover"
       "monitorcontrol"
 
       "wechat"
+      "libreoffice"
 
+      # gaming
+      "steam"
+      "whisky"
+      
       # fonts
       "font-maple"
       "font-victor-mono-nerd-font"
       "font-fira-code-nerd-font"
       "font-jetbrains-mono-nerd-font"
       "font-hack-nerd-font"
+      "font-monaspace-nerd-font"
     ];
 
     masApps = {
