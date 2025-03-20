@@ -92,8 +92,4 @@ in
 
     pythonForLspBridge
   ];
-
-  home.sessionVariables = {
-    PATH = "/Applications/Emacs.app/Contents/MacOS/bin:$PATH";
-  };
 }

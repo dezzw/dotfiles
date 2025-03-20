@@ -56,7 +56,7 @@ let
       aria # cli downloader
 
       # AI client
-      aider-chat
+      # aider-chat # outdated using brew for now
 
       pandoc_3_6
 
@@ -106,6 +106,11 @@ in
     FZF_CTRL_R_OPTS = "--sort --exact";
     ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
   };
+
+  home.sessionPath = [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/"
+    "/Applications/Emacs.app/Contents/MacOS/bin/"
+  ];
 
   home.file = {
     ".p10k.zsh".source = ./dotfiles/p10k.zsh;

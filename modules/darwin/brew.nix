@@ -21,11 +21,12 @@
     ];
 
     brews = [
-    "clojure-lsp-native"
-    "enchant"
-    "php"
-    "node"
-    # "loop"
+      "clojure-lsp-native"
+      "enchant"
+      "php"
+      "node"
+      # "loop"
+      "aider"
     ];
 
     casks = [
@@ -33,8 +34,8 @@
       # "amethyst"
       # "loop"
       "hammerspoon"
-
       "jordanbaird-ice"
+      
       # Browser
       "firefox@developer-edition"
       "google-chrome"
@@ -43,18 +44,17 @@
       # Graphic Tools
       "blender"
       "magicavoxel"
-      "gimp"
+      # "gimp"
       "obs"
 
       # Developing Tools
       # "jetbrains-toolbox"
       "visual-studio-code"
-      "godot"
+      # "godot"
       "zed"
       "orbstack"
       "wezterm"
       "ollama"
-      "copilot-for-xcode"
       "chatgpt"
 
       # Applications

@@ -1,0 +1,17 @@
+{:tasks
+ {:requires ([babashka.fs :as fs])
+  update (shell "nix flake update")
+  upgrade (shell "darwin-rebuild switch --flake .#")
+  clean (do
+          (->> (fs/list-dir "/Users/dez/.local/state/nix/profiles/")
+               (sort-by fs/creation-time)
+               (drop-last 2)
+               (run! fs/delete-if-exists))
+          (println "Deleting previous generations before the last 7:")
+          (shell "sudo nix-env --delete-generations +7 --profile /nix/var/nix/profiles/system")
+          (println "Garbage collecting older than 7d:")
+          (shell "sudo nix-collect-garbage --delete-older-than 7d")
+          (println "Hard linking duplicates:")
+          (shell "nix store optimise"))
+  }
+ }

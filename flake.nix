@@ -36,9 +36,11 @@
         import nixpkgs {
           inherit system;
           overlays = with inputs; [
-            (final: prev: {
-              inherit (inputs.demacs.packages.${final.system}) demacs;
-            })
+	    # (import ./overlays/aider.nix)
+	    (final: prev: {
+	      inherit (inputs.demacs.packages.${final.system}) demacs;
+	    })
+
           ];
           config = import ./config.nix;
         };
