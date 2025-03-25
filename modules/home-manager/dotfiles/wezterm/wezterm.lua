@@ -10,6 +10,7 @@ config = {
     color_scheme = 'OneDark (base16)',
     window_background_opacity = 0.9,
     text_background_opacity = 1.0,
+    font = wezterm.font 'Maple Mono NF CN',
 }
 
 return config

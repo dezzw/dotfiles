@@ -1,7 +1,7 @@
 {:tasks
  {:requires ([babashka.fs :as fs])
   update (shell "nix flake update")
-  upgrade (shell "darwin-rebuild switch --flake .#")
+  apply (shell "darwin-rebuild switch --flake .#")
   clean (do
           (->> (fs/list-dir "/Users/dez/.local/state/nix/profiles/")
                (sort-by fs/creation-time)
