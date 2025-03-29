@@ -45,6 +45,10 @@ let
       # java
       zulu
 
+      # Golang
+      go
+      
+
       # clj
       clojure
       leiningen

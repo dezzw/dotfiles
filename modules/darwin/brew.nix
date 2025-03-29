@@ -50,8 +50,8 @@
       # Developing Tools
       # "jetbrains-toolbox"
       "visual-studio-code"
+      "cursor"
       # "godot"
-      "zed"
       "orbstack"
       "wezterm"
       "ollama"
@@ -65,7 +65,6 @@
       "zoom"
       "appcleaner"
       "cleanshot"
-      "crossover"
       "monitorcontrol"
 
       "wechat"
@@ -74,6 +73,7 @@
       # gaming
       "steam"
       "whisky"
+      "minecraft"
       
       # fonts
       "font-maple-mono-nf-cn"
