@@ -39,15 +39,14 @@ let
 
       # php
 
-      # jupyter
-      jupyter-all
+      # python
+      uv
 
       # java
       zulu
 
       # Golang
       go
-      
 
       # clj
       clojure
@@ -73,7 +72,7 @@ let
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin [ ];
 
-  guiPkgs = with pkgs; [ ] ++ lib.optionals pkgs.stdenv.isDarwin [ utm ]; # utm is a qemu wrapper for mac only
+  guiPkgs = with pkgs; [ ] ++ lib.optionals pkgs.stdenv.isDarwin [ ]; # utm is a qemu wrapper for mac only
 in
 {
   programs.home-manager.enable = true;
@@ -95,6 +94,7 @@ in
     ../neovim
     ../helix
     # ../alacritty
+    #../ghostty
   ];
 
   home.sessionVariables = {

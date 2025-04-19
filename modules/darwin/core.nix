@@ -47,23 +47,20 @@
     };
   };
 
-  # launchd.user.agents.emacs.path = [ config.environment.systemPath ];
-  # launchd.user.agents.emacs.serviceConfig = {
-  #   KeepAlive = true;
-  #   ProgramArguments = [
-  #     "/bin/sh"
-  #     "-c"
-  #     "/bin/wait4path ${pkgs.demacs}/bin/emacs && exec ${pkgs.demacs}/bin/emacs --fg-daemon"
-  #   ];
-  #   StandardErrorPath = "/tmp/emacs.err.log";
-  #   StandardOutPath = "/tmp/emacs.out.log";
-  # };
-
   documentation.enable = true;
 
-  system.keyboard = {
-    enableKeyMapping = true;
-    remapCapsLockToControl = true;
+  system = {
+    defaults = {
+      finder = {
+        ShowPathbar = true;
+        FXPreferredViewStyle = "clmv";
+	FXRemoveOldTrashItems = true;
+      };
+    };
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToControl = true;
+    };
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;
