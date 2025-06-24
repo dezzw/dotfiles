@@ -5,7 +5,9 @@
 
     enable = true;
 
-    global = { brewfile = true; };
+    global = {
+      brewfile = true;
+    };
 
     onActivation = {
       autoUpdate = true;
@@ -13,7 +15,7 @@
       cleanup = "zap";
     };
 
-    taps = [ 
+    taps = [
       "homebrew/cask-versions"
       "homebrew/cask-fonts"
       "clojure-lsp/brew"
@@ -37,7 +39,7 @@
       # "loop"
       "hammerspoon"
       "jordanbaird-ice"
-      
+
       # Browser
       "firefox@developer-edition"
       "google-chrome"
@@ -57,6 +59,7 @@
       "orbstack"
       "utm"
       "wezterm"
+      "warp"
       "ollama"
       "chatgpt"
 
@@ -66,7 +69,7 @@
       "downie"
       "iina"
       "zoom"
-      "appcleaner"
+      "pearcleaner"
       "cleanshot"
       "monitorcontrol"
 
@@ -75,9 +78,8 @@
 
       # gaming
       "steam"
-      "whisky"
       "minecraft"
-      
+
       # fonts
       "font-maple-mono-nf-cn"
       # "font-victor-mono-nerd-font"

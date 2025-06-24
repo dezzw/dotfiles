@@ -1,7 +1,13 @@
-{ inputs, config, pkgs, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
 {
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
+  system.primaryUser = "dez";
   system.stateVersion = 4;
 
   users.users.dez.home = "/Users/dez";
@@ -10,9 +16,15 @@
     pathsToLink = [ "/Applications" ];
     # I exclusively control homebrew from here, but it's annoying to fully qualify the path to brew binaries
     systemPath = [ "/opt/homebrew/bin" ];
-    etc = { darwin.source = "${inputs.darwin}"; };
+    etc = {
+      darwin.source = "${inputs.darwin}";
+    };
 
-    systemPackages = with pkgs; [ git curl coreutils ];
+    systemPackages = with pkgs; [
+      git
+      curl
+      coreutils
+    ];
 
     # Fix "Too many open files" problems. Based on this:
     # https://medium.com/mindful-technology/too-many-open-files-limit-ulimit-on-mac-os-x-add0f1bfddde
@@ -54,7 +66,7 @@
       finder = {
         ShowPathbar = true;
         FXPreferredViewStyle = "clmv";
-	FXRemoveOldTrashItems = true;
+        FXRemoveOldTrashItems = true;
       };
     };
     keyboard = {

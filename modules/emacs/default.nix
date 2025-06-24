@@ -31,7 +31,7 @@ in
     # Language Server
     ccls
 
-    ruff-lsp
+    ruff
     basedpyright
     # pyright
     vscode-langservers-extracted
@@ -41,15 +41,16 @@ in
     # clojure-lsp
     neil
     clj-kondo
-    
+
     nixd
 
     texlab
 
     lua-language-server
     fennel-ls
-    
-    universal-ctags
+
+    global
+    # universal-ctags
 
     # Code Formating
     nixfmt-rfc-style
@@ -64,14 +65,15 @@ in
       version = "0.10.2";
 
       src = fetchFromGitHub {
-	owner = "coreyja";
-	repo = "devicon-lookup";
-	rev = "v${version}";
-	hash = "sha256-mDjRbBX3B1pfGX9SkrQLFXpgpq3Kay+crFXT1Bmfadk=";
+        owner = "coreyja";
+        repo = "devicon-lookup";
+        rev = "v${version}";
+        hash = "sha256-mDjRbBX3B1pfGX9SkrQLFXpgpq3Kay+crFXT1Bmfadk=";
       };
 
       useFetchCargoVendor = true;
-      cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";})
+      cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";
+    })
 
     # org-download
     pngpaste

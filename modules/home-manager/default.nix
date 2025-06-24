@@ -41,6 +41,7 @@ let
 
       # python
       uv
+      pipx
 
       # java
       zulu
@@ -53,6 +54,12 @@ let
       leiningen
       babashka
 
+      # clisp
+      roswell
+
+      # haskell
+      stack
+
       # tex
       texliveFull
 
@@ -61,7 +68,7 @@ let
       # AI client
       # aider-chat # outdated using brew for now
 
-      pandoc_3_6
+      pandoc
 
       comma
 
@@ -193,10 +200,9 @@ in
       done
       compinit -C
     '';
-    initExtraFirst = ''
+    initContent = ''
       source ${./dotfiles/p10k.zsh}
-    '';
-    initExtra = ''
+
       if [[ "$INSIDE_EMACS" = 'vterm' ]] \
         && [[ -n ''${EMACS_VTERM_PATH} ]] \
         && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
