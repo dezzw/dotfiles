@@ -97,13 +97,11 @@ in
       "steam"
       "minecraft"
     ]
-    ++ lib.optional isMini [
+    ++ lib.optionals isMini [
       "plex-media-server"
     ];
 
-    masApps = builtins.trace
-    "isMac = ${toString isMac}, hostName = ${toString hostName}"
-    ({
+    masApps = {
       Tailscale = 1475387142;
     }
     // lib.optionalAttrs isMac {
@@ -113,6 +111,6 @@ in
       "Interactful" = 1528095640;
       "Microsoft Word" = 462054704;
       "Microsoft Excel" = 462058435;
-    });
+    };
   };
 }
