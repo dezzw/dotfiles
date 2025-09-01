@@ -19,35 +19,14 @@ let
   '';
 in
 {
-  # programs.emacs = {
-  #   enable = true;
-  #   package = pkgs.demacs;
-  # };
+  programs.emacs = {
+    enable = true;
+    package = pkgs.demacs;
+  };
 
   home.packages = with pkgs; [
 
     emacs-lsp-booster
-
-    # Language Server
-    ccls
-
-    ruff
-    basedpyright
-    # pyright
-    vscode-langservers-extracted
-    typescript-language-server
-    bash-language-server
-
-    # clojure-lsp
-    neil
-    clj-kondo
-
-    nixd
-
-    texlab
-
-    lua-language-server
-    fennel-ls
 
     global
     # universal-ctags
@@ -71,7 +50,6 @@ in
         hash = "sha256-mDjRbBX3B1pfGX9SkrQLFXpgpq3Kay+crFXT1Bmfadk=";
       };
 
-      useFetchCargoVendor = true;
       cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";
     })
 
@@ -91,6 +69,8 @@ in
     leetcode-cli
 
     emacs-all-the-icons-fonts
+
+    gh
 
     pythonForLspBridge
   ];

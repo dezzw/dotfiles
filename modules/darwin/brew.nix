@@ -19,7 +19,6 @@
       "homebrew/cask-versions"
       "homebrew/cask-fonts"
       "clojure-lsp/brew"
-      "d12frosted/emacs-plus"
       "mrkai77/cask"
     ];
 
@@ -30,7 +29,6 @@
       "node"
       # "loop"
       "aider"
-      "emacs-plus@31"
     ];
 
     casks = [

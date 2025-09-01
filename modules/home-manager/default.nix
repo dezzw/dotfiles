@@ -76,6 +76,14 @@ let
 
       # misc
       neofetch # display key software/version info in term
+
+      # helix
+      tig
+      serpl
+      lazysql
+      slumber
+
+      just
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin [ ];
 
@@ -99,7 +107,7 @@ in
   imports = [
     ../emacs
     ../neovim
-    ../helix
+    # ../helix
     # ../alacritty
     #../ghostty
   ];
@@ -119,12 +127,12 @@ in
   };
 
   home.sessionPath = [
+    "$HOME/.cargo/bin"
     "/Applications/Xcode.app/Contents/Developer/usr/bin/"
     "/Applications/Emacs.app/Contents/MacOS/bin/"
   ];
 
   home.file = {
-    ".p10k.zsh".source = ./dotfiles/p10k.zsh;
     ".config/wezterm/" = {
       source = ./dotfiles/wezterm;
       recursive = true;
@@ -142,18 +150,20 @@ in
   programs.nix-index.enable = true;
   programs.direnv = {
     enable = true;
-    enableZshIntegration = true;
+    # enableFishIntegration = true;
     nix-direnv.enable = true;
   };
 
   programs.zoxide = {
     enable = true;
+    enableFishIntegration = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
   };
 
   programs.fzf = {
     enable = true;
+    enableFishIntegration = true;
     enableZshIntegration = true;
     tmux.enableShellIntegration = true;
     defaultCommand = "fd --type f --hidden --exclude .git";
@@ -172,7 +182,7 @@ in
     '';
   };
 
-  programs.zsh = {
+ programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
@@ -200,9 +210,7 @@ in
       done
       compinit -C
     '';
-    initContent = ''
-      source ${./dotfiles/p10k.zsh}
-
+    initExtra = ''
       if [[ "$INSIDE_EMACS" = 'vterm' ]] \
         && [[ -n ''${EMACS_VTERM_PATH} ]] \
         && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
@@ -245,16 +253,6 @@ in
     sessionVariables = { };
     plugins = [
       {
-        name = "powerlevel10k";
-        file = "powerlevel10k.zsh-theme";
-        src = pkgs.fetchFromGitHub {
-          owner = "romkatv";
-          repo = "powerlevel10k";
-          rev = "v1.16.1";
-          sha256 = "sha256-DLiKH12oqaaVChRqY0Q5oxVjziZdW/PfnRW1fCSCbjo=";
-        };
-      }
-      {
         name = "autopair";
         file = "autopair.zsh";
         src = pkgs.fetchFromGitHub {
@@ -279,6 +277,25 @@ in
       cd = "z";
       cat = "bat";
     };
+  };
+
+  programs.fish = {
+    enable = true;
+
+    shellInit = ''
+      # source ${config.home.homeDirectory}/.dotfiles/modules/home-manager/dotfiles/emacs.fish
+    '';
+
+    shellAbbrs = {
+      cd = "z";
+      cat = "bat";
+    };
+  };
+
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
   };
 
   programs.eza = {
@@ -329,7 +346,7 @@ in
   programs.tmux = {
     enable = true;
     keyMode = "vi";
-    shell = "${pkgs.zsh}/bin/zsh";
+    shell = "${pkgs.fish}/bin/fish";
     historyLimit = 10000;
     escapeTime = 0;
     extraConfig = builtins.readFile ./dotfiles/tmux.conf;
@@ -356,8 +373,14 @@ in
     ];
   };
 
+  programs.zellij = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.yazi = {
     enable = true;
+    enableFishIntegration = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
     settings = {

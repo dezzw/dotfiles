@@ -1,10 +1,11 @@
-{ inputs, username, lib, pkgs, ... }: {
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    enableBashCompletion = true;
-  };
-
+{
+  inputs,
+  username,
+  lib,
+  pkgs,
+  ...
+}:
+{
   # environment setup
   environment = {
     systemPackages = [ ];
@@ -13,8 +14,17 @@
       unstable.source = "${inputs.unstable}";
     };
     # list of acceptable shells in /etc/shells
-    shells = with pkgs; [ bash zsh ];
+    shells = with pkgs; [
+      fish
+      bash
+      zsh
+    ];
     pathsToLink = [ "/libexec" ];
+  };
+
+  users.users."dez" = {
+    shell = pkgs.fish;
+    ignoreShellProgramCheck = true;
   };
 
 }

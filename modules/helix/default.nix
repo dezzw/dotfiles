@@ -2,6 +2,10 @@
 
 {
   programs.helix = {
-    enable = true;
+    enable = false;
   };
+
+  home.packages = with pkgs; [
+    steel
+  ];
 }
