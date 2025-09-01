@@ -5,8 +5,8 @@
   ...
 }:
 let
-  hostName = builtins.getEnv "HOST";
-  isMac = hostName == "MacBookPro";
+  hostName = config.networking.hostName or "";
+  isMac = hostName == "pro";
   isMini = hostName == "mini";
 in
 {
@@ -57,7 +57,7 @@ in
       # "font-hack-nerd-font"
       "font-monaspace-nerd-font"
     ]
-    ++ lib.optional isMac [
+    ++ lib.optionals isMac [
       # WM
       # "amethyst"
       # "loop"
@@ -101,7 +101,9 @@ in
       "plex-media-server"
     ];
 
-    masApps = {
+    masApps = builtins.trace
+    "isMac = ${toString isMac}, hostName = ${toString hostName}"
+    ({
       Tailscale = 1475387142;
     }
     // lib.optionalAttrs isMac {
@@ -111,6 +113,6 @@ in
       "Interactful" = 1528095640;
       "Microsoft Word" = 462054704;
       "Microsoft Excel" = 462058435;
-    };
+    });
   };
 }

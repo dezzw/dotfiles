@@ -72,67 +72,50 @@
     {
       darwinConfigurations =
         let
-          username = "dez";
+          mkDarwin =
+            hostname: username:
+            darwin.lib.darwinSystem rec {
+              system = "aarch64-darwin";
+              pkgs = mkPkgs system;
+
+              specialArgs = {
+                inherit
+                  inputs
+                  nixpkgs
+                  hostname
+                  username
+                  ;
+              };
+
+              modules = [
+                {
+                  nix = import ./nix-settings.nix {
+                    inherit
+                      inputs
+                      system
+                      nixpkgs
+                      username
+                      ;
+                  };
+
+                  networking.hostName = hostname;
+                }
+
+                mac-app-util.darwinModules.default
+
+                ./modules/darwin
+                home-manager.darwinModules.home-manager
+                (mkHome username [
+                  mac-app-util.homeManagerModules.default
+                  inputs.nixvim.homeModules.nixvim
+                  ./modules/home-manager
+                ])
+              ];
+            };
         in
         {
-          dez = darwin.lib.darwinSystem rec {
-            system = "aarch64-darwin";
-            pkgs = mkPkgs "aarch64-darwin";
-            specialArgs = { inherit inputs nixpkgs username; };
-            modules = [
-              {
-                nix = import ./nix-settings.nix {
-                  inherit
-                    inputs
-                    system
-                    nixpkgs
-                    username
-                    ;
-                };
-              }
-
-              mac-app-util.darwinModules.default
-
-              ./modules/darwin
-              home-manager.darwinModules.home-manager
-              (mkHome username [
-                mac-app-util.homeManagerModules.default
-                inputs.nixvim.homeModules.nixvim
-
-                ./modules/home-manager
-              ])
-            ];
-          };
-
-          mini = darwin.lib.darwinSystem rec {
-            system = "aarch64-darwin";
-            pkgs = mkPkgs "aarch64-darwin";
-            specialArgs = { inherit inputs nixpkgs username; };
-            modules = [
-              {
-                nix = import ./nix-settings.nix {
-                  inherit
-                    inputs
-                    system
-                    nixpkgs
-                    username
-                    ;
-                };
-              }
-
-              mac-app-util.darwinModules.default
-
-              ./modules/darwin
-              home-manager.darwinModules.home-manager
-              (mkHome username [
-                mac-app-util.homeManagerModules.default
-                inputs.nixvim.homeManagerModules.nixvim
-
-                ./modules/home-manager
-                # ./modules/home-manager/home-security.nix
-              ])
-            ];
-          };
+          pro = mkDarwin "pro" "dez";
+          mini = mkDarwin "mini" "dez";
         };
 
       nixosConfigurations = {
