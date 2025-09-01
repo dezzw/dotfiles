@@ -1,5 +1,14 @@
-{ config, pkgs, ... }:
-
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  hostName = builtins.getEnv "HOST";
+  isMac = hostName == "MacBookPro";
+  isMini = hostName == "mini";
+in
 {
   homebrew = {
 
@@ -32,6 +41,23 @@
     ];
 
     casks = [
+      # common
+      "visual-studio-code"
+      "orbstack"
+      "utm"
+      "wezterm"
+      "ollama"
+      "downie"
+
+      # fonts
+      "font-maple-mono-nf-cn"
+      # "font-victor-mono-nerd-font"
+      "font-fira-code-nerd-font"
+      "font-jetbrains-mono-nerd-font"
+      # "font-hack-nerd-font"
+      "font-monaspace-nerd-font"
+    ]
+    ++ lib.optional isMac [
       # WM
       # "amethyst"
       # "loop"
@@ -51,20 +77,13 @@
 
       # Developing Tools
       # "jetbrains-toolbox"
-      "visual-studio-code"
       "cursor"
       # "godot"
-      "orbstack"
-      "utm"
-      "wezterm"
-      "warp"
-      "ollama"
       "chatgpt"
 
       # Applications
       "alfred"
       "discord"
-      "downie"
       "iina"
       "zoom"
       "pearcleaner"
@@ -77,19 +96,16 @@
       # gaming
       "steam"
       "minecraft"
-
-      # fonts
-      "font-maple-mono-nf-cn"
-      # "font-victor-mono-nerd-font"
-      "font-fira-code-nerd-font"
-      "font-jetbrains-mono-nerd-font"
-      # "font-hack-nerd-font"
-      "font-monaspace-nerd-font"
+    ]
+    ++ lib.optional isMini [
+      "plex-media-server"
     ];
 
     masApps = {
-      Xcode = 497799835;
       Tailscale = 1475387142;
+    }
+    // lib.optionalAttrs isMac {
+      Xcode = 497799835;
       "The Unarchiver" = 425424353;
       "Color Picker" = 1545870783;
       "Interactful" = 1528095640;

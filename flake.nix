@@ -104,7 +104,7 @@
             ];
           };
 
-          Desmonds-Mac-mini = darwin.lib.darwinSystem rec {
+          mini = darwin.lib.darwinSystem rec {
             system = "aarch64-darwin";
             pkgs = mkPkgs "aarch64-darwin";
             specialArgs = { inherit inputs nixpkgs username; };
