@@ -25,8 +25,6 @@ in
     };
 
     taps = [
-      "homebrew/cask-versions"
-      "homebrew/cask-fonts"
       "clojure-lsp/brew"
       "mrkai77/cask"
     ];
@@ -76,9 +74,8 @@ in
       "obs"
 
       # Developing Tools
-      # "jetbrains-toolbox"
-      "cursor"
       # "godot"
+      "ghostty"
       "chatgpt"
 
       # Applications
@@ -87,7 +84,6 @@ in
       "iina"
       "zoom"
       "pearcleaner"
-      "cleanshot"
       "monitorcontrol"
 
       "wechat"
@@ -109,8 +105,6 @@ in
       "The Unarchiver" = 425424353;
       "Color Picker" = 1545870783;
       "Interactful" = 1528095640;
-      "Microsoft Word" = 462054704;
-      "Microsoft Excel" = 462058435;
     };
   };
 }

@@ -53,6 +53,20 @@ in
       cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";
     })
 
+    (rustPlatform.buildRustPackage rec {
+      pname = "emacs-lsp-proxy";
+      version = "0.5.8";
+
+      src = fetchFromGitHub {
+        owner = "jadestrong";
+        repo = "lsp-proxy";
+        rev = "v${version}";
+        hash = "sha256-vmmMsaI9bnR1UM47DSrGDzNJCZoz1GZHk0HjjB/1Png=";
+      };
+
+      cargoHash = "sha256-Wg+R2uEwBC9qJkqm8cm9nHXQH8WSoCLFqwABXrezG8Q=";
+    })
+
     # org-download
     pngpaste
 

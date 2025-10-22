@@ -24,58 +24,35 @@ let
 
       jq
 
-      # c/c++
-      cmake
-      astyle
-
       # nodejs
       nodejs
-      deno
-      typescript
 
       # lua
       lua5_4_compat
-      lua54Packages.fennel
-
-      # php
 
       # python
-      uv
       pipx
 
       # java
       zulu
-
-      # Golang
-      go
 
       # clj
       clojure
       leiningen
       babashka
 
-      # clisp
-      roswell
-
-      # haskell
-      stack
-
       # tex
-      texliveFull
-
-      aria # cli downloader
+      # texliveFull
+      # texliveMedium
 
       # AI client
       # aider-chat # outdated using brew for now
-
-      pandoc
 
       comma
 
       cachix
 
       # misc
-      neofetch # display key software/version info in term
 
       # helix
       tig
@@ -169,10 +146,24 @@ in
     defaultCommand = "fd --type f --hidden --exclude .git";
     fileWidgetCommand = "fd --type f"; # for when ctrl-t is pressed
   };
+
+  programs.codex.enable = true;
+
   programs.ssh = {
     enable = true;
-    compression = true;
-    controlMaster = "auto";
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      forwardAgent = false;
+      addKeysToAgent = "no";
+      compression = false;
+      serverAliveInterval = 0;
+      serverAliveCountMax = 3;
+      hashKnownHosts = false;
+      userKnownHostsFile = "~/.ssh/known_hosts";
+      controlMaster = "no";
+      controlPath = "~/.ssh/master-%r@%n:%p";
+      controlPersist = "no";
+    };
     includes = [
       "*.conf"
       "~/.orbstack/ssh/config"
@@ -182,7 +173,7 @@ in
     '';
   };
 
- programs.zsh = {
+  programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
@@ -210,7 +201,7 @@ in
       done
       compinit -C
     '';
-    initExtra = ''
+    initContent = ''
       if [[ "$INSIDE_EMACS" = 'vterm' ]] \
         && [[ -n ''${EMACS_VTERM_PATH} ]] \
         && [[ -f ''${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
@@ -305,72 +296,35 @@ in
 
   programs.git = {
     enable = true;
-    userName = "dezzw";
-    userEmail = "dw@dezzw.com";
-    delta = {
-      enable = true;
-      options = {
-        features = "decorations";
+    settings = {
+      user.name = "dezzw";
+      user.email = "dw@dezzw.com";
+    };
+  };
 
-        interactive = {
-          keep-plus-minus-markers = false;
-        };
+  programs.delta = {
+    enable = true;
+    options = {
+      features = "decorations";
+              
+      interactive = {
+        keep-plus-minus-markers = false;
+      };
 
-        decorations = {
-          commit-decoration-style = "blue ol";
-          commit-style = "raw";
-          file-style = "omit";
-          hunk-header-decoration-style = "blue box";
-          hunk-header-file-style = "red";
-          hunk-header-line-number-style = "#067a00";
-          hunk-header-style = "file line-number syntax";
-        };
+      decorations = {
+        commit-decoration-style = "blue ol";
+        commit-style = "raw";
+        file-style = "omit";
+        hunk-header-decoration-style = "blue box";
+        hunk-header-file-style = "red";
+        hunk-header-line-number-style = "#067a00";
+        hunk-header-style = "file line-number syntax";
       };
     };
   };
 
   programs.gpg = {
     enable = true;
-  };
-
-  # using Apple Password instead
-  # programs.password-store = {
-  #   enable = true;
-  #   package =
-  #     pkgs.pass.withExtensions (exts: with exts; [ pass-otp pass-update ]);
-  #   settings = { PASSWORD_STORE_DIR = "$HOME/.password-store"; };
-  # };
-
-  # programs.browserpass = { enable = true; };
-
-  programs.tmux = {
-    enable = true;
-    keyMode = "vi";
-    shell = "${pkgs.fish}/bin/fish";
-    historyLimit = 10000;
-    escapeTime = 0;
-    extraConfig = builtins.readFile ./dotfiles/tmux.conf;
-    sensibleOnTop = true;
-    plugins = with pkgs; [
-      tmuxPlugins.sensible
-      tmuxPlugins.open
-      {
-        plugin = tmuxPlugins.fzf-tmux-url;
-        # default key bind is ctrl-b, u
-        extraConfig = ''
-          set -g @fzf-url-history-limit '2000'
-          set -g @open-S 'https://www.duckduckgo.com/'
-        '';
-      }
-      {
-        plugin = tmuxPlugins.resurrect;
-        extraConfig = ''
-          set -g @resurrect-strategy-nvim 'session'
-          set -g @resurrect-processes ': all:'
-          set -g @resurrect-capture-pane-contents 'on'
-        '';
-      }
-    ];
   };
 
   programs.zellij = {

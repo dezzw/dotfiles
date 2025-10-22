@@ -1,5 +1,8 @@
 .log/*
 
+.helix/
+.lsp/
+
 result/*
 
 .DS_Store
