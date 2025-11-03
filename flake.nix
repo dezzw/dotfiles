@@ -58,17 +58,25 @@
           config = import ./config.nix;
         };
 
-      mkHome = username: modules: {
-        home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          backupFileExtension = "bak";
-          extraSpecialArgs = {
-            inherit inputs username;
+      mkHome =
+        {
+          username,
+          modules,
+          extraSpecialArgs ? { },
+        }:
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "bak";
+            extraSpecialArgs =
+              {
+                inherit inputs username;
+              }
+              // extraSpecialArgs;
+            users."${username}".imports = modules;
           };
-          users."${username}".imports = modules;
         };
-      };
       # Common module sets for reuse
       commonDarwinModules = username: [
         mac-app-util.darwinModules.default
@@ -76,11 +84,36 @@
         home-manager.darwinModules.home-manager
       ];
 
-      commonHomeModules = [
+      darwinHomeModules = [
         mac-app-util.homeManagerModules.default
-        inputs.nixvim.homeManagerModules.nixvim
+        inputs.nixvim.homeModules.default
         ./modules/home-manager
       ];
+
+      linuxHomeModules = [
+        ./modules/home-manager/linux
+      ];
+
+      mkLinuxHome =
+        {
+          username,
+          system,
+          homeDirectory ? "/home/${username}",
+          extraModules ? [ ],
+          extraSpecialArgs ? { },
+        }:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = mkPkgs system;
+          extraSpecialArgs =
+            {
+              inherit inputs username homeDirectory;
+            }
+            // extraSpecialArgs;
+          modules =
+            linuxHomeModules
+            ++ []
+            ++ extraModules;
+        };
 
       mkDarwinSystem =
         {
@@ -107,7 +140,12 @@
             }
           ]
           ++ (commonDarwinModules username)
-          ++ [ (mkHome username commonHomeModules) ]
+          ++ [
+            (mkHome {
+              inherit username;
+              modules = darwinHomeModules;
+            })
+          ]
           ++ extraModules;
         };
     in
@@ -123,8 +161,8 @@
             inherit username;
           };
 
-          Desmonds-Mac-mini = mkDarwinSystem {
-            hostname = "Desmonds-Mac-mini";
+          mini = mkDarwinSystem {
+            hostname = "mini";
             inherit username;
             # extraModules = [ ./modules/home-manager/home-security.nix ];
           };
@@ -138,117 +176,8 @@
           homeDirectory = "/home/${username}";
         in
         {
-          ${username} = home-manager.lib.homeManagerConfiguration {
-            pkgs = mkPkgs system;
-            extraSpecialArgs = {
-              inherit inputs username;
-            };
-            modules = [
-              # Custom module imports
-              ./modules/emacs
-              ./modules/zellij
-              inputs.yazelix-hm.homeManagerModules.default
-
-              # Main configuration
-              (
-                { pkgs, ... }:
-                {
-                  # Home configuration
-                  home = {
-                    username = username;
-                    homeDirectory = homeDirectory;
-                    stateVersion = "25.11";
-
-                    sessionVariables = {
-                      EDITOR = "hx";
-                      COLORTERM = "truecolor";
-                      TERM = "xterm-256color";
-                      XDG_CURRENT_DESKTOP = "WSLG";
-                    };
-
-                    packages = with pkgs; [
-                      # System utilities
-                      htop
-                      git
-                      fzf
-                      fd
-                      ripgrep
-
-                      # Fonts
-                      maple-mono.truetype
-                      maple-mono.NF
-                      maple-mono.NF-CN
-                      symbola
-                    ];
-                  };
-
-                  # Font configuration
-                  fonts.fontconfig.enable = true;
-
-                  # Program configurations
-                  programs = {
-                    home-manager.enable = true;
-
-                    # Shell configuration
-                    bash = {
-                      enable = true;
-                      shellAliases = {
-                        ls = "eza";
-                        ll = "eza -l";
-                        la = "eza -a";
-                        cd = "z";
-                        python = "python3";
-                      };
-
-                      bashrcExtra = ''
-                        # Work environment variables
-                        export XTENSA_SYSTEM=/opt/xtensa/registry
-                        export LD_LIBRARY_PATH=/usr/local/lib
-                        export LM_LICENSE_FILE=27001@10.0.10.168
-                        export XTENSA_CORE=quadra_cpu_prod
-                        export PATH="$PATH:/opt/xtensa/XtDevTools/install/tools/RI-2019.1-linux/XtensaTools/bin/"
-                        export PATH="$PATH:$HOME/.cargo/bin/"
-                        export USER="desmond.wang"
-                        export LOGNAME="desmond.wang"
-                      '';
-                    };
-
-                    # Development tools
-                    claude-code.enable = true;
-                    yazelix.enable = true;
-                    lazygit.enable = true;
-
-                    # File management
-                    yazi = {
-                      enable = true;
-                      enableBashIntegration = true;
-                    };
-
-                    # Shell enhancements
-                    starship = {
-                      enable = true;
-                      enableBashIntegration = true;
-                    };
-
-                    eza = {
-                      enable = true;
-                      enableBashIntegration = true;
-                    };
-
-                    zoxide = {
-                      enable = true;
-                      enableBashIntegration = true;
-                    };
-
-                    direnv = {
-                      enable = true;
-                      enableBashIntegration = true;
-                      nix-direnv.enable = true;
-                    };
-                  };
-                }
-              )
-            ];
+          ${username} = mkLinuxHome {
+            inherit username system homeDirectory;
           };
         };
     };

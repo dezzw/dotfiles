@@ -47,13 +47,6 @@ in
       "ollama"
       "downie"
 
-      # fonts
-      "font-maple-mono-nf-cn"
-      # "font-victor-mono-nerd-font"
-      "font-fira-code-nerd-font"
-      "font-jetbrains-mono-nerd-font"
-      # "font-hack-nerd-font"
-      "font-monaspace-nerd-font"
     ]
     ++ lib.optionals isMac [
       # WM

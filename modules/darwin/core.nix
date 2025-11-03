@@ -59,6 +59,11 @@
     };
   };
 
+  # Manage system fonts through nix-darwin.
+  fonts = {
+    packages = import ../common/fonts.nix pkgs;
+  };
+
   documentation.enable = true;
 
   system = {
