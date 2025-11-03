@@ -58,19 +58,17 @@
           config = import ./config.nix;
         };
 
-      mkHome =
-        username: modules:
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            backupFileExtension = "bak";
-            extraSpecialArgs = {
-              inherit inputs username;
-            };
-            users."${username}".imports = modules;
+      mkHome = username: modules: {
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          backupFileExtension = "bak";
+          extraSpecialArgs = {
+            inherit inputs username;
           };
+          users."${username}".imports = modules;
         };
+      };
       # Common module sets for reuse
       commonDarwinModules = username: [
         mac-app-util.darwinModules.default
@@ -96,17 +94,21 @@
           specialArgs = {
             inherit inputs nixpkgs username;
           };
-          modules =
-            [
-              {
-                nix = import ./nix-settings.nix {
-                  inherit inputs system nixpkgs username;
-                };
-              }
-            ]
-            ++ (commonDarwinModules username)
-            ++ [ (mkHome username commonHomeModules) ]
-            ++ extraModules;
+          modules = [
+            {
+              nix = import ./nix-settings.nix {
+                inherit
+                  inputs
+                  system
+                  nixpkgs
+                  username
+                  ;
+              };
+            }
+          ]
+          ++ (commonDarwinModules username)
+          ++ [ (mkHome username commonHomeModules) ]
+          ++ extraModules;
         };
     in
     {

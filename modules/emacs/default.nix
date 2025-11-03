@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   python = pkgs.python3.withPackages (
     p: with p; [
@@ -29,7 +29,7 @@ in
     emacs-lsp-booster
 
     global
-    # universal-ctags
+    universal-ctags
 
     # Code Formating
     nixfmt-rfc-style
@@ -68,7 +68,9 @@ in
     })
 
     # org-download
+  ] ++ lib.optionals pkgs.stdenv.isDarwin [
     pngpaste
+  ] ++ [
 
     # Spelling checking
     # enchant
