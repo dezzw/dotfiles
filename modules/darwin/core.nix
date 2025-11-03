@@ -8,7 +8,7 @@
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.primaryUser = "dez";
-  system.stateVersion = 4;
+  system.stateVersion = 5;
 
   users.users.dez.home = "/Users/dez";
 
