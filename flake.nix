@@ -18,6 +18,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Editor configurations
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,9 +26,12 @@
 
     demacs.url = "github:dezzw/demacs";
 
-    helix-steel.url = "github:mattwparas/helix/steel-event-system";
-    helix-steel.inputs.nixpkgs.follows = "nixpkgs";
+    yazelix-hm = {
+      url = "path:/home/desmond/dotfiles/yazelix/home_manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
+    # macOS utilities
     mac-app-util.url = "github:hraban/mac-app-util";
   };
 
@@ -38,23 +42,18 @@
       darwin,
       home-manager,
       mac-app-util,
-      helix-steel,
       ...
     }:
     let
-      inherit (home-manager.lib) homeManagerConfiguration;
-
+      # Helper functions
       mkPkgs =
         system:
         import nixpkgs {
           inherit system;
-          overlays = with inputs; [
-            # (import ./overlays/aider.nix)
-            helix-steel.overlays.default
+          overlays = [
             (final: prev: {
               inherit (inputs.demacs.packages.${final.system}) demacs;
             })
-
           ];
           config = import ./config.nix;
         };
@@ -64,79 +63,193 @@
           useGlobalPkgs = true;
           useUserPackages = true;
           backupFileExtension = "bak";
-          extraSpecialArgs = { inherit inputs username; };
+          extraSpecialArgs = {
+            inherit inputs username;
+          };
           users."${username}".imports = modules;
         };
       };
-    in
-    {
-      darwinConfigurations =
-        let
-          mkDarwin =
-            hostname: username:
-            darwin.lib.darwinSystem rec {
-              system = "aarch64-darwin";
-              pkgs = mkPkgs system;
+      # Common module sets for reuse
+      commonDarwinModules = username: [
+        mac-app-util.darwinModules.default
+        ./modules/darwin
+        home-manager.darwinModules.home-manager
+      ];
 
-              specialArgs = {
+      commonHomeModules = [
+        mac-app-util.homeManagerModules.default
+        inputs.nixvim.homeManagerModules.nixvim
+        ./modules/home-manager
+      ];
+
+      mkDarwinSystem =
+        {
+          hostname,
+          username,
+          extraModules ? [ ],
+        }:
+        darwin.lib.darwinSystem rec {
+          system = "aarch64-darwin";
+          pkgs = mkPkgs system;
+          specialArgs = {
+            inherit inputs nixpkgs username;
+          };
+          modules = [
+            {
+              nix = import ./nix-settings.nix {
                 inherit
                   inputs
+                  system
                   nixpkgs
-                  hostname
                   username
                   ;
               };
-
-              modules = [
-                {
-                  nix = import ./nix-settings.nix {
-                    inherit
-                      inputs
-                      system
-                      nixpkgs
-                      username
-                      ;
-                  };
-
-                  networking.hostName = hostname;
-                }
-
-                mac-app-util.darwinModules.default
-
-                ./modules/darwin
-                home-manager.darwinModules.home-manager
-                (mkHome username [
-                  mac-app-util.homeManagerModules.default
-                  inputs.nixvim.homeModules.nixvim
-                  ./modules/home-manager
-                ])
-              ];
-            };
+            }
+          ]
+          ++ (commonDarwinModules username)
+          ++ [ (mkHome username commonHomeModules) ]
+          ++ extraModules;
+        };
+    in
+    {
+      # macOS configurations
+      darwinConfigurations =
+        let
+          username = "dez";
         in
         {
-          pro = mkDarwin "pro" "dez";
-          mini = mkDarwin "mini" "dez";
+          Desmonds-MBP = mkDarwinSystem {
+            hostname = "Desmonds-MBP";
+            inherit username;
+          };
+
+          Desmonds-Mac-mini = mkDarwinSystem {
+            hostname = "Desmonds-Mac-mini";
+            inherit username;
+            # extraModules = [ ./modules/home-manager/home-security.nix ];
+          };
         };
 
-      nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
+      # Linux home-manager configurations
+      homeConfigurations =
+        let
+          username = "desmond";
           system = "x86_64-linux";
+          homeDirectory = "/home/${username}";
+        in
+        {
+          ${username} = home-manager.lib.homeManagerConfiguration {
+            pkgs = mkPkgs system;
+            extraSpecialArgs = {
+              inherit inputs username;
+            };
+            modules = [
+              # Custom module imports
+              ./modules/emacs
+              ./modules/zellij
+              inputs.yazelix-hm.homeManagerModules.default
 
-          modules = [
-            ./system/nixos
+              # Main configuration
+              (
+                { pkgs, ... }:
+                {
+                  # Home configuration
+                  home = {
+                    username = username;
+                    homeDirectory = homeDirectory;
+                    stateVersion = "25.11";
 
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              users.users.dez.home = "/home/dez";
-              home-manager.users.dez.imports = [
-                ./home
-                ./home/home-darwin.nix
-              ];
-            }
-          ];
+                    sessionVariables = {
+                      EDITOR = "hx";
+                      COLORTERM = "truecolor";
+                      TERM = "xterm-256color";
+                      XDG_CURRENT_DESKTOP = "WSLG";
+                    };
+
+                    packages = with pkgs; [
+                      # System utilities
+                      htop
+                      git
+                      fzf
+                      fd
+                      ripgrep
+
+                      # Fonts
+                      maple-mono.truetype
+                      maple-mono.NF
+                      maple-mono.NF-CN
+                      symbola
+                    ];
+                  };
+
+                  # Font configuration
+                  fonts.fontconfig.enable = true;
+
+                  # Program configurations
+                  programs = {
+                    home-manager.enable = true;
+
+                    # Shell configuration
+                    bash = {
+                      enable = true;
+                      shellAliases = {
+                        ls = "eza";
+                        ll = "eza -l";
+                        la = "eza -a";
+                        cd = "z";
+                        python = "python3";
+                      };
+
+                      bashrcExtra = ''
+                        # Work environment variables
+                        export XTENSA_SYSTEM=/opt/xtensa/registry
+                        export LD_LIBRARY_PATH=/usr/local/lib
+                        export LM_LICENSE_FILE=27001@10.0.10.168
+                        export XTENSA_CORE=quadra_cpu_prod
+                        export PATH="$PATH:/opt/xtensa/XtDevTools/install/tools/RI-2019.1-linux/XtensaTools/bin/"
+                        export PATH="$PATH:$HOME/.cargo/bin/"
+                        export USER="desmond.wang"
+                        export LOGNAME="desmond.wang"
+                      '';
+                    };
+
+                    # Development tools
+                    claude-code.enable = true;
+                    yazelix.enable = true;
+                    lazygit.enable = true;
+
+                    # File management
+                    yazi = {
+                      enable = true;
+                      enableBashIntegration = true;
+                    };
+
+                    # Shell enhancements
+                    starship = {
+                      enable = true;
+                      enableBashIntegration = true;
+                    };
+
+                    eza = {
+                      enable = true;
+                      enableBashIntegration = true;
+                    };
+
+                    zoxide = {
+                      enable = true;
+                      enableBashIntegration = true;
+                    };
+
+                    direnv = {
+                      enable = true;
+                      enableBashIntegration = true;
+                      nix-direnv.enable = true;
+                    };
+                  };
+                }
+              )
+            ];
+          };
         };
-      };
     };
 }
