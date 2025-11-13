@@ -1,9 +1,11 @@
-{ inputs
-, system
-, nixpkgs
-, username
-, ...
-}: {
+{
+  inputs,
+  system,
+  nixpkgs,
+  username,
+  ...
+}:
+{
 
   nixPath = [ "nixpkgs=${nixpkgs}" ];
   package = inputs.master.legacyPackages.${system}.nix;
@@ -32,16 +34,23 @@
     trusted-substituters = [
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
-      "https://dezzw.cachix.org"
+      "https://demacs.cachix.org"
+      "https://numtide.cachix.org"
     ];
 
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "dezzw.cachix.org-1:5YXdWpaFXkULUAJ30oEaGHCZlC2Tt7SZMW8r9kmR83E="
+      "demacs.cachix.org-1:KwSnWI5wdJm4TGdeUfmksk59098voqdDkBVNrUS7yN4="
+      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
     ];
 
-    trusted-users = [ "${username}" "root" "@admin" "@wheel" ];
+    trusted-users = [
+      "${username}"
+      "root"
+      "@admin"
+      "@wheel"
+    ];
 
     # sandbox = false;
     # extra-sandbox-paths = [
@@ -56,8 +65,7 @@
     builders-use-substitutes = true
     http-connections = 0
   ''
-  +
-  (nixpkgs.lib.optionalString (system == "aarch64-darwin") ''
+  + (nixpkgs.lib.optionalString (system == "aarch64-darwin") ''
     extra-platforms = aarch64-darwin x86_64-darwin
   '');
 }

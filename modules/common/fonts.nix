@@ -1,5 +1,4 @@
-pkgs:
-with pkgs; [
+pkgs: with pkgs; [
   maple-mono.truetype
   maple-mono.NF
   maple-mono.NF-CN

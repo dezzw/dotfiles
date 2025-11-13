@@ -33,6 +33,9 @@
 
     # macOS utilities
     mac-app-util.url = "github:hraban/mac-app-util";
+
+    # AI coding tools
+    nix-ai-tools.url = "github:numtide/nix-ai-tools";
   };
 
   outputs =
@@ -52,7 +55,16 @@
           inherit system;
           overlays = [
             (final: prev: {
-              inherit (inputs.demacs.packages.${final.system}) demacs;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs;
+            })
+            (final: prev: {
+              inherit (inputs.nix-ai-tools.packages.${final.stdenv.hostPlatform.system})
+                claude-code
+                codex
+                claude-code-acp
+                codex-acp
+                cursor-agent
+                ;
             })
           ];
           config = import ./config.nix;
@@ -69,11 +81,10 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "bak";
-            extraSpecialArgs =
-              {
-                inherit inputs username;
-              }
-              // extraSpecialArgs;
+            extraSpecialArgs = {
+              inherit inputs username;
+            }
+            // extraSpecialArgs;
             users."${username}".imports = modules;
           };
         };
@@ -84,15 +95,16 @@
         home-manager.darwinModules.home-manager
       ];
 
-      darwinHomeModules = [
-        mac-app-util.homeManagerModules.default
+      commonHomeModules = [
         inputs.nixvim.homeModules.default
         ./modules/home-manager
       ];
 
-      linuxHomeModules = [
-        ./modules/home-manager/linux
+      darwinHomeModules = commonHomeModules ++ [
+        mac-app-util.homeManagerModules.default
       ];
+
+      linuxHomeModules = commonHomeModules;
 
       mkLinuxHome =
         {
@@ -104,15 +116,11 @@
         }:
         home-manager.lib.homeManagerConfiguration {
           pkgs = mkPkgs system;
-          extraSpecialArgs =
-            {
-              inherit inputs username homeDirectory;
-            }
-            // extraSpecialArgs;
-          modules =
-            linuxHomeModules
-            ++ []
-            ++ extraModules;
+          extraSpecialArgs = {
+            inherit inputs username homeDirectory;
+          }
+          // extraSpecialArgs;
+          modules = linuxHomeModules ++ [ ] ++ extraModules;
         };
 
       mkDarwinSystem =

@@ -4,116 +4,160 @@
   pkgs,
   username,
   lib,
+  homeDirectory ? if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}",
   ...
 }:
 let
-  defaultPkgs =
-    with pkgs;
-    [
-      # filesystem
-      fd
-      ripgrep
-      curl
-      tree
+  fontPackages = import ../common/fonts.nix pkgs;
 
-      # compression
-      unzip
-      gzip
-      xz
-      zip
+  commonPkgs = with pkgs; [
+    # filesystem
+    fd
+    ripgrep
+    curl
+    tree
+    htop
+    git
+    fzf
 
-      jq
+    # compression
+    unzip
+    gzip
+    xz
+    zip
 
-      # nodejs
-      nodejs
+    jq
 
-      # lua
-      lua5_4_compat
+    # nodejs
+    nodejs
 
-      # python
-      pipx
+    # lua
+    lua5_4_compat
 
-      # java
-      zulu
+    # python
+    pipx
 
-      # clj
-      clojure
-      leiningen
-      babashka
+    # java
+    zulu
 
-      # tex
-      # texliveFull
-      # texliveMedium
+    # clj
+    clojure
+    leiningen
+    babashka
 
-      # AI client
-      # aider-chat # outdated using brew for now
+    # tex
+    # texliveFull
+    # texliveMedium
 
-      comma
+    # AI clients
+    # aider-chat # outdated using brew for now
+    claude-code
+    codex
+    claude-code-acp
+    codex-acp
+    cursor-agent
 
-      cachix
+    comma
 
-      # misc
+    cachix
 
-      # helix
-      tig
-      serpl
-      lazysql
-      slumber
+    # misc
+    tig
+    serpl
+    lazysql
+    slumber
 
-      just
-    ]
-    ++ lib.optionals pkgs.stdenv.isDarwin [ ];
+    just
+  ];
 
-  guiPkgs = with pkgs; [ ] ++ lib.optionals pkgs.stdenv.isDarwin [ ]; # utm is a qemu wrapper for mac only
+  darwinPkgs = with pkgs; [ ];
+
+  linuxPkgs = with pkgs; fontPackages;
+
+  allPkgs =
+    commonPkgs
+    ++ (lib.optionals pkgs.stdenv.isDarwin darwinPkgs)
+    ++ (lib.optionals pkgs.stdenv.isLinux linuxPkgs);
 in
 {
   programs.home-manager.enable = true;
-  home.enableNixpkgsReleaseCheck = false;
+  home.enableNixpkgsReleaseCheck = lib.mkDefault false;
 
-  # This value determines the Home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new Home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update Home Manager without changing this value. See
-  # the Home Manager release notes for a list of state version
-  # changes in each release.
-  home.stateVersion = "23.11";
-  home.packages = defaultPkgs ++ guiPkgs;
+  home = {
+    inherit username homeDirectory;
+    stateVersion = "25.11";
+    packages = allPkgs;
+
+    sessionVariables = {
+      TERM = "xterm-256color";
+      COLORTERM = "truecolor";
+      SYSTEMD_COLORS = "true";
+      FZF_CTRL_R_OPTS = "--sort --exact";
+
+      # Editor settings
+      EDITOR = "hx";
+      VISUAL = "hx";
+      GIT_EDITOR = "hx";
+
+      # Add colors to man pages
+      MANPAGER = "less -R --use-color -Dd+r -Du+b +Gg -M -s";
+      ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
+    }
+    // lib.optionalAttrs pkgs.stdenv.isLinux {
+      # Linux-specific variables
+      XDG_CURRENT_DESKTOP = "WSLG";
+    };
+
+    sessionPath = [
+      "$HOME/.cargo/bin"
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/"
+      "/Applications/Emacs.app/Contents/MacOS/bin/"
+    ];
+
+    file = lib.optionalAttrs pkgs.stdenv.isDarwin {
+      ".config/wezterm/" = {
+        source = ./dotfiles/wezterm;
+        recursive = true;
+      };
+    };
+  };
 
   imports = [
+    ./programs
     ../emacs
     ../neovim
-    ./programs
     # ../helix
     # ../alacritty
     # ../ghostty
+    ../zellij
   ];
 
-  home.sessionVariables = {
-    TERM = "xterm-256color";
+  # Linux-specific: Enable font configuration
+  fonts.fontconfig.enable = lib.mkIf pkgs.stdenv.isLinux true;
 
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-    GIT_EDITOR = "nvim";
-    # Add colors to man pages
-    MANPAGER = "less -R --use-color -Dd+r -Du+b +Gg -M -s";
-    SYSTEMD_COLORS = "true";
-    COLORTERM = "truecolor";
-    FZF_CTRL_R_OPTS = "--sort --exact";
-    ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
-  };
-
-  home.sessionPath = [
-    "$HOME/.cargo/bin"
-    "/Applications/Xcode.app/Contents/Developer/usr/bin/"
-    "/Applications/Emacs.app/Contents/MacOS/bin/"
-  ];
-
-  home.file = {
-    ".config/wezterm/" = {
-      source = ./dotfiles/wezterm;
-      recursive = true;
+  # Linux-specific: Bash configuration with work environment
+  programs.bash = lib.mkIf pkgs.stdenv.isLinux {
+    enable = true;
+    shellAliases = {
+      ls = "eza";
+      ll = "eza -l";
+      la = "eza -a";
+      cd = "z";
+      python = "python3";
     };
+
+    bashrcExtra = ''
+      # Work environment variables
+      export XTENSA_SYSTEM=/opt/xtensa/registry
+      export LD_LIBRARY_PATH=/usr/local/lib
+      export LM_LICENSE_FILE=27001@10.0.10.168
+      export XTENSA_CORE=quadra_cpu_prod
+      export PATH="$PATH:/opt/xtensa/XtDevTools/install/tools/RI-2019.1-linux/XtensaTools/bin/"
+      export PATH="$PATH:$HOME/.cargo/bin/"
+      export USER="desmond.wang"
+      export LOGNAME="desmond.wang"
+    '';
   };
 }

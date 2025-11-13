@@ -1,16 +1,40 @@
 {:tasks
- {:requires ([babashka.fs :as fs])
+ {:requires ([babashka.fs :as fs]
+             [clojure.java.io :as io])
+
+  ;; Platform detection helper
+  :init (do
+          (def os-name (System/getProperty "os.name"))
+          (def is-mac? (clojure.string/includes? os-name "Mac"))
+          (def is-linux? (clojure.string/includes? os-name "Linux"))
+          (def user (System/getenv "USER"))
+          (def home (System/getenv "HOME"))
+          (def profiles-dir (if is-mac?
+                               (str "/Users/" user "/.local/state/nix/profiles/")
+                               (str "/home/" user "/.local/state/nix/profiles/")))
+          (println (str "Platform: " (if is-mac? "macOS" "Linux"))))
+
   update (shell "nix flake update")
-  apply (shell "sudo darwin-rebuild switch --flake .#")
+
+  apply (if is-mac?
+          (shell "sudo darwin-rebuild switch --flake .#")
+          (shell "USER=desmond home-manager switch --flake .#"))
+
   clean (do
-          (->> (fs/list-dir "/Users/dez/.local/state/nix/profiles/")
-               (sort-by fs/creation-time)
-               (drop-last 2)
-               (run! fs/delete-if-exists))
+          (when (fs/exists? profiles-dir)
+            (println (str "Cleaning profiles in: " profiles-dir))
+            (->> (fs/list-dir profiles-dir)
+                 (sort-by fs/creation-time)
+                 (drop-last 2)
+                 (run! fs/delete-if-exists)))
           (println "Deleting previous generations before the last 7:")
-          (shell "sudo nix-env --delete-generations +7 --profile /nix/var/nix/profiles/system")
+          (if is-mac?
+            (shell "sudo nix-env --delete-generations +7 --profile /nix/var/nix/profiles/system")
+            (shell "nix-env --delete-generations +7"))
           (println "Garbage collecting older than 7d:")
-          (shell "sudo nix-collect-garbage --delete-older-than 7d")
+          (if is-mac?
+            (shell "sudo nix-collect-garbage --delete-older-than 7d")
+            (shell "nix-collect-garbage --delete-older-than 7d"))
           (println "Hard linking duplicates:")
           (shell "nix store optimise"))
   }

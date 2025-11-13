@@ -24,70 +24,74 @@ in
     package = pkgs.demacs;
   };
 
-  home.packages = with pkgs; [
+  home.packages =
+    with pkgs;
+    [
 
-    emacs-lsp-booster
+      emacs-lsp-booster
 
-    global
-    universal-ctags
+      global
+      universal-ctags
 
-    # Code Formating
-    nixfmt-rfc-style
+      # Code Formating
+      nixfmt-rfc-style
 
-    # dirvish
-    imagemagick
-    ffmpegthumbnailer
-    mediainfo
+      # dirvish
+      imagemagick
+      ffmpegthumbnailer
+      mediainfo
 
-    (rustPlatform.buildRustPackage rec {
-      pname = "devicon-lookup";
-      version = "0.10.2";
+      (rustPlatform.buildRustPackage rec {
+        pname = "devicon-lookup";
+        version = "0.10.2";
 
-      src = fetchFromGitHub {
-        owner = "coreyja";
-        repo = "devicon-lookup";
-        rev = "v${version}";
-        hash = "sha256-mDjRbBX3B1pfGX9SkrQLFXpgpq3Kay+crFXT1Bmfadk=";
-      };
+        src = fetchFromGitHub {
+          owner = "coreyja";
+          repo = "devicon-lookup";
+          rev = "v${version}";
+          hash = "sha256-mDjRbBX3B1pfGX9SkrQLFXpgpq3Kay+crFXT1Bmfadk=";
+        };
 
-      cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";
-    })
+        cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";
+      })
 
-    (rustPlatform.buildRustPackage rec {
-      pname = "emacs-lsp-proxy";
-      version = "0.5.8";
+      (rustPlatform.buildRustPackage rec {
+        pname = "emacs-lsp-proxy";
+        version = "0.5.8";
 
-      src = fetchFromGitHub {
-        owner = "jadestrong";
-        repo = "lsp-proxy";
-        rev = "v${version}";
-        hash = "sha256-vmmMsaI9bnR1UM47DSrGDzNJCZoz1GZHk0HjjB/1Png=";
-      };
+        src = fetchFromGitHub {
+          owner = "jadestrong";
+          repo = "lsp-proxy";
+          rev = "v${version}";
+          hash = "sha256-vmmMsaI9bnR1UM47DSrGDzNJCZoz1GZHk0HjjB/1Png=";
+        };
 
-      cargoHash = "sha256-Wg+R2uEwBC9qJkqm8cm9nHXQH8WSoCLFqwABXrezG8Q=";
-    })
+        cargoHash = "sha256-Wg+R2uEwBC9qJkqm8cm9nHXQH8WSoCLFqwABXrezG8Q=";
+      })
 
-    # org-download
-  ] ++ lib.optionals pkgs.stdenv.isDarwin [
-    pngpaste
-  ] ++ [
+      # org-download
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      pngpaste
+    ]
+    ++ [
 
-    # Spelling checking
-    # enchant
-    (aspellWithDicts (
-      dicts: with dicts; [
-        en
-        en-computers
-        en-science
-      ]
-    ))
+      # Spelling checking
+      # enchant
+      (aspellWithDicts (
+        dicts: with dicts; [
+          en
+          en-computers
+          en-science
+        ]
+      ))
 
-    leetcode-cli
+      leetcode-cli
 
-    emacs-all-the-icons-fonts
+      emacs-all-the-icons-fonts
 
-    gh
+      gh
 
-    pythonForLspBridge
-  ];
+      pythonForLspBridge
+    ];
 }

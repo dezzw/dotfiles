@@ -10,6 +10,7 @@
     config = {
       italic-text = "always";
       style = "plain";
+      theme = "OneHalfDark";
     };
   };
 
@@ -37,9 +38,6 @@
     fileWidgetCommand = "fd --type f";
   };
 
-  programs.codex.enable = true;
-  programs.claude-code.enable = true;
-
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
@@ -55,9 +53,7 @@
       controlPath = "~/.ssh/master-%r@%n:%p";
       controlPersist = "no";
     };
-    includes =
-      [ "*.conf" ]
-      ++ lib.optionals pkgs.stdenv.isDarwin [ "~/.orbstack/ssh/config" ];
+    includes = [ "*.conf" ] ++ lib.optionals pkgs.stdenv.isDarwin [ "~/.orbstack/ssh/config" ];
     extraConfig = ''
       AddKeysToAgent yes
     '';
@@ -205,8 +201,6 @@
   };
 
   programs.gpg.enable = true;
-
-  programs.zellij.enable = true;
 
   programs.yazi = {
     enable = true;
