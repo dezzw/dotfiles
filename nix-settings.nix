@@ -25,6 +25,7 @@
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
       "https://demacs.cachix.org"
+      "https://numtide.cachix.org"
     ];
 
     experimental-features = [
