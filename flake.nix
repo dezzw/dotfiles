@@ -26,11 +26,6 @@
 
     demacs.url = "github:dezzw/demacs";
 
-    yazelix-hm = {
-      url = "path:/home/desmond/dotfiles/yazelix/home_manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # macOS utilities
     mac-app-util.url = "github:hraban/mac-app-util";
 
@@ -164,8 +159,8 @@
           username = "dez";
         in
         {
-          Desmonds-MBP = mkDarwinSystem {
-            hostname = "Desmonds-MBP";
+          pro = mkDarwinSystem {
+            hostname = "pro";
             inherit username;
           };
 

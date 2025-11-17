@@ -55,19 +55,19 @@ in
         cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";
       })
 
-      (rustPlatform.buildRustPackage rec {
-        pname = "emacs-lsp-proxy";
-        version = "0.5.8";
+    (rustPlatform.buildRustPackage rec {
+      pname = "emacs-lsp-proxy";
+      version = "0.5.9";
 
-        src = fetchFromGitHub {
-          owner = "jadestrong";
-          repo = "lsp-proxy";
-          rev = "v${version}";
-          hash = "sha256-vmmMsaI9bnR1UM47DSrGDzNJCZoz1GZHk0HjjB/1Png=";
-        };
+      src = fetchFromGitHub {
+        owner = "jadestrong";
+        repo = "lsp-proxy";
+        rev = "v${version}";
+        hash = "sha256-dcS6XumwDNeF/+Js6w5JsdV/V/uG0f+w6C4oQmPnKGA=";
+      };
 
-        cargoHash = "sha256-Wg+R2uEwBC9qJkqm8cm9nHXQH8WSoCLFqwABXrezG8Q=";
-      })
+      cargoHash = "sha256-yXj6MAaGBkVBD2F5kvWgwqnlCdL+8NDEtZB0K+SDzYU=";
+    })
 
       # org-download
     ]
