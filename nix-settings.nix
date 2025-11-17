@@ -21,6 +21,12 @@
   settings = {
     accept-flake-config = true;
 
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+      "https://demacs.cachix.org"
+    ];
+
     experimental-features = [
       "auto-allocate-uids"
       "ca-derivations"
