@@ -1,3 +1,6 @@
+# Main home-manager configuration
+# Composes shared modules with platform-specific overrides
+
 {
   inputs,
   config,
@@ -7,78 +10,7 @@
   homeDirectory ? if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}",
   ...
 }:
-let
-  fontPackages = import ../common/fonts.nix pkgs;
 
-  commonPkgs = with pkgs; [
-    # filesystem
-    fd
-    ripgrep
-    curl
-    tree
-    htop
-    git
-    fzf
-
-    # compression
-    unzip
-    gzip
-    xz
-    zip
-
-    jq
-
-    # nodejs
-    nodejs
-
-    # lua
-    lua5_4_compat
-
-    # python
-    pipx
-
-    # java
-    zulu
-
-    # clj
-    clojure
-    leiningen
-    babashka
-
-    # tex
-    # texliveFull
-    # texliveMedium
-
-    # AI clients
-    # aider-chat # outdated using brew for now
-    claude-code
-    codex
-    claude-code-acp
-    codex-acp
-    cursor-agent
-
-    comma
-
-    cachix
-
-    # misc
-    tig
-    serpl
-    lazysql
-    slumber
-
-    just
-  ];
-
-  darwinPkgs = with pkgs; [ ];
-
-  linuxPkgs = with pkgs; fontPackages;
-
-  allPkgs =
-    commonPkgs
-    ++ (lib.optionals pkgs.stdenv.isDarwin darwinPkgs)
-    ++ (lib.optionals pkgs.stdenv.isLinux linuxPkgs);
-in
 {
   programs.home-manager.enable = true;
   home.enableNixpkgsReleaseCheck = lib.mkDefault false;
@@ -86,58 +18,29 @@ in
   home = {
     inherit username homeDirectory;
     stateVersion = "25.11";
-    packages = allPkgs;
-
-    sessionVariables = {
-      TERM = "xterm-256color";
-      COLORTERM = "truecolor";
-      SYSTEMD_COLORS = "true";
-      FZF_CTRL_R_OPTS = "--sort --exact";
-
-      # Editor settings
-      EDITOR = "hx";
-      VISUAL = "hx";
-      GIT_EDITOR = "hx";
-
-      # Add colors to man pages
-      MANPAGER = "less -R --use-color -Dd+r -Du+b +Gg -M -s";
-      ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
-    }
-    // lib.optionalAttrs pkgs.stdenv.isLinux {
-      # Linux-specific variables
-      XDG_CURRENT_DESKTOP = "WSLG";
-    };
-
-    sessionPath = [
-      "$HOME/.cargo/bin"
-    ]
-    ++ lib.optionals pkgs.stdenv.isDarwin [
-      "/Applications/Xcode.app/Contents/Developer/usr/bin/"
-      "/Applications/Emacs.app/Contents/MacOS/bin/"
-    ];
-
-    file = lib.optionalAttrs pkgs.stdenv.isDarwin {
-      ".config/wezterm/" = {
-        source = ./dotfiles/wezterm;
-        recursive = true;
-      };
-    };
   };
 
+  # Import shared modules
   imports = [
-    ./programs
+    ./packages.nix
+    ../shared/programs
+    ../shared/environment
+    ../shared/fonts.nix
+    # Editor configurations (keep existing structure for now)
     ../emacs
     ../neovim
-    # ../helix
-    # ../alacritty
-    # ../ghostty
     ../zellij
+    # Platform-specific dotfiles (moved to conditional below to avoid recursion)
   ];
 
-  # Linux-specific: Enable font configuration
-  fonts.fontconfig.enable = lib.mkIf pkgs.stdenv.isLinux true;
+  # Platform-specific dotfiles
+  home.file = lib.optionalAttrs pkgs.stdenv.isDarwin {
+    ".config/wezterm/".source = ./dotfiles/wezterm;
+    ".config/wezterm/".recursive = true;
+  };
 
   # Linux-specific: Bash configuration with work environment
+  # (This is work-specific, could be moved to a host-specific config)
   programs.bash = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
     shellAliases = {

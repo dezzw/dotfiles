@@ -1,6 +1,26 @@
 {
   description = "systems configuration";
 
+  nixConfig = {
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+      "https://demacs.cachix.org"
+      "https://numtide.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "demacs.cachix.org-1:KwSnWI5wdJm4TGdeUfmksk59098voqdDkBVNrUS7yN4="
+      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+    ];
+    experimental-features = [
+      "flakes"
+      "nix-command"
+    ];
+    accept-flake-config = true;
+  };
+
   inputs = {
     # Package sets
     master.url = "github:NixOS/nixpkgs/master";
@@ -31,6 +51,18 @@
 
     # AI coding tools
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
+
+    # Custom Rust packages (tracked as flake inputs for automatic hash management)
+    # Tracking HEAD (latest commit) - no version numbers needed!
+    # Update with: nix flake update devicon-lookup emacs-lsp-proxy
+    devicon-lookup = {
+      url = "github:coreyja/devicon-lookup";
+      flake = false;
+    };
+    emacs-lsp-proxy = {
+      url = "github:jadestrong/lsp-proxy";
+      flake = false;
+    };
   };
 
   outputs =
@@ -43,6 +75,7 @@
       ...
     }:
     let
+      lib = nixpkgs.lib;
       # Helper functions
       mkPkgs =
         system:
@@ -61,8 +94,10 @@
                 cursor-agent
                 ;
             })
+            (import ./overlays/rust-packages.nix inputs)
+            (import ./overlays/aider.nix)
           ];
-          config = import ./config.nix;
+          config = (import ./nix-config.nix).nixpkgsConfig;
         };
 
       mkHome =
@@ -106,6 +141,7 @@
           username,
           system,
           homeDirectory ? "/home/${username}",
+          hostname ? null,
           extraModules ? [ ],
           extraSpecialArgs ? { },
         }:
@@ -115,7 +151,18 @@
             inherit inputs username homeDirectory;
           }
           // extraSpecialArgs;
-          modules = linuxHomeModules ++ [ ] ++ extraModules;
+          modules = linuxHomeModules ++ [
+            {
+              nix = (import ./nix-config.nix).mkNixSettings {
+                inherit inputs system nixpkgs username;
+                isHomeManager = true;
+              };
+            }
+          ]
+          # Host-specific configuration (if exists)
+          ++ lib.optionals (hostname != null && builtins.pathExists ./hosts/standalone/${hostname}.nix)
+            [ ./hosts/standalone/${hostname}.nix ]
+          ++ extraModules;
         };
 
       mkDarwinSystem =
@@ -132,7 +179,7 @@
           };
           modules = [
             {
-              nix = import ./nix-settings.nix {
+              nix = (import ./nix-config.nix).mkNixSettings {
                 inherit
                   inputs
                   system
@@ -149,6 +196,36 @@
               modules = darwinHomeModules;
             })
           ]
+          # Host-specific configuration (if exists)
+          ++ lib.optional (builtins.pathExists ./hosts/darwin/${hostname}.nix)
+            ./hosts/darwin/${hostname}.nix
+          ++ extraModules;
+        };
+
+      # NixOS system builder - applies shared Nix configuration
+      mkNixOSSystem =
+        {
+          hostname,
+          system,
+          username,
+          extraModules ? [ ],
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs nixpkgs username;
+          };
+          modules = [
+            ./modules/nixos/nix.nix
+            home-manager.nixosModules.home-manager
+            (mkHome {
+              inherit username;
+              modules = linuxHomeModules;
+            })
+          ]
+          # Host-specific configuration (if exists)
+          ++ lib.optional (builtins.pathExists ./hosts/nixos/${hostname}.nix)
+            ./hosts/nixos/${hostname}.nix
           ++ extraModules;
         };
     in
@@ -181,7 +258,18 @@
         {
           ${username} = mkLinuxHome {
             inherit username system homeDirectory;
+            hostname = "wsl";  # Matches hosts/standalone/wsl.nix
           };
         };
+
+      # NixOS configurations (example - uncomment and customize as needed)
+      # nixosConfigurations = {
+      #   myhost = mkNixOSSystem {
+      #     hostname = "myhost";
+      #     system = "x86_64-linux";
+      #     username = "desmond";
+      #     # extraModules = [ ./hosts/myhost ];
+      #   };
+      # };
     };
 }

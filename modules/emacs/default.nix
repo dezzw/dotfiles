@@ -41,33 +41,9 @@ in
       ffmpegthumbnailer
       mediainfo
 
-      (rustPlatform.buildRustPackage rec {
-        pname = "devicon-lookup";
-        version = "0.10.2";
-
-        src = fetchFromGitHub {
-          owner = "coreyja";
-          repo = "devicon-lookup";
-          rev = "v${version}";
-          hash = "sha256-mDjRbBX3B1pfGX9SkrQLFXpgpq3Kay+crFXT1Bmfadk=";
-        };
-
-        cargoHash = "sha256-aewaNaeJLxRqm6p9K/GzHhJY3/b5z7N4Z8F7KjVxzcQ=";
-      })
-
-    (rustPlatform.buildRustPackage rec {
-      pname = "emacs-lsp-proxy";
-      version = "0.5.9";
-
-      src = fetchFromGitHub {
-        owner = "jadestrong";
-        repo = "lsp-proxy";
-        rev = "v${version}";
-        hash = "sha256-dcS6XumwDNeF/+Js6w5JsdV/V/uG0f+w6C4oQmPnKGA=";
-      };
-
-      cargoHash = "sha256-yXj6MAaGBkVBD2F5kvWgwqnlCdL+8NDEtZB0K+SDzYU=";
-    })
+      # Custom Rust packages (from overlay)
+      devicon-lookup
+      emacs-lsp-proxy
 
       # org-download
     ]
