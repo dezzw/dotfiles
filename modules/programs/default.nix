@@ -1,4 +1,4 @@
-# All shared program configurations
+# All program configurations
 
 { ... }:
 
@@ -6,8 +6,8 @@
   imports = [
     ./git.nix
     ./ssh.nix
-    ./tools
-    ./shell
+    ../tools
+    ../shell
   ];
 
   # Additional programs

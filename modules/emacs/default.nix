@@ -43,7 +43,7 @@ in
 
       # Custom Rust packages (from overlay)
       devicon-lookup
-      emacs-lsp-proxy
+      # Note: emacs-lsp-proxy is now built as part of the Emacs configuration
 
       # org-download
     ]

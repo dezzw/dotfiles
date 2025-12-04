@@ -6,5 +6,6 @@
   imports = [
     ./session.nix
     ./paths.nix
+    ./fonts.nix
   ];
 }

@@ -118,7 +118,7 @@ update_all_hashes() {
   mapfile -t hashes < <(echo "$error_output" | grep -oP "got:\s+sha256-[A-Za-z0-9+/=]+" | awk '{print $2}' | grep -v "AAAAAAAA" || true)
   
   # List of packages in order (should match the order of hashes in errors)
-  local packages=("devicon-lookup" "emacs-lsp-proxy")
+  local packages=("devicon-lookup")
   
   # If we got hashes, update packages
   if [[ ${#hashes[@]} -gt 0 ]]; then

@@ -54,13 +54,9 @@
 
     # Custom Rust packages (tracked as flake inputs for automatic hash management)
     # Tracking HEAD (latest commit) - no version numbers needed!
-    # Update with: nix flake update devicon-lookup emacs-lsp-proxy
+    # Update with: nix flake update devicon-lookup
     devicon-lookup = {
       url = "github:coreyja/devicon-lookup";
-      flake = false;
-    };
-    emacs-lsp-proxy = {
-      url = "github:jadestrong/lsp-proxy";
       flake = false;
     };
   };
@@ -92,6 +88,7 @@
                 claude-code-acp
                 codex-acp
                 cursor-agent
+                opencode
                 ;
             })
             (import ./overlays/rust-packages.nix inputs)

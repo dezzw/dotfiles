@@ -1,41 +1,27 @@
 # Package composition for home-manager
-# Combines shared packages with platform-specific additions
+# Combines packages with platform-specific additions
 
 { pkgs, lib, ... }:
 
 let
-  # Base packages - inlined to avoid recursion
-  basePkgs = with pkgs; [
-    fd ripgrep curl tree htop git fzf
-    unzip gzip xz zip
-    jq comma cachix tig serpl lazysql slumber just
-  ];
+  # Base packages
+  basePkgs = import ../packages/base.nix { inherit pkgs; };
 
   # Development tools
-  devPkgs = with pkgs; [
-    git just
-  ];
+  devPkgs = import ../packages/dev.nix { inherit pkgs; };
 
   # Language packages
-  langPkgs = with pkgs; [
-    # Clojure
-    clojure leiningen babashka
-    # Python
-    pipx
-    # Node.js
-    nodejs
-    # Java
-    zulu
-    # Lua
-    lua5_4_compat
-  ];
+  langPkgs =
+    (import ../lang/clojure.nix { inherit pkgs; })
+    ++ (import ../lang/python.nix { inherit pkgs; })
+    ++ (import ../lang/nodejs.nix { inherit pkgs; })
+    ++ (import ../lang/java.nix { inherit pkgs; })
+    ++ (import ../lang/lua.nix { inherit pkgs; });
 
   # AI tools
-  aiPkgs = with pkgs; [
-    claude-code codex claude-code-acp codex-acp cursor-agent
-  ];
+  aiPkgs = import ../packages/ai.nix { inherit pkgs; };
 
-  # Combine all shared packages
+  # Combine all packages
   sharedPackages = basePkgs ++ devPkgs ++ langPkgs ++ aiPkgs;
   
   # Linux-specific fonts (inlined to avoid import recursion)

@@ -12,7 +12,8 @@ if [[ -z "$PACKAGE_NAME" ]]; then
   echo ""
   echo "Available packages:"
   echo "  - devicon-lookup (owner: coreyja, repo: devicon-lookup)"
-  echo "  - emacs-lsp-proxy (owner: jadestrong, repo: lsp-proxy)"
+  echo ""
+  echo "Note: emacs-lsp-proxy is now managed in ~/.emacs.d/flake.nix"
   exit 1
 fi
 
@@ -21,10 +22,6 @@ case "$PACKAGE_NAME" in
   devicon-lookup)
     OWNER="coreyja"
     REPO="devicon-lookup"
-    ;;
-  emacs-lsp-proxy)
-    OWNER="jadestrong"
-    REPO="lsp-proxy"
     ;;
   *)
     echo "Unknown package: $PACKAGE_NAME"
