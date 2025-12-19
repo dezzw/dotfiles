@@ -80,6 +80,9 @@
           overlays = [
             (final: prev: {
               inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-igc-patched;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-master;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-master-patched;
             })
             (final: prev: {
               inherit (inputs.nix-ai-tools.packages.${final.stdenv.hostPlatform.system})

@@ -21,7 +21,7 @@ in
 {
   programs.emacs = {
     enable = true;
-    package = pkgs.demacs;
+    package = pkgs.demacs-master;
   };
 
   home.packages =
