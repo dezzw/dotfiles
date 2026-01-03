@@ -30,7 +30,7 @@ in
 
       emacs-lsp-booster
 
-      global
+      # global
       universal-ctags
 
       # Code Formating
