@@ -9,7 +9,8 @@
   # $ darwin-rebuild changelog
   system.primaryUser = "dez";
   system.stateVersion = 5;
-  ids.gids.nixbld = 30000; # Preserve legacy nixbld group ID expected by nix-darwin
+  # Align nixbld GID with the value detected on the host to avoid activation failures.
+  ids.gids.nixbld = 350;
 
   users.users.dez.home = "/Users/dez";
 

@@ -104,6 +104,7 @@
         {
           username,
           modules,
+          homeDirectory ? null,
           extraSpecialArgs ? { },
         }:
         {
@@ -111,10 +112,14 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "bak";
-            extraSpecialArgs = {
-              inherit inputs username;
-            }
-            // extraSpecialArgs;
+            extraSpecialArgs =
+              {
+                inherit inputs username;
+              }
+              // lib.optionalAttrs (homeDirectory != null) {
+                inherit homeDirectory;
+              }
+              // extraSpecialArgs;
             users."${username}".imports = modules;
           };
         };
@@ -191,10 +196,13 @@
           ]
           ++ (commonDarwinModules username)
           ++ [
-            (mkHome {
-              inherit username;
-              modules = darwinHomeModules;
-            })
+            (
+              mkHome {
+                inherit username;
+                modules = darwinHomeModules;
+                homeDirectory = "/Users/${username}";
+              }
+            )
           ]
           # Host-specific configuration (if exists)
           ++ lib.optional (builtins.pathExists ./hosts/darwin/${hostname}.nix)
@@ -218,10 +226,13 @@
           modules = [
             ./modules/nixos/nix.nix
             home-manager.nixosModules.home-manager
-            (mkHome {
-              inherit username;
-              modules = linuxHomeModules;
-            })
+            (
+              mkHome {
+                inherit username;
+                modules = linuxHomeModules;
+                homeDirectory = "/home/${username}";
+              }
+            )
           ]
           # Host-specific configuration (if exists)
           ++ lib.optional (builtins.pathExists ./hosts/nixos/${hostname}.nix)
