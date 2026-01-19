@@ -34,9 +34,10 @@ in
       universal-ctags
 
       # Code Formating
-      nixfmt-rfc-style
+      nixfmt
 
       # dirvish
+      vips
       imagemagick
       ffmpegthumbnailer
       mediainfo

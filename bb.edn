@@ -1,14 +1,11 @@
 {:tasks
- {:requires ([babashka.fs :as fs]
-             [clojure.java.io :as io])
+ {:requires ([babashka.fs :as fs])
 
   ;; Platform detection helper
   :init (do
           (def os-name (System/getProperty "os.name"))
           (def is-mac? (clojure.string/includes? os-name "Mac"))
-          (def is-linux? (clojure.string/includes? os-name "Linux"))
           (def user (System/getenv "USER"))
-          (def home (System/getenv "HOME"))
           (def profiles-dir (if is-mac?
                                (str "/Users/" user "/.local/state/nix/profiles/")
                                (str "/home/" user "/.local/state/nix/profiles/")))
@@ -16,9 +13,12 @@
 
   update (shell "nix flake update")
 
-  apply (if is-mac?
-          (shell "sudo darwin-rebuild switch --flake .#")
-          (shell "USER=desmond home-manager switch --flake .#"))
+ apply (if is-mac?
+         (shell "sudo darwin-rebuild switch --flake .#")
+         (shell {:extra-env {"USER" "desmond"}}
+                "nix"
+                "run"
+                ".#homeConfigurations.desmond.activationPackage"))
 
   clean (do
           (when (fs/exists? profiles-dir)

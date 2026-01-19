@@ -7,12 +7,14 @@
       "https://nix-community.cachix.org"
       "https://demacs.cachix.org"
       "https://numtide.cachix.org"
+      "https://cache.numtide.com"
     ];
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "demacs.cachix.org-1:KwSnWI5wdJm4TGdeUfmksk59098voqdDkBVNrUS7yN4="
       "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
     ];
     experimental-features = [
       "flakes"
@@ -50,7 +52,7 @@
     mac-app-util.url = "github:hraban/mac-app-util";
 
     # AI coding tools
-    nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    llm-agents.url = "github:numtide/llm-agents.nix";
 
     # Custom Rust packages (tracked as flake inputs for automatic hash management)
     # Tracking HEAD (latest commit) - no version numbers needed!
@@ -85,13 +87,14 @@
               inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-master-patched;
             })
             (final: prev: {
-              inherit (inputs.nix-ai-tools.packages.${final.stdenv.hostPlatform.system})
+              inherit (inputs.llm-agents.packages.${final.stdenv.hostPlatform.system})
                 claude-code
                 codex
                 claude-code-acp
                 codex-acp
                 cursor-agent
                 opencode
+                gemini-cli
                 ;
             })
             (import ./overlays/rust-packages.nix inputs)
