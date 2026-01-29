@@ -2,6 +2,7 @@
   inputs,
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -9,8 +10,8 @@
   # $ darwin-rebuild changelog
   system.primaryUser = "dez";
   system.stateVersion = 5;
-  # Align nixbld GID with the value detected on the host to avoid activation failures.
-  ids.gids.nixbld = 350;
+  # Default nixbld GID (hosts can override when their local install differs).
+  ids.gids.nixbld = lib.mkDefault 350;
 
   users.users.dez.home = "/Users/dez";
 

@@ -83,8 +83,8 @@
             (final: prev: {
               inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs;
               inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-igc-patched;
-              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-master;
-              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-master-patched;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-git;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-git-patched;
             })
             (final: prev: {
               inherit (inputs.llm-agents.packages.${final.stdenv.hostPlatform.system})

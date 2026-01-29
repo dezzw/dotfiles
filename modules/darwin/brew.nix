@@ -31,11 +31,10 @@ in
 
     brews = [
       "clojure-lsp-native"
-      "enchant"
       "php"
       "node"
-      # "loop"
-      "aider"
+
+      "mole"
     ];
 
     casks = [
@@ -46,7 +45,8 @@ in
       "utm"
       "wezterm"
       "ollama"
-      "downie"
+      "downie"      
+      "monitorcontrol"
       "wechat"
 
     ]
@@ -58,28 +58,22 @@ in
       "jordanbaird-ice"
 
       # Browser
-      "firefox@developer-edition"
       "google-chrome"
-      # "arc"
 
       # Graphic Tools
-      "blender"
-      "magicavoxel"
+      # "blender"
+      # "magicavoxel"
       # "gimp"
       "obs"
 
       # Developing Tools
       # "godot"
-      "ghostty"
       "chatgpt"
 
       # Applications
       "alfred"
       "discord"
       "iina"
-      "zoom"
-      "pearcleaner"
-      "monitorcontrol"
 
       "libreoffice"
 
@@ -97,8 +91,6 @@ in
     // lib.optionalAttrs isMac {
       Xcode = 497799835;
       "The Unarchiver" = 425424353;
-      "Color Picker" = 1545870783;
-      "Interactful" = 1528095640;
     };
   };
 }
