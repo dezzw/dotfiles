@@ -41,11 +41,13 @@ in
     casks = [
       # common
       "visual-studio-code"
+      "cursor"
       "orbstack"
       "utm"
       "wezterm"
       "ollama"
       "downie"
+      "wechat"
 
     ]
     ++ lib.optionals isMac [
@@ -79,7 +81,6 @@ in
       "pearcleaner"
       "monitorcontrol"
 
-      "wechat"
       "libreoffice"
 
       # gaming
