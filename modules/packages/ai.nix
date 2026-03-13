@@ -8,5 +8,5 @@ with pkgs; [
   claude-code-acp
   codex-acp
   cursor-agent
-  opencode
+  cursor-agent-acp
 ]

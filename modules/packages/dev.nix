@@ -9,5 +9,5 @@ with pkgs; [
   # Build tools
   just
 
-  eask-cli
+  # eask-cli
 ]

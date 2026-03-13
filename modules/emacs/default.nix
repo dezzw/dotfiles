@@ -21,7 +21,7 @@ in
 {
   programs.emacs = {
     enable = true;
-    package = if pkgs.stdenv.isDarwin then pkgs.demacs-git-patched else pkgs.demacs-git;
+    package = if pkgs.stdenv.isDarwin then pkgs.demacs-patched else pkgs.demacs;
   };
 
   home.packages =

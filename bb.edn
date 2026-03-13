@@ -21,20 +21,20 @@
                 ".#homeConfigurations.desmond.activationPackage"))
 
   clean (do
-          (when (fs/exists? profiles-dir)
+          (when (and (fs/exists? profiles-dir) is-mac?)
             (println (str "Cleaning profiles in: " profiles-dir))
             (->> (fs/list-dir profiles-dir)
                  (sort-by fs/creation-time)
                  (drop-last 2)
                  (run! fs/delete-if-exists)))
-          (println "Deleting previous generations before the last 7:")
+          (println "Deleting previous generations before the last 1:")
           (if is-mac?
-            (shell "sudo nix-env --delete-generations +7 --profile /nix/var/nix/profiles/system")
-            (shell "nix-env --delete-generations +7"))
-          (println "Garbage collecting older than 7d:")
+            (shell "sudo nix-env --delete-generations +1 --profile /nix/var/nix/profiles/system")
+            (shell "nix-env --delete-generations +1"))
+          (println "Garbage collecting older than 1d:")
           (if is-mac?
-            (shell "sudo nix-collect-garbage --delete-older-than 7d")
-            (shell "nix-collect-garbage --delete-older-than 7d"))
+            (shell "sudo nix-collect-garbage --delete-older-than 1d")
+            (shell "nix-collect-garbage --delete-older-than 1d"))
           (println "Hard linking duplicates:")
           (shell "nix store optimise"))
   }

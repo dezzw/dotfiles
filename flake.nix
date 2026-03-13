@@ -26,8 +26,7 @@
   inputs = {
     # Package sets
     master.url = "github:NixOS/nixpkgs/master";
-    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Environment/system management
     darwin = {
@@ -59,6 +58,13 @@
     # Update with: nix flake update devicon-lookup
     devicon-lookup = {
       url = "github:coreyja/devicon-lookup";
+      flake = false;
+    };
+
+    # Cursor Agent ACP adapter (Node/npm build from source)
+    # Update with: nix flake update cursor-agent-acp-npm
+    cursor-agent-acp-npm = {
+      url = "github:blowmage/cursor-agent-acp-npm";
       flake = false;
     };
   };
@@ -93,12 +99,11 @@
                 claude-code-acp
                 codex-acp
                 cursor-agent
-                opencode
-                gemini-cli
                 ;
             })
             (import ./overlays/rust-packages.nix inputs)
             (import ./overlays/aider.nix)
+            (import ./overlays/cursor-agent-acp-npm.nix inputs)
           ];
           config = (import ./nix-config.nix).nixpkgsConfig;
         };
