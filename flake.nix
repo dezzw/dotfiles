@@ -79,6 +79,7 @@
       ...
     }:
     let
+      sharedNixConfig = import ./nix-config.nix;
       lib = nixpkgs.lib;
       # Helper functions
       mkPkgs =
@@ -105,7 +106,7 @@
             (import ./overlays/aider.nix)
             (import ./overlays/cursor-agent-acp-npm.nix inputs)
           ];
-          config = (import ./nix-config.nix).nixpkgsConfig;
+          config = sharedNixConfig.nixpkgsConfig;
         };
 
       mkHome =
@@ -166,7 +167,7 @@
           // extraSpecialArgs;
           modules = linuxHomeModules ++ [
             {
-              nix = (import ./nix-config.nix).mkNixSettings {
+              nix = sharedNixConfig.mkNixSettings {
                 inherit inputs system nixpkgs username;
                 isHomeManager = true;
               };
@@ -192,7 +193,7 @@
           };
           modules = [
             {
-              nix = (import ./nix-config.nix).mkNixSettings {
+              nix = sharedNixConfig.mkNixSettings {
                 inherit
                   inputs
                   system

@@ -13,6 +13,7 @@
 
 {
   programs.home-manager.enable = true;
+  programs.man.generateCaches = lib.mkForce false;
   home.enableNixpkgsReleaseCheck = lib.mkDefault false;
 
   home = {

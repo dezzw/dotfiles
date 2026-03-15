@@ -9,12 +9,14 @@ rec {
       "https://nix-community.cachix.org"
       "https://demacs.cachix.org"
       "https://numtide.cachix.org"
+      "https://cache.numtide.com"
     ];
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "demacs.cachix.org-1:KwSnWI5wdJm4TGdeUfmksk59098voqdDkBVNrUS7yN4="
       "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
     ];
     experimental-features = [
       "flakes"
@@ -78,6 +80,10 @@ rec {
         trusted-public-keys = baseConfig.trusted-public-keys;
         trusted-substituters = baseConfig.substituters;
         max-jobs = "auto";
+        builders-use-substitutes = true;
+        http-connections = 0;
+        keep-outputs = true;
+        keep-derivations = true;
         trusted-users = [
           "${username}"
           "root"
@@ -90,15 +96,9 @@ rec {
         # ];
       };
 
-      extraOptions = ''
-        keep-outputs = true
-        keep-derivations = true
-        builders-use-substitutes = true
-        http-connections = 0
-      ''
-    + (nixpkgs.lib.optionalString (system == "aarch64-darwin") ''
-      extra-platforms = aarch64-darwin x86_64-darwin
-    '');
+      extraOptions = nixpkgs.lib.optionalString (system == "aarch64-darwin") ''
+        extra-platforms = aarch64-darwin x86_64-darwin
+      '';
   }
   // nixpkgs.lib.optionalAttrs (!isHomeManager) {
     # Only available in system configs (NixOS/nix-darwin), not home-manager

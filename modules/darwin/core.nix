@@ -1,27 +1,23 @@
 {
-  inputs,
-  config,
   pkgs,
   lib,
+  username,
   ...
 }:
 {
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
-  system.primaryUser = "dez";
+  system.primaryUser = username;
   system.stateVersion = 5;
   # Default nixbld GID (hosts can override when their local install differs).
   ids.gids.nixbld = lib.mkDefault 350;
 
-  users.users.dez.home = "/Users/dez";
+  users.users.${username}.home = "/Users/${username}";
 
   environment = {
     pathsToLink = [ "/Applications" ];
     # I exclusively control homebrew from here, but it's annoying to fully qualify the path to brew binaries
     systemPath = [ "/opt/homebrew/bin" ];
-    etc = {
-      darwin.source = "${inputs.darwin}";
-    };
 
     systemPackages = with pkgs; [
       git
