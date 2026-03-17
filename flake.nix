@@ -88,7 +88,7 @@
           inherit system;
           overlays = [
             (final: prev: {
-              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-igc;
               inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-igc-patched;
               inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-git;
               inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-git-patched;
