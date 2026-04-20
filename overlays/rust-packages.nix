@@ -1,6 +1,6 @@
 # Overlay for custom Rust packages
 # Uses flake inputs tracking HEAD (latest commit) for automatic updates
-# No version numbers needed! Just run: nix flake update devicon-lookup
+# No version numbers needed! Just run: nix flake update <input-name>
 
 inputs: final: prev: {
   # devicon-lookup - Emacs package for devicon lookup

@@ -61,12 +61,6 @@
       flake = false;
     };
 
-    # Cursor Agent ACP adapter (Node/npm build from source)
-    # Update with: nix flake update cursor-agent-acp-npm
-    cursor-agent-acp-npm = {
-      url = "github:blowmage/cursor-agent-acp-npm";
-      flake = false;
-    };
   };
 
   outputs =
@@ -88,10 +82,12 @@
           inherit system;
           overlays = [
             (final: prev: {
-              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-igc;
-              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-igc-patched;
-              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-git;
-              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system}) demacs-git-patched;
+              inherit (inputs.demacs.packages.${final.stdenv.hostPlatform.system})
+                demacs-igc
+                demacs-igc-patched
+                demacs-git
+                demacs-git-patched
+                ;
             })
             (final: prev: {
               inherit (inputs.llm-agents.packages.${final.stdenv.hostPlatform.system})
@@ -100,11 +96,10 @@
                 claude-code-acp
                 codex-acp
                 cursor-agent
+                rtk
                 ;
             })
             (import ./overlays/rust-packages.nix inputs)
-            (import ./overlays/aider.nix)
-            (import ./overlays/cursor-agent-acp-npm.nix inputs)
           ];
           config = sharedNixConfig.nixpkgsConfig;
         };
@@ -121,14 +116,13 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "bak";
-            extraSpecialArgs =
-              {
-                inherit inputs username;
-              }
-              // lib.optionalAttrs (homeDirectory != null) {
-                inherit homeDirectory;
-              }
-              // extraSpecialArgs;
+            extraSpecialArgs = {
+              inherit inputs username;
+            }
+            // lib.optionalAttrs (homeDirectory != null) {
+              inherit homeDirectory;
+            }
+            // extraSpecialArgs;
             users."${username}".imports = modules;
           };
         };
@@ -165,18 +159,26 @@
             inherit inputs username homeDirectory;
           }
           // extraSpecialArgs;
-          modules = linuxHomeModules ++ [
-            {
-              nix = sharedNixConfig.mkNixSettings {
-                inherit inputs system nixpkgs username;
-                isHomeManager = true;
-              };
-            }
-          ]
-          # Host-specific configuration (if exists)
-          ++ lib.optionals (hostname != null && builtins.pathExists ./hosts/standalone/${hostname}.nix)
-            [ ./hosts/standalone/${hostname}.nix ]
-          ++ extraModules;
+          modules =
+            linuxHomeModules
+            ++ [
+              {
+                nix = sharedNixConfig.mkNixSettings {
+                  inherit
+                    inputs
+                    system
+                    nixpkgs
+                    username
+                    ;
+                  isHomeManager = true;
+                };
+              }
+            ]
+            # Host-specific configuration (if exists)
+            ++ lib.optionals (hostname != null && builtins.pathExists ./hosts/standalone/${hostname}.nix) [
+              ./hosts/standalone/${hostname}.nix
+            ]
+            ++ extraModules;
         };
 
       mkDarwinSystem =
@@ -205,17 +207,14 @@
           ]
           ++ (commonDarwinModules username)
           ++ [
-            (
-              mkHome {
-                inherit username;
-                modules = darwinHomeModules;
-                homeDirectory = "/Users/${username}";
-              }
-            )
+            (mkHome {
+              inherit username;
+              modules = darwinHomeModules;
+              homeDirectory = "/Users/${username}";
+            })
           ]
           # Host-specific configuration (if exists)
-          ++ lib.optional (builtins.pathExists ./hosts/darwin/${hostname}.nix)
-            ./hosts/darwin/${hostname}.nix
+          ++ lib.optional (builtins.pathExists ./hosts/darwin/${hostname}.nix) ./hosts/darwin/${hostname}.nix
           ++ extraModules;
         };
 
@@ -235,17 +234,14 @@
           modules = [
             ./modules/nixos/nix.nix
             home-manager.nixosModules.home-manager
-            (
-              mkHome {
-                inherit username;
-                modules = linuxHomeModules;
-                homeDirectory = "/home/${username}";
-              }
-            )
+            (mkHome {
+              inherit username;
+              modules = linuxHomeModules;
+              homeDirectory = "/home/${username}";
+            })
           ]
           # Host-specific configuration (if exists)
-          ++ lib.optional (builtins.pathExists ./hosts/nixos/${hostname}.nix)
-            ./hosts/nixos/${hostname}.nix
+          ++ lib.optional (builtins.pathExists ./hosts/nixos/${hostname}.nix) ./hosts/nixos/${hostname}.nix
           ++ extraModules;
         };
     in
@@ -278,7 +274,7 @@
         {
           ${username} = mkLinuxHome {
             inherit username system homeDirectory;
-            hostname = "wsl";  # Matches hosts/standalone/wsl.nix
+            hostname = "wsl"; # Matches hosts/standalone/wsl.nix
           };
         };
 
