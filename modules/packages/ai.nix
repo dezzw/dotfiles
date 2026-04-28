@@ -6,7 +6,7 @@ with pkgs;
 [
   claude-code
   codex
-  claude-code-acp
+  claude-agent-acp
   codex-acp
   cursor-agent
   rtk

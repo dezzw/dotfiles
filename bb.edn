@@ -15,31 +15,35 @@
           (when is-mac?
             (println (str "Target host: " host))))
 
-  update (shell "nix flake update")
-
- apply (if is-mac?
-         (shell (str "sudo darwin-rebuild switch --flake .#" host))
-         (shell {:extra-env {"USER" "desmond"}}
-                "nix"
-                "run"
-                ".#homeConfigurations.desmond.activationPackage"))
-
-  clean (do
-          (when (and (fs/exists? profiles-dir) is-mac?)
-            (println (str "Cleaning profiles in: " profiles-dir))
-            (->> (fs/list-dir profiles-dir)
-                 (sort-by fs/creation-time)
-                 (drop-last 2)
-                 (run! fs/delete-if-exists)))
-          (println "Deleting previous generations before the last 1:")
-          (if is-mac?
-            (shell "sudo nix-env --delete-generations +1 --profile /nix/var/nix/profiles/system")
-            (shell "nix-env --delete-generations +1"))
-          (println "Garbage collecting older than 1d:")
-          (if is-mac?
-            (shell "sudo nix-collect-garbage --delete-older-than 1d")
-            (shell "nix-collect-garbage --delete-older-than 1d"))
-          (println "Hard linking duplicates:")
-          (shell "nix store optimise"))
+  update {:doc "Update flake lock file up to date"
+          :task (shell "nix flake update")}
+  
+  apply {:doc "Rebuild the system"
+         :task (if is-mac?
+                (shell (str "sudo darwin-rebuild switch --flake .#" host))
+                (shell {:extra-env {"USER" "desmond"}}
+                 "nix"
+                 "run"
+                 ".#homeConfigurations.desmond.activationPackage"))}
+  upgrade {:doc "Update flake lock and rebuild system"
+           :depends [update apply]}
+  clean {:doc "Clean old /nix outputs"
+         :task (do
+                (when (and (fs/exists? profiles-dir) is-mac?)
+                 (println (str "Cleaning profiles in: " profiles-dir))
+                 (->> (fs/list-dir profiles-dir)
+                  (sort-by fs/creation-time)
+                  (drop-last 2)
+                  (run! fs/delete-if-exists)))
+                (println "Deleting previous generations before the last 1:")
+                (if is-mac?
+                 (shell "sudo nix-env --delete-generations +1 --profile /nix/var/nix/profiles/system")
+                 (shell "nix-env --delete-generations +1"))
+                (println "Garbage collecting older than 1d:")
+                (if is-mac?
+                 (shell "sudo nix-collect-garbage --delete-older-than 1d")
+                 (shell "nix-collect-garbage --delete-older-than 1d"))
+                (println "Hard linking duplicates:")
+                (shell "nix store optimise"))}
   }
  }

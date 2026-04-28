@@ -93,7 +93,7 @@
               inherit (inputs.llm-agents.packages.${final.stdenv.hostPlatform.system})
                 claude-code
                 codex
-                claude-code-acp
+                claude-agent-acp
                 codex-acp
                 cursor-agent
                 rtk
