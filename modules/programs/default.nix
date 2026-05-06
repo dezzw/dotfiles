@@ -11,7 +11,11 @@
   ];
 
   # Additional programs
-  programs.nix-index.enable = true;
-  programs.gpg.enable = true;
-  programs.lazygit.enable = true;
+  programs = {
+    # nix-index.enable = true;
+    nix-index-database.comma.enable = true;
+
+    gpg.enable = true;
+    lazygit.enable = true;
+  };
 }

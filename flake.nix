@@ -45,6 +45,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     demacs.url = "github:dezzw/demacs";
 
     # macOS utilities
@@ -135,6 +140,7 @@
 
       commonHomeModules = [
         inputs.nixvim.homeModules.default
+        inputs.nix-index-database.homeModules.default
         ./modules/home-manager
       ];
 

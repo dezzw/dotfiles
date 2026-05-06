@@ -2,7 +2,8 @@
 
 { pkgs, ... }:
 
-with pkgs; [
+with pkgs;
+[
   # Filesystem utilities
   fd
   ripgrep
@@ -20,14 +21,16 @@ with pkgs; [
 
   # Utilities
   jq
-  comma
   cachix
   tig
   lazysql
   slumber
   just
 ]
-++ (with pkgs; lib.optionals stdenv.isLinux [
-  # serpl currently fails to build on Darwin via ast-grep test failures.
-  serpl
-])
+++ (
+  with pkgs;
+  lib.optionals stdenv.isLinux [
+    # serpl currently fails to build on Darwin via ast-grep test failures.
+    serpl
+  ]
+)
