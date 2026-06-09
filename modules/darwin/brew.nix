@@ -22,6 +22,7 @@ in
       autoUpdate = true;
       upgrade = true;
       cleanup = "zap";
+      extraFlags = [ "--force-cleanup" ];
     };
 
     taps = [
@@ -44,7 +45,7 @@ in
       "orbstack"
       "utm"
       "wezterm"
-      "ollama"
+      "ollama-app"
       "downie"      
       "monitorcontrol"
       "wechat"

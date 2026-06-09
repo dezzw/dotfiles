@@ -17,18 +17,21 @@ let
     mkdir -p $out/bin
     ln -s ${python}/bin/python $out/bin/python-for-lsp-bridge
   '';
+  emacsPackage = pkgs.demacs-git;
+  emacsLspBooster = pkgs.emacs-lsp-booster.override {
+    emacs = emacsPackage;
+  };
 in
 {
   programs.emacs = {
     enable = true;
-    package = if pkgs.stdenv.isDarwin then pkgs.demacs-igc-patched else pkgs.demacs-git;
+    package = emacsPackage;
   };
 
   home.packages =
     with pkgs;
     [
-
-      emacs-lsp-booster
+      emacsLspBooster
 
       # global
       universal-ctags
