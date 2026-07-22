@@ -10,7 +10,6 @@ with pkgs;
   curl
   tree
   htop
-  git
   fzf
 
   # Compression tools

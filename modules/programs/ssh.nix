@@ -6,9 +6,10 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
+
     settings."*" = {
       forwardAgent = false;
-      addKeysToAgent = "no";
+      addKeysToAgent = "yes";
       compression = false;
       serverAliveInterval = 0;
       serverAliveCountMax = 3;
@@ -18,9 +19,7 @@
       controlPath = "~/.ssh/master-%r@%n:%p";
       controlPersist = "no";
     };
+
     includes = [ "*.conf" ] ++ lib.optionals pkgs.stdenv.isDarwin [ "~/.orbstack/ssh/config" ];
-    extraConfig = ''
-      AddKeysToAgent yes
-    '';
   };
 }

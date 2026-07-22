@@ -10,5 +10,6 @@
     ./starship.nix
     ./eza.nix
     ./yazi.nix
+    ./zoxide.nix
   ];
 }

@@ -30,7 +30,7 @@
     ../emacs
     ../neovim
     ../zellij
-    # Platform-specific dotfiles (moved to conditional below to avoid recursion)
+    ./home-darwin.nix
   ];
 
   # Platform-specific dotfiles

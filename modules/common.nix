@@ -9,7 +9,6 @@
     systemPackages = [ ];
     # list of acceptable shells in /etc/shells
     shells = with pkgs; [
-      fish
       bash
       zsh
     ];
@@ -17,7 +16,7 @@
   };
 
   users.users."${username}" = {
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
     ignoreShellProgramCheck = true;
   };
 

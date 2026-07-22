@@ -24,16 +24,8 @@ let
   # Combine all packages
   sharedPackages = basePkgs ++ devPkgs ++ langPkgs ++ aiPkgs;
   
-  # Linux-specific fonts (inlined to avoid import recursion)
-  linuxFonts = with pkgs; [
-    maple-mono.truetype
-    maple-mono.NF
-    maple-mono.NF-CN
-    symbola
-    nerd-fonts.fira-code
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.monaspace
-  ];
+  # Linux-specific fonts
+  linuxFonts = import ../common/fonts.nix pkgs;
 in
 {
   home.packages = sharedPackages

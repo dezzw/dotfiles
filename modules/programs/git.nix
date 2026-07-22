@@ -1,13 +1,29 @@
 # Git configuration
 
-{ config, ... }:
+{ pkgs, ... }:
 
 {
   programs.git = {
     enable = true;
+    package = pkgs.gitFull;
+
+    maintenance.enable = true;
+
     settings = {
       user.name = "dezzw";
       user.email = "dw@dezzw.com";
+
+      init.defaultBranch = "main";
+
+      fetch.prune = true;
+
+      pull.rebase = true;
+      rebase.autoStash = true;
+      branch.autoSetupRebase = "always";
+
+      merge.conflictstyle = "zdiff3";
+      rerere.enabled = true;
+      help.autocorrect = "prompt";
     };
   };
 

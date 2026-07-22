@@ -7,12 +7,11 @@
     TERM = "xterm-256color";
     COLORTERM = "truecolor";
     SYSTEMD_COLORS = "true";
-    FZF_CTRL_R_OPTS = "--sort --exact";
 
     # Editor settings
-    EDITOR = "hx";
-    VISUAL = "hx";
-    GIT_EDITOR = "hx";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+    GIT_EDITOR = "nvim";
 
     # Add colors to man pages
     MANPAGER = "less -R --use-color -Dd+r -Du+b +Gg -M -s";

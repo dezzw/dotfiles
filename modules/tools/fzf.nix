@@ -1,14 +1,25 @@
 # FZF configuration
 
-{ config, ... }:
+{ ... }:
 
 {
   programs.fzf = {
     enable = true;
-    enableFishIntegration = true;
     enableZshIntegration = true;
     tmux.enableShellIntegration = true;
+
     defaultCommand = "fd --type f --hidden --exclude .git";
-    fileWidgetCommand = "fd --type f";
+
+    fileWidget = {
+      command = "fd --type f --hidden --exclude .git";
+    };
+
+    changeDirWidget = {
+      command = "fd --type d --hidden --exclude .git";
+    };
+
+    historyWidget = {
+      options = [ "--sort --exact" ];
+    };
   };
 }

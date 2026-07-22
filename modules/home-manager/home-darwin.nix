@@ -1,13 +1,14 @@
 {
   lib,
   pkgs,
-  home,
   ...
 }:
 {
   # stolen from https://github.com/nix-community/home-manager/issues/1341
   # with modifications so full disk access isn't needed (no tmp dir) and finder shell script permissions aren't needed (using mkalias flake)
-  disabledModules = [ "targets/darwin/linkapps.nix" ]; # so we can use shortcuts instead of symlinks
+  targets.darwin.copyApps.enable = false;
+  targets.darwin.linkApps.enable = false;
+
   home.activation.aliasApplications = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       app_folder="Home Manager Apps"

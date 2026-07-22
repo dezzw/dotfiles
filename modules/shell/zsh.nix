@@ -90,11 +90,7 @@
     shellAliases = {
       cd = "z";
       cat = "bat";
+      python = "python3";
     };
-  };
-
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
   };
 }

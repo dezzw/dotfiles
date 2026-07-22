@@ -1,6 +1,7 @@
 {
   description = "systems configuration";
 
+  # Mirrors nix-config.nix baseConfig (flake nixConfig must be a literal set)
   nixConfig = {
     substituters = [
       "https://cache.nixos.org"
@@ -42,7 +43,6 @@
     # Editor configurations
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-index-database = {
