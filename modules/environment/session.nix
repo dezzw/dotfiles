@@ -17,7 +17,7 @@
     MANPAGER = "less -R --use-color -Dd+r -Du+b +Gg -M -s";
     ENCHANT_CONFIG_DIR = "$HOME/.config/enchant";
   }
-  // lib.optionalAttrs pkgs.stdenv.isLinux {
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     # Linux-specific variables
     XDG_CURRENT_DESKTOP = "WSLG";
   };

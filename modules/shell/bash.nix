@@ -4,7 +4,7 @@
 { pkgs, lib, ... }:
 
 {
-  programs.bash = lib.mkIf pkgs.stdenv.isLinux {
+  programs.bash = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     enable = true;
   };
 }

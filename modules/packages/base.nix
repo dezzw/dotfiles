@@ -28,7 +28,7 @@ with pkgs;
 ]
 ++ (
   with pkgs;
-  lib.optionals stdenv.isLinux [
+  lib.optionals stdenv.hostPlatform.isLinux [
     # serpl currently fails to build on Darwin via ast-grep test failures.
     serpl
   ]

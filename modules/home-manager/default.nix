@@ -7,7 +7,7 @@
   pkgs,
   username,
   lib,
-  homeDirectory ? if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}",
+  homeDirectory ? if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${username}" else "/home/${username}",
   ...
 }:
 
@@ -34,7 +34,7 @@
   ];
 
   # Platform-specific dotfiles
-  home.file = lib.optionalAttrs pkgs.stdenv.isDarwin {
+  home.file = lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
     ".config/wezterm/".source = ./dotfiles/wezterm;
     ".config/wezterm/".recursive = true;
   };

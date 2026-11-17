@@ -29,6 +29,6 @@ let
 in
 {
   home.packages = sharedPackages
-    ++ lib.optionals pkgs.stdenv.isDarwin [ ]
-    ++ lib.optionals pkgs.stdenv.isLinux linuxFonts;
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ ]
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux linuxFonts;
 }

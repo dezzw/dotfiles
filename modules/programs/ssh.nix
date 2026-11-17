@@ -20,6 +20,6 @@
       controlPersist = "no";
     };
 
-    includes = [ "*.conf" ] ++ lib.optionals pkgs.stdenv.isDarwin [ "~/.orbstack/ssh/config" ];
+    includes = [ "*.conf" ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ "~/.orbstack/ssh/config" ];
   };
 }
