@@ -25,8 +25,7 @@
   };
 
   inputs = {
-    # Package sets
-    master.url = "github:NixOS/nixpkgs/master";
+    # Single nixpkgs pin (nixpkgs-unstable) for the whole flake
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Environment/system management
@@ -43,6 +42,7 @@
     # Editor configurations
     nixvim = {
       url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-index-database = {
@@ -50,13 +50,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    demacs.url = "github:dezzw/demacs";
+    demacs = {
+      url = "github:dezzw/demacs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # macOS utilities
-    mac-app-util.url = "github:hraban/mac-app-util";
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # AI coding tools
-    llm-agents.url = "github:numtide/llm-agents.nix";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Custom Rust packages (tracked as flake inputs for automatic hash management)
     # Tracking HEAD (latest commit) - no version numbers needed!
@@ -70,7 +80,6 @@
 
   outputs =
     inputs@{
-      self,
       nixpkgs,
       darwin,
       home-manager,
@@ -132,7 +141,7 @@
           };
         };
       # Common module sets for reuse
-      commonDarwinModules = username: [
+      commonDarwinModules = [
         mac-app-util.darwinModules.default
         ./modules/darwin
         home-manager.darwinModules.home-manager
@@ -211,7 +220,7 @@
               };
             }
           ]
-          ++ (commonDarwinModules username)
+          ++ commonDarwinModules
           ++ [
             (mkHome {
               inherit username;

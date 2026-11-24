@@ -3,7 +3,7 @@
 {
   programs.nixvim = {
     enable = true;
-    nixpkgs.source = inputs.nixvim.inputs.nixpkgs;
+    nixpkgs.source = inputs.nixpkgs;
 
     globals.mapleader = " ";
 

@@ -89,7 +89,7 @@ Return non-nil on success, signal error on failure."
   (if df-macos-p
       (df-run-process "sudo" "darwin-rebuild" "switch" "--flake" ".#")
     (let ((process-environment (cons "USER=desmond" process-environment)))
-      (df-run-process "home-manager" "switch" "--flake" ".#"))))
+      (df-run-process "nix" "run" ".#homeConfigurations.desmond.activationPackage"))))
 
 (defun df-task-clean ()
   "Clean nix profiles and garbage collect."

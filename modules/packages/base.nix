@@ -10,7 +10,6 @@ with pkgs;
   curl
   tree
   htop
-  fzf
 
   # Compression tools
   unzip

@@ -67,7 +67,7 @@ rec {
   }:
   {
     nixPath = [ "nixpkgs=${nixpkgs}" ];
-    package = inputs.master.legacyPackages.${system}.nix;
+    package = inputs.nixpkgs.legacyPackages.${system}.nix;
 
     registry = {
       system.flake = inputs.self;

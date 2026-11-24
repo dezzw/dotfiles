@@ -7,9 +7,6 @@ let
   # Base packages
   basePkgs = import ../packages/base.nix { inherit pkgs; };
 
-  # Development tools
-  devPkgs = import ../packages/dev.nix { inherit pkgs; };
-
   # Language packages
   langPkgs =
     (import ../lang/clojure.nix { inherit pkgs; })
@@ -22,13 +19,12 @@ let
   aiPkgs = import ../packages/ai.nix { inherit pkgs; };
 
   # Combine all packages
-  sharedPackages = basePkgs ++ devPkgs ++ langPkgs ++ aiPkgs;
+  sharedPackages = basePkgs ++ langPkgs ++ aiPkgs;
   
   # Linux-specific fonts
   linuxFonts = import ../common/fonts.nix pkgs;
 in
 {
   home.packages = sharedPackages
-    ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ ]
     ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux linuxFonts;
 }
